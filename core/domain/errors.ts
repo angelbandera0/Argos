@@ -11,7 +11,8 @@ export type RuleCode =
   | "SESSION_TOO_LONG"
   | "STORE_UNAVAILABLE"
   | "INVALID_USERNAME"
-  | "INVALID_SESSION_SECONDS";
+  | "INVALID_SESSION_SECONDS"
+  | "INVALID_NAME";
 
 export class Forbidden extends Error {
   constructor() {
