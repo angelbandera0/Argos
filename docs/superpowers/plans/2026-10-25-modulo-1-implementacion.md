@@ -59,7 +59,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 
 **`core/domain/`**
 - `actor.ts`: `type ActorKind = "superadmin" | "admin" | "operator"`; `type Channel = "ui" | "api" | "app" | "mcp"`; `interface Actor { userId: string; kind: ActorKind; channel: Channel; activeStoreId?: string }`.
-- `errors.ts`: clases `Forbidden`, `NotFound`, `RuleViolation(code: RuleCode)`, `AuthFailed` (login fallido, sin detalle), `SessionExpired`. `RuleCode = "FOUNDER_PROTECTED" | "HAS_DATA" | "ROLE_EXCLUDED" | "NAME_TAKEN" | "CATEGORY_HAS_PRODUCTS" | "REASON_REQUIRED" | "SUPERADMIN_EXISTS" | "PASSWORD_TOO_SHORT" | "PERMISSION_REQUIRES_VIEW" | "SESSION_TOO_LONG" | "STORE_UNAVAILABLE"`.
+- `errors.ts`: clases `Forbidden`, `NotFound`, `RuleViolation(code: RuleCode)`, `AuthFailed` (login fallido, sin detalle), `SessionExpired`. `RuleCode = "FOUNDER_PROTECTED" | "HAS_DATA" | "ROLE_EXCLUDED" | "NAME_TAKEN" | "CATEGORY_HAS_PRODUCTS" | "REASON_REQUIRED" | "SUPERADMIN_EXISTS" | "PASSWORD_TOO_SHORT" | "PERMISSION_REQUIRES_VIEW" | "SESSION_TOO_LONG" | "STORE_UNAVAILABLE" | "INVALID_USERNAME"`.
 - `username.ts`: `formatUsername(code, name): string`, `parseUsername(username): { code: string; name: string }`, `normalizeUsername(raw): string`, `isValidUsernameName(name): boolean`.
 - `company-code.ts`: `generateCompanyCode(randomInt: (max: number) => number): string`.
 - `password.ts`: `validateAdminPassword(password: string): void`.
