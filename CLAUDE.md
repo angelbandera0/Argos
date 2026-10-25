@@ -33,8 +33,8 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 ## Ejecución con subagentes (reglas del usuario)
 
 - **Informes cortos.** El detalle va en el archivo de informe de la tarea; la respuesta al controlador tiene como máximo 5 líneas: estado, commit, resumen de pruebas en una línea, hasta 2 inquietudes y la ruta del informe. Los revisores escriben la revisión completa en un archivo y responden con el veredicto y solo los hallazgos Críticos e Importantes (máximo 10 líneas).
-- **Modelos.** Ejecución e implementación: Sonnet. Planificación, diseño y decisiones de arquitectura: Opus. Tareas de muy baja complejidad (solo documentación, configuración o cambios mecánicos): Haiku, sin preguntar. Antes de lanzar cada tarea, el controlador propone el modelo y pregunta al usuario si prefiere Opus o Sonnet; recomienda Opus solo en tareas de seguridad (RLS, sesiones, PIN, permisos).
-- **Revisión.** Una sola revisión por tarea. No hay re-revisión. Si la revisión encuentra algo Crítico o Importante, hay como máximo una ronda de arreglo: el implementador arregla y entrega la evidencia de las pruebas, y el controlador la comprueba leyendo el informe. Lo Menor se anota como diferido, sin ronda.
+- **Modelos.** Escribir código (incluido SQL y RLS): siempre Sonnet, sin preguntar. Opus solo para planificación, diseño y decisiones de arquitectura. Tareas de muy baja complejidad (solo documentación, configuración o cambios mecánicos): Haiku, sin preguntar.
+- **Revisión.** Se omite la revisión por tarea para avanzar; las revisiones de seguridad están diferidas en `docs/superpowers/revisiones-pendientes.md`. Cada tarea termina con sus pruebas en verde y el informe corto. Lo que se detecte se anota ahí.
 - **Una tarea cada vez.** Tras cada tarea el controlador para y espera el "sigue" del usuario.
 
 ## Architecture notes
