@@ -9,7 +9,8 @@ export type RuleCode =
   | "PASSWORD_TOO_SHORT"
   | "PERMISSION_REQUIRES_VIEW"
   | "SESSION_TOO_LONG"
-  | "STORE_UNAVAILABLE";
+  | "STORE_UNAVAILABLE"
+  | "INVALID_USERNAME";
 
 export class Forbidden extends Error {
   constructor() {

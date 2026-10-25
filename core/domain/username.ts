@@ -16,6 +16,6 @@ export function isValidUsernameName(name: string): boolean {
 
 export function parseUsername(username: string): { code: string; name: string } {
   const dot = username.indexOf(".");
-  if (dot === -1) throw new RuleViolation("NAME_TAKEN");
+  if (dot === -1) throw new RuleViolation("INVALID_USERNAME");
   return { code: username.slice(0, dot), name: username.slice(dot + 1) };
 }

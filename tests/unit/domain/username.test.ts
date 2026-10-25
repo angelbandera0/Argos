@@ -17,7 +17,13 @@ describe("username", () => {
   });
 
   it("throws RuleViolation when there is no dot", () => {
-    expect(() => parseUsername("sinpunto")).toThrow(RuleViolation);
+    expect.assertions(2);
+    try {
+      parseUsername("sinpunto");
+    } catch (e) {
+      expect(e).toBeInstanceOf(RuleViolation);
+      expect((e as RuleViolation).code).toBe("INVALID_USERNAME");
+    }
   });
 
   it("normalizes case and surrounding spaces", () => {
