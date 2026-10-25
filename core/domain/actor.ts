@@ -7,4 +7,6 @@ export interface Actor {
   kind: ActorKind;
   channel: Channel;
   activeStoreId?: string;
+  /** The operator's app session (operators only). */
+  sessionId?: string;
 }
