@@ -101,11 +101,10 @@ select throws_ok($$select create_company('Delta')$$, 'P0001', 'Only an active ad
 select tests.authenticate_as((select v from ctx where k = 'admin'));
 select throws_ok($$select create_company('   ')$$, 'P0001', 'Company name must be between 1 and 80 characters', 'DR-005: create_company rejects a blank name');
 select throws_ok($$select create_company(repeat('x', 81))$$, 'P0001', 'Company name must be between 1 and 80 characters', 'DR-005: create_company rejects an 81-character name');
-select is((select count(*) from profiles) + (select count(*) from companies) + (select count(*) from company_admins)
-  + (select count(*) from sites) + (select count(*) from stores), 0::bigint,
-  'T-04: authenticated admin reads zero rows (RLS, no policies)');
+select is((select count(*) from companies where id <> (select v from ctx where k = 'gamma')) + (select count(*) from sites) + (select count(*) from stores), 0::bigint,
+  'T-04: an admin without company_admins rows reads no other company data (RLS)');
 select throws_ok($$insert into sites (company_id, name) values ('00000000-0000-0000-0000-0000000000a1', 'Z')$$, '42501', null,
-  'T-04: authenticated admin cannot insert (RLS, no policies)');
+  'T-04: an admin without company_admins rows cannot insert (RLS)');
 select tests.clear_auth();
 
 select throws_ok($$select create_company('Delta')$$, 'P0001', 'Only an active administrator can create companies', 'DR-005: create_company rejects a null auth.uid()');
@@ -117,7 +116,7 @@ select is((select count(*) from pg_class where relnamespace = 'public'::regnames
 set local role anon;
 select is((select count(*) from profiles) + (select count(*) from companies) + (select count(*) from company_admins)
   + (select count(*) from sites) + (select count(*) from stores), 0::bigint,
-  'T-04: anon sees zero rows (RLS, no policies)');
+  'T-04: anon sees zero rows (RLS)');
 select throws_ok($$select create_company('Delta')$$, '42501', null, 'T-04: anon cannot execute create_company');
 reset role;
 

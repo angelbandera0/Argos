@@ -2,7 +2,7 @@
 
 Sin Docker ni Supabase CLI: las pruebas corren contra el proyecto cloud `argos` (`wqzeqrjzahtqufasrydb`) con `execute_sql` del MCP de Supabase. Todo va dentro de `begin ... rollback`, así que no queda ningún dato ni el esquema `tests`.
 
-Versiones de migración = las que reporta el remoto (`list_migrations`): 20261025171215_core_schema, 20261025171423_core_schema_trigger_search_path, 20261025225316_core_schema_integrity (renombradas desde 140000/140100 locales).
+Versiones de migración = las que reporta el remoto (`list_migrations`): 20261025171215_core_schema, 20261025171423_core_schema_trigger_search_path, 20261025225316_core_schema_integrity, 20261025231302_rls_core (renombradas desde 140000/140100 locales).
 
 ## Hallazgos de `execute_sql`
 
