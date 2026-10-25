@@ -35,13 +35,13 @@ Compañía  (tenant, dueña del negocio)
 ## Reglas de dominio
 
 - **DR-001 Jerarquía.** Compañía → Sede → Tienda. Cada sede pertenece a una sola compañía y cada tienda a una sola sede.
-- **DR-002 Superadmin único.** Existe un solo superadmin. Solo él crea administradores.
+- **DR-002 Superadmin único.** Existe un solo superadmin. Solo él crea administradores. Se crea automáticamente la primera vez que arranca el servidor.
 - **DR-003 Origen de las compañías.** Un administrador nuevo empieza sin compañías y crea las suyas. Quien crea una compañía es su fundador.
 - **DR-004 Administración compartida.** Una compañía puede ser gestionada por varios administradores. Cualquier administrador de la compañía, o el superadmin, puede dar acceso a otro administrador.
 - **DR-005 Fundador permanente.** El fundador o el superadmin pueden quitar el acceso de un administrador a la compañía; los demás administradores no. El fundador no puede ser removido de ella, ni por sí mismo ni por el superadmin.
 - **DR-006 Administrador fundador protegido.** No se puede eliminar la cuenta de un administrador mientras sea fundador de alguna compañía.
 - **DR-007 Gestión exclusiva de administradores.** Compañías, sedes, tiendas, usuarios, roles y categorías los gestionan solo los administradores. Ningún rol puede recibir estos permisos.
-- **DR-008 Roles.** Un administrador crea roles y define, por módulo, qué operaciones permite cada uno. Un rol vale por defecto para todas las compañías del administrador y se puede excluir alguna.
+- **DR-008 Roles.** Un administrador crea roles y define, por módulo, qué operaciones permite cada uno. Un rol vale por defecto para todas las compañías del administrador y se puede excluir alguna. Solo el administrador que creó un rol lo ve, lo usa y lo edita.
 - **DR-009 Asignación de usuarios.** Un usuario operativo pertenece a una sola compañía y solo puede estar asignado a tiendas de esa compañía. Tiene por defecto el mismo rol en todas sus tiendas y se puede cambiar por tienda.
 - **DR-010 Credenciales por tipo de usuario.** Superadmin y administradores entran con usuario y contraseña. Los usuarios operativos, con username y PIN de 6 dígitos.
 - **DR-011 PIN y username.** El PIN lo genera el sistema, se muestra una sola vez y solo un administrador puede cambiarlo. El username es único en todo el sistema. Tras 5 PIN incorrectos seguidos el usuario se bloquea; solo un administrador lo desbloquea, y al hacerlo se genera un PIN nuevo.

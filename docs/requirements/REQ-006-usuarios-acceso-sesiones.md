@@ -14,6 +14,7 @@ Cada persona entra al sistema con el método que corresponde a su nivel de riesg
 - CA-01: DADO el superadmin, CUANDO entra, ENTONCES lo hace con usuario y contraseña, y puede recuperar su contraseña por correo electrónico.
 - CA-01b: DADO el superadmin o un administrador, CUANDO inicia sesión, ENTONCES además de la contraseña debe verificar un segundo factor (TOTP) (ADR-007).
 - CA-01c: DADO el superadmin o un administrador, CUANDO define o cambia su contraseña, ENTONCES debe tener al menos 12 caracteres.
+- CA-02b: DADO que no existe ningún superadmin, CUANDO el servidor arranca, ENTONCES se crea uno a partir de la configuración de entorno (correo y contraseña inicial), con cambio de contraseña obligatorio en su primer ingreso; y CUANDO ya existe uno, ENTONCES el arranque no cambia nada, aunque varias instancias arranquen a la vez.
 - CA-02: DADO que existe un superadmin, CUANDO se intenta crear otro, ENTONCES se rechaza.
 - CA-03: DADO el superadmin, CUANDO crea un administrador, ENTONCES el sistema genera una contraseña temporal que el superadmin le entrega.
 - CA-04: DADO un administrador con contraseña temporal, CUANDO inicia sesión por primera vez, ENTONCES debe cambiarla antes de continuar.
