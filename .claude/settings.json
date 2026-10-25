@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "vercel@claude-plugins-official": false,
+    "firebase@firebase": false,
+    "context7@claude-plugins-official": false,
+    "claude-code-setup@claude-plugins-official": false
+  }
+}
