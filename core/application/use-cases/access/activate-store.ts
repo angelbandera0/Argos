@@ -10,7 +10,7 @@ export async function activateStore(
   storeId: string,
   opts: { requireActiveStore: boolean },
 ): Promise<void> {
-  const session = await assertSessionActive(deps, actor);
+  const { session } = await assertSessionActive(deps, actor);
   if (opts.requireActiveStore && session.activeStoreId === null) throw new Forbidden();
   const target = await deps.access.getStoreAccess(actor.userId, storeId);
   if (!target) throw new Forbidden();

@@ -1,4 +1,4 @@
-import { assertSessionActive } from "@/core/application/use-cases/access/assert-session-active";
+import { assertSessionActive, requireOperatorStore } from "@/core/application/use-cases/access/assert-session-active";
 import { makeChooseStore } from "@/core/application/use-cases/access/choose-store";
 import { makeLoginWithPin } from "@/core/application/use-cases/access/login-with-pin";
 import { makeLogout } from "@/core/application/use-cases/access/logout";
@@ -7,7 +7,9 @@ import type { StoreAccess } from "@/core/application/ports/store-access-reader";
 import type { Actor } from "@/core/domain/actor";
 import { FakeClock } from "../../fakes/fake-clock";
 import { InMemorySessions } from "../../fakes/in-memory-sessions";
-import { FakePinVerifier, FakeStoreAccess } from "../../fakes/fake-store-access";
+import { FakeAuthGateway } from "../../fakes/fake-auth-gateway";
+import { FakePinVerifier } from "../../fakes/fake-pin-verifier";
+import { FakeStoreAccess } from "../../fakes/fake-store-access";
 import { InMemoryUserRepository } from "../../fakes/in-memory-user-repository";
 
 export const T0 = new Date("2026-01-01T08:00:00.000Z");
@@ -50,6 +52,8 @@ export function setup() {
       access("t3", { roleSessionSeconds: 14400 }),
       access("t4", { operational: false }),
       access("t5", { companyCapSeconds: 172800 }),
+      access("t6", { companyCapSeconds: 3600, roleSessionSeconds: 7200 }),
+      access("t7", { companyCapSeconds: 172800, roleSessionSeconds: 100000 }),
     ],
   });
   const verifier = new FakePinVerifier({
@@ -59,14 +63,18 @@ export function setup() {
     "abcd.boss:123456": { userId: "u4", sessionId: "sess4" },
     "abcd.ghost:123456": { userId: "ghost", sessionId: "sess5" },
   });
-  const deps = { verifier, users, sessions, access: storeAccess, clock };
+  const auth = new FakeAuthGateway(users);
+  const deps = { verifier, users, sessions, access: storeAccess, clock, auth };
   return {
     clock,
     sessions,
+    auth,
+    access: storeAccess,
     login: makeLoginWithPin(deps),
     choose: makeChooseStore(deps),
     switchStore: makeSwitchStore(deps),
     logout: makeLogout(deps),
     assertActive: (actor: Actor) => assertSessionActive(deps, actor),
+    requireStore: (actor: Actor) => requireOperatorStore(deps, actor),
   };
 }

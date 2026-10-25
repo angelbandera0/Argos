@@ -92,6 +92,7 @@ describe("REVIEW FOCUS 3: expired sessions", () => {
     await a.login({ username: "abcd.ana", pin: "123456" });
     a.clock.advance(24 * HOUR); // no active store: 1-day fallback
     await expect(a.choose(operatorActor(), { storeId: "t1" })).rejects.toBeInstanceOf(SessionExpired);
+    expect(await a.sessions.get("sess1")).toMatchObject({ activeStoreId: null, endedAt: new Date(T0.getTime() + 24 * HOUR) });
     const b = setup();
     await b.login({ username: "abcd.ana", pin: "123456" });
     await b.choose(operatorActor(), { storeId: "t2" });
@@ -102,12 +103,14 @@ describe("REVIEW FOCUS 3: expired sessions", () => {
   });
 
   it("an ended or missing session throws SessionExpired", async () => {
-    const { login, logout, assertActive, choose } = setup();
+    const { login, logout, assertActive, choose, sessions } = setup();
     await login({ username: "abcd.ana", pin: "123456" });
     await logout(operatorActor());
+    const endedAt = (await sessions.get("sess1"))?.endedAt;
     await expect(assertActive(operatorActor())).rejects.toBeInstanceOf(SessionExpired);
     await expect(choose(operatorActor(), { storeId: "t1" })).rejects.toBeInstanceOf(SessionExpired);
     await expect(assertActive(operatorActor("nope"))).rejects.toBeInstanceOf(SessionExpired);
+    expect((await sessions.get("sess1"))?.endedAt).toEqual(endedAt);
   });
 
   it("non-operator or missing sessionId -> Forbidden", async () => {
@@ -119,7 +122,9 @@ describe("REVIEW FOCUS 3: expired sessions", () => {
   it("active session returns the session", async () => {
     const { login, assertActive } = setup();
     await login({ username: "abcd.ana", pin: "123456" });
-    expect(await assertActive(operatorActor())).toMatchObject({ sessionId: "sess1", startedAt: T0 });
+    const { session, activeStore } = await assertActive(operatorActor());
+    expect(session).toMatchObject({ sessionId: "sess1", startedAt: T0 });
+    expect(activeStore).toBeNull();
   });
 });
 

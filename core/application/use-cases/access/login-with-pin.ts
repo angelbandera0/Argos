@@ -1,3 +1,4 @@
+import type { AuthGateway } from "@/core/application/ports/auth-gateway";
 import type { Clock } from "@/core/application/ports/clock";
 import type { PinVerifier } from "@/core/application/ports/pin-verifier";
 import type { SessionRepository } from "@/core/application/ports/session-repository";
@@ -11,6 +12,7 @@ export interface LoginWithPinDeps {
   sessions: SessionRepository;
   access: StoreAccessReader;
   clock: Clock;
+  auth: Pick<AuthGateway, "revokeSessions">;
 }
 
 export function makeLoginWithPin(deps: LoginWithPinDeps) {
@@ -23,6 +25,8 @@ export function makeLoginWithPin(deps: LoginWithPinDeps) {
     // Defense in depth: the verifier alone is not trusted to enforce kind/status.
     const profile = await deps.users.getProfile(verified.userId);
     if (!profile || profile.kind !== "operator" || profile.status !== "active") {
+      // The verifier already opened an auth session for this user: close it.
+      await deps.auth.revokeSessions(verified.userId);
       throw new AuthFailed();
     }
     await deps.sessions.start({
