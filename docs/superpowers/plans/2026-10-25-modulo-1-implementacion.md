@@ -309,26 +309,27 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - [ ] **Step 4: Ejecutar** — Esperado: PASS.
 - [ ] **Step 5: Commit** — `feat(db): audit log and auth events via triggers`.
 
-### Task 13: Hooks de autenticación
+### Task 13: Hook de claims y bloqueo del PIN
 
 **Files:**
-- Create: `supabase/migrations/20261025000800_auth_hooks.sql`, `supabase/tests/008_auth_hooks.test.sql`
-- Create: `supabase/HOOKS.md` (pasos manuales para registrar los hooks y activar MFA en el panel de Supabase)
+- Create: `supabase/migrations/<versión>_auth_hooks.sql`, `supabase/tests/008_auth_hooks.test.sql`
+- Create: `supabase/HOOKS.md` (pasos manuales para registrar el Custom Access Token Hook y activar MFA en el panel de Supabase)
 
 **Interfaces:**
-- Produces: `public.custom_access_token_hook(event jsonb) returns jsonb` (añade `user_kind` y `company_id` a los claims) y `public.hook_password_verification_attempt(event jsonb) returns jsonb` (bloqueo a los 5 fallos; rechaza si el perfil está `locked` o `deactivated`; reinicia el contador en un acierto; escribe en `auth_events`). El contador y el estado viven en `profiles` (`failed_pin_attempts int`, `status`).
+- Produces: `public.custom_access_token_hook(event jsonb) returns jsonb` (añade `user_kind` y `company_id` a los claims; siempre emite el claim `must_change_password`); `public.register_pin_failure(p_username text) returns jsonb` (devuelve `{ "locked": boolean, "user_id": uuid | null }`; incrementa de forma atómica `profiles.failed_pin_attempts` solo para operadores `active`; a los 5 fallos pone `status = 'locked'`; escribe `login_failed` y `locked` en `auth_events` con `username_attempted` y sin el PIN; no hace nada para usuarios inexistentes, bloqueados, desactivados o no operadores y devuelve `locked: false`); `public.reset_pin_failures(p_user_id uuid) returns void`; `public.unlock_profile(p_user_id uuid) returns void` (`status = 'active'`, contador a 0, escribe `unlocked` en `auth_events`). Las tres funciones de bloqueo son `security definer`, con `search_path` fijo y `execute` solo para `service_role` (las llama la acción de login del servidor, ADR-007 puntos 4 y 10). NO existe Password Verification Hook (es de Teams/Enterprise; Tarea 2).
 
 - [ ] **Step 1: Escribir las pruebas**
-  - cinco llamadas con `valid = false` para un operador: las cuatro primeras devuelven `continue`, la quinta deja `status = 'locked'` y devuelve `reject`;
-  - un acierto antes del quinto fallo reinicia el contador a 0;
-  - un usuario `locked` es rechazado aunque `valid = true`;
-  - los administradores no se bloquean por este hook;
-  - `custom_access_token_hook` añade `user_kind` y, para operadores, `company_id`; no añade la tienda activa;
-  - cada intento fallido y el bloqueo dejan una fila en `auth_events` con `username_attempted`, sin el PIN.
+  - cinco llamadas a `register_pin_failure` para un operador: las cuatro primeras devuelven `locked: false`, la quinta deja `status = 'locked'`, `failed_pin_attempts = 5` y devuelve `locked: true`;
+  - `reset_pin_failures` devuelve el contador a 0 y no cambia el estado de un perfil bloqueado;
+  - sobre un perfil `locked`, `deactivated`, un administrador o un username inexistente, `register_pin_failure` no cambia nada y devuelve `locked: false` (misma forma de respuesta);
+  - `unlock_profile` deja `active`, contador 0 y fila `unlocked`;
+  - `anon` y `authenticated` no pueden ejecutar las tres funciones (42501);
+  - `custom_access_token_hook` añade `user_kind`, `must_change_password` y, para operadores, `company_id`; no añade la tienda activa;
+  - cada fallo y el bloqueo dejan una fila en `auth_events` con `username_attempted`, y ninguna fila contiene un PIN (**Review Focus 2**).
 - [ ] **Step 2: Ejecutar** — Esperado: FAIL.
-- [ ] **Step 3: Escribir la migración y `supabase/HOOKS.md`** según lo verificado en la Tarea 2. El registro de los hooks en el panel lo hace el usuario; el controlador lo pide antes de la Tarea 16.
+- [ ] **Step 3: Escribir la migración y `supabase/HOOKS.md`.** El registro del hook en el panel lo hace el usuario; el controlador lo pide antes de la Tarea 16.
 - [ ] **Step 4: Ejecutar** — Esperado: PASS.
-- [ ] **Step 5: Commit** — `feat(db): custom access token and password verification hooks`.
+- [ ] **Step 5: Commit** — `feat(db): custom access token hook and pin lockout functions`.
 
 ---
 
@@ -615,7 +616,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
   - **Review Focus 2:** buscar el PIN en `audit_log`, `auth_events` y en la salida de `console` capturada durante la prueba; no aparece;
   - cambiar de tienda no pide el PIN; con `app_sessions.ended_at` fijado, el siguiente `select` devuelve 0 filas aunque el token siga vigente.
 - [ ] **Step 2: Ejecutar `pnpm test:int`** — Esperado: FAIL.
-- [ ] **Step 3: Implementar.** La acción `enterWithPin` registra `app_sessions` con el `session_id` del JWT y escribe `login_ok` o `login_failed` en `auth_events` sin el PIN.
+- [ ] **Step 3: Implementar.** La acción `enterWithPin` primero lee `profiles.status` (si no es `active` falla con el mismo error genérico, sin llamar a Auth); intenta el login con `PinVerifier`; en fallo llama a `register_pin_failure` y, si devuelve `locked: true`, aplica el ban indefinido de Auth (`876000h`, valor máximo aceptado por verificar en la Tarea 16); en acierto llama a `reset_pin_failures`, registra `app_sessions` con el `session_id` del JWT y escribe `login_ok` en `auth_events` (los fallos ya los escribe `register_pin_failure`), todo sin el PIN. El desbloqueo (`unlockUser`) llama a `unlock_profile` y levanta el ban (`ban_duration = none`).
 - [ ] **Step 4: Ejecutar** — Esperado: PASS.
 - [ ] **Step 5: Commit** — `feat(users): operator repositories and pin login actions`.
 
@@ -775,4 +776,4 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 
 **Decisiones que toma este plan** (no estaban en la especificación): regla de caracteres del `nombre` de usuario `^[a-z0-9_-]{2,24}$`; los hijos vivos cuentan como "datos" al eliminar una compañía o sede; las violaciones de reglas devuelven HTTP 422; el correo sintético de operadores termina en `.invalid` salvo que la Tarea 2 diga otra cosa; Vitest como ejecutor de pruebas.
 
-**Riesgos que el plan reconoce:** el desarrollo corre contra el proyecto cloud real (sin Docker); la disponibilidad del Password Verification Hook y de los límites de sesión en el plan de `argos` se verifica en la Tarea 2 antes de construir sobre ellos.
+**Riesgos que el plan reconoce:** el desarrollo corre contra el proyecto cloud real (sin Docker); el Password Verification Hook no está disponible en el plan Free (Tarea 2): el bloqueo del PIN vive en el servidor (ADR-007) y se supone plan Free, pendiente de confirmar (Q-020); el ban indefinido de Auth y los correos `.invalid` se prueban en la Tarea 16 (Q-021).
