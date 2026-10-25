@@ -4,7 +4,11 @@ import type { InMemoryUserRepository } from "./in-memory-user-repository";
 export class FakeAuthGateway implements AuthGateway {
   readonly passwords: Record<string, string> = {};
   readonly setPasswordCalls: Array<{ userId: string; password: string }> = [];
+  readonly createOperatorCalls: Array<{ username: string; companyId: string; displayName: string }> = [];
+  readonly resetPinCalls: string[] = [];
+  readonly revokedSessions: string[] = [];
   private sequence = 0;
+  private pinCounter = 0;
 
   constructor(private readonly users: InMemoryUserRepository) {}
 
@@ -23,12 +27,34 @@ export class FakeAuthGateway implements AuthGateway {
     return { userId, temporaryPassword: `temp-pass-${this.sequence}-Xk93` };
   }
 
-  async createOperatorUser(): Promise<{ userId: string; pin: string }> {
-    throw new Error("not implemented in fake");
+  private nextPin(): string {
+    this.pinCounter += 1;
+    return String(100000 + this.pinCounter);
   }
 
-  async resetPin(): Promise<{ pin: string }> {
-    throw new Error("not implemented in fake");
+  async createOperatorUser(i: {
+    username: string;
+    companyId: string;
+    displayName: string;
+  }): Promise<{ userId: string; pin: string }> {
+    this.createOperatorCalls.push(i);
+    this.sequence += 1;
+    const userId = `operator-${this.sequence}`;
+    this.users.profiles.set(userId, {
+      id: userId,
+      kind: "operator",
+      username: i.username,
+      displayName: i.displayName,
+      companyId: i.companyId,
+      status: "active",
+      mustChangePassword: false,
+    });
+    return { userId, pin: this.nextPin() };
+  }
+
+  async resetPin(userId: string): Promise<{ pin: string }> {
+    this.resetPinCalls.push(userId);
+    return { pin: this.nextPin() };
   }
 
   async setPassword(userId: string, password: string): Promise<void> {
@@ -40,8 +66,8 @@ export class FakeAuthGateway implements AuthGateway {
     }
   }
 
-  async revokeSessions(): Promise<void> {
-    throw new Error("not implemented in fake");
+  async revokeSessions(userId: string): Promise<void> {
+    this.revokedSessions.push(userId);
   }
 
   async ensureSuperadmin(): Promise<{ created: boolean }> {
