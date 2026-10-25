@@ -58,7 +58,7 @@ Decisión del usuario: todo se desarrolla y se prueba contra el proyecto Supabas
 Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo que consume.
 
 **`core/domain/`**
-- `actor.ts`: `type ActorKind = "superadmin" | "admin" | "operator"`; `type Channel = "ui" | "api" | "app" | "mcp"`; `interface Actor { userId: string; kind: ActorKind; channel: Channel; activeStoreId?: string }`.
+- `actor.ts`: `type ActorKind = "superadmin" | "admin" | "operator"`; `type Channel = "ui" | "api" | "app" | "mcp"`; `interface Actor { userId: string; kind: ActorKind; channel: Channel; activeStoreId?: string; sessionId?: string }` (`sessionId` es el de la sesión de aplicación del operador).
 - `errors.ts`: clases `Forbidden`, `NotFound`, `RuleViolation(code: RuleCode)`, `AuthFailed` (login fallido, sin detalle), `SessionExpired`. `RuleCode = "FOUNDER_PROTECTED" | "HAS_DATA" | "ROLE_EXCLUDED" | "NAME_TAKEN" | "CATEGORY_HAS_PRODUCTS" | "REASON_REQUIRED" | "SUPERADMIN_EXISTS" | "PASSWORD_TOO_SHORT" | "PERMISSION_REQUIRES_VIEW" | "SESSION_TOO_LONG" | "STORE_UNAVAILABLE" | "INVALID_USERNAME" | "INVALID_SESSION_SECONDS" | "INVALID_NAME"`.
 - `username.ts`: `formatUsername(code, name): string`, `parseUsername(username): { code: string; name: string }`, `normalizeUsername(raw): string`, `isValidUsernameName(name): boolean`.
 - `company-code.ts`: `generateCompanyCode(randomInt: (max: number) => number): string`.
@@ -69,6 +69,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 
 **`core/application/ports/`** (cada una en su archivo, nombres exactos)
 - `Clock { now(): Date }`.
+- `StoreAccessReader { listStoreAccess(userId: string): Promise<StoreAccess[]>; getStoreAccess(userId: string, storeId: string): Promise<StoreAccess | null> }` con `StoreAccess { storeId; storeName; siteName; companyId; roleId; roleName; roleSessionSeconds: number | null; companyCapSeconds: number; operational: boolean }` (lectura con permisos elevados porque un operador no puede leer `roles`); `StoreOption = StoreAccess` más `available: boolean` (igual a `operational`).
 - `AuthGateway`: `createAdminUser(i: { email: string; displayName: string }): Promise<{ userId: string; temporaryPassword: string }>`; `createOperatorUser(i: { username: string; companyId: string; displayName: string; assignments: { storeId: string; roleId: string }[] }): Promise<{ userId: string; pin: string }>` (el adaptador escribe usuario de Auth, perfil y asignaciones de forma atómica); `resetPin(userId: string): Promise<{ pin: string }>`; `setPassword(userId: string, password: string): Promise<void>`; `revokeSessions(userId: string): Promise<void>`; `ensureSuperadmin(i: { email: string; initialPassword: string }): Promise<{ created: boolean }>`.
 - `PinVerifier { verify(username: string, pin: string): Promise<{ userId: string; sessionId: string } | null> }` (`sessionId` es el `session_id` de la sesión de Supabase recién creada).
 - Repositorios: `CompanyRepository`, `SiteRepository`, `StoreRepository`, `UserRepository`, `RoleRepository`, `CatalogRepository`, `SessionRepository`, `HistoryReader`. Las firmas se fijan en la tarea que los crea y no cambian después.
