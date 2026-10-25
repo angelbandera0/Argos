@@ -60,6 +60,7 @@ select throws_ok($$insert into stores (company_id, site_id, name) values ('00000
 select throws_ok($$insert into sites (company_id, name) values ('00000000-0000-0000-0000-0000000000a1', ' norte ')$$, '23505', null,
   'DR-015: site name is unique per company among live rows');
 
+update stores set deleted_at = now() where site_id = '00000000-0000-0000-0000-0000000000c1';
 update sites set deleted_at = now() where id = '00000000-0000-0000-0000-0000000000c1';
 select lives_ok($$insert into sites (company_id, name) values ('00000000-0000-0000-0000-0000000000a1', 'Norte')$$,
   'DR-015: site name is reusable after soft delete');
