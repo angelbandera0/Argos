@@ -86,6 +86,7 @@ export function setup() {
   };
   return {
     clock,
+    sessions,
     catalog,
     createCategory: makeCreateCategory(deps),
     renameCategory: makeRenameCategory(deps),

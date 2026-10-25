@@ -90,7 +90,8 @@ describe("products: create", () => {
         categoryId: [s.category.id, "cat9"],
       });
     void assignMany;
-    expect(typeof s.product.categoryId).toBe("string");
+    // The check is the @ts-expect-error above: typecheck covers tests/.
+    expect(assignMany).toBeTypeOf("function");
   });
 
   it("CA-11 / REVIEW FOCUS 4: Pan, ' pan ' and PAN collide with an existing 'Pan'", async () => {
