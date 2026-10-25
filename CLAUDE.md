@@ -18,6 +18,11 @@ Package manager is pnpm (`pnpm@11.1.3`).
 
 This is Next.js 16.4.3 with React 19.3 — newer than typical training data, with breaking changes. `AGENTS.md` requires reading the relevant guide in `node_modules/next/dist/docs/` (`01-app`, `02-pages`, `03-architecture`, …) before writing Next.js code, and heeding deprecation notices.
 
+## Design and specs
+
+- Before creating or modifying UI, follow @docs/design/DESIGN.md and use only the tokens in `docs/design/tokens.css` (imported by `app/globals.css`). No dark backgrounds, so there is no dark-mode block.
+- Product specs live in `docs/` (spec-anchored, see `docs/README.md`): the spec wins over code, and functional changes go through the docs first.
+
 ## Architecture notes
 
 - App Router only (`app/`). Path alias `@/*` maps to the repo root (not `src/`).
