@@ -41,6 +41,7 @@ export async function setup() {
   target("u1", "c1"); // operator with role r1 (admin A) in t1
   target("u2", "c2"); // operator of another company
   target("u3", "c1", "locked");
+  target("u4", "c1", "deactivated");
   target("adm", "c1", "active", "admin");
   target("orphan", null);
   users.assignments.set("u1", [{ userId: "u1", storeId: "t1", roleId: "r1" }]);

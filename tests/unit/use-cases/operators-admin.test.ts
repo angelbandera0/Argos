@@ -29,6 +29,22 @@ describe("makeResetPin", () => {
   });
 });
 
+describe("deactivated targets", () => {
+  it("reset PIN on a deactivated user -> NotFound with no gateway call", async () => {
+    const { resetPin, auth } = await setup();
+    await expect(resetPin(adminA, { userId: "u4" })).rejects.toBeInstanceOf(NotFound);
+    expect(auth.resetPinCalls).toEqual([]);
+    expect(auth.revokedSessions).toEqual([]);
+  });
+
+  it("deactivating again -> NotFound with no mutation", async () => {
+    const { deactivate, users, auth } = await setup();
+    await expect(deactivate(adminA, { userId: "u4" })).rejects.toBeInstanceOf(NotFound);
+    expect(users.statusCalls).toEqual([]);
+    expect(auth.revokedSessions).toEqual([]);
+  });
+});
+
 describe("makeUnlockUser", () => {
   it("REQ-006 CA-12: new PIN, status active, sessions revoked", async () => {
     const { unlock, users, auth } = await setup();
@@ -41,6 +57,16 @@ describe("makeUnlockUser", () => {
   it("a non-owner administrator of the company can unlock", async () => {
     const { unlock } = await setup();
     expect(await unlock(adminB, { userId: "u3" })).toEqual({ pin: "100001" });
+  });
+
+  it("deactivated -> NotFound, admin profile -> NotFound, missing -> Forbidden; no gateway calls", async () => {
+    const { unlock, users, auth } = await setup();
+    await expect(unlock(adminA, { userId: "u4" })).rejects.toBeInstanceOf(NotFound);
+    await expect(unlock(adminA, { userId: "adm" })).rejects.toBeInstanceOf(NotFound);
+    await expect(unlock(adminA, { userId: "ghost" })).rejects.toBeInstanceOf(Forbidden);
+    expect(auth.resetPinCalls).toEqual([]);
+    expect(auth.revokedSessions).toEqual([]);
+    expect(users.statusCalls).toEqual([]);
   });
 
   it("user that is not locked -> NotFound; nothing changes", async () => {

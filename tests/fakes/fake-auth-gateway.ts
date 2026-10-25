@@ -4,7 +4,12 @@ import type { InMemoryUserRepository } from "./in-memory-user-repository";
 export class FakeAuthGateway implements AuthGateway {
   readonly passwords: Record<string, string> = {};
   readonly setPasswordCalls: Array<{ userId: string; password: string }> = [];
-  readonly createOperatorCalls: Array<{ username: string; companyId: string; displayName: string }> = [];
+  readonly createOperatorCalls: Array<{
+    username: string;
+    companyId: string;
+    displayName: string;
+    assignments: { storeId: string; roleId: string }[];
+  }> = [];
   readonly resetPinCalls: string[] = [];
   readonly revokedSessions: string[] = [];
   private sequence = 0;
@@ -36,6 +41,7 @@ export class FakeAuthGateway implements AuthGateway {
     username: string;
     companyId: string;
     displayName: string;
+    assignments: { storeId: string; roleId: string }[];
   }): Promise<{ userId: string; pin: string }> {
     this.createOperatorCalls.push(i);
     this.sequence += 1;
@@ -49,6 +55,10 @@ export class FakeAuthGateway implements AuthGateway {
       status: "active",
       mustChangePassword: false,
     });
+    this.users.assignments.set(
+      userId,
+      i.assignments.map((a) => ({ userId, storeId: a.storeId, roleId: a.roleId })),
+    );
     return { userId, pin: this.nextPin() };
   }
 

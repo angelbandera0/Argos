@@ -51,19 +51,17 @@ export function makeCreateOperator(deps: CreateOperatorDeps) {
     if (!company) throw new NotFound();
     const username = formatUsername(company.code, input.name);
     if (await deps.users.findByUsername(username)) throw new RuleViolation("NAME_TAKEN");
-    if (input.storeIds.length === 0) throw new NotFound();
-    await assertStoresInCompany(deps.stores, company.id, input.storeIds);
+    const storeIds = [...new Set(input.storeIds)];
+    if (storeIds.length === 0) throw new NotFound();
+    await assertStoresInCompany(deps.stores, company.id, storeIds);
     await assertRoleNotExcluded(deps.roles, input.roleId, company.id);
 
     const { userId, pin } = await deps.auth.createOperatorUser({
       username,
       companyId: company.id,
       displayName,
+      assignments: storeIds.map((storeId) => ({ storeId, roleId: input.roleId })),
     });
-    await deps.users.assignStores(
-      userId,
-      input.storeIds.map((storeId) => ({ storeId, roleId: input.roleId })),
-    );
     return { userId, username, pin };
   };
 }

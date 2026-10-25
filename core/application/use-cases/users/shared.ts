@@ -27,7 +27,7 @@ export async function loadManagedOperator(
   const profile = await deps.users.getProfile(userId);
   if (!profile || !profile.companyId) throw new Forbidden();
   await assertCompanyAccess(deps.companies, actor, profile.companyId);
-  if (profile.kind !== "operator") throw new NotFound();
+  if (profile.kind !== "operator" || profile.status === "deactivated") throw new NotFound();
   return { ...profile, companyId: profile.companyId };
 }
 
