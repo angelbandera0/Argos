@@ -2,16 +2,16 @@
 
 > Principios no negociables. Cualquier requisito, diseño o código que contradiga este documento es incorrecto, salvo que se modifique antes mediante una decisión registrada en `DECISIONS.md`.
 
-Estado: **En revisión** — la sección técnica está confirmada; los principios marcados `[PROPUESTO]` siguen pendientes de confirmar.
+Estado: **En revisión** — las secciones técnica y de negocio están confirmadas.
 
 ## 1. Principios de negocio
 
-- **P-01 Aislamiento entre entidades** — Confirmado (ADR-003)
-  Un usuario nunca ve ni modifica datos de una entidad a la que no tiene acceso explícito. Se garantiza en la capa de datos y en los casos de uso, no solo en la interfaz.
-- **P-02 Trazabilidad** `[PROPUESTO]`
-  Toda operación que afecte dinero, inventario o permisos deja registro de quién, cuándo, qué, desde qué local, por qué canal (UI, API, MCP) y valor anterior/nuevo.
-- **P-03 No borrado de operaciones** `[PROPUESTO]`
-  Las operaciones con efecto contable o de inventario no se eliminan: se anulan o se revierten con una operación inversa.
+- **P-01 Aislamiento entre compañías** — Confirmado (ADR-003, ADR-006)
+  Un usuario nunca ve ni modifica datos de una compañía a la que no tiene acceso explícito. Se garantiza en la capa de datos y en los casos de uso, no solo en la interfaz.
+- **P-02 Trazabilidad** — Confirmado (ADR-010)
+  Toda creación, modificación, desactivación o eliminación, y toda operación que afecte dinero, inventario o permisos, deja registro de quién, cuándo, qué, desde qué tienda, por qué canal (UI, API, MCP) y valor anterior/nuevo. Los accesos, bloqueos y cambios de PIN también se registran. El historial no se modifica ni se borra.
+- **P-03 No borrado de datos** — Confirmado (ADR-008)
+  Eliminar es siempre borrado lógico. Lo que tiene datos asociados se desactiva, no se elimina. Las operaciones con efecto contable o de inventario no se eliminan: se anulan o se revierten con una operación inversa.
 
 ## 2. Principios técnicos
 
@@ -32,7 +32,7 @@ Estado: **En revisión** — la sección técnica está confirmada; los principi
   Autorización en los casos de uso **y** políticas RLS en Postgres. El servidor actúa con el JWT del usuario. La `service_role` key está prohibida salvo para tareas de sistema documentadas expresamente en `DECISIONS.md`.
 
 - **T-05 Autenticación** (ADR-004)
-  OAuth 2.1 mediante Supabase Auth, encapsulado detrás de un puerto para poder sustituirlo. Sin API keys estáticas en v1. Las integraciones externas operan como **usuarios técnicos** con rol propio.
+  OAuth 2.1 mediante Supabase Auth, encapsulado detrás de un puerto para poder sustituirlo. Sin API keys estáticas en v1. Las integraciones externas operan como **usuarios técnicos** con rol propio. La credencial depende del tipo de usuario: contraseña para superadmin y administradores, username y PIN de 6 dígitos para usuarios operativos (ADR-007). El PIN y las contraseñas nunca se guardan ni se registran en claro.
 
 - **T-06 API REST** (ADR-004)
   Versionada (`/api/v1`), con especificación OpenAPI generada automáticamente, tokens de vida corta, revocación desde el panel, rate limiting y auditoría de cada llamada.

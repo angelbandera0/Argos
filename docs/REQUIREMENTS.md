@@ -14,4 +14,12 @@
 
 ## Negocio
 
-> Pendiente de la información del negocio.
+### Módulo 1 — Organización, usuarios, roles y catálogo
+
+| ID | Requisito | Estado | Prioridad |
+|---|---|---|---|
+| [REQ-005](requirements/REQ-005-organizacion-companias-sedes-tiendas.md) | Organización: compañías, sedes y tiendas | En revisión | Imprescindible |
+| [REQ-006](requirements/REQ-006-usuarios-acceso-sesiones.md) | Usuarios, acceso y sesiones | En revisión | Imprescindible |
+| [REQ-007](requirements/REQ-007-roles-y-permisos.md) | Roles y permisos | En revisión | Imprescindible |
+| [REQ-008](requirements/REQ-008-catalogo-categorias-productos.md) | Catálogo: categorías y productos | En revisión | Imprescindible |
+| [REQ-009](requirements/REQ-009-historial-de-operaciones.md) | Historial de operaciones | En revisión | Imprescindible |

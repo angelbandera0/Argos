@@ -93,3 +93,107 @@
   - *Una herramienta por caso de uso:* los agentes rinden peor con decenas de herramientas.
   - *Configuración por usuario o por token en v1:* complejidad desproporcionada para la primera versión.
 - **Consecuencias:** cada requisito debe definir qué herramienta(s) MCP lo cubren y en qué categoría.
+
+---
+
+### ADR-006 — Jerarquía compañía → sede → tienda y multitenancy
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** El negocio necesita agrupar tiendas por lugar de trabajo y aislar los datos de cada dueño. Se usó primero "entidad" para dos cosas distintas (empresa y centro de trabajo).
+- **Decisión:** Tres niveles: **Compañía** (dueña del negocio y tenant), **Sede** (centro de trabajo) y **Tienda**. El aislamiento (P-01) se aplica por compañía. Catálogo, roles y ajustes son de la compañía. Los nombres "sede" y "tienda" son propuestos; "entidad" deja de usarse.
+- **Alternativas descartadas:**
+  - *Entidad = empresa, sin nivel intermedio:* no representa el centro de trabajo que agrupa tiendas.
+  - *Catálogo por sede o tienda:* se descartó por ahora; el catálogo es común a la compañía.
+- **Consecuencias:** toda tabla de negocio lleva la compañía y su RLS se basa en ella; un administrador puede tener acceso a varias compañías.
+
+---
+
+### ADR-007 — Credenciales según el rol: contraseña y PIN
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** Los usuarios operativos necesitan entrar rápido en la tienda; los administradores tienen mucho poder. Un PIN de 6 dígitos tiene solo un millón de combinaciones, y un PIN sin identificador tendría que ser único en todo el sistema y permitiría adivinar usuarios válidos.
+- **Decisión:** Superadmin y administradores entran con usuario y contraseña (el superadmin recupera la suya por correo). Los usuarios operativos entran con username y PIN de 6 dígitos, generado por el sistema, mostrado una sola vez y modificable solo por un administrador. Bloqueo tras intentos fallidos y rate limiting. Sin API keys estáticas.
+- **Alternativas descartadas:**
+  - *Solo PIN:* PIN único global, 10⁶ combinaciones, filtra la existencia de PIN y no permite bloquear por usuario.
+  - *PIN para administradores:* demasiado débil para la cuenta que crea usuarios y desactiva compañías.
+  - *PIN escrito por el administrador:* favorece PIN triviales como 123456.
+- **Implementación acordada (2026-10-25):**
+  1. Cada usuario operativo es un usuario de Supabase Auth con un correo interno sintético (`<username>@<compañía>.interno`) que nadie ve ni usa.
+  2. La credencial guardada no es el PIN: es un HMAC de `username:PIN` con una clave secreta del servidor que no está en la base de datos. Así un volcado de la base no permite descubrir PIN por fuerza bruta.
+  3. El login con PIN pasa siempre por una acción del servidor, nunca directo desde el navegador. Allí se limitan los intentos por username y por IP y se devuelve siempre un error genérico.
+  4. El bloqueo por usuario tras intentos fallidos se implementa con el Password Verification Hook de Supabase Auth. El límite por IP de Supabase no protege a un usuario concreto.
+  5. Compañía y rol viajan como claims del JWT mediante el Custom Access Token Hook, y las políticas RLS deciden con ellos. La tienda activa y el cambio de tienda sin PIN se resuelven en el diseño.
+  6. El MCP es solo para el superadmin y los administradores. Los usuarios operativos usan la API únicamente desde la app oficial, mediante el flujo de ADR-011.
+  7. Superadmin y administradores usan verificación en dos pasos (TOTP).
+  8. La duración de la sesión se limita con el ajuste de Supabase si el plan lo permite; si no, se fuerza en la aplicación y en el hook. El tiempo menor por rol se aplica siempre en la aplicación.
+  9. **Excepción a T-04 (`service_role`):** se permite usar la clave `service_role` solo para crear usuarios y restablecer PIN o contraseñas (`auth.admin`). Se aísla en un único adaptador de administración de usuarios, que antes verifica en un caso de uso que quien llama es administrador con acceso a la compañía del usuario afectado.
+  10. Bloqueo tras 5 PIN incorrectos seguidos, sin desbloqueo automático. Un administrador desbloquea y el sistema genera un PIN nuevo.
+  11. El username es único en todo el sistema, porque al entrar solo se escribe username y PIN.
+  12. La contraseña del superadmin y de los administradores tiene un mínimo de 12 caracteres, sin reglas de composición forzadas.
+- **Consecuencias:** el superadmin único depende de la recuperación por correo. Hay que verificar si el plan de Supabase permite limitar la duración de la sesión y que el Password Verification Hook cubra el volumen esperado de intentos.
+
+---
+
+### ADR-008 — Eliminar es borrado lógico; desactivar con motivo
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** Los roles incluyen la operación "eliminar", pero la trazabilidad exige no perder datos.
+- **Decisión:** Eliminar es siempre borrado lógico. Las compañías, sedes y tiendas con datos asociados no se eliminan: las desactiva el fundador o el superadmin, con un motivo elegido de una lista o escrito a mano.
+- **Alternativas descartadas:** *borrado físico* (pierde trazabilidad).
+- **Reglas acordadas:** se puede reactivar (fundador o superadmin, con motivo libre). Desactivar una compañía o sede deja inaccesible lo que cuelga de ella, pero cada nivel conserva su propio estado. Lo que no tiene datos asociados se puede eliminar con borrado lógico. Los motivos predefinidos están en DR-015.
+- **Consecuencias:** las consultas normales deben excluir lo eliminado, y el acceso debe comprobar el estado de toda la cadena compañía → sede → tienda.
+
+---
+
+### ADR-009 — Sesión de máximo un día, con tope por compañía
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** Habrá turnos de día y de noche en un módulo posterior, y se quiere limitar el riesgo de sesiones abiertas.
+- **Decisión:** Toda sesión dura como máximo un día. Cada rol puede fijar un tiempo menor. El tope por compañía lo cambia solo un administrador, en los ajustes de la compañía, con traza. Al entrar a una tienda manda el tope de su compañía.
+- **Alternativas descartadas:** *el tope más bajo de todas las compañías del rol* (penaliza a las tiendas de compañías con topes mayores).
+- **Reglas acordadas:** cambiar de tienda no reinicia el reloj; se aplican el rol y el tiempo de sesión de la nueva tienda, contados desde el inicio de sesión. Si ya se cumplió, la sesión se cierra.
+- **Consecuencias:** la sesión debe guardar su hora de inicio y comprobarla al cambiar de tienda.
+
+---
+
+### ADR-010 — Historial de operaciones por módulo
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** Se pide saber quién hizo qué y cuándo en cada módulo, y que cada usuario vea solo lo que su rol le permite.
+- **Decisión:** Historial inmutable por módulo con quién, qué cambió (anterior y nuevo), fecha y hora, contexto y canal. La visibilidad sigue el permiso de ver del rol sobre el módulo. Accesos, bloqueos y cambios de PIN solo los ven los administradores.
+- **Alternativas descartadas:** *un historial global sin filtro por rol* (expone información fuera del permiso del usuario).
+- **Consecuencias:** toda escritura debe pasar por casos de uso que registran el historial; el historial no guarda PIN ni contraseñas. Los administradores ven el historial completo de sus compañías y el superadmin el de todas.
+
+---
+
+### ADR-011 — Acceso seguro de aplicaciones cliente a la API
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** Habrá una app oficial usada por usuarios operativos (con PIN) y administradores. Debe conectarse a la API sin exponer credenciales ni claves.
+- **Decisión:**
+  1. La app es un cliente público de OAuth 2.1: código de autorización con PKCE, sin claves secretas dentro de la app.
+  2. La app nunca maneja el PIN ni la contraseña: abre una ventana segura del navegador del sistema con nuestra página de login (username + PIN para operativos; contraseña + TOTP para administradores).
+  3. Direcciones de retorno exactas con enlaces universales (iOS) o app links (Android), no esquemas personalizados.
+  4. Tokens de acceso de vida corta con refresh tokens rotativos, guardados en el almacén seguro del móvil (Keychain o Keystore). El refresh deja de funcionar al cumplirse el tope de sesión de un día.
+  5. Desactivar, bloquear o cambiar el PIN de un usuario invalida sus sesiones de inmediato.
+  6. El token respeta el rol del usuario y RLS. Rate limiting y auditoría por llamada, con canal "app" en el historial.
+  7. Futuro (no v1): atestación de la app (Play Integrity y App Attest).
+- **Alternativas descartadas:**
+  - *Pantalla de PIN propia dentro de la app que envía las credenciales al servidor:* la app maneja credenciales y no es el flujo de OAuth 2.1; más fácil de suplantar.
+  - *API keys estáticas en la app:* se extraen del binario (ya descartadas en ADR-004).
+- **Consecuencias:** el PIN se escribe en una página del navegador y no en una pantalla propia de la app. Depende del servidor OAuth de Supabase (beta, ver ADR-004).
+
+---
+
+### ADR-012 — Exposición REST y MCP del módulo 1
+- **Fecha:** 2026-10-25
+- **Estado:** Aceptada
+- **Contexto:** D-04 exige exposición vía MCP o justificación escrita.
+- **Decisión:**
+  - **MCP, no se expone:** compañías, sedes, tiendas, usuarios, roles, PIN, contraseñas y ajustes.
+  - **MCP, catálogo:** `lectura` (consultar y buscar productos y categorías), `escritura` (crear y editar productos) y `sensible` (eliminar productos, desactivado por defecto y con confirmación).
+  - **MCP, historial:** `lectura` según el permiso del rol. El historial de accesos y PIN nunca se expone.
+  - El MCP es solo para el superadmin y los administradores.
+  - **API REST:** cubre las mismas operaciones, más la gestión de estructura y usuarios para los administradores.
+- **Alternativas descartadas:** *exponer la gestión de accesos por MCP* (un agente comprometido podría escalar permisos).
+- **Consecuencias:** la configuración de qué herramientas están habilitadas se hace en REQ-001.
