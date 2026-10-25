@@ -25,6 +25,7 @@ const access = (storeId: string, o: Partial<StoreAccess> = {}): StoreAccess => (
   roleSessionSeconds: null,
   companyCapSeconds: 86400,
   operational: true,
+  permissions: { products: { view: false, create: false, edit: false, delete: false } },
   ...o,
 });
 
