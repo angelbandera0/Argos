@@ -10,7 +10,8 @@ export type RuleCode =
   | "PERMISSION_REQUIRES_VIEW"
   | "SESSION_TOO_LONG"
   | "STORE_UNAVAILABLE"
-  | "INVALID_USERNAME";
+  | "INVALID_USERNAME"
+  | "INVALID_SESSION_SECONDS";
 
 export class Forbidden extends Error {
   constructor() {
