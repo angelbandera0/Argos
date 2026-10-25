@@ -26,8 +26,9 @@ export function decideRedirect(i: {
   const { pathname, session } = i;
 
   if (!session) {
-    // Public pages are exact; sub-paths of /entrar still send the visitor to /entrar.
-    if (PUBLIC_PATHS.includes(pathname)) return null;
+    // /login/2fa needs an aal1 session, so it is not public without one.
+    if (matches(pathname, "/login/2fa")) return "/login";
+    if (matchesAny(pathname, PUBLIC_PATHS)) return null;
     if (matches(pathname, "/entrar") || matches(pathname, "/tienda")) return "/entrar";
     return "/login";
   }

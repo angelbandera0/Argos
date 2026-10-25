@@ -36,6 +36,8 @@ export async function proxy(request: NextRequest) {
     const { data } = await supabase.auth.getClaims();
     claims = (data?.claims as Record<string, unknown> | undefined) ?? null;
   } catch {
+    // Intentional fail-closed: the proxy is not the authorization layer, so on
+    // a Supabase outage users are treated as signed out and re-authenticate.
     claims = null;
   }
 
@@ -45,7 +47,10 @@ export async function proxy(request: NextRequest) {
   });
   if (!redirectTo) return response;
 
-  const redirect = NextResponse.redirect(new URL(redirectTo, request.url));
+  const target = request.nextUrl.clone();
+  target.pathname = redirectTo;
+  target.search = "";
+  const redirect = NextResponse.redirect(target);
   for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
   for (const h of ["cache-control", "expires", "pragma"]) {
     const v = response.headers.get(h);
@@ -68,5 +73,5 @@ function toSession(claims: Record<string, unknown> | null): RedirectSession | nu
 }
 
 export const config = {
-  matcher: ["/((?!api/|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|woff|woff2)$).*)"],
 };
