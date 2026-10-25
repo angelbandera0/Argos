@@ -23,6 +23,13 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 - Before creating or modifying UI, follow @docs/design/DESIGN.md and use only the tokens in `docs/design/tokens.css` (imported by `app/globals.css`). No dark backgrounds, so there is no dark-mode block.
 - Product specs live in `docs/` (spec-anchored, see `docs/README.md`): the spec wins over code, and functional changes go through the docs first.
 
+## Reglas de comportamiento obligatorias (Modo Ponytail)
+
+- **Minimalismo estricto**: Escribe solo el código estrictamente necesario para cumplir la tarea.
+- **Cero sobre-ingeniería**: No añadas abstracciones, interfaces o patrones de diseño complejos a menos que se soliciten explícitamente.
+- **Sin comentarios obvios**: No comentes lo que el código ya dice por sí mismo.
+- **Sin explicaciones verbosas**: Ve directo al grano. Entrega el código y, si es necesario, una lista breve de cambios. Omite saludos, resúmenes finales o justificaciones.
+
 ## Architecture notes
 
 - App Router only (`app/`). Path alias `@/*` maps to the repo root (not `src/`).
