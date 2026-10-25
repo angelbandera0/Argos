@@ -70,7 +70,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 **`core/application/ports/`** (cada una en su archivo, nombres exactos)
 - `Clock { now(): Date }`.
 - `AuthGateway`: `createAdminUser(i: { email: string; displayName: string }): Promise<{ userId: string; temporaryPassword: string }>`; `createOperatorUser(i: { username: string; companyId: string; displayName: string }): Promise<{ userId: string; pin: string }>`; `resetPin(userId: string): Promise<{ pin: string }>`; `setPassword(userId: string, password: string): Promise<void>`; `revokeSessions(userId: string): Promise<void>`; `ensureSuperadmin(i: { email: string; initialPassword: string }): Promise<{ created: boolean }>`.
-- `PinVerifier { verify(username: string, pin: string): Promise<{ userId: string } | null> }`.
+- `PinVerifier { verify(username: string, pin: string): Promise<{ userId: string; sessionId: string } | null> }` (`sessionId` es el `session_id` de la sesión de Supabase recién creada).
 - Repositorios: `CompanyRepository`, `SiteRepository`, `StoreRepository`, `UserRepository`, `RoleRepository`, `CatalogRepository`, `SessionRepository`, `HistoryReader`. Las firmas se fijan en la tarea que los crea y no cambian después.
 
 **Casos de uso** (`core/application/use-cases/<área>/<nombre>.ts`): cada uno exporta `makeXxx(deps)` que devuelve `(actor: Actor, input) => Promise<Output>`.
@@ -116,7 +116,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 **Interfaces:**
 - Produces: `pnpm test` (Vitest, pruebas unitarias en `tests/unit/**`), `pnpm test:int` (Vitest, `tests/integration/**`, usa el proyecto `argos` y `SUPABASE_SERVICE_ROLE_KEY`), `pnpm typecheck` (`tsc --noEmit`). El alias `@` resuelve a la raíz en Vitest.
 
-- [ ] **Step 1: Escribir `tests/unit/smoke.test.ts`** que importa algo vía `@/` (por ejemplo `@/core/domain/actor` tras la Tarea 4; hasta entonces un módulo trivial) y comprueba `1 + 1 === 2`.
+- [ ] **Step 1: Escribir `tests/unit/smoke.test.ts`** autocontenida (sin imports de `@/`) que comprueba `1 + 1 === 2`. El alias `@` se comprueba en la primera prueba de la Tarea 4.
 - [ ] **Step 2: Ejecutar `pnpm test`** — Esperado: FAIL, el script no existe.
 - [ ] **Step 3: Instalar `vitest` y `vite-tsconfig-paths`**; configurar `vitest.config.ts` con dos proyectos (`unit`, `integration`) y añadir los cuatro scripts.
 - [ ] **Step 4: Ejecutar** `pnpm test && pnpm typecheck && pnpm lint` — Esperado: PASS.
@@ -171,7 +171,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Create: `supabase/tests/000_helpers.sql`, `supabase/migrations/20261025000100_core_schema.sql`, `supabase/tests/001_core_schema.test.sql`
 
 **Interfaces:**
-- Produces: tablas `profiles`, `companies`, `company_admins`, `sites`, `stores` según §3 del diseño técnico; función `app.generate_company_code()`; RPC `public.create_company(p_name text) returns companies` (inserta compañía, su código y la fila del fundador en `company_admins` en una transacción, con `founder_id = auth.uid()`). Helpers de prueba: `tests.create_user(kind text, email text, company uuid default null) returns uuid`, `tests.authenticate_as(user_id uuid, aal text default 'aal2')`, `tests.clear_auth()`.
+- Produces: tablas `profiles`, `companies`, `company_admins`, `sites`, `stores` según §3 del diseño técnico; función `app.generate_company_code()`; RPC `public.create_company(p_name text) returns companies` (inserta compañía, su código y la fila del fundador en `company_admins` en una transacción, con `founder_id = auth.uid()`). Helpers de prueba: `tests.create_user(kind text, email text, company uuid default null) returns uuid`, `tests.authenticate_as(user_id uuid, aal text default 'aal2', session_id uuid default gen_random_uuid())` (fija también el claim `session_id`), `tests.clear_auth()`.
 
 - [ ] **Step 1: Escribir `000_helpers.sql`** (crea el esquema `tests` y los tres helpers; `authenticate_as` hace `set local role authenticated` y fija `request.jwt.claims` con `sub`, `role` y `aal`).
 - [ ] **Step 2: Escribir `001_core_schema.test.sql`** con estas pruebas
@@ -293,7 +293,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Create: `supabase/migrations/20261025000700_audit.sql`, `supabase/tests/007_audit.test.sql`
 
 **Interfaces:**
-- Produces: tablas `audit_log` y `auth_events` (§3); función `app.audit_row()` y triggers `after insert or update` en `companies`, `company_admins`, `sites`, `stores`, `roles`, `role_permissions`, `role_company_exclusions`, `user_stores`, `categories`, `products` y `profiles`; acción deducida del cambio (`create`, `update`, `deactivate`, `reactivate`, `delete`); canal desde `auth.jwt()->>'client_id'` (por defecto `ui`, ajustado por el resultado de la Tarea 2); políticas de lectura del §6. Nadie tiene `update` ni `delete` sobre `audit_log`.
+- Produces: tablas `audit_log` y `auth_events` (§3); función `app.audit_row()` y triggers `after insert or update` en `companies`, `company_admins`, `sites`, `stores`, `roles`, `role_permissions`, `role_company_exclusions`, `user_stores`, `categories`, `products` y `profiles`; acción deducida del cambio (`create`, `update`, `deactivate`, `reactivate`, `delete`); canal desde `auth.jwt()->>'client_id'` (por defecto `ui`, ajustado por el resultado de la Tarea 2); `actor_id` admite `null` y `channel` admite `'system'` para escrituras sin `auth.uid()` (service_role y arranque), sin cambiar el tipo `Channel` de TypeScript; políticas de lectura del §6. Nadie tiene `update` ni `delete` sobre `audit_log`.
 
 - [ ] **Step 1: Escribir las pruebas**
   - `REQ-009 CA-01`: actualizar el nombre de un producto crea una fila con `before.name`, `after.name`, `actor_id`, `store_id` y `created_at`;
@@ -340,7 +340,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Test: `tests/unit/infrastructure/env.test.ts`, `tests/unit/infrastructure/decide-redirect.test.ts`
 
 **Interfaces:**
-- Produces: `parseEnv(raw: Record<string, string | undefined>): Env`; `createServerClient(): Promise<SupabaseClient>` (JWT del usuario, cookies de `@supabase/ssr`); `createAdminClient(): SupabaseClient` (marcado con `import "server-only"`); `decideRedirect(i: { pathname: string; session: null | { kind: ActorKind; aal: "aal1" | "aal2"; mustChangePassword: boolean; sessionEnded: boolean } }): string | null`; `getContainer(): Container` con `setContainerForTests(c: Partial<Container>)`.
+- Produces: `parseEnv(raw: Record<string, string | undefined>): Env` (se invoca de forma perezosa, en el primer uso; `SUPABASE_SERVICE_ROLE_KEY` y `SUPERADMIN_*` son opcionales al parsear y obligatorios para el código que los usa, de modo que `pnpm build` no necesita el secreto); `createServerClient(): Promise<SupabaseClient>` (JWT del usuario, cookies de `@supabase/ssr`); `createAdminClient(): SupabaseClient` (marcado con `import "server-only"`); `decideRedirect(i: { pathname: string; session: null | { kind: ActorKind; aal: "aal1" | "aal2"; mustChangePassword: boolean; sessionEnded: boolean } }): string | null`; `getContainer(): Container` con `setContainerForTests(c: Partial<Container>)`.
 
 - [ ] **Step 1: Escribir las pruebas**
   - `parseEnv` lanza si falta `NEXT_PUBLIC_SUPABASE_URL`, si `PIN_PEPPER` tiene menos de 32 caracteres, y acepta `SUPERADMIN_*` ausentes;
@@ -376,7 +376,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 
 **Interfaces:**
 - Consumes: Tareas 14 y 15; `createAdminClient()`.
-- Produces: las firmas de `AuthGateway` y `PinVerifier` del registro, implementadas con `supabase.auth.admin` y `signInWithPassword`.
+- Produces: las firmas de `AuthGateway` y `PinVerifier` del registro, implementadas con `supabase.auth.admin` y `signInWithPassword`. `createAdminUser` y `createOperatorUser` crean el usuario de Auth **y** su fila en `profiles` (si falla la fila, borran el usuario de Auth); no existe `UserRepository.createProfile`.
 
 - [ ] **Step 1: Escribir la prueba de integración** (con `supabase start`)
   - `createOperatorUser` devuelve un PIN de 6 dígitos y, con `PinVerifier.verify(username, pin)`, el usuario entra; con otro PIN, `null`; con un username inexistente, `null`;
@@ -481,7 +481,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Test: `tests/unit/use-cases/organization.test.ts`
 
 **Interfaces:**
-- Produces: `Company { id; code; name; founderId; status; sessionCapSeconds }`; `Level = "company" | "site" | "store"`; `CompanyRepository { create(i: { name: string; founderId: string }): Promise<Company>; getById(id: string): Promise<Company | null>; listForActor(actor: Actor): Promise<Company[]>; listAdmins(companyId: string): Promise<string[]>; grantAccess(companyId: string, adminId: string, grantedBy: string): Promise<void>; revokeAccess(companyId: string, adminId: string): Promise<void>; setSessionCap(companyId: string, seconds: number): Promise<void> }`; `SiteRepository` y `StoreRepository` con `create`, `getById`, `listByParent`, `hasData`; un `UnitStatusRepository { setStatus(level: Level, id: string, status: "active" | "inactive", reason: Reason | null, by: string): Promise<void>; softDelete(level: Level, id: string): Promise<void>; hasData(level: Level, id: string): Promise<boolean> }`. Casos: `makeCreateCompany`, `makeGrantCompanyAccess`, `makeRevokeCompanyAccess`, `makeUpdateCompanySettings`, `makeCreateSite`, `makeCreateStore`, `makeDeactivateUnit`, `makeReactivateUnit`, `makeDeleteUnit`.
+- Produces: `Company { id; code; name; founderId; status; sessionCapSeconds }`; `Level = "company" | "site" | "store"`; `CompanyRepository { create(i: { name: string; founderId: string }): Promise<Company>; getById(id: string): Promise<Company | null>; listForActor(actor: Actor): Promise<Company[]>; listAdmins(companyId: string): Promise<string[]>; grantAccess(companyId: string, adminId: string, grantedBy: string): Promise<void>; revokeAccess(companyId: string, adminId: string): Promise<void>; setSessionCap(companyId: string, seconds: number): Promise<void> }`; `SiteRepository` y `StoreRepository` con `create`, `getById`, `listByParent` (sin `hasData`: solo existe `UnitStatusRepository.hasData`); un `UnitStatusRepository { setStatus(level: Level, id: string, status: "active" | "inactive", reason: Reason | null, by: string): Promise<void>; softDelete(level: Level, id: string): Promise<void>; hasData(level: Level, id: string): Promise<boolean> }`. Casos: `makeCreateCompany`, `makeGrantCompanyAccess`, `makeRevokeCompanyAccess`, `makeUpdateCompanySettings`, `makeCreateSite`, `makeCreateStore`, `makeDeactivateUnit`, `makeReactivateUnit`, `makeDeleteUnit`.
 
 - [ ] **Step 1: Escribir las pruebas** (una por criterio de REQ-005)
   - `CA-01`: un administrador sin compañías crea una y queda como fundador con código de 4 caracteres; un operador recibe `Forbidden`;
@@ -583,7 +583,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 
 **Interfaces:**
 - Consumes: `AuthGateway`, `PinVerifier`, `Clock`, repositorios de organización y roles, `effectiveExpiry`.
-- Produces: `UserRepository` ampliado con `createProfile`, `findByUsername`, `listForCompany`, `setStatus(userId: string, status: Profile["status"]): Promise<void>`, `assignStores(userId: string, assignments: { storeId: string; roleId: string }[]): Promise<void>`, `listAssignments(userId: string): Promise<Assignment[]>`; `SessionRepository { start(i: { sessionId: string; userId: string; startedAt: Date }): Promise<void>; setActiveStore(sessionId: string, storeId: string): Promise<void>; end(sessionId: string): Promise<void>; get(sessionId: string): Promise<AppSession | null> }`; casos con las firmas: `makeLoginWithPin(deps)(i: { username: string; pin: string; sessionId: string }): Promise<{ userId: string; stores: StoreOption[] }>` (no recibe `Actor`), `makeChooseStore(deps)(actor, i: { storeId: string })`, `makeSwitchStore(deps)(actor, i: { storeId: string })`, `makeCreateOperator`, `makeResetPin`, `makeUnlockUser`, etc.
+- Produces: `UserRepository` ampliado con `findByUsername`, `listForCompany`, `setStatus(userId: string, status: Profile["status"]): Promise<void>`, `assignStores(userId: string, assignments: { storeId: string; roleId: string }[]): Promise<void>`, `listAssignments(userId: string): Promise<Assignment[]>`; `SessionRepository { start(i: { sessionId: string; userId: string; startedAt: Date }): Promise<void>; setActiveStore(sessionId: string, storeId: string): Promise<void>; end(sessionId: string): Promise<void>; get(sessionId: string): Promise<AppSession | null> }`; casos con las firmas: `makeLoginWithPin(deps)(i: { username: string; pin: string }): Promise<{ userId: string; sessionId: string; stores: StoreOption[] }>` (no recibe `Actor`; inicia la sesión de aplicación con el `sessionId` que devuelve `PinVerifier`), `makeChooseStore(deps)(actor, i: { storeId: string })`, `makeSwitchStore(deps)(actor, i: { storeId: string })`, `makeCreateOperator`, `makeResetPin`, `makeUnlockUser`, etc.
 
 - [ ] **Step 1: Escribir las pruebas**
   - `REQ-006 CA-07`: `makeCreateOperator` devuelve `username = código.nombre` con el código de la compañía y un PIN de 6 dígitos; un nombre inválido lanza `RuleViolation`; un nombre repetido (ignorando mayúsculas) lanza `NAME_TAKEN`; una tienda de otra compañía lanza `NotFound`; un rol excluido lanza `ROLE_EXCLUDED`; un rol de otro administrador lanza `Forbidden`;
