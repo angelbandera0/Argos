@@ -59,7 +59,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 
 **`core/domain/`**
 - `actor.ts`: `type ActorKind = "superadmin" | "admin" | "operator"`; `type Channel = "ui" | "api" | "app" | "mcp"`; `interface Actor { userId: string; kind: ActorKind; channel: Channel; activeStoreId?: string }`.
-- `errors.ts`: clases `Forbidden`, `NotFound`, `RuleViolation(code: RuleCode)`, `AuthFailed` (login fallido, sin detalle), `SessionExpired`. `RuleCode = "FOUNDER_PROTECTED" | "HAS_DATA" | "ROLE_EXCLUDED" | "NAME_TAKEN" | "CATEGORY_HAS_PRODUCTS" | "REASON_REQUIRED" | "SUPERADMIN_EXISTS" | "PASSWORD_TOO_SHORT" | "PERMISSION_REQUIRES_VIEW" | "SESSION_TOO_LONG" | "STORE_UNAVAILABLE" | "INVALID_USERNAME" | "INVALID_SESSION_SECONDS"`.
+- `errors.ts`: clases `Forbidden`, `NotFound`, `RuleViolation(code: RuleCode)`, `AuthFailed` (login fallido, sin detalle), `SessionExpired`. `RuleCode = "FOUNDER_PROTECTED" | "HAS_DATA" | "ROLE_EXCLUDED" | "NAME_TAKEN" | "CATEGORY_HAS_PRODUCTS" | "REASON_REQUIRED" | "SUPERADMIN_EXISTS" | "PASSWORD_TOO_SHORT" | "PERMISSION_REQUIRES_VIEW" | "SESSION_TOO_LONG" | "STORE_UNAVAILABLE" | "INVALID_USERNAME" | "INVALID_SESSION_SECONDS" | "INVALID_NAME"`.
 - `username.ts`: `formatUsername(code, name): string`, `parseUsername(username): { code: string; name: string }`, `normalizeUsername(raw): string`, `isValidUsernameName(name): boolean`.
 - `company-code.ts`: `generateCompanyCode(randomInt: (max: number) => number): string`.
 - `password.ts`: `validateAdminPassword(password: string): void`.
@@ -542,7 +542,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Test: `tests/unit/use-cases/roles.test.ts`, `tests/integration/roles.int.test.ts`
 
 **Interfaces:**
-- Produces: `Role { id; ownerId; name; sessionSeconds: number | null; excludedCompanyIds: string[]; permissions: Record<Module, PermissionSet> }`; `RoleRepository { create(role: Omit<Role, "id">): Promise<Role>; update(id: string, patch: Partial<Omit<Role, "id" | "ownerId">>): Promise<Role>; getById(id: string): Promise<Role | null>; listByOwner(ownerId: string): Promise<Role[]>; softDelete(id: string): Promise<void> }`; casos `makeCreateRole`, `makeUpdateRole`, `makeSetRoleCompanyExclusions`, `makeDeleteRole`, `makeListRoles`.
+- Produces: `Role { id; ownerId; name; sessionSeconds: number | null; excludedCompanyIds: string[]; permissions: Record<Module, PermissionSet> }`; `RoleRepository { create(role: Omit<Role, "id">): Promise<Role>; update(id: string, patch: Partial<Omit<Role, "id" | "ownerId">>): Promise<Role>; getById(id: string): Promise<Role | null>; listByOwner(ownerId: string): Promise<Role[]>; softDelete(id: string): Promise<void>; hasAssignments(roleId: string): Promise<boolean> }`; casos `makeCreateRole`, `makeUpdateRole`, `makeSetRoleCompanyExclusions`, `makeDeleteRole`, `makeListRoles`.
 
 - [ ] **Step 1: Escribir las pruebas**
   - `REQ-007 CA-01`: un administrador crea un rol con permisos sobre `products`; un operador y el superadmin reciben `Forbidden`;
