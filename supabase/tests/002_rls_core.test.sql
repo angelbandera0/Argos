@@ -149,7 +149,7 @@ update sites set name = 'Norte 2' where id = '00000000-0000-0000-0000-0000000000
 update sites set name = 'hack' where id = '00000000-0000-0000-0000-0000000000c2';
 update stores set name = 'Caja Norte 2' where name = 'Caja Norte';
 update stores set name = 'hack' where name = 'Caja Sur';
-select throws_ok($$update sites set company_id = '00000000-0000-0000-0000-0000000000b2' where id = '00000000-0000-0000-0000-0000000000c1'$$, '42501', null,
+select throws_ok($$update sites set company_id = '00000000-0000-0000-0000-0000000000b2' where id = '00000000-0000-0000-0000-0000000000c1'$$, 'P0001', null,
   'sites_update: a site cannot be moved to another company');
 select throws_ok($$update stores set company_id = '00000000-0000-0000-0000-0000000000b2' where name = 'Caja Norte 2'$$, '42501', null,
   'stores_update: a store cannot be moved to another company');

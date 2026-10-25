@@ -1,4 +1,4 @@
-select plan(37);
+select plan(46);
 
 create temp table ctx (k text primary key, v uuid);
 grant all on ctx to public;
@@ -118,6 +118,12 @@ select tests.clear_auth();
 
 insert into company_admins (company_id, admin_id, granted_by) values
   ('00000000-0000-0000-0000-0000000000a1', (select v from ctx where k = 'cris'), (select v from ctx where k = 'ana'));
+insert into companies (id, name, code, founder_id) values
+  ('00000000-0000-0000-0000-0000000000b9', 'Beta', 'be9b', (select v from ctx where k = 'cris'));
+insert into company_admins (company_id, admin_id, granted_by) values
+  ('00000000-0000-0000-0000-0000000000b9', (select v from ctx where k = 'cris'), (select v from ctx where k = 'cris'));
+insert into sites (id, company_id, name) values
+  ('00000000-0000-0000-0000-0000000000c9', '00000000-0000-0000-0000-0000000000a1', 'Movil');
 select tests.authenticate_as((select v from ctx where k = 'cris'));
 select throws_ok($$update companies set status = 'active' where id = '00000000-0000-0000-0000-0000000000a1'$$,
   '42501', null, 'I1: a non-founder administrator cannot deactivate or reactivate a company');
@@ -131,6 +137,24 @@ select throws_ok($$update stores set status = 'inactive', status_reason_code = '
   '42501', null, 'I1: a non-founder administrator cannot change a store status');
 select throws_ok($$update stores set deleted_at = now() where id = '00000000-0000-0000-0000-0000000000f1'$$,
   '42501', null, 'I1: a non-founder administrator cannot delete a store');
+select throws_ok($$update sites set company_id = '00000000-0000-0000-0000-0000000000b9', status = 'inactive', status_reason_code = 'x' where id = '00000000-0000-0000-0000-0000000000c9'$$,
+  'P0001', null, 'I1 fix: moving a site to a company the actor founded to change its status is rejected');
+select throws_ok($$update sites set company_id = '00000000-0000-0000-0000-0000000000b9' where id = '00000000-0000-0000-0000-0000000000c9'$$,
+  'P0001', null, 'I1 fix: sites.company_id is immutable');
+select lives_ok($$update stores set status_changed_by = gen_random_uuid(), status_changed_at = '2000-01-01', status_reason_code = 'x', status_reason_text = 'y' where id = '00000000-0000-0000-0000-0000000000f1'$$,
+  'I2 fix: an administrator can update audit fields without changing status');
+select is((select status_changed_by from stores where id = '00000000-0000-0000-0000-0000000000f1'), (select v from ctx where k = 'ana'),
+  'I2 fix: status_changed_by cannot be forged');
+select is((select status_changed_at < '2001-01-01' from stores where id = '00000000-0000-0000-0000-0000000000f1'), false,
+  'I2 fix: status_changed_at cannot be forged');
+select is((select status_reason_code from stores where id = '00000000-0000-0000-0000-0000000000f1'), null,
+  'I2 fix: status_reason_code cannot be set on an active entity');
+select throws_ok($$insert into sites (company_id, name, status) values ('00000000-0000-0000-0000-0000000000a1', 'Nace inactiva', 'inactive')$$,
+  'P0001', null, 'I2 fix: a site cannot be inserted inactive without a reason');
+select lives_ok($$insert into sites (id, company_id, name, status_changed_by, status_changed_at) values ('00000000-0000-0000-0000-0000000000ca', '00000000-0000-0000-0000-0000000000a1', 'Forjada', gen_random_uuid(), '2000-01-01')$$,
+  'I2 fix: an administrator can insert a site');
+select is((select status_changed_by from sites where id = '00000000-0000-0000-0000-0000000000ca'), null,
+  'I2 fix: status_changed_by is nulled on insert');
 select tests.clear_auth();
 
 select tests.authenticate_as((select v from ctx where k = 'super'));
