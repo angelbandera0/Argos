@@ -1,4 +1,4 @@
-select plan(32);
+select plan(53);
 
 create temp table ctx (k text primary key, v uuid);
 grant all on ctx to public;
@@ -132,4 +132,67 @@ select throws_ok($$insert into sites (company_id, name) values ('00000000-0000-0
 select tests.clear_auth();
 select is((select name from companies where id = '00000000-0000-0000-0000-0000000000b2'), 'Beta',
   'an administrator cannot update another company');
+select tests.authenticate_as((select v from ctx where k = 'ana'));
+update profiles set display_name = 'op-ok' where id = (select v from ctx where k = 'op');
+update profiles set display_name = 'hack' where id in (select v from ctx where k in ('op_b', 'beto', 'ana'));
+select tests.authenticate_as((select v from ctx where k = 'super'));
+select is((select display_name from profiles where id = (select v from ctx where k = 'op')), 'op-ok',
+  'profiles_update: an administrator can update an operator of their company');
+select is((select count(*) from profiles where display_name = 'hack'), 0::bigint,
+  'profiles_update: an administrator cannot update operators of other companies, other administrators or themselves');
+update profiles set display_name = 'adm-ok' where id = (select v from ctx where k = 'new_admin');
+select is((select display_name from profiles where id = (select v from ctx where k = 'new_admin')), 'adm-ok',
+  'profiles_update: the superadmin can update an administrator');
+
+select tests.authenticate_as((select v from ctx where k = 'ana'));
+update sites set name = 'Norte 2' where id = '00000000-0000-0000-0000-0000000000c1';
+update sites set name = 'hack' where id = '00000000-0000-0000-0000-0000000000c2';
+update stores set name = 'Caja Norte 2' where name = 'Caja Norte';
+update stores set name = 'hack' where name = 'Caja Sur';
+select throws_ok($$update sites set company_id = '00000000-0000-0000-0000-0000000000b2' where id = '00000000-0000-0000-0000-0000000000c1'$$, '42501', null,
+  'sites_update: a site cannot be moved to another company');
+select throws_ok($$update stores set company_id = '00000000-0000-0000-0000-0000000000b2' where name = 'Caja Norte 2'$$, '42501', null,
+  'stores_update: a store cannot be moved to another company');
+select throws_ok($$insert into stores (company_id, site_id, name) values ('00000000-0000-0000-0000-0000000000b2', '00000000-0000-0000-0000-0000000000c2', 'Caja X')$$, '42501', null,
+  'an administrator cannot create a store in another company');
+select throws_ok($$insert into company_admins (company_id, admin_id, granted_by) values ('00000000-0000-0000-0000-0000000000a1', (select v from ctx where k = 'new_admin'), (select v from ctx where k = 'beto'))$$, '42501', null,
+  'REQ-005: granted_by must be the authenticated user');
+select throws_ok($$update companies set founder_id = (select v from ctx where k = 'beto') where id = '00000000-0000-0000-0000-0000000000a1'$$, 'P0001', null,
+  'companies.founder_id is immutable for the founder');
+
+select tests.authenticate_as((select v from ctx where k = 'super'));
+select is((select name from sites where id = '00000000-0000-0000-0000-0000000000c1'), 'Norte 2',
+  'sites_update: an administrator can update a site of their company');
+select is((select count(*) from sites where name = 'hack'), 0::bigint,
+  'sites_update: an administrator cannot update a site of another company');
+select is((select array_agg(name order by name) from stores), array['Caja 2', 'Caja Norte 2', 'Caja Sur'],
+  'stores_update: an administrator updates only the stores of their company');
+select throws_ok($$insert into stores (company_id, site_id, name) values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000c1', 'Caja X')$$, '42501', null,
+  'REQ-005: the superadmin cannot create stores');
+select lives_ok($$insert into company_admins (company_id, admin_id, granted_by) values ('00000000-0000-0000-0000-0000000000a1', (select v from ctx where k = 'cris'), (select v from ctx where k = 'super'))$$,
+  'CA-03: the superadmin can grant access');
+select throws_ok($$update companies set founder_id = (select v from ctx where k = 'cris') where id = '00000000-0000-0000-0000-0000000000a1'$$, 'P0001', null,
+  'companies.founder_id is immutable for the superadmin');
+
+select tests.authenticate_as((select v from ctx where k = 'cris'));
+select throws_ok($$update companies set founder_id = (select v from ctx where k = 'cris') where id = '00000000-0000-0000-0000-0000000000a1'$$, 'P0001', null,
+  'companies.founder_id is immutable for a non-founder administrator');
+select is((select count(*) from company_admins where admin_id = (select v from ctx where k = 'ana')), 1::bigint,
+  'the founder keeps access after a founder_id takeover attempt');
+
+select tests.authenticate_as((select v from ctx where k = 'super'));
+delete from company_admins where admin_id = (select v from ctx where k = 'cris');
+select is((select count(*) from company_admins where admin_id = (select v from ctx where k = 'cris')), 0::bigint,
+  'CA-03: the superadmin can revoke a non-founder');
+
+select tests.authenticate_as((select v from ctx where k = 'ana'), 'aal1');
+select throws_ok($$insert into company_admins (company_id, admin_id, granted_by) values ('00000000-0000-0000-0000-0000000000a1', (select v from ctx where k = 'cris'), (select v from ctx where k = 'ana'))$$, '42501', null,
+  'ADR-007: aal1 cannot grant access');
+select throws_ok($$insert into sites (company_id, name) values ('00000000-0000-0000-0000-0000000000a1', 'Aal1')$$, '42501', null,
+  'ADR-007: aal1 cannot create sites');
+select throws_ok($$insert into profiles (id, kind, username, display_name, company_id) values (gen_random_uuid(), 'operator', 'k7m2.aal1', 'aal1', '00000000-0000-0000-0000-0000000000a1')$$, '42501', null,
+  'ADR-007: aal1 cannot create operators');
+select is((select count(*) from profiles where id = (select v from ctx where k = 'op')), 0::bigint,
+  'ADR-007: an administrator with aal1 does not see the operators');
+
 select * from finish();
