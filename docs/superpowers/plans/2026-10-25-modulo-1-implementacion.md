@@ -14,6 +14,17 @@
 - `docs/DECISIONS.md` (ADR-006 a ADR-012) y `docs/CONSTITUTION.md`
 - `docs/design/DESIGN.md`, `docs/design/screens/MODULO-1-PANTALLAS.md` y `docs/design/screens/mockups/`
 
+## Enmienda 2026-10-25: entorno cloud, sin Docker
+
+Decisión del usuario: todo se desarrolla y se prueba contra el proyecto Supabase `argos` (ref `wqzeqrjzahtqufasrydb`), sin Docker ni CLI local. Esta enmienda **prevalece** sobre el resto del plan:
+
+- Donde el plan diga `supabase start`, "Supabase local", "base local" o "con `supabase start`", léase **el proyecto `argos`**.
+- Donde diga `pnpm test:db`, léase: **aplicar la migración con `apply_migration` del MCP de Supabase y ejecutar el archivo de prueba con `execute_sql`**. Cada archivo pgTAP va envuelto en `begin; … rollback;`, así que no deja datos. Hay que habilitar `pgtap` una vez (`create extension if not exists pgtap with schema extensions;`).
+- Las migraciones se guardan igualmente en `supabase/migrations/` y se aplican con `apply_migration` usando el mismo nombre. **Una migración ya aplicada no se reescribe**: un arreglo es una migración nueva.
+- No hay `supabase/config.toml`. Los hooks de autenticación y el MFA se activan a mano en el panel de Supabase (instrucciones en `supabase/HOOKS.md`, que crea la Tarea 13).
+- Las pruebas de integración (`pnpm test:int`) usan el proyecto real: crean usuarios con el prefijo `itest-` y los borran al terminar. Necesitan `SUPABASE_SERVICE_ROLE_KEY` en `.env.local`, que **el usuario** debe copiar del panel (el agente no puede leerla ni debe escribirla en ningún chat).
+- No hay paso final "aplicar al proyecto remoto" (Tarea 36, paso 3): las migraciones ya están aplicadas.
+
 ## Global Constraints
 
 - Next.js 16.4.3 y React 19.3: antes de escribir código de Next.js, leer la guía correspondiente en `node_modules/next/dist/docs/` (`AGENTS.md`). El archivo de intercepción se llama `proxy.ts`, no `middleware.ts`.
@@ -30,7 +41,7 @@
 - Eliminar es siempre borrado lógico (`deleted_at`); el historial es inmutable.
 - Motivos de desactivación: `cierre-definitivo`, `cierre-temporal`, `reestructuracion`, `remodelacion`, `creada-por-error`, `fin-de-contrato`, `otro` (texto obligatorio).
 - Los commits terminan con la línea `Co-Authored-By` que indique el entorno. Mensajes de commit en inglés, formato `tipo(ámbito): descripción`.
-- Supabase local requiere Docker y la CLI; el proyecto remoto `argos` (ref `wqzeqrjzahtqufasrydb`) no recibe migraciones hasta que el módulo pase las pruebas en local.
+- Todo se desarrolla contra el proyecto cloud `argos` (ref `wqzeqrjzahtqufasrydb`); ver la enmienda de entorno cloud. No se toca ningún otro proyecto de la cuenta.
 
 ## Review Focus
 
@@ -68,20 +79,20 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 
 ## Fase 0 · Cimientos
 
-### Task 1: Entorno local de Supabase
+### Task 1: Entorno contra el proyecto cloud
 
 **Files:**
-- Create: `supabase/config.toml` (lo genera `supabase init`)
-- Modify: `.gitignore` (añadir `supabase/.temp`, `.env.local`)
-- Create: `.env.example`
+- Modify: `.gitignore` (comprobar que `.env*.local` está ignorado)
+- Create: `.env.example`, `supabase/migrations/.gitkeep`, `supabase/tests/.gitkeep`
 
 **Interfaces:**
-- Produces: `supabase start` levanta Postgres local; variables `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PIN_PEPPER`, `SUPERADMIN_EMAIL`, `SUPERADMIN_INITIAL_PASSWORD` documentadas en `.env.example`.
+- Produces: `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PIN_PEPPER`, `SUPERADMIN_EMAIL`, `SUPERADMIN_INITIAL_PASSWORD`; `.env.local` (no versionado) con la URL y la clave publicable del proyecto `argos` y un `PIN_PEPPER` aleatorio de 32 o más caracteres; la extensión `pgtap` habilitada en `argos`.
 
-- [ ] **Step 1: Instalar requisitos (los ejecuta el usuario)** — Docker Desktop y la CLI: `brew install supabase/tap/supabase`. Verificar `docker info` y `supabase --version`.
-- [ ] **Step 2: Inicializar** — `supabase init` y `supabase start`. Esperado: `supabase status` muestra API URL, anon key y service_role key.
-- [ ] **Step 3: Crear `.env.example`** con las seis variables y un comentario por cada una; copiar a `.env.local` con los valores de `supabase status` y un `PIN_PEPPER` de 32 o más caracteres aleatorios.
-- [ ] **Step 4: Commit** — `chore(supabase): init local stack and env example`.
+- [ ] **Step 1: Obtener los valores públicos** con `get_project_url` y `get_publishable_keys` del MCP de Supabase (proyecto `argos`) y escribirlos en `.env.local`. Generar `PIN_PEPPER` con `openssl rand -hex 32`.
+- [ ] **Step 2: Habilitar pgTAP** con `execute_sql`: `create extension if not exists pgtap with schema extensions;` y comprobar con `select extname from pg_extension where extname = 'pgtap';`. Esperado: una fila.
+- [ ] **Step 3: Crear `.env.example`** con las seis variables y un comentario por cada una; dejar `SUPABASE_SERVICE_ROLE_KEY` vacía en `.env.local` y anotar que la copia el usuario desde el panel (Project Settings → API).
+- [ ] **Step 4: Verificar** que `git status` no muestra `.env.local` (`git check-ignore .env.local` lo confirma) y añadir `!.env.example` a `.gitignore`, porque `.env*` también ignora `.env.example`; comprobar que `git status` sí muestra `.env.example`.
+- [ ] **Step 5: Commit** — `chore(supabase): cloud environment, env example and pgtap`.
 
 ### Task 2: Spike de Q-014 y Q-016
 
@@ -103,7 +114,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 - Create: `vitest.config.ts`, `tests/smoke.test.ts`
 
 **Interfaces:**
-- Produces: `pnpm test` (Vitest, pruebas unitarias en `tests/unit/**`), `pnpm test:int` (Vitest, `tests/integration/**`, requiere `supabase start`), `pnpm test:db` (`supabase test db`), `pnpm typecheck` (`tsc --noEmit`). El alias `@` resuelve a la raíz en Vitest.
+- Produces: `pnpm test` (Vitest, pruebas unitarias en `tests/unit/**`), `pnpm test:int` (Vitest, `tests/integration/**`, usa el proyecto `argos` y `SUPABASE_SERVICE_ROLE_KEY`), `pnpm typecheck` (`tsc --noEmit`). El alias `@` resuelve a la raíz en Vitest.
 
 - [ ] **Step 1: Escribir `tests/unit/smoke.test.ts`** que importa algo vía `@/` (por ejemplo `@/core/domain/actor` tras la Tarea 4; hasta entonces un módulo trivial) y comprueba `1 + 1 === 2`.
 - [ ] **Step 2: Ejecutar `pnpm test`** — Esperado: FAIL, el script no existe.
@@ -152,7 +163,7 @@ Los nombres de abajo son los que usan todas las tareas. Cada una repite solo lo 
 
 ## Fase 1 · Base de datos
 
-Convención para las seis tareas siguientes: cada migración vive en `supabase/migrations/<AAAAMMDDHHMMSS>_<nombre>.sql` y cada prueba pgTAP en `supabase/tests/<NNN>_<nombre>.test.sql`, con la forma `begin; select plan(n); …; select * from finish(); rollback;`. Se ejecutan con `pnpm test:db`. Los nombres de las pruebas incluyen el criterio de aceptación que cubren (por ejemplo `'REQ-005 CA-05: ...'`).
+Convención para las seis tareas siguientes: cada migración vive en `supabase/migrations/<AAAAMMDDHHMMSS>_<nombre>.sql` y cada prueba pgTAP en `supabase/tests/<NNN>_<nombre>.test.sql`, con la forma `begin; select plan(n); …; select * from finish(); rollback;`. Se ejecutan con `execute_sql` del MCP (ver la enmienda de entorno cloud). Los nombres de las pruebas incluyen el criterio de aceptación que cubren (por ejemplo `'REQ-005 CA-05: ...'`).
 
 ### Task 6: Esquema núcleo
 
@@ -301,7 +312,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 
 **Files:**
 - Create: `supabase/migrations/20261025000800_auth_hooks.sql`, `supabase/tests/008_auth_hooks.test.sql`
-- Modify: `supabase/config.toml` (registrar los hooks en `[auth.hook.*]`)
+- Create: `supabase/HOOKS.md` (pasos manuales para registrar los hooks y activar MFA en el panel de Supabase)
 
 **Interfaces:**
 - Produces: `public.custom_access_token_hook(event jsonb) returns jsonb` (añade `user_kind` y `company_id` a los claims) y `public.hook_password_verification_attempt(event jsonb) returns jsonb` (bloqueo a los 5 fallos; rechaza si el perfil está `locked` o `deactivated`; reinicia el contador en un acierto; escribe en `auth_events`). El contador y el estado viven en `profiles` (`failed_pin_attempts int`, `status`).
@@ -314,7 +325,7 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
   - `custom_access_token_hook` añade `user_kind` y, para operadores, `company_id`; no añade la tienda activa;
   - cada intento fallido y el bloqueo dejan una fila en `auth_events` con `username_attempted`, sin el PIN.
 - [ ] **Step 2: Ejecutar** — Esperado: FAIL.
-- [ ] **Step 3: Escribir la migración y registrar los hooks** según lo verificado en la Tarea 2.
+- [ ] **Step 3: Escribir la migración y `supabase/HOOKS.md`** según lo verificado en la Tarea 2. El registro de los hooks en el panel lo hace el usuario; el controlador lo pide antes de la Tarea 16.
 - [ ] **Step 4: Ejecutar** — Esperado: PASS.
 - [ ] **Step 5: Commit** — `feat(db): custom access token and password verification hooks`.
 
@@ -747,8 +758,8 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 - Produces: tabla con cada criterio de aceptación de REQ-005 a REQ-009 y el archivo y el nombre de la prueba que lo cubre (o "manual: <pantalla>" si solo se verifica en el navegador).
 
 - [ ] **Step 1: Construir la tabla** recorriendo cada CA de los cinco REQ; todo criterio sin prueba se anota y se añade la prueba que falta antes de seguir.
-- [ ] **Step 2: Ejecutar la verificación completa** — `pnpm lint && pnpm typecheck && pnpm test && pnpm test:int && pnpm test:db && pnpm build`. Esperado: todo PASS, sin avisos nuevos.
-- [ ] **Step 3: Aplicar las migraciones al proyecto `argos`** solo con la aprobación del usuario: `supabase link --project-ref wqzeqrjzahtqufasrydb` y `supabase db push`; registrar los hooks en el panel y activar `aal2`/MFA según lo verificado en la Tarea 2; correr los asesores de seguridad con `get_advisors` del MCP.
+- [ ] **Step 2: Ejecutar la verificación completa** — `pnpm lint && pnpm typecheck && pnpm test && pnpm test:int && pnpm build`, más todas las pruebas SQL con `execute_sql`. Esperado: todo PASS, sin avisos nuevos.
+- [ ] **Step 3: Revisar el proyecto `argos`**: comprobar con `list_migrations` que todas las migraciones están aplicadas y con `get_advisors` (seguridad y rendimiento) que no hay avisos nuevos; confirmar con el usuario que los hooks y MFA están activos en el panel.
 - [ ] **Step 4: Completar** las "Notas para el manual" de cada REQ (D-04, punto 5).
 - [ ] **Step 5: Commit** — `docs: module 1 traceability matrix, manual notes and commands`.
 
@@ -763,4 +774,4 @@ Convención para las seis tareas siguientes: cada migración vive en `supabase/m
 
 **Decisiones que toma este plan** (no estaban en la especificación): regla de caracteres del `nombre` de usuario `^[a-z0-9_-]{2,24}$`; los hijos vivos cuentan como "datos" al eliminar una compañía o sede; las violaciones de reglas devuelven HTTP 422; el correo sintético de operadores termina en `.invalid` salvo que la Tarea 2 diga otra cosa; Vitest como ejecutor de pruebas.
 
-**Riesgos que el plan reconoce:** Docker y la CLI de Supabase no están instalados en esta máquina (Tarea 1 es manual); la disponibilidad del Password Verification Hook y de los límites de sesión en el plan de `argos` se verifica en la Tarea 2 antes de construir sobre ellos.
+**Riesgos que el plan reconoce:** el desarrollo corre contra el proyecto cloud real (sin Docker); la disponibilidad del Password Verification Hook y de los límites de sesión en el plan de `argos` se verifica en la Tarea 2 antes de construir sobre ellos.
