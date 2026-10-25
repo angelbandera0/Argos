@@ -8,7 +8,7 @@ Estado: **En revisión** — primer módulo (organización, usuarios, roles, cat
 
 | Término | Definición |
 |---|---|
-| Compañía | Dueña del negocio. Es el nivel multitenant: los datos de una compañía no se ven desde otra. |
+| Compañía | Dueña del negocio. Es el nivel multitenant: los datos de una compañía no se ven desde otra ni se comparten entre ellas. Tiene un código corto (4 caracteres aleatorios) que asigna el sistema y no cambia. |
 | Sede | Lugar o centro de trabajo de una compañía. Agrupa tiendas. (Nombre propuesto; antes "entidad".) |
 | Tienda | Punto de venta dentro de una sede. Es donde trabajan los usuarios operativos. |
 | Superadmin | Único usuario de nivel plataforma. Crea administradores. |
@@ -41,10 +41,10 @@ Compañía  (tenant, dueña del negocio)
 - **DR-005 Fundador permanente.** El fundador o el superadmin pueden quitar el acceso de un administrador a la compañía; los demás administradores no. El fundador no puede ser removido de ella, ni por sí mismo ni por el superadmin.
 - **DR-006 Administrador fundador protegido.** No se puede eliminar la cuenta de un administrador mientras sea fundador de alguna compañía.
 - **DR-007 Gestión exclusiva de administradores.** Compañías, sedes, tiendas, usuarios, roles y categorías los gestionan solo los administradores. Ningún rol puede recibir estos permisos.
-- **DR-008 Roles.** Un administrador crea roles y define, por módulo, qué operaciones permite cada uno. Un rol vale por defecto para todas las compañías del administrador y se puede excluir alguna. Solo el administrador que creó un rol lo ve, lo usa y lo edita.
+- **DR-008 Roles.** Un administrador crea roles y define, por módulo, qué operaciones permite cada uno. Un rol vale por defecto para todas las compañías del administrador y se puede excluir alguna. Solo el administrador que creó un rol lo ve, lo usa y lo edita. Si otro administrador de la compañía gestiona a un usuario con ese rol, ve al usuario con la etiqueta "rol de otro administrador" y no sus permisos; puede desbloquearlo, cambiarle el PIN y desactivarlo, pero no cambiarle el rol.
 - **DR-009 Asignación de usuarios.** Un usuario operativo pertenece a una sola compañía y solo puede estar asignado a tiendas de esa compañía. Tiene por defecto el mismo rol en todas sus tiendas y se puede cambiar por tienda.
 - **DR-010 Credenciales por tipo de usuario.** Superadmin y administradores entran con usuario y contraseña. Los usuarios operativos, con username y PIN de 6 dígitos.
-- **DR-011 PIN y username.** El PIN lo genera el sistema, se muestra una sola vez y solo un administrador puede cambiarlo. El username es único en todo el sistema. Tras 5 PIN incorrectos seguidos el usuario se bloquea; solo un administrador lo desbloquea, y al hacerlo se genera un PIN nuevo.
+- **DR-011 PIN y username.** El PIN lo genera el sistema, se muestra una sola vez y solo un administrador puede cambiarlo. El username tiene la forma `código.nombre`: el código es el que el sistema asigna a la compañía y el administrador solo escribe el nombre. Así es único en todo el sistema sin que una compañía pueda inferir los usuarios de otra. Tras 5 PIN incorrectos seguidos el usuario se bloquea; solo un administrador lo desbloquea, y al hacerlo se genera un PIN nuevo.
 - **DR-012 Sesión.** Dura como máximo un día. Cada rol puede tener un tiempo menor. El tope por compañía lo cambia solo un administrador, en los ajustes de la compañía, y queda en el historial. Al entrar a una tienda manda el tope de la compañía de esa tienda.
 - **DR-013 Elección de tienda.** El usuario operativo elige la tienda al entrar y puede cambiar de tienda sin volver a escribir el PIN. Cambiar de tienda no reinicia el reloj de la sesión: se aplican el rol y el tiempo de sesión de la nueva tienda, contados desde el inicio de sesión. Si ese tiempo ya se cumplió, la sesión se cierra y hay que entrar de nuevo con el PIN.
 - **DR-014 Eliminar es borrado lógico.** Ninguna operación de eliminar borra datos físicamente.

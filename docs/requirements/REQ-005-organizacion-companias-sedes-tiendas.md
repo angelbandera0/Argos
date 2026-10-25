@@ -10,7 +10,7 @@ Un administrador estructura su negocio en compañías, sedes y tiendas, controla
 
 ## Criterios de aceptación
 
-- CA-01: DADO un administrador sin compañías, CUANDO crea una compañía, ENTONCES queda registrado como su fundador y la compañía aparece solo para los administradores con acceso a ella.
+- CA-01: DADO un administrador sin compañías, CUANDO crea una compañía, ENTONCES queda registrado como su fundador, la compañía aparece solo para los administradores con acceso a ella y el sistema le asigna un código corto único e inmutable de 4 caracteres.
 - CA-02: DADO una compañía, CUANDO un administrador con acceso crea una sede y dentro de ella una tienda, ENTONCES la jerarquía compañía → sede → tienda queda establecida.
 - CA-03: DADO una compañía, CUANDO cualquiera de sus administradores o el superadmin da acceso a otro administrador, ENTONCES este puede gestionarla.
 - CA-04: DADO un administrador que no es el fundador, CUANDO intenta quitar el acceso a otro administrador, ENTONCES se rechaza. Solo el fundador o el superadmin pueden hacerlo.

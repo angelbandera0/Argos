@@ -118,7 +118,7 @@
   - *PIN para administradores:* demasiado débil para la cuenta que crea usuarios y desactiva compañías.
   - *PIN escrito por el administrador:* favorece PIN triviales como 123456.
 - **Implementación acordada (2026-10-25):**
-  1. Cada usuario operativo es un usuario de Supabase Auth con un correo interno sintético derivado solo del username (dominio interno no resoluble) que nadie ve ni usa. El username es único en todo el sistema, así que no necesita la compañía.
+  1. Cada usuario operativo es un usuario de Supabase Auth con un correo interno sintético derivado solo del username (dominio interno no resoluble) que nadie ve ni usa. El username lleva el código de la compañía como prefijo (`código.nombre`) y es único en todo el sistema.
   2. La credencial guardada no es el PIN: es un HMAC de `username:PIN` con una clave secreta del servidor que no está en la base de datos. Así un volcado de la base no permite descubrir PIN por fuerza bruta.
   3. El login con PIN pasa siempre por una acción del servidor, nunca directo desde el navegador. Allí se limitan los intentos por username y por IP y se devuelve siempre un error genérico.
   4. El bloqueo por usuario tras intentos fallidos se implementa con el Password Verification Hook de Supabase Auth. El límite por IP de Supabase no protege a un usuario concreto.
@@ -128,7 +128,7 @@
   8. La duración de la sesión se limita con el ajuste de Supabase si el plan lo permite; si no, se fuerza en la aplicación y en el hook. El tiempo menor por rol se aplica siempre en la aplicación.
   9. **Excepción a T-04 (`service_role`):** se permite usar la clave `service_role` solo para crear usuarios y restablecer PIN o contraseñas (`auth.admin`). Se aísla en un único adaptador de administración de usuarios, que antes verifica en un caso de uso que quien llama es administrador con acceso a la compañía del usuario afectado.
   10. Bloqueo tras 5 PIN incorrectos seguidos, sin desbloqueo automático. Un administrador desbloquea y el sistema genera un PIN nuevo.
-  11. El username es único en todo el sistema, porque al entrar solo se escribe username y PIN.
+  11. El username es `código.nombre`, con el código de 4 caracteres que el sistema asigna a la compañía. Es único en todo el sistema (al entrar solo se escribe username y PIN) y evita revelar entre compañías qué usuarios existen.
   12. La contraseña del superadmin y de los administradores tiene un mínimo de 12 caracteres, sin reglas de composición forzadas.
 - **Consecuencias:** el superadmin único depende de la recuperación por correo. Hay que verificar si el plan de Supabase permite limitar la duración de la sesión y que el Password Verification Hook cubra el volumen esperado de intentos.
 

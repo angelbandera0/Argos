@@ -19,6 +19,7 @@ Un administrador define qué puede hacer cada tipo de usuario en cada módulo, s
 - CA-07: DADO un rol con permiso de ver sobre un módulo, CUANDO el usuario consulta el historial, ENTONCES ve el historial de ese módulo (ver REQ-009).
 - CA-08: DADO un administrador, CUANDO modifica o desactiva un rol, ENTONCES los usuarios con ese rol ven el cambio en su siguiente petición y la operación queda en el historial.
 - CA-10: DADO un rol creado por un administrador, CUANDO otro administrador de la misma compañía consulta los roles, ENTONCES no lo ve, no puede asignarlo ni editarlo. Solo su dueño puede.
+- CA-11: DADO un usuario cuyo rol creó otro administrador de la misma compañía, CUANDO un administrador que no es el dueño del rol consulta al usuario, ENTONCES ve la etiqueta "rol de otro administrador" sin los permisos del rol; puede desbloquearlo, cambiarle el PIN y desactivarlo, pero no cambiarle el rol ni las tiendas con ese rol.
 - CA-09: DADO un administrador sin acceso a una compañía, CUANDO intenta usar los roles o asignaciones de esa compañía, ENTONCES no puede.
 
 ## Restricciones
@@ -33,7 +34,7 @@ P-01, P-02, P-03, T-03, T-04. Reglas DR-007, DR-008, DR-014.
 - **MCP:** no se expone (ADR-012). Justificación: gestión de permisos.
 
 ## Dependencias y preguntas abiertas
-REQ-005, REQ-006, REQ-008, REQ-009. Q-019.
+REQ-005, REQ-006, REQ-008, REQ-009.
 
 ## Notas para el manual
 Se completa al implementar (D-04).

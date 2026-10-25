@@ -36,8 +36,8 @@ Todas las tablas están en `public`, con RLS activo, `id uuid`, `created_at/upda
 
 | Tabla | Columnas principales | Reglas |
 |---|---|---|
-| `profiles` | `id` (= `auth.users.id`), `kind` (superadmin / admin / operator), `username`, `display_name`, `company_id` (solo operadores), `status` (active / locked / deactivated), `must_change_password`, `deleted_at` | `username` único en todo el sistema y nunca reutilizado, sin distinguir mayúsculas (DR-011). Solo hay un `superadmin` (índice único parcial). `company_id` nulo salvo en operadores. |
-| `companies` | `name`, `founder_id` → `profiles`, `status` (active / inactive), `status_reason_code`, `status_reason_text`, `status_changed_by/at`, `session_cap_seconds` (por defecto 86400, máximo 86400 **[mi decisión]**), `deleted_at` | El fundador es siempre administrador de la compañía. |
+| `profiles` | `id` (= `auth.users.id`), `kind` (superadmin / admin / operator), `username`, `display_name`, `company_id` (solo operadores), `status` (active / locked / deactivated), `must_change_password`, `deleted_at` | `username` con forma `código.nombre`, único en todo el sistema, inmodificable y nunca reutilizado, sin distinguir mayúsculas (DR-011). El administrador solo escribe `nombre`; el prefijo lo pone el sistema, así que nunca hay colisión entre compañías ni se revela qué existe en otra. Solo hay un `superadmin` (índice único parcial). `company_id` nulo salvo en operadores. |
+| `companies` | `name`, `code` (4 caracteres aleatorios, único e inmutable, lo genera el sistema), `founder_id` → `profiles`, `status` (active / inactive), `status_reason_code`, `status_reason_text`, `status_changed_by/at`, `session_cap_seconds` (por defecto 86400, máximo 86400 **[mi decisión]**), `deleted_at` | El fundador es siempre administrador de la compañía. |
 | `company_admins` | `company_id`, `admin_id`, `granted_by`, `created_at` | PK compuesta. El fundador se inserta en la misma transacción que la compañía. |
 | `sites` | `company_id`, `name`, `status` y motivo, `deleted_at` | Nombre único por compañía. |
 | `stores` | `company_id`, `site_id`, `name`, `status` y motivo, `deleted_at` | FK compuesta `(site_id, company_id)` → `sites(id, company_id)`: una tienda no puede colgar de una sede de otra compañía. |
@@ -105,6 +105,7 @@ Funciones `security definer` con `search_path` fijo, en el esquema `app`:
 | `companies`, `sites`, `stores` | Superadmin: todo. Administrador: sus compañías. Operador: su compañía y tiendas asignadas. | Solo administradores con acceso. Desactivar, reactivar y eliminar: fundador o superadmin. |
 | `company_admins` | Administradores de la compañía y superadmin. | Dar acceso: cualquier administrador de la compañía o superadmin. Quitar: fundador o superadmin, nunca al fundador. |
 | `roles`, `role_*` | Solo el dueño del rol (DR-008). | Solo el dueño del rol. |
+| `user_stores` (columna `role_id`) | Un administrador que no es dueño del rol ve la fila pero no el rol: la interfaz muestra "rol de otro administrador". | Solo el dueño del rol puede cambiar `role_id`; cualquier administrador de la compañía puede desbloquear, resetear PIN y desactivar (DR-008). |
 | `categories` | Administradores y operadores con `app.can(company, 'products', 'view')`. | Solo administradores. |
 | `products` | `app.can(..., 'view')`. | `app.can(..., 'create' / 'edit' / 'delete')`, y administradores. |
 | `audit_log` | Superadmin: todo. Administrador: sus compañías. Operador: filas del módulo cuya vista permite su rol. | Nadie directamente; la escribe el trigger. |

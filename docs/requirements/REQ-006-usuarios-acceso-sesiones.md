@@ -22,7 +22,7 @@ Cada persona entra al sistema con el método que corresponde a su nivel de riesg
 - CA-06: DADO un administrador que es fundador de al menos una compañía, CUANDO se intenta eliminar su cuenta, ENTONCES se rechaza.
 
 ### Usuarios operativos
-- CA-07: DADO un administrador, CUANDO crea un usuario operativo, ENTONCES asigna su compañía (una sola, entre las que el administrador gestiona), su username (único en todo el sistema), su rol y sus tiendas (solo de esa compañía), y el sistema genera un PIN de 6 dígitos que se muestra una sola vez.
+- CA-07: DADO un administrador, CUANDO crea un usuario operativo, ENTONCES asigna su compañía (una sola, entre las que el administrador gestiona), el nombre de su usuario (el sistema le antepone el código de la compañía, de modo que el username queda como `código.nombre`, único e inmodificable), su rol y sus tiendas (solo de esa compañía), y el sistema genera un PIN de 6 dígitos que se muestra una sola vez.
 - CA-08: DADO un usuario operativo, CUANDO entra, ENTONCES escribe su username y su PIN y elige una de las tiendas que tiene asignadas y activas.
 - CA-09: DADO un usuario con varias tiendas, CUANDO tiene el mismo rol en todas, ENTONCES se le aplica ese rol; CUANDO un administrador le asigna un rol distinto en una tienda, ENTONCES en esa tienda se aplica el rol específico.
 - CA-10: DADO un usuario dentro del sistema, CUANDO cambia de tienda, ENTONCES no se le pide el PIN y se aplican el rol y el tiempo de sesión de la nueva tienda.
