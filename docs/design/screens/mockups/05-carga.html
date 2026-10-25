@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta · Placeholders de carga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  .grid { display: grid; gap: var(--space-5); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .user-row { grid-template-columns: auto 1fr auto; }
+  .hist-row { grid-template-columns: 110px 1fr 120px; }
+  @media (max-width: 767px) { .hist-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="route-progress" id="progress" hidden role="progressbar" aria-label="Cargando pantalla"></div>
+<div class="app">
+  <nav class="side" data-shell="usuarios" aria-label="Principal"></nav>
+  <main class="main">
+    <div class="content">
+      <div class="topbar">
+        <h1 class="h-display">Placeholders de carga</h1><span class="spacer"></span>
+        <button class="btn btn-secondary" type="button" id="toggle" aria-pressed="false">Ver contenido final</button>
+        <button class="btn btn-secondary" type="button" id="nav-demo">Probar barra de ruta</button>
+      </div>
+      <p class="muted">Cada placeholder repite la forma del contenido final, así nada se mueve cuando llegan los datos. Activa “reducir movimiento” en tu sistema para ver la versión quieta.</p>
+
+      <div class="grid">
+        <!-- Lista de usuarios -->
+        <section class="card" aria-labelledby="h1">
+          <h2 class="h2" id="h1">Lista de usuarios</h2>
+          <div class="list" data-loading aria-busy="true">
+            <span class="sr-only">Cargando…</span>
+            <div class="list-row user-row"><span class="skeleton skeleton-on-panel skeleton-circle"></span><span class="stack" style="gap:6px"><span class="skeleton skeleton-on-panel skeleton-text" style="width:45%"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:30%"></span></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:64px;height:24px"></span></div>
+            <div class="list-row user-row"><span class="skeleton skeleton-on-panel skeleton-circle"></span><span class="stack" style="gap:6px"><span class="skeleton skeleton-on-panel skeleton-text" style="width:55%"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:35%"></span></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:64px;height:24px"></span></div>
+            <div class="list-row user-row"><span class="skeleton skeleton-on-panel skeleton-circle"></span><span class="stack" style="gap:6px"><span class="skeleton skeleton-on-panel skeleton-text" style="width:40%"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:28%"></span></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:64px;height:24px"></span></div>
+          </div>
+          <div class="list" data-loaded hidden>
+            <div class="list-row user-row"><span class="avatar">LP</span><span><strong>Luis Pérez</strong><br><span class="caption mono">k7m2.caja1</span></span><span class="chip">Activo</span></div>
+            <div class="list-row user-row"><span class="avatar">MG</span><span><strong>María Gómez</strong><br><span class="caption mono">k7m2.caja2</span></span><span class="chip chip-alert">Bloqueado</span></div>
+            <div class="list-row user-row"><span class="avatar">JR</span><span><strong>Jorge Ruiz</strong><br><span class="caption mono">k7m2.enc1</span></span><span class="chip">Activo</span></div>
+          </div>
+        </section>
+
+        <!-- Formulario -->
+        <section class="card" aria-labelledby="h2">
+          <h2 class="h2" id="h2">Formulario</h2>
+          <div class="stack" data-loading aria-busy="true">
+            <span class="sr-only">Cargando…</span>
+            <span class="skeleton skeleton-on-panel skeleton-text" style="width:20%"></span><span class="skeleton skeleton-on-panel skeleton-pill"></span>
+            <span class="skeleton skeleton-on-panel skeleton-text" style="width:30%"></span><span class="skeleton skeleton-on-panel skeleton-pill"></span>
+            <span class="skeleton skeleton-on-panel skeleton-pill" style="width:140px"></span>
+          </div>
+          <div class="stack" data-loaded hidden>
+            <label class="label" for="a">Nombre</label><input class="input" id="a" value="Cajero">
+            <label class="label" for="b">Tiempo de sesión</label><select class="select" id="b"><option>8 horas</option></select>
+            <button class="btn btn-primary" type="button" style="align-self:flex-start">Guardar rol</button>
+          </div>
+        </section>
+
+        <!-- Historial -->
+        <section class="card" aria-labelledby="h3">
+          <h2 class="h2" id="h3">Historial</h2>
+          <div class="list" data-loading aria-busy="true">
+            <span class="sr-only">Cargando…</span>
+            <div class="list-row hist-row"><span class="skeleton skeleton-on-panel skeleton-text"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:80%"></span><span class="skeleton skeleton-on-panel skeleton-text"></span></div>
+            <div class="list-row hist-row"><span class="skeleton skeleton-on-panel skeleton-text"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:65%"></span><span class="skeleton skeleton-on-panel skeleton-text"></span></div>
+            <div class="list-row hist-row"><span class="skeleton skeleton-on-panel skeleton-text"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:75%"></span><span class="skeleton skeleton-on-panel skeleton-text"></span></div>
+          </div>
+          <div class="list" data-loaded hidden>
+            <div class="list-row hist-row"><span class="caption mono">Hoy · 09:14</span><span>Ana editó el producto “Pan de agua”</span><span class="chip">Productos</span></div>
+            <div class="list-row hist-row"><span class="caption mono">Hoy · 08:50</span><span>Luis creó el producto “Galleta”</span><span class="chip">Productos</span></div>
+            <div class="list-row hist-row"><span class="caption mono">Ayer · 18:02</span><span>Ana cambió el tope de sesión a 12 h</span><span class="chip">Ajustes</span></div>
+          </div>
+        </section>
+
+        <!-- Acciones -->
+        <section class="card" aria-labelledby="h4">
+          <h2 class="h2" id="h4">Botones mientras se ejecuta una acción</h2>
+          <div class="row">
+            <button class="btn btn-primary" type="button" disabled aria-busy="true"><span class="spinner" aria-hidden="true"></span>Entrando…</button>
+            <button class="btn btn-primary" type="button" disabled aria-busy="true"><span class="spinner" aria-hidden="true"></span>Guardando…</button>
+            <button class="btn btn-secondary" type="button" disabled aria-busy="true"><span class="spinner" aria-hidden="true"></span>Generando PIN…</button>
+          </div>
+          <p class="hint">El botón queda desactivado y cambia su texto. No cambia de tamaño.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="shell.js"></script>
+<script>
+  let loaded = false;
+  const toggle = document.getElementById('toggle');
+  toggle.addEventListener('click', () => {
+    loaded = !loaded;
+    document.querySelectorAll('[data-loading]').forEach((n) => { n.hidden = loaded; });
+    document.querySelectorAll('[data-loaded]').forEach((n) => { n.hidden = !loaded; });
+    toggle.textContent = loaded ? 'Ver placeholders' : 'Ver contenido final';
+    toggle.setAttribute('aria-pressed', String(loaded));
+  });
+  document.getElementById('nav-demo').addEventListener('click', () => {
+    const p = document.getElementById('progress'); p.hidden = false; setTimeout(() => { p.hidden = true; }, 3000);
+  });
+</script>
+</body>
+</html>

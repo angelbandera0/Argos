@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquetas del módulo 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  .wrap { max-width: 760px; margin: 0 auto; padding: var(--space-8) var(--space-4); display: flex; flex-direction: column; gap: var(--space-5); }
+  .link-card { display: flex; flex-direction: column; gap: var(--space-1-5); text-decoration: none; color: inherit; }
+  .link-card:hover { background: var(--color-line-soft); }
+  .link-card strong { color: var(--color-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="h-display">Maquetas del módulo 1</h1>
+  <p class="muted">Pantallas navegables con los tokens de <code>DESIGN.md</code>. Son maquetas: los datos son de ejemplo. Cambia el ancho de la ventana para ver web, tablet y móvil. La barra negra superior cambia entre los estados de cada pantalla.</p>
+  <a class="card link-card" href="01-login-pin.html"><strong>01 · Entrar con PIN y elegir tienda</strong><span class="caption">Usuario operativo. Estados: entrar, elegir tienda, sin tiendas, sesión expirada. Envía el formulario para ver el error y el botón “Entrando…”.</span></a>
+  <a class="card link-card" href="02-detalle-usuario.html"><strong>02 · Detalle de usuario</strong><span class="caption">Administrador. Estados: activo, bloqueado, cargando. “Cambiar PIN” muestra el PIN una sola vez.</span></a>
+  <a class="card link-card" href="03-editor-roles.html"><strong>03 · Editor de roles</strong><span class="caption">Administrador. Estados: editar, error de nombre, guardando, cargando. Permisos, compañías donde vale y tiempo de sesión.</span></a>
+  <a class="card link-card" href="04-desactivar-compania.html"><strong>04 · Desactivar una compañía</strong><span class="caption">Fundador o superadmin. Estados: activa, sin permiso, desactivada, cargando. Motivo de una lista o escrito a mano.</span></a>
+  <a class="card link-card" href="05-carga.html"><strong>05 · Placeholders de carga</strong><span class="caption">Lista, formulario, historial, botones con spinner y barra de ruta. Alterna entre placeholder y contenido final.</span></a>
+</div>
+</body>
+</html>

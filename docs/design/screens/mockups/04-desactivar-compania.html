@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta · Desactivar una compañía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  .tree { display: flex; flex-direction: column; gap: var(--space-2); }
+  .tree-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--space-3); background: var(--color-surface); border-radius: var(--radius-inner); padding: var(--space-3) var(--space-3-5); min-height: 56px; }
+  .tree-child { margin-left: var(--space-6); }
+  .reason { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-touch); padding: 0 var(--space-3-5); border-radius: var(--radius-inner); background: var(--color-panel); cursor: pointer; font-weight: 500; }
+  .reason:has(input:checked) { background: var(--color-red-tint); color: var(--color-red-hover); font-weight: 600; }
+  .reason input { width: 20px; height: 20px; margin: 0; accent-color: var(--color-red-strong); }
+</style>
+</head>
+<body>
+<div class="demo-bar" data-demo-bar data-initial="activa" aria-label="Estados de la maqueta"></div>
+<div class="route-progress" data-state="cargando" hidden role="progressbar" aria-label="Cargando pantalla"></div>
+
+<div class="app">
+  <nav class="side" data-shell="companias" aria-label="Principal"></nav>
+  <main class="main">
+    <div class="content">
+      <div class="topbar">
+        <span class="caption">Compañías <span aria-hidden="true">/</span> Panadería Central</span>
+        <span class="spacer"></span>
+      </div>
+
+      <!-- Estado: cargando -->
+      <div data-state="cargando" hidden aria-busy="true" class="stack" style="gap:var(--space-5)">
+        <span class="sr-only">Cargando…</span>
+        <span class="skeleton skeleton-title" style="width:50%;height:40px"></span>
+        <div class="card"><span class="skeleton skeleton-on-panel skeleton-title"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span></div>
+      </div>
+
+      <div class="stack" data-state="activa sin-permiso desactivada" style="gap:var(--space-5)">
+        <div class="row">
+          <h1 class="h-display">Panadería Central</h1>
+          <span class="chip chip-ring mono">k7m2</span>
+          <span class="chip" id="chip-ok"><span data-icon="check" data-size="13"></span>Activa</span>
+          <span class="chip chip-alert" id="chip-off" hidden>Desactivada</span>
+        </div>
+
+        <div class="notice notice-alert" id="off-note" hidden>
+          <span data-icon="alert"></span>
+          <p><strong>Cierre temporal.</strong> Desactivada por Ana Rivera el 25 de octubre. Mientras tanto nadie puede entrar a sus sedes y tiendas.</p>
+        </div>
+
+        <section class="card" aria-labelledby="h-est">
+          <div class="card-head">
+            <h2 class="h2" id="h-est">Sedes y tiendas</h2><span class="spacer"></span>
+            <button class="btn btn-secondary" type="button"><span data-icon="plus"></span>Nueva sede</button>
+          </div>
+          <div class="tree" role="list">
+            <div class="tree-row" role="listitem"><div class="row"><span class="icon-dot" data-icon="building"></span><div><strong>Sede Centro</strong><br><span class="caption">2 tiendas</span></div></div><span class="chip chip-ring">Activa</span></div>
+            <div class="tree-row tree-child" role="listitem"><div class="row"><span class="icon-dot" data-icon="store"></span><strong>Tienda Obispo</strong></div><span class="chip chip-ring">Activa</span></div>
+            <div class="tree-row tree-child" role="listitem"><div class="row"><span class="icon-dot" data-icon="store"></span><strong>Tienda Galiano</strong></div><span class="chip chip-ring">Activa</span></div>
+            <div class="tree-row" role="listitem"><div class="row"><span class="icon-dot" data-icon="building"></span><div><strong>Sede Vedado</strong><br><span class="caption">1 tienda</span></div></div><span class="chip chip-alert">Desactivada</span></div>
+            <div class="tree-row tree-child" role="listitem"><div class="row"><span class="icon-dot" data-icon="store"></span><strong>Tienda Calle 23</strong></div><span class="chip chip-alert">Desactivada</span></div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-estado">
+          <h2 class="h2" id="h-estado">Estado de la compañía</h2>
+          <p class="muted" id="state-text">La compañía está operando con normalidad. Solo el fundador o el superadmin pueden desactivarla.</p>
+          <div class="row">
+            <button class="btn btn-primary" type="button" id="btn-off" aria-describedby="perm-hint"><span data-icon="power"></span>Desactivar compañía</button>
+            <button class="btn btn-primary" type="button" id="btn-on" hidden><span data-icon="power"></span>Reactivar compañía</button>
+          </div>
+          <p class="hint" id="perm-hint" hidden>Solo el fundador o el superadmin pueden desactivarla. El fundador es Marta Gil.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<dialog class="modal" id="dlg" aria-labelledby="dlg-title">
+  <form class="modal-body" id="off-form" novalidate>
+    <h2 class="h2" id="dlg-title" style="font-size:20px">¿Por qué desactivas Panadería Central?</h2>
+    <fieldset style="border:0;padding:0;margin:0" class="stack">
+      <legend class="sr-only">Motivo</legend>
+      <label class="reason"><input type="radio" name="r" value="cierre-definitivo">Cierre definitivo</label>
+      <label class="reason"><input type="radio" name="r" value="cierre-temporal">Cierre temporal</label>
+      <label class="reason"><input type="radio" name="r" value="reestructuracion">Reestructuración</label>
+      <label class="reason"><input type="radio" name="r" value="remodelacion">Remodelación</label>
+      <label class="reason"><input type="radio" name="r" value="error">Creada por error</label>
+      <label class="reason"><input type="radio" name="r" value="contrato">Fin de contrato o acuerdo</label>
+      <label class="reason"><input type="radio" name="r" value="otro">Otro</label>
+    </fieldset>
+    <div class="field" id="other-field" hidden>
+      <label for="other">Cuéntanos el motivo</label>
+      <textarea class="textarea" id="other" aria-describedby="other-err"></textarea>
+      <p class="error-text" id="other-err" hidden><span data-icon="alert"></span>Escribe el motivo para continuar.</p>
+    </div>
+    <div class="notice"><span data-icon="info"></span><p>Sus sedes y tiendas dejarán de ser accesibles, pero cada una conserva su propio estado: si reactivas la compañía, volverán a operar las que estaban activas.</p></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" type="button" id="cancel">Cancelar</button>
+      <button class="btn btn-primary" type="submit" id="confirm" disabled>Desactivar compañía</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="shell.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const apply = (state) => {
+    const off = state === 'desactivada', denied = state === 'sin-permiso';
+    $('chip-ok').hidden = off; $('chip-off').hidden = !off; $('off-note').hidden = !off;
+    $('btn-off').hidden = off; $('btn-on').hidden = !off;
+    $('btn-off').toggleAttribute('disabled', denied); $('btn-off').setAttribute('aria-disabled', String(denied));
+    $('perm-hint').hidden = !denied;
+    $('state-text').textContent = off
+      ? 'La compañía está desactivada. Solo el fundador o el superadmin pueden reactivarla; se te pedirá un motivo.'
+      : 'La compañía está operando con normalidad. Solo el fundador o el superadmin pueden desactivarla.';
+  };
+  window.addEventListener('demo-state', (e) => apply(e.detail));
+  const radios = [...document.querySelectorAll('input[name="r"]')];
+  const refresh = () => {
+    const v = radios.find((r) => r.checked)?.value;
+    $('other-field').hidden = v !== 'otro';
+    $('confirm').disabled = !v || (v === 'otro' && !$('other').value.trim());
+    $('other-err').hidden = true;
+  };
+  radios.forEach((r) => r.addEventListener('change', refresh)); $('other').addEventListener('input', refresh);
+  $('btn-off').addEventListener('click', () => { radios.forEach((r) => { r.checked = false; }); $('other').value = ''; refresh(); $('dlg').showModal(); });
+  $('cancel').addEventListener('click', () => $('dlg').close());
+  $('off-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!$('confirm').disabled) { $('dlg').close(); window.demoSet('desactivada'); }
+  });
+  $('btn-on').addEventListener('click', () => window.demoSet('activa'));
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta · Detalle de usuario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  .store-row { grid-template-columns: 1fr 220px auto; }
+  .event-row { grid-template-columns: 150px 1fr auto; }
+  .pin-reveal { font: 500 56px/1 var(--font-display); letter-spacing: 0.18em; text-align: center; padding: var(--space-5) 0; background: var(--color-panel); border-radius: var(--radius-inner); user-select: all; }
+  @media (max-width: 767px) { .store-row, .event-row { grid-template-columns: 1fr; } .pin-reveal { font-size: 44px; } }
+</style>
+</head>
+<body>
+<div class="demo-bar" data-demo-bar data-initial="activo" aria-label="Estados de la maqueta"></div>
+<div class="route-progress" data-state="cargando" hidden role="progressbar" aria-label="Cargando pantalla"></div>
+
+<div class="app">
+  <nav class="side" data-shell="usuarios" aria-label="Principal"></nav>
+  <main class="main">
+    <div class="content">
+      <div class="topbar">
+        <label class="sr-only" for="company">Compañía activa</label>
+        <select class="select" id="company" style="width:auto;min-width:240px"><option>Panadería Central · k7m2</option><option>Café Habana · p3x9</option></select>
+        <span class="spacer"></span>
+        <span class="caption">Usuarios <span aria-hidden="true">/</span> Luis Pérez</span>
+      </div>
+
+      <!-- Estado: cargando (placeholders con la forma final) -->
+      <div data-state="cargando" hidden aria-busy="true">
+        <span class="sr-only">Cargando…</span>
+        <div class="stack" style="gap:var(--space-5)">
+          <div class="card">
+            <div class="row"><span class="skeleton skeleton-on-panel skeleton-circle" style="width:56px;height:56px"></span>
+              <div class="stack" style="flex:1;gap:8px"><span class="skeleton skeleton-on-panel skeleton-title"></span><span class="skeleton skeleton-on-panel skeleton-text" style="width:25%"></span></div>
+              <span class="skeleton skeleton-on-panel skeleton-pill" style="width:140px"></span></div>
+          </div>
+          <div class="skeleton skeleton-pill" style="width:280px;height:36px"></div>
+          <div class="card"><div class="list">
+            <span class="skeleton skeleton-on-panel" style="height:56px"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- Estados: activo y bloqueado comparten contenido -->
+      <div class="content" data-state="activo bloqueado" style="gap:var(--space-5)">
+        <header class="card">
+          <div class="card-head">
+            <span class="avatar" role="img" aria-label="Luis Pérez" style="width:56px;height:56px;font-size:16px">LP</span>
+            <div class="stack" style="gap:2px">
+              <h1 class="h2" style="font-size:22px">Luis Pérez</h1>
+              <span class="caption"><span class="mono">k7m2.caja1</span> · Panadería Central</span>
+            </div>
+            <span class="chip chip-alert" id="chip-locked" hidden><span data-icon="lock" data-size="13"></span>Bloqueado</span>
+            <span class="chip" id="chip-active"><span data-icon="check" data-size="13"></span>Activo</span>
+            <span class="spacer"></span>
+            <button class="btn btn-primary" id="btn-unlock" type="button" hidden><span data-icon="unlock"></span>Desbloquear</button>
+            <button class="btn btn-secondary" id="btn-pin" type="button"><span data-icon="lock"></span>Cambiar PIN</button>
+            <button class="btn btn-ghost" type="button">Desactivar usuario</button>
+          </div>
+          <div class="notice notice-alert" id="locked-note" hidden>
+            <span data-icon="alert"></span>
+            <p>Este usuario se bloqueó tras 5 PIN incorrectos. Al desbloquearlo se genera un PIN nuevo y se cierran sus sesiones.</p>
+          </div>
+        </header>
+
+        <div>
+          <div class="tabs" role="tablist" aria-label="Secciones del usuario">
+            <button class="tab" role="tab" id="tab-stores" aria-selected="true" aria-controls="panel-stores">Tiendas y rol</button>
+            <button class="tab" role="tab" id="tab-activity" aria-selected="false" aria-controls="panel-activity" tabindex="-1">Actividad</button>
+          </div>
+        </div>
+
+        <section class="card" id="panel-stores" role="tabpanel" aria-labelledby="tab-stores">
+          <div class="card-head">
+            <h2 class="h2">Tiendas asignadas</h2><span class="spacer"></span>
+            <button class="btn btn-secondary" type="button"><span data-icon="plus"></span>Asignar tienda</button>
+          </div>
+          <label class="hit inner">
+            <input class="switch" type="checkbox" role="switch" id="same-role" checked>
+            <span><strong>Mismo rol en todas las tiendas</strong><br><span class="caption">Desactívalo para dar un rol distinto en cada tienda.</span></span>
+          </label>
+          <div class="field" id="role-all">
+            <label for="role">Rol</label>
+            <select class="select" id="role" style="background-color:var(--color-surface)"><option>Cajero</option><option>Encargado de tienda</option></select>
+          </div>
+          <div class="list" role="list">
+            <div class="list-row store-row" role="listitem">
+              <div class="row"><span class="icon-dot" data-icon="store"></span><div><strong>Tienda Obispo</strong><br><span class="caption">Sede Centro</span></div></div>
+              <label class="sr-only" for="r1">Rol en Tienda Obispo</label>
+              <select class="select role-each" id="r1" disabled><option>Cajero</option></select>
+              <span class="chip chip-ring">Activa</span>
+            </div>
+            <div class="list-row store-row" role="listitem">
+              <div class="row"><span class="icon-dot" data-icon="store"></span><div><strong>Tienda Galiano</strong><br><span class="caption">Sede Centro</span></div></div>
+              <label class="sr-only" for="r2">Rol en Tienda Galiano</label>
+              <select class="select role-each" id="r2" disabled><option>Cajero</option></select>
+              <span class="chip chip-ring">Activa</span>
+            </div>
+            <div class="list-row store-row" role="listitem">
+              <div class="row"><span class="icon-dot" data-icon="store"></span><div><strong>Tienda Calle 23</strong><br><span class="caption">Sede Vedado</span></div></div>
+              <span class="chip chip-ring" title="Creado por otro administrador"><span data-icon="lock" data-size="13"></span>Rol de otro administrador</span>
+              <span class="chip chip-alert">Desactivada</span>
+            </div>
+          </div>
+          <p class="caption">En “Rol de otro administrador” puedes desbloquear, cambiar el PIN o desactivar al usuario, pero no cambiar su rol.</p>
+        </section>
+
+        <section class="card" id="panel-activity" role="tabpanel" aria-labelledby="tab-activity" hidden>
+          <div class="card-head"><h2 class="h2">Accesos recientes</h2><span class="spacer"></span><span class="caption">Solo lo ven los administradores</span></div>
+          <div class="list">
+            <div class="list-row event-row"><span class="caption mono">Hoy · 08:02</span><span>Inicio de sesión correcto</span><span class="chip">Pantalla</span></div>
+            <div class="list-row event-row"><span class="caption mono">Ayer · 22:41</span><span>PIN incorrecto (4.º intento)</span><span class="chip chip-alert">Fallo</span></div>
+            <div class="list-row event-row"><span class="caption mono">Ayer · 22:40</span><span>PIN incorrecto (3.er intento)</span><span class="chip chip-alert">Fallo</span></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Confirmar cambio de PIN -->
+<dialog class="modal" id="dlg-confirm" aria-labelledby="dc-title">
+  <form method="dialog" class="modal-body">
+    <h2 class="h2" id="dc-title" style="font-size:20px">¿Generar un PIN nuevo para Luis?</h2>
+    <p class="muted">El PIN anterior dejará de funcionar y se cerrarán sus sesiones abiertas. El PIN nuevo se mostrará una sola vez.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" value="cancel">Cancelar</button>
+      <button class="btn btn-primary" value="ok" id="dc-ok">Generar PIN</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- PIN mostrado una sola vez -->
+<dialog class="modal" id="dlg-pin" aria-labelledby="dp-title">
+  <div class="modal-body">
+    <h2 class="h2" id="dp-title" style="font-size:20px">PIN nuevo de Luis</h2>
+    <div class="pin-reveal mono" id="pin-value" aria-label="PIN nuevo">482 917</div>
+    <div class="notice"><span data-icon="info"></span><p>Cópialo ahora y entrégaselo a Luis. Por seguridad <strong>no volverá a mostrarse</strong>.</p></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" type="button" id="copy-pin"><span data-icon="copy"></span><span id="copy-label">Copiar PIN</span></button>
+      <button class="btn btn-primary" type="button" id="pin-done" disabled>Ya lo copié</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="shell.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  /* Bloqueado / activo */
+  window.addEventListener('demo-state', (e) => {
+    const locked = e.detail === 'bloqueado';
+    $('chip-locked').hidden = !locked; $('chip-active').hidden = locked;
+    $('btn-unlock').hidden = !locked; $('locked-note').hidden = !locked;
+  });
+  /* Pestañas */
+  const tabs = [$('tab-stores'), $('tab-activity')], panels = [$('panel-stores'), $('panel-activity')];
+  tabs.forEach((t, i) => t.addEventListener('click', () => {
+    tabs.forEach((x, j) => { x.setAttribute('aria-selected', String(i === j)); x.tabIndex = i === j ? 0 : -1; panels[j].hidden = i !== j; });
+  }));
+  /* Mismo rol en todas las tiendas */
+  $('same-role').addEventListener('change', (e) => {
+    $('role-all').hidden = !e.target.checked;
+    document.querySelectorAll('.role-each').forEach((s) => { s.disabled = e.target.checked; });
+  });
+  /* Flujo de PIN */
+  const ask = () => $('dlg-confirm').showModal();
+  $('btn-pin').addEventListener('click', ask); $('btn-unlock').addEventListener('click', ask);
+  $('dlg-confirm').addEventListener('close', () => {
+    if ($('dlg-confirm').returnValue !== 'ok') return;
+    $('copy-label').textContent = 'Copiar PIN'; $('pin-done').disabled = true; $('dlg-pin').showModal();
+  });
+  $('copy-pin').addEventListener('click', () => { $('copy-label').textContent = 'PIN copiado'; $('pin-done').disabled = false; });
+  $('pin-done').addEventListener('click', () => $('dlg-pin').close());
+  /* No se puede cerrar el PIN con Escape sin haberlo copiado. */
+  $('dlg-pin').addEventListener('cancel', (e) => { if ($('pin-done').disabled) e.preventDefault(); });
+</script>
+</body>
+</html>

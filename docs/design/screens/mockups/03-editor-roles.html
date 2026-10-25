@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta · Editor de roles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  .perm-grid { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+  .perm { display: flex; align-items: center; gap: var(--space-2-5); min-height: var(--size-touch); cursor: pointer; font-weight: 500; }
+  .perm input { width: 22px; height: 22px; margin: 0; accent-color: var(--color-red-strong); cursor: pointer; }
+  .company-row { display: flex; align-items: center; gap: var(--space-3); min-height: 56px; }
+  .actions { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  @media (max-width: 767px) { .actions .btn { flex: 1; } }
+</style>
+</head>
+<body>
+<div class="demo-bar" data-demo-bar data-initial="editar" aria-label="Estados de la maqueta"></div>
+<div class="route-progress" data-state="cargando" hidden role="progressbar" aria-label="Cargando pantalla"></div>
+
+<div class="app">
+  <nav class="side" data-shell="roles" aria-label="Principal"></nav>
+  <main class="main">
+    <div class="content">
+      <div class="topbar">
+        <span class="caption">Roles <span aria-hidden="true">/</span> Cajero</span>
+        <span class="spacer"></span>
+        <span class="chip chip-ring"><span data-icon="lock" data-size="13"></span>Solo tú ves y editas este rol</span>
+      </div>
+      <h1 class="h-display">Rol: Cajero</h1>
+
+      <!-- Estado: cargando -->
+      <div data-state="cargando" hidden aria-busy="true" class="stack" style="gap:var(--space-5)">
+        <span class="sr-only">Cargando…</span>
+        <div class="card"><span class="skeleton skeleton-on-panel skeleton-title"></span><span class="skeleton skeleton-on-panel skeleton-pill"></span><span class="skeleton skeleton-on-panel skeleton-pill"></span></div>
+        <div class="card"><span class="skeleton skeleton-on-panel skeleton-title"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span><span class="skeleton skeleton-on-panel" style="height:56px"></span></div>
+        <div class="card"><span class="skeleton skeleton-on-panel skeleton-title"></span><span class="skeleton skeleton-on-panel" style="height:96px"></span></div>
+      </div>
+
+      <form class="stack" data-state="editar error-nombre guardando" style="gap:var(--space-5)" id="role-form" novalidate>
+        <section class="card" aria-labelledby="h-datos">
+          <h2 class="h2" id="h-datos">Datos del rol</h2>
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input class="input" id="name" name="name" value="Cajero" aria-describedby="name-error">
+            <p class="error-text" id="name-error" hidden><span data-icon="alert"></span>Ya tienes un rol llamado “Cajero”. Elige otro nombre.</p>
+          </div>
+          <div class="field">
+            <label for="session">Tiempo de sesión</label>
+            <select class="select" id="session" aria-describedby="session-hint">
+              <option>Usar el tope de la compañía (máximo 1 día)</option>
+              <option>8 horas</option><option>4 horas</option><option>2 horas</option><option>1 hora</option>
+            </select>
+            <span class="hint" id="session-hint">Nunca supera el tope de la compañía de la tienda donde se trabaja. Hoy: 24 horas en las tres compañías.</span>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-comp">
+          <div class="card-head"><h2 class="h2" id="h-comp">Compañías donde vale</h2><span class="spacer"></span><span class="chip" id="comp-count">2 de 3</span></div>
+          <p class="hint">Por defecto un rol vale para todas tus compañías. Desmarca las que no lo necesiten.</p>
+          <div class="list" role="group" aria-label="Compañías">
+            <label class="list-row company-row" style="grid-template-columns:auto 1fr auto"><span class="icon-dot" data-icon="building"></span><span><strong>Panadería Central</strong><br><span class="caption mono">k7m2</span></span><input class="switch comp" type="checkbox" role="switch" checked></label>
+            <label class="list-row company-row" style="grid-template-columns:auto 1fr auto"><span class="icon-dot" data-icon="building"></span><span><strong>Café Habana</strong><br><span class="caption mono">p3x9</span></span><input class="switch comp" type="checkbox" role="switch" checked></label>
+            <label class="list-row company-row" style="grid-template-columns:auto 1fr auto"><span class="icon-dot" data-icon="building"></span><span><strong>Pastelería Sol</strong><br><span class="caption mono">9bq1</span></span><input class="switch comp" type="checkbox" role="switch"></label>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-perm">
+          <h2 class="h2" id="h-perm">Permisos por módulo</h2>
+          <div class="inner stack" style="gap:var(--space-2)">
+            <strong>Productos</strong>
+            <div class="perm-grid" role="group" aria-label="Permisos sobre Productos">
+              <label class="perm"><input type="checkbox" data-p="view" checked>Ver</label>
+              <label class="perm"><input type="checkbox" data-p="create" checked>Crear</label>
+              <label class="perm"><input type="checkbox" data-p="edit">Editar</label>
+              <label class="perm"><input type="checkbox" data-p="delete">Eliminar</label>
+            </div>
+            <span class="hint">Eliminar no borra: el producto se marca como eliminado y queda en el historial. Con “Ver” el rol también verá el historial de Productos.</span>
+          </div>
+          <div class="notice"><span data-icon="info"></span><p>Compañías, sedes, tiendas, usuarios, roles y categorías solo los gestionan los administradores, por eso no aparecen aquí.</p></div>
+        </section>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" id="save-btn">Guardar rol</button>
+          <button class="btn btn-secondary" type="button">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="shell.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const saveBtn = $('save-btn');
+  const setSaving = (on) => {
+    saveBtn.disabled = on; saveBtn.setAttribute('aria-busy', String(on));
+    saveBtn.innerHTML = on ? '<span class="spinner" aria-hidden="true"></span>Guardando…' : 'Guardar rol';
+  };
+  window.addEventListener('demo-state', (e) => {
+    const bad = e.detail === 'error-nombre';
+    $('name-error').hidden = !bad; $('name').setAttribute('aria-invalid', String(bad));
+    setSaving(e.detail === 'guardando');
+  });
+  /* Contador de compañías */
+  const comps = [...document.querySelectorAll('.comp')];
+  comps.forEach((c) => c.addEventListener('change', () => { $('comp-count').textContent = `${comps.filter((x) => x.checked).length} de ${comps.length}`; }));
+  /* Regla: crear, editar y eliminar exigen ver */
+  const p = (k) => document.querySelector(`[data-p="${k}"]`);
+  ['create', 'edit', 'delete'].forEach((k) => p(k).addEventListener('change', (e) => { if (e.target.checked) p('view').checked = true; }));
+  p('view').addEventListener('change', (e) => { if (!e.target.checked) ['create', 'edit', 'delete'].forEach((k) => { p(k).checked = false; }); });
+  $('role-form').addEventListener('submit', (e) => { e.preventDefault(); setSaving(true); setTimeout(() => setSaving(false), 1200); });
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maqueta · Entrar con PIN y elegir tienda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="mockup.css">
+<style>
+  /* Pantallas de acceso: web/tablet = tarjeta centrada; móvil = pantalla completa sobre panel. */
+  .auth { position: relative; min-height: calc(100vh - 60px); }
+  .auth-brand { position: absolute; top: 28px; left: 32px; display: flex; align-items: center; gap: var(--space-2-5); font: 600 20px/1 var(--font-display); letter-spacing: -0.4px; }
+  .auth-brand .brand-mark { width: 34px; height: 34px; }
+  .auth-card { width: min(480px, 100%); padding: 40px; border-radius: var(--radius-panel); background: var(--color-panel); gap: var(--space-5); }
+  .auth-card .brand { display: none; }
+  .auth-title { display: flex; flex-direction: column; gap: var(--space-1-5); }
+  .auth-form { display: flex; flex-direction: column; gap: var(--space-6); }
+  .auth-form .input { min-height: 52px; }
+
+  /* Campo de PIN (DESIGN.md §6.14): un input real e invisible sobre 6 casillas decorativas */
+  .pin-head { display: flex; align-items: center; justify-content: space-between; }
+  .link-btn { display: inline-flex; align-items: center; gap: 6px; min-height: var(--size-touch); padding: 0 2px; border: 0; background: none; color: var(--color-red-strong); font-weight: 600; font-size: 13px; cursor: pointer; }
+  .link-btn:hover { color: var(--color-red-hover); }
+  .link-btn svg { width: 16px; height: 16px; }
+  .pin-boxes { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .pin-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 16px; z-index: 2; cursor: text; }
+  .pin-cell { height: 68px; border-radius: 16px; background: var(--color-surface); border: 1.5px solid var(--color-line); display: grid; place-items: center; font: 500 28px/1 var(--font-display); position: relative; }
+  .pin-cell[data-dot="true"]::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--color-ink); }
+  .pin-cell[data-digit]::before { content: attr(data-digit); width: auto; height: auto; background: none; }
+  .pin-cell[data-filled="true"] { border-color: var(--color-line-strong); }
+  .pin-cell[data-active="true"] { border: 2px solid var(--color-red-strong); box-shadow: 0 0 0 4px var(--color-red-tint); }
+  .pin-cell[data-active="true"]::after { content: ""; position: absolute; width: 2px; height: 26px; background: var(--color-red-strong); animation: caret 1s steps(1) infinite; }
+  .pin-boxes[data-error="true"] .pin-cell { border: 2px solid var(--color-red-strong); background: var(--color-red-wash); box-shadow: none; }
+  @keyframes caret { 50% { opacity: 0; } }
+  .pin-help { color: var(--color-muted); font-size: 13px; }
+  .pin-error { color: var(--color-red-hover); font-weight: 600; font-size: 13px; display: flex; gap: 6px; align-items: flex-start; }
+  .pin-error svg { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+
+  .btn-submit { min-height: 56px; width: 100%; }
+  .btn-submit[disabled] { background: var(--color-line); color: var(--color-muted); opacity: 1; cursor: not-allowed; }
+  .forgot { align-self: center; }
+  .store-btn { display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 64px; padding: var(--space-3) var(--space-4); border: 0; border-radius: var(--radius-inner); background: var(--color-surface); text-align: left; cursor: pointer; box-shadow: var(--shadow-raised); }
+  .store-btn:hover { background: var(--color-panel); }
+  .store-btn[disabled] { cursor: not-allowed; box-shadow: none; opacity: 0.55; }
+  .store-btn:active:not([disabled]) { transform: scale(0.98); }
+
+  @media (max-width: 767px) {
+    body { background: var(--color-panel); }
+    .auth { display: block; padding: 0; min-height: calc(100vh - 60px); }
+    .auth-brand { top: 20px; left: 20px; }
+    .auth-card { width: 100%; min-height: calc(100vh - 60px); padding: 88px 20px 24px; border-radius: 0; background: transparent; display: flex; flex-direction: column; }
+    .auth-form { flex: 1; gap: var(--space-5); }
+    .pin-boxes { gap: 10px; }
+    .pin-cell { height: 60px; border-radius: 14px; }
+    .forgot { align-self: flex-start; order: 3; min-height: var(--size-touch); }
+    .submit-wrap { order: 4; margin-top: auto; }
+    .store-btn { box-shadow: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .pin-cell[data-active="true"]::after { animation: none; } .store-btn:active { transform: none; } }
+</style>
+</head>
+<body>
+<div class="demo-bar" data-demo-bar data-initial="entrar" aria-label="Estados de la maqueta"></div>
+
+<main class="auth">
+  <div class="auth-brand"><span class="brand-mark" aria-hidden="true"></span><span>Argos</span></div>
+
+  <!-- Estado: entrar (el error y "Entrando…" aparecen al enviar) -->
+  <section class="card auth-card" data-state="entrar" aria-labelledby="t-entrar">
+    <div class="auth-title">
+      <h1 id="t-entrar" class="h-display">Entrar</h1>
+      <p class="muted">Escribe tu usuario y tu PIN de 6 dígitos.</p>
+    </div>
+    <form class="auth-form" id="pin-form" novalidate>
+      <div class="field">
+        <label for="user">Usuario</label>
+        <input class="input" id="user" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" value="k7m2.caja1" aria-describedby="user-hint">
+        <span class="hint" id="user-hint">Tu usuario completo, con el código delante del punto.</span>
+      </div>
+
+      <div class="field">
+        <div class="pin-head">
+          <label for="pin" class="label">PIN</label>
+          <button type="button" class="link-btn" id="toggle-pin" aria-pressed="false"><span id="eye" data-icon="eye"></span><span id="eye-label">Mostrar</span></button>
+        </div>
+        <div class="pin-boxes" id="boxes">
+          <input class="pin-input" id="pin" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" aria-describedby="pin-help">
+          <span class="pin-cell" aria-hidden="true"></span><span class="pin-cell" aria-hidden="true"></span><span class="pin-cell" aria-hidden="true"></span>
+          <span class="pin-cell" aria-hidden="true"></span><span class="pin-cell" aria-hidden="true"></span><span class="pin-cell" aria-hidden="true"></span>
+        </div>
+        <!-- Un solo mensaje para cualquier fallo: no revela si el usuario existe, si está bloqueado ni cuántos intentos quedan. -->
+        <p class="pin-help" id="pin-help">Faltan 6 dígitos.</p>
+        <p class="pin-error" id="pin-error" role="alert" hidden><span data-icon="alert"></span><span>Usuario o PIN incorrectos, o el usuario está bloqueado. Si sigue pasando, pide ayuda a un administrador.</span></p>
+      </div>
+
+      <button type="button" class="link-btn forgot" id="forgot">¿Olvidaste tu PIN?</button>
+      <div class="submit-wrap"><button class="btn btn-primary btn-submit" type="submit" id="enter-btn" disabled>Entrar</button></div>
+    </form>
+  </section>
+
+  <!-- Estado: elegir-tienda -->
+  <section class="card auth-card" data-state="elegir-tienda" aria-labelledby="t-tienda" hidden>
+    <div class="row">
+      <span class="avatar" role="img" aria-label="Luis Pérez">LP</span>
+      <div><strong>Luis Pérez</strong><br><span class="caption">k7m2.caja1</span></div>
+      <span class="spacer"></span>
+      <button class="btn btn-icon" type="button" aria-label="Cerrar sesión" data-icon="power"></button>
+    </div>
+    <div class="auth-title">
+      <h1 id="t-tienda" class="h-display">Elige tu tienda</h1>
+      <p class="muted">Puedes cambiar de tienda después sin volver a escribir tu PIN.</p>
+    </div>
+    <div class="stack" role="list">
+      <span class="overline">Sede Centro</span>
+      <button class="store-btn" role="listitem" type="button"><span class="icon-dot" data-icon="store"></span><span><strong>Tienda Obispo</strong><br><span class="caption">Cajero</span></span><span class="spacer"></span><span data-icon="chevron"></span></button>
+      <button class="store-btn" role="listitem" type="button"><span class="icon-dot" data-icon="store"></span><span><strong>Tienda Galiano</strong><br><span class="caption">Cajero</span></span><span class="spacer"></span><span data-icon="chevron"></span></button>
+      <span class="overline">Sede Vedado</span>
+      <button class="store-btn" role="listitem" type="button" disabled aria-disabled="true"><span class="icon-dot" data-icon="store"></span><span><strong>Tienda Calle 23</strong><br><span class="caption">No disponible: tienda desactivada</span></span></button>
+    </div>
+    <p class="caption">Tu sesión termina hoy a las 22:30.</p>
+  </section>
+
+  <!-- Estado: sin-tiendas -->
+  <section class="card auth-card" data-state="sin-tiendas" aria-labelledby="t-sin" hidden>
+    <div class="icon-dot" data-icon="alert" data-size="22" style="width:48px;height:48px"></div>
+    <div class="auth-title">
+      <h1 id="t-sin" class="h-display">No tienes tiendas disponibles</h1>
+      <p class="muted">Todas tus tiendas están desactivadas o aún no te asignaron ninguna. Pide a un administrador que revise tu acceso.</p>
+    </div>
+    <button class="btn btn-secondary" type="button">Cerrar sesión</button>
+  </section>
+
+  <!-- Estado: sesion-expirada -->
+  <section class="card auth-card" data-state="sesion-expirada" aria-labelledby="t-exp" hidden>
+    <div class="icon-dot" data-icon="lock" data-size="22" style="width:48px;height:48px"></div>
+    <div class="auth-title">
+      <h1 id="t-exp" class="h-display">Tu sesión terminó</h1>
+      <p class="muted">Por seguridad, las sesiones duran como máximo un día. Vuelve a entrar con tu PIN.</p>
+    </div>
+    <button class="btn btn-primary btn-submit" type="button" onclick="demoSet('entrar')">Volver a entrar</button>
+  </section>
+</main>
+
+<!-- ¿Olvidaste tu PIN? El PIN solo lo cambia un administrador. -->
+<dialog class="modal" id="dlg-forgot" aria-labelledby="df-title">
+  <form method="dialog" class="modal-body">
+    <h2 class="h2" id="df-title" style="font-size:20px">¿Olvidaste tu PIN?</h2>
+    <p class="muted">Solo un administrador puede darte un PIN nuevo. Pídele que lo genere desde tu usuario y que te lo entregue en persona.</p>
+    <div class="modal-actions"><button class="btn btn-primary" value="ok">Entendido</button></div>
+  </form>
+</dialog>
+
+<script src="shell.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const pin = $('pin'), boxes = $('boxes'), cells = [...boxes.querySelectorAll('.pin-cell')];
+  const btn = $('enter-btn'), user = $('user');
+  let shown = false;
+
+  const draw = () => {
+    const v = pin.value;
+    cells.forEach((c, i) => {
+      const filled = i < v.length, active = document.activeElement === pin && i === Math.min(v.length, 5) && v.length < 6;
+      c.dataset.filled = String(filled); c.dataset.active = String(active);
+      delete c.dataset.dot; delete c.dataset.digit;
+      if (filled) { if (shown) c.dataset.digit = v[i]; else c.dataset.dot = 'true'; }
+    });
+    const left = 6 - v.length;
+    $('pin-help').textContent = left > 0 ? `Falta${left === 1 ? '' : 'n'} ${left} dígito${left === 1 ? '' : 's'}.` : 'PIN completo.';
+    btn.disabled = !(user.value.trim() && v.length === 6);
+  };
+  const clearError = () => { boxes.dataset.error = 'false'; $('pin-error').hidden = true; $('pin-help').hidden = false; };
+
+  pin.addEventListener('input', () => { pin.value = pin.value.replace(/\D/g, '').slice(0, 6); clearError(); draw(); });
+  pin.addEventListener('focus', draw); pin.addEventListener('blur', draw);
+  user.addEventListener('input', draw);
+
+  $('toggle-pin').addEventListener('click', () => {
+    shown = !shown;
+    $('toggle-pin').setAttribute('aria-pressed', String(shown));
+    $('eye-label').textContent = shown ? 'Ocultar' : 'Mostrar';
+    $('eye').innerHTML = ''; $('eye').dataset.icon = shown ? 'eyeoff' : 'eye';
+    $('eye').insertAdjacentHTML('afterbegin', icon(shown ? 'eyeoff' : 'eye', 16));
+    draw();
+  });
+  $('forgot').addEventListener('click', () => $('dlg-forgot').showModal());
+
+  const loading = (on) => {
+    btn.disabled = on || btn.disabled; btn.setAttribute('aria-busy', String(on));
+    btn.innerHTML = on ? '<span class="spinner" aria-hidden="true"></span>Entrando…' : 'Entrar';
+  };
+  $('pin-form').addEventListener('submit', (e) => {
+    e.preventDefault(); if (btn.disabled) return;
+    clearError(); loading(true);
+    setTimeout(() => {
+      loading(false); draw();
+      boxes.dataset.error = 'true'; $('pin-error').hidden = false; $('pin-help').hidden = true;
+      pin.value = ''; pin.focus(); draw();
+    }, 1200);
+  });
+  window.addEventListener('demo-state', (e) => { if (e.detail === 'entrar') { clearError(); loading(false); draw(); } });
+  draw();
+</script>
+</body>
+</html>

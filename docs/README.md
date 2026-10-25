@@ -27,6 +27,7 @@ Next.js en Vercel · Supabase Cloud · Clean Architecture · API REST `/api/v1` 
 | `DECISIONS.md` | Registro de decisiones (ADR) y alternativas descartadas |
 | `technical/` | Diseño técnico por módulo (`MODULO-1-DISENO-TECNICO.md`) |
 | `design/` | Guía visual: `DESIGN.md`, `tokens.css`, preset de Tailwind y capturas |
+| `design/screens/` | Diseño de pantallas por módulo (`MODULO-1-PANTALLAS.md`) y maquetas HTML en `mockups/` |
 | `OPEN_QUESTIONS.md` | Dudas, contradicciones y supuestos pendientes |
 
 ## Flujo de trabajo

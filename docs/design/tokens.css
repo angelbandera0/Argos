@@ -11,6 +11,7 @@
   --color-red-strong: #D92D25;   /* botones con texto blanco, texto/enlaces rojos */
   --color-red-hover: #B3221B;    /* hover, texto sobre red-tint */
   --color-red-tint: #FFE6E4;     /* fondos de alerta */
+  --color-red-wash: #FFF7F6;     /* fondo de campos en error */
   --color-yellow: #FFC93C;       /* hoy / abierto / efectivo — siempre con texto ink */
   --color-yellow-tint: #FFF4CF;  /* fondos informativos */
 
@@ -92,6 +93,13 @@
   --size-sidebar: 236px;
   --size-rail: 84px;
   --size-bottom-nav: 68px;
+
+  /* ---- Carga (ver DESIGN.md §6.15) ---- */
+  --skeleton-on-surface: var(--color-panel);   /* placeholder sobre fondo blanco */
+  --skeleton-on-panel: var(--color-line);      /* placeholder dentro de un panel */
+  --skeleton-shine: rgba(255, 255, 255, 0.65); /* brillo que recorre el placeholder */
+  --skeleton-duration: 1.4s;
+  --spinner-duration: 0.8s;
 }
 
 /* Tablet */
@@ -138,3 +146,61 @@ a:hover { color: var(--color-red-hover); }
 }
 
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* ---- Carga: placeholders ---- */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* Bloque placeholder. Por defecto sobre blanco; con .skeleton-on-panel, dentro de un panel. */
+.skeleton {
+  --skeleton-base: var(--skeleton-on-surface);
+  display: block;
+  background-color: var(--skeleton-base);
+  background-image: linear-gradient(90deg, transparent 0, var(--skeleton-shine) 50%, transparent 100%);
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  border-radius: var(--radius-inner);
+  animation: skeleton-shimmer var(--skeleton-duration) ease-in-out infinite;
+}
+.skeleton-on-panel { --skeleton-base: var(--skeleton-on-panel); }
+.skeleton-text { height: 12px; border-radius: var(--radius-pill); }
+.skeleton-title { height: 20px; width: 40%; border-radius: var(--radius-pill); }
+.skeleton-circle { width: 40px; height: 40px; border-radius: 50%; }
+.skeleton-pill { height: var(--size-control); border-radius: var(--radius-pill); }
+
+@keyframes skeleton-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Indicador dentro de un botón mientras se ejecuta una acción. Hereda el color del texto. */
+.spinner {
+  display: inline-block; width: 18px; height: 18px; flex: none;
+  border: 2.5px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: spinner-turn var(--spinner-duration) linear infinite;
+}
+@keyframes spinner-turn { to { transform: rotate(360deg); } }
+
+/* Barra fina de progreso al navegar entre pantallas. */
+.route-progress {
+  position: fixed; inset: 0 0 auto 0; height: 3px; overflow: hidden; z-index: 50;
+  background: transparent; pointer-events: none;
+}
+.route-progress::before {
+  content: ""; display: block; height: 100%; width: 40%;
+  background: var(--color-red); border-radius: var(--radius-pill);
+  animation: route-progress-slide 1.1s ease-in-out infinite;
+}
+@keyframes route-progress-slide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+/* Movimiento reducido: sin brillo ni barrido; el estado de carga se sigue viendo. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; background-image: none; }
+  .spinner { animation-duration: 2.4s; }
+  .route-progress::before { animation: none; width: 40%; }
+}

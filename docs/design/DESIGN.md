@@ -25,6 +25,7 @@
 | `--color-red-strong` | `#D92D25` | Botones primarios (texto blanco), texto/enlaces rojos, iconos activos, píldora "Tarjeta". |
 | `--color-red-hover` | `#B3221B` | Hover de enlaces y botones rojos; texto rojo sobre `--color-red-tint`. |
 | `--color-red-tint` | `#FFE6E4` | Fondo de chips de alerta ("3 EN COLA"), fondos de icono de alerta. |
+| `--color-red-wash` | `#FFF7F6` | Fondo de campos en estado de error (casillas del PIN). |
 | `--color-yellow` | `#FFC93C` | Acento: "hoy", "abierta", píldora "Efectivo", avatar. **Siempre con texto `--color-ink`.** |
 | `--color-yellow-tint` | `#FFF4CF` | Fondos de icono informativo / tareas no urgentes. |
 | `--color-ink` | `#1C1C1E` | Texto principal, títulos, cifras. |
@@ -201,6 +202,37 @@ Buscador: alto 44, radio pill, fondo `--color-panel` (sin borde), icono lupa 18 
 
 ### 6.13 Avatar
 Círculo 40–48 px, fondo `--color-yellow`, iniciales ink 700 13 px, `role="img"` + `aria-label` con el nombre.
+
+### 6.14 Campo de PIN (6 casillas)
+Para el acceso con PIN **no se usa teclado numérico en pantalla**: se muestran 6 casillas y el sistema abre su propio teclado numérico.
+
+- **Estructura:** un **único** `<input>` real (`type="password"`, `inputmode="numeric"`, `pattern="[0-9]*"`, `maxlength="6"`, `autocomplete="one-time-code"`, `font-size: 16px` para evitar el zoom en iOS) colocado de forma invisible (`opacity: 0`, `position: absolute; inset: 0`) encima de 6 casillas decorativas (`aria-hidden="true"`). Así se puede pegar el PIN, funciona el autocompletado y los lectores de pantalla leen un solo campo. No uses 6 inputs separados.
+- **Etiqueta:** `<label for>` "PIN" + texto de ayuda enlazado con `aria-describedby` ("Faltan 2 dígitos." / "PIN completo.").
+- **Casillas:** grilla de 6 columnas iguales, gap 10 px (móvil) / 12 px (web); alto 60 px (móvil) / 68 px (web); radio 14 / 16 px; fondo blanco sobre `--color-panel`.
+  - Vacía: borde `1.5px solid var(--color-line)`.
+  - Activa (la siguiente por rellenar): borde `2px solid var(--color-red-strong)` + `box-shadow: 0 0 0 4px var(--color-red-tint)` + cursor vertical rojo 2×26 px.
+  - Llena: borde `1.5px solid var(--color-line-strong)` y un punto `--color-ink` de 12 px (o el dígito en Inter Tight 26–28 px si "Mostrar" está activo).
+  - Error: todas con borde `2px solid var(--color-red-strong)` y fondo `--color-red-wash`; mensaje con `role="alert"` en `--color-red-hover` con icono. Al volver a escribir se quita el error. En este sistema el texto es siempre el mismo mensaje genérico y **nunca indica los intentos que quedan** (`screens/MODULO-1-PANTALLAS.md`, A-05).
+- **Mostrar / Ocultar:** botón de texto rojo (`--color-red-strong`, 13 px 600) a la derecha de la etiqueta, con icono de ojo y `aria-pressed`.
+- **Validación:** filtrar todo lo que no sea dígito (`value.replace(/\D/g, '')`) y cortar a 6.
+- **Botón "Entrar":** desactivado hasta que haya usuario y 6 dígitos (fondo `--color-line`, texto `--color-muted`); activo en `--color-red-strong` con texto blanco, alto 56 px, radio pill. Debajo o encima, el enlace "¿Olvidaste tu PIN?".
+
+### 6.15 Carga (placeholders)
+Tres patrones, según lo que se espera. Las clases están en `tokens.css`.
+
+| Situación | Patrón | Clase |
+|---|---|---|
+| Se carga el **contenido** de una pantalla o tarjeta | Placeholder con la misma forma y tamaño del contenido final | `.skeleton` (+ `.skeleton-text`, `.skeleton-title`, `.skeleton-circle`, `.skeleton-pill`); `.skeleton-on-panel` dentro de un panel |
+| Se ejecuta una **acción** (guardar, entrar, cambiar PIN) | Indicador dentro del botón, que queda desactivado y cambia su texto ("Entrando…") | `.spinner` |
+| Se **navega** entre pantallas | Barra roja fina arriba | `.route-progress` |
+
+Reglas:
+- El placeholder replica el diseño final (mismas alturas, anchos y número de filas) para que al llegar el contenido nada se mueva.
+- No mostrar placeholders si la carga dura menos de 150 ms: espera ese tiempo antes de pintarlos para evitar parpadeos.
+- El contenedor lleva `aria-busy="true"` y un texto `.sr-only` "Cargando…". Al terminar, se quita `aria-busy`.
+- El brillo recorre en bucle solo mientras se carga. Con `prefers-reduced-motion` el placeholder se queda quieto, el spinner gira más lento y la barra de ruta queda fija.
+- Sobre blanco usa `--skeleton-on-surface`; dentro de un panel, `--skeleton-on-panel`. Nunca grises sueltos.
+- En Next.js cada ruta con datos lleva su `loading.tsx` con el placeholder de su propia pantalla.
 
 ---
 
