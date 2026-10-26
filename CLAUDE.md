@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-Fresh `create-next-app` scaffold (single "Initial commit"); `app/` only contains `layout.tsx`, `page.tsx`, `globals.css`. No tests, no test runner configured.
+Módulo 1 en desarrollo (ver `docs/superpowers/`); tests con Vitest (`pnpm test`, `test:db`, `test:int`).
 
 ## Commands
 
@@ -22,6 +22,8 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 
 - Before creating or modifying UI, read and follow `docs/design/DESIGN.md` (not auto-loaded, to save context; subagents on UI tasks must be told to read it) and use only the tokens in `docs/design/tokens.css` (imported by `app/globals.css`). No dark backgrounds, so there is no dark-mode block.
 - Product specs live in `docs/` (spec-anchored, see `docs/README.md`): the spec wins over code, and functional changes go through the docs first.
+
+- **Librería Argos UI**: componentes en `components/ui/` (galería en `/ui`, solo desarrollo), primitivas `@base-ui/react`, escala tipográfica reducida. Es obligatorio usar sus componentes (PageHeader, ListToolbar, DataTable, FormShell, Alert, Toast, Dialog/AlertDialog, Tabs, Accordion…) en lugar de marcado o CSS propio; los patrones están en `docs/design/PATRONES-UI.md`. Todo componente nuevo se añade a la galería y a `DESIGN-resumen.md`.
 
 ## Reglas de comportamiento obligatorias (Modo Ponytail)
 

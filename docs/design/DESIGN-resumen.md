@@ -55,16 +55,12 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Hover (§6.1): rojo a `--color-red-hover` con texto blanco; blanco a `--color-panel`; botones solo-icono con `aria-label` y `title`.
 - Perfil y menú (§6.16, [decisión del usuario, DESIGN (2).md]): barra superior con fecha y hora, buscador y campana (deshabilitados, "Próximamente"), slot de acción y perfil a la derecha (avatar+nombre+rol; tablet avatar+chevron; móvil avatar). Menú con cabecera (`usuario · rol`; correo si no es operador), "Ver perfil" (`/perfil`) y "Cerrar sesión" en rojo; `aria-haspopup="menu"`, `role="menu"`/`menuitem`, Escape/clic fuera/flechas, foco al botón.
 - Item de sidebar (§6.2): alto 46, pill, padding 0 14, gap 12, icono 19. Inactivo: ink-2 500. Activo: blanco, ink 600, icono red-strong, punto rojo 7 a la derecha, `--shadow-active`, `aria-current="page"`.
-- Badge de contador (§6.2): 22 px, pill, `--color-red-tint`, texto red-hover 700 12. Punto de notificación: 7–8 px rojo.
 - KPI de cabecera (§6.3): cifra `kpi` con flecha de tendencia rojo (15–18, trazo 2.4); overline alineado a la derecha. Separación: `border-left: 1px solid var(--color-line)`, padding 0 18–20.
 - Píldoras de pago (§6.4): overline más píldora de 30–32 px de alto y ancho fijo 88–110, texto 12 px 700. Efectivo: yellow con ink. Tarjeta: red-strong con blanco. Transferencia: panel con ink.
 - Barra de meta (§6.5): pista panel (blanca dentro de panel), alto 30–32, pill. Relleno rojo con padding 3–4 y etiqueta blanca interna (ink 700 12). `role="progressbar"` con `aria-valuenow/min/max`.
 - Tarjeta (§6.6): panel, radio card, sin borde ni sombra. Cabecera: `h2` a la izquierda, chip o botón secundario a la derecha. Variante estado: icono en círculo 36–40 red-tint con red-strong, chip blanco, cifra `stat`. Variante editorial: título `card-title-lg` en 2 líneas, chip de alerta, paginador de puntos (activo rojo, inactivos `--color-line-strong`).
 - Chips (§6.7): neutro (blanco, ink, 10–12 px 600, tracking 0.8); alerta (red-tint, red-hover 700); abierto/hoy (yellow, ink 700); sobre gráfico (blanco, borde 1px `--color-ring`, ink 700).
 - Fila de tarea (§6.8): blanca dentro de panel, radio inner, padding 10–12. Icono 32–36: urgente red-tint con red-strong; normal yellow-tint con ink. Título 600, subtítulo caption muted. Menú "⋯" como botón icono 44 transparente.
-- Acordeón (§6.9): ancho completo, alto 48–52, texto 600, chevron 15–16 a la derecha (abierto: red-strong), separador `--color-line`, `aria-expanded`.
-- Pestañas segmentadas (§6.10): sin fondo en el contenedor, gap 4–6. Activa: blanco, ink 700, `--shadow-raised`. Inactiva: transparente, ink-2. Alto 36, pill. `role="tablist"`, `role="tab"`, `aria-selected`.
-- Anillo de tiempo (§6.11): SVG girado -90°, pista punteada `--color-ring`, arco rojo en 4 segmentos, centro blanco con `stat`.
 - Buscador (§6.12): alto 40 (44 táctil), pill, fondo panel sin borde, lupa 18 a 14 del borde, padding izquierdo 40. Siempre con `<label>` (puede ir oculto).
 - Avatar (§6.13): círculo 40–48, yellow, iniciales ink 700 12, `role="img"` y `aria-label`.
 - Campo PIN (§6.14):
@@ -96,9 +92,13 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+`-ti
 - Datatable (§6.33): contenedor borde line-soft radio 24; barra superior, filtros, barra de lote (`--color-warning-tint`, `role="region"`), cabecera 44 con `aria-sort` y checkbox mixto (`aria-checked="mixed"`), filas 60 (seleccionada `--color-row-selected`), menú "⋯" (`aria-haspopup="menu"`), pie con paginación. Móvil < 768: tarjetas.
 
 ## Librería Argos UI (§13)
-- Componentes en `components/ui/` del proyecto (sin paquete aparte); galería de evaluación en `/ui` solo en desarrollo.
-- Primitivas complejas con `@base-ui/react` (sin estilo, con accesibilidad y teclado) más nuestros tokens y atributos de datos; envoltorios Client Components.
-- Se mantiene la escala tipográfica reducida. Sin Chakra ni CSS-in-JS.
+- Todo en `components/ui/` (sin paquete aparte); galería en `/ui` solo en desarrollo. Primitivas complejas de `@base-ui/react` con nuestros tokens; envoltorios Client Components. Escala tipográfica reducida. Sin Chakra ni CSS-in-JS.
+- OBLIGATORIO usar estos componentes en vez de marcado propio; cada componente nuevo se añade a la galería (`app/ui/sections/`) y a esta lista. Patrones con ejemplo en `PATRONES-UI.md`.
+- Estructura de página: `PageHeader` (título, migas, acciones), `ListToolbar` (buscador, filtros, acción), `DataTable` (lista; cliente), `EmptyState` (sin datos), `Card`, `Skeleton`/`Spinner`/`RouteProgress` (carga).
+- Formularios: `FormShell` (action, error general, guardando), `Field` (etiqueta, hint, error), `Input`, `Textarea`, `Select` (lista corta), `Multiselect`, `Checkbox`, `RadioGroup` (hasta 7), `Switch` (ajuste inmediato), `CodeField`, `Button` (variantes, `loading`).
+- Avisos: `Alert` (en página), `Banner` (franja global), `Toast` (`useToast`, resultado de una acción), `Dialog` (modal), `AlertDialog` (confirmación destructiva), `Tooltip`.
+- Estado: `Badge` (estado/contador), `Chip` (filtro o quitable).
+- Navegación y agrupación: `Tabs` (underline: secciones; segmented: vistas), `Breadcrumbs`, `Steps`, `Accordion` (list, cards, rich), `SidebarSection`/`SidebarItem`/`SidebarSubmenu`.
 - Referencias: `components/DESIGN-ampliada.md`, `tokens-ampliados.css`, `tailwind-preset-v3.js`, `components/mockups/`.
 
 ## Carga (§6.15)
@@ -106,8 +106,6 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+`-ti
 - Acción (guardar, entrar, cambiar PIN): `.spinner` dentro del botón, que queda desactivado y cambia su texto ("Entrando…").
 - Navegación entre pantallas: `.route-progress`, barra roja de 3 px arriba.
 - Reglas: replicar alturas, anchos y filas; no mostrar si la carga dura < 150 ms; contenedor con `aria-busy="true"` y `.sr-only` "Cargando…", que se quita al terminar.
-- Colores: `--skeleton-on-surface` sobre blanco, `--skeleton-on-panel` dentro de panel. Duraciones `--skeleton-duration` (1.4s) y `--spinner-duration` (0.8s).
-- Movimiento reducido (ya en tokens.css): skeleton quieto, spinner más lento, barra fija.
 - Next.js: cada ruta con datos lleva su propio `loading.tsx` con el placeholder de su pantalla.
 
 ## Gráficos (§7)

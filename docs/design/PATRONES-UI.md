@@ -1,88 +1,43 @@
 # Patrones de UI
 
-Patrones de UI ya implementados; ante cualquier duda, el código y DESIGN.md mandan.
+Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI (`components/ui/`, galería en `/ui` solo en desarrollo) en lugar de marcado propio; el código manda ante cualquier duda. Tokens solo de `docs/design/tokens.css`; guía en `DESIGN-resumen.md` y `DESIGN.md`.
 
-Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design/tokens.css`.
+## Servidor
 
-## 1. Página con datos
+1. **Página con datos.** Página síncrona con `PageHeader` y `<Suspense fallback={<Loading />}>` con un hijo `async` que lee sesión y datos. `loading.tsx` exporta el skeleton (`Card aria-busy` + `Skeleton`) y la página lo importa. Rutas con sesión: `export const instant = false`; `params` y `searchParams` son Promises. `createServerClient()` ya hace `await connection()`; nada por usuario usa `use cache`. Ejemplo: `app/(app)/companias/page.tsx`, `loading.tsx`.
+2. **Guard y casos de uso.** `requireOrgUser()` (`app/(app)/companias/guard.ts`) devuelve `{ supabase, actor, org }` o `notFound()`; roles y usuarios tienen guards análogos. Casos de uso por petición con la fábrica (`makeOrg`, `makeRoles`, `makeCatalog` en `infrastructure/supabase/`), RLS aplica.
+3. **Server actions.** `"use server"`, firma `(_: State, formData: FormData): Promise<State>`, `State` con `error?`. Orden: guard, validar, caso de uso en `try`, `catch` devuelve `{ error: fail(e, mensaje) }`; éxito `revalidatePath` + `redirect` o `{}`. Ejemplo: `app/(app)/roles/actions.ts`.
+4. **Fechas.** Reloj de la barra en el navegador (`components/shell/top-clock.tsx`). El resto usa `Intl.DateTimeFormat("es")` sin `timeZone` (zona del servidor): deuda en `docs/superpowers/revisiones-pendientes.md`.
 
-- La página exportada es síncrona: cabecera (`.topbar`, `h1.page-title`) y `<Suspense fallback={<Loading />}>` con un hijo `async` que lee sesión y datos. Ejemplo: `app/(app)/companias/page.tsx`.
-- `loading.tsx` de la ruta exporta un skeleton (`Card aria-busy` + `Skeleton onPanel`) y la página lo importa como fallback. Ejemplo: `app/(app)/companias/loading.tsx`.
-- Rutas que leen sesión: `export const instant = false`. `params` y `searchParams` son Promises: `await` antes de usarlos.
-- Cache Components: `createServerClient()` ya hace `await connection()`; todo lo que lea cookies o sesión va dentro de Suspense; nada por usuario usa `use cache`.
+## Componentes por patrón
 
-## 2. Guard y casos de uso por petición
+| Patrón | Componentes | Ejemplo migrado |
+|---|---|---|
+| Cabecera de página | `PageHeader` (título, descripción, `Breadcrumbs`, acciones) | `app/(app)/roles/[id]/page.tsx` |
+| Lista con buscador y filtros | `ListToolbar` (`q` + `Select` de filtro + acción primaria) | `app/(app)/usuarios/page.tsx` |
+| Tabla de datos | `DataTable` desde un componente cliente (`cell` son funciones), `rowActions`, `Badge` de estado | `components/users/user-table.tsx`, `app/(app)/companias/company-table.tsx` |
+| Sin datos / sin coincidencias | `EmptyState` (icono por nombre, frase, CTA solo si puede crear); sin coincidencias: texto atenuado | `app/(app)/catalogo/productos/page.tsx` |
+| Alta y edición | `FormShell` + `Field` con `Input`, `Textarea`, `Select`, `Multiselect`, `Switch`, `Checkbox`, `RadioGroup` | `components/roles/role-form.tsx`, `components/users/new-user-form.tsx` |
+| Secciones de una página | `Tabs` underline (o `Accordion` variant cards en formularios largos) | `app/(app)/usuarios/[id]/page.tsx` |
+| Árbol / lista expandible | `Accordion` variant rich (icono, `summary`, `badge`, `action`) | `app/(app)/companias/[id]/page.tsx` |
+| Proceso de varios pasos | `Steps` | `app/(auth)/primer-ingreso/page.tsx` |
+| Vista alternativa o periodo | `Tabs` variant segmented (máx. 4) con tabla alternativa accesible | `components/dashboard/analytics-card.tsx` |
+| Aviso en página | `Alert` (success/warning/danger/info), `Banner` (franja global, uno a la vez) | `app/(app)/companias/[id]/page.tsx` |
+| Confirmación de resultado | `useToast()` (`ToastProvider` ya montado) | `components/users/assignments-form.tsx` |
+| Confirmación destructiva | `AlertDialog` (foco inicial en Cancelar) | `components/roles/delete-role-dialog.tsx` |
+| Modal con formulario | `Dialog` (`size`, `footer`) | `components/org/deactivate-dialog.tsx` |
+| Secreto de una sola vez | `Dialog dismissible={false}`; cierre solo tras copiar | `components/users/pin-reveal-dialog.tsx` |
+| Estado e insignias | `Badge`, `Chip`, `Tooltip` | `app/(app)/superadmin/administradores/admin-table.tsx` |
+| Carga | `Skeleton`, `Spinner`, `RouteProgress`; `Button loading` | `app/(app)/roles/loading.tsx` |
+| Shell y menú | `SidebarSection`, `SidebarItem`, `SidebarSubmenu`; `ProfileMenu` | `components/shell/app-shell.tsx` |
 
-- `requireOrgUser()` en `app/(app)/companias/guard.ts` devuelve `{ supabase, actor, org }` o llama a `notFound()` (no admin, operador, sin aal2 o con contraseña pendiente de cambio). Roles y usuarios tienen guards con la misma forma (`requireRoleUser`, `requireUserAdmin`).
-- Los casos de uso se construyen dentro de cada función, con el cliente de la petición (RLS aplica): `makeOrg` (`infrastructure/supabase/org-factory.ts`), `makeRoles` (`roles-factory.ts`), `makeCatalog` (`catalog-factory.ts`).
+## Reglas transversales
 
-## 3. Server actions
-
-- `actions.ts` con `"use server"`. Se usa desde el formulario cliente con `useActionState` (ejemplo: `app/(app)/companias/nueva/new-company-form.tsx`). Firma `(_: State, formData: FormData): Promise<State>`; `State` lleva `error?` y, si hace falta, el valor escrito para repoblar. Ejemplo: `createCompanyAction` en `app/(app)/companias/actions.ts`.
-- Orden: `await requireXUser()`, validar, caso de uso dentro de `try`, en `catch` devolver `{ error: fail(e, mensaje) }`. Éxito: `revalidatePath` y `redirect`, o `{}`.
-- `fail()` traduce `Forbidden`, `NotFound` y `RuleViolation` (por `e.code`) a español; el mensaje propio de una regla se pasa como segundo argumento. Ejemplo: `app/(app)/roles/actions.ts`.
-
-## 4. Lista con buscador, filtro y estado vacío
-
-- Buscador: `<form role="search">` con `<input name="q" type="search">`; el filtro se hace en servidor sobre `searchParams.q` (trim y minúsculas). Ejemplo: `app/(app)/companias/page.tsx`.
-- Filtro por estado: `<select name="estado">` generado desde un mapa `STATUS`, botón "Filtrar". Ejemplo: `app/(app)/usuarios/page.tsx`.
-- Dos estados vacíos distintos: sin datos (`Card.empty` con icono, texto y CTA solo si el actor puede crear) y sin coincidencias (`p.muted`).
-
-## 5. Formularios de alta y edición
-
-- Campos con `Field` (`components/ui/field.tsx`): `label`, `htmlFor`, `hint`, `error` (aparece con `role="alert"`). Para texto simple, `Input`.
-- Estado guardando: `Button` con `loading` (spinner, `aria-busy`, deshabilitado). Con `useFormStatus` como `Submit` en `components/org/deactivate-dialog.tsx`.
-- Error general: `p.form-error role="alert"` con icono `AlertCircle`.
-- Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx` (sin roles, sin tiendas activas).
-
-## 6. Modales
-
-- Base: `components/ui/dialog.tsx` (Base UI Dialog, no `<dialog>` nativo). Al cerrarse o desmontarse devuelve el foco al elemento que tenía activo al abrir. `dismissible={false}` bloquea Escape y la cruz; el clic fuera nunca cierra.
-- Confirmación con motivo: `components/org/deactivate-dialog.tsx`. Se monta solo al abrir; confirmar se habilita con `ready`; cierra solo si la acción no devuelve error; el error va en `role="alert"`.
-- Mostrar una sola vez: `components/users/pin-reveal-dialog.tsx`. `dismissible={false}`; "Ya lo copié" está deshabilitado hasta copiar y solo entonces llama `onDone`. Si el portapapeles falla, el valor queda seleccionable.
-
-## 7. Menú del shell
-
-- Items en `app/(app)/layout.tsx` como `NavItem` con `icon` en texto (`"Building2"`); `NavLink` (cliente) resuelve `NAV_ICONS[icon]` de `components/icons.ts`. Icono nuevo: añádelo a `NAV_ICONS`.
-- Nunca pases un componente de icono de servidor a cliente; pasa el nombre.
-
-## 8. Acciones deshabilitadas con razón visible
-
-- Sin permiso: botón `disabled`, razón en `p.hint` con id, enlazada con `aria-describedby`. Ejemplo: `disabledReason` en `components/org/deactivate-dialog.tsx` y su cálculo en `app/(app)/companias/[id]/page.tsx` (líneas 370-377).
-- Acciones solo de administrador: se ocultan con condicional por `actor.kind` (`{canCreate && <NewUnit ... />}`).
-
-## 9. Fechas (deuda conocida)
-
-- La fecha y hora de la barra superior se calculan en el navegador (`components/shell/top-clock.tsx`, `format-clock.ts`), tras montar; este elemento ya no tiene deuda de zona horaria.
-
-- Hoy se formatean con `Intl.DateTimeFormat("es", ...)` sin `timeZone`, así que usan la zona del servidor. Ejemplo: `app/(app)/companias/[id]/page.tsx` (línea 390). Deuda registrada en `docs/superpowers/revisiones-pendientes.md`; no copies el patrón sin revisarla.
-
-## 10. Verificación visual
-
-- Una pantalla nueva no se da por buena sin revisión visual: pídela con `/verificar-ui N` (N = número de tarea). Si queda pendiente, anótalo en el informe de la tarea.
-
-## 11. Argos UI: entradas (fase 1)
-
-- Botón: `components/ui/button.tsx`; variantes primary/secondary/outline/accent/ghost/danger/icon, `size` sm/md/lg, `iconLeft`/`iconRight` (ReactNode ya creado), `loading`. Solo icono: `variant="icon"` con `aria-label`.
-- Input (`components/ui/input.tsx`) y Textarea (`textarea.tsx`, `counter` con `maxLength`): dentro de `Field` (`optional`, `hint`, `error` con icono). `variant="outline"` = campo de la guía; sin variante = relleno de panel actual.
-- Checkbox (`checkbox.tsx`): opción suelta o `indeterminate`. RadioGroup (`radio-group.tsx`): hasta 7 opciones excluyentes. Switch (`switch.tsx`): ajuste on/off inmediato.
-- Select (`select.tsx`): una opción de lista corta, `name` envía en FormData. Multiselect (`multiselect.tsx`): varias opciones con buscador; `name` envía valores repetidos.
-
-## 12. Argos UI: avisos y capas (fase 2)
-
-- Alert (`components/ui/alert.tsx`): `variant` success/warning/danger/info, `title`, `icon` (nombre), `action` (nodo), `dismissible`, `compact`; danger = `role="alert"`.
-- Banner (`banner.tsx`): franja de página, uno a la vez, `action` opcional (Button sm).
-- Toast (`toast.tsx`): `ToastProvider` ya montado en `app/layout.tsx`; en cliente `const toast = useToast(); toast.success|info|warning|error(título, { description, action })`. Máx. 3 visibles, 5 s, el error no se cierra solo.
-- Dialog (`dialog.tsx`): `size` sm/md/lg, `description`, `icon`+`tone`, `footer`, `showClose`; popups de Select/Multiselect usan `--z-popup` (65 > `--z-dialog`) y funcionan dentro. AlertDialog (`alert-dialog.tsx`): confirmación destructiva con `role="alertdialog"`, foco inicial en Cancelar, `confirmLabel`/`cancelLabel`/`loading`.
-- Badge (`badge.tsx`): success/warning/danger/neutral/new/count. Chip (`chip.tsx`): variantes de estado con `icon`, filtro con `pressed`/`onPressedChange`, quitable con `onRemove`.
-- Tooltip (`tooltip.tsx`): `<Tooltip label side>` envolviendo un único elemento enfocable.
-
-## 13. Argos UI: navegación y datos (fase 3)
-
-- Tabs (`components/ui/tabs.tsx`): `items` con `count`/`disabled`/`content`; `variant` underline (secciones de página) o segmented (vista/periodo, máx. 4); `aria-label` obligatorio.
-- Breadcrumbs (`breadcrumbs.tsx`): `items` `{label, href?}` (el último sin href), `withHome`; colapsa con más de 4 niveles; en móvil solo «Nivel anterior».
-- Steps (`steps.tsx`): procesos de 3-5 pasos; `current`, `errorIndex`, `orientation`; en vertical el paso actual muestra su `content`. Lógica en `nav-utils.ts`.
-- Accordion (`accordion.tsx`): `variant` list (FAQ, una abierta), cards (formularios largos, `multiple`) o rich (icono por NOMBRE, `summary`, `badge`, `action`).
-- Sidebar (`sidebar-section.tsx`): `SidebarSection` (título, `collapsible`), `SidebarItem` (icono por nombre, `badge`, `dot`), `SidebarSubmenu` (un nivel). `AppShell` ya envuelve el menú en `SidebarSection title="Menú"`.
-- DataTable (`data-table.tsx`, lógica pura en `data-table-utils.ts`): tabla genérica `DataTable<T>` de cliente (las `cell` son funciones: úsala desde un componente cliente). Orden, selección y paginación locales; pasa `onSortChange`/`onPageChange`/`total` para controlarlos desde searchParams o server actions. Acciones por fila con `rowActions`, `loading`, `empty` (usa `EmptyState`).
-- PageHeader (`page-header.tsx`): título, descripción, migas y acciones de cada página. ListToolbar (`list-toolbar.tsx`): buscador + filtros Select + acción primaria; es un `<form>` (GET o controlado). EmptyState (`empty-state.tsx`): icono por nombre, frase y CTA. FormShell (`form-shell.tsx`): `<form action>` con error general y botón «Guardando…» vía `useFormStatus`.
+- Errores de formulario: `FormShell` los muestra con `role="alert"`; por campo, `Field error`. Estado guardando: `FormShell`/`Button loading` (no reimplementes `useFormStatus`).
+- Acción deshabilitada por falta de permiso: botón `disabled` con la razón visible y enlazada con `aria-describedby` (ejemplo `unit-menu.tsx`, `deactivate-dialog.tsx`); acciones solo de administrador se ocultan por `actor.kind`.
+- Opción de `Select` con valor vacío («Todos»): usar `value=""` explícito (`app/(app)/usuarios/page.tsx`).
+- Iconos del shell: pasa el NOMBRE (`"Building2"`), nunca un componente de servidor a cliente; icono nuevo: añádelo a `NAV_ICONS` (`components/icons.ts`).
+- Mostrar una vez, sin cierre accidental: Escape y clic fuera no cierran (`dismissible={false}`).
+- Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx`.
+- Cada componente nuevo de `components/ui/` se añade a la galería (`app/ui/sections/`) y se documenta en `DESIGN-resumen.md`.
+- Pantalla nueva sin verificar a mano: anótalo en el informe y pide `/verificar-ui N`.

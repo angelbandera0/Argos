@@ -156,7 +156,7 @@ Definidos en `DESIGN.md` §6.15 y `tokens.css`.
 ## 8. Accesibilidad específica
 
 - El PIN es un único `<input>` real con su etiqueta y un texto de ayuda enlazado ("Faltan 2 dígitos."); las casillas son decorativas (`aria-hidden`). El campo es de tipo contraseña, así que los dígitos no se leen en voz alta salvo con "Mostrar".
-- El modal del PIN y los de confirmación usan `<dialog>`: el foco queda atrapado y vuelve al botón que lo abrió.
+- El modal del PIN y los de confirmación usan el `Dialog`/`AlertDialog` de Argos UI (Base UI): el foco queda atrapado y vuelve al botón que lo abrió.
 - Los interruptores son `role="switch"` con su etiqueta; los estados se dicen con texto además del color (chips con palabra).
 - Objetivos táctiles de 44 px o más, incluidas las casillas de permisos (con su etiqueta clicable).
 - El mensaje de error de login se anuncia con `role="alert"`.
