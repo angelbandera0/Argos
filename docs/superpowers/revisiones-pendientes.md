@@ -198,3 +198,7 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - Selector de compañía en el panel: no verificado en navegador (riel, móvil, popover en riel abre bajo el avatar); `/verificar-ui`. Tonos de avatar: 4 (colisiones posibles entre compañías).
 - Diálogos de formulario: `createCompanyAction` redirige tras éxito, así que el diálogo de nueva compañía no muestra toast ni cierra explícitamente (la navegación lo desmonta). Sin verificar a mano: pedir `/verificar-ui` de /companias, /companias/[id] y /catalogo/categorias.
 - El commit 18ee5cf incluyó por error cambios ajenos en curso (`app/(app)/layout.tsx`, `components/org/company-selector.tsx`, `components/org/company-avatar.ts`); `tests/unit/org/` sigue sin añadir.
+
+## Task 32 (menores)
+- auth_events no tiene company_id: el filtro por compañía pasa por profiles (solo operadores); los eventos de administradores solo los ve el superadmin. Valorar columna company_id en Task 33/36.
+- Cada integración itest deja filas en audit_log (inmutable) con company_id de compañías borradas.
