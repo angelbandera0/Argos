@@ -2,8 +2,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CompanySelector } from "@/components/org/company-selector";
-import { logout } from "@/app/(auth)/entrar/actions";
-import { Button } from "@/components/ui/button";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
@@ -49,11 +47,6 @@ async function OperatorShell({
             activeId={active.storeId}
             stores={stores.map((s) => ({ id: s.storeId, name: s.storeName, site: s.siteName, available: s.operational }))}
           />
-          <form action={logout}>
-            <Button type="submit" variant="secondary">
-              Cerrar sesión
-            </Button>
-          </form>
         </div>
       }
       nav={operatorNav(active.permissions.products)}

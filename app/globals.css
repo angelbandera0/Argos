@@ -33,7 +33,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .nav-item[aria-current="page"] svg { color: var(--color-red-strong); }
 .nav-item[aria-current="page"]::after { content: ""; margin-left: auto; width: var(--size-dot); height: var(--size-dot); border-radius: 50%; background: var(--color-red); }
 .side-foot { margin-top: auto; display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2); }
-.side-foot .who { display: flex; flex-direction: column; }
+.side-foot .who { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.sign-out { margin-left: auto; flex: none; }
+.mobile-user { display: none; }
+.btn-icon:focus-visible { outline: var(--size-focus) solid var(--color-red-strong); outline-offset: 2px; }
 
 .main { flex: 1 1 560px; min-width: 0; }
 .content { max-width: 1040px; display: flex; flex-direction: column; gap: var(--space-5); padding-bottom: var(--space-8); }
@@ -43,6 +46,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .side { width: var(--size-rail); align-items: center; padding: var(--space-5) 0; }
   .brand { padding: 0 0 var(--space-4); }
   .brand span:last-child, .side .overline, .nav-item span, .side-foot .who { display: none; }
+  .side-foot { flex-direction: column; padding: 0; }
+  .sign-out { margin-left: 0; }
   .nav-item { width: var(--size-rail-item); height: var(--size-rail-item); padding: 0; justify-content: center; }
   .nav-item[aria-current="page"]::after { display: none; }
   .nav-item svg { width: var(--size-icon-rail); height: var(--size-icon-rail); }
@@ -57,6 +62,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
     border-radius: var(--radius-pill);
   }
   .brand, .side-foot, .side .overline { display: none; }
+  .mobile-user { display: flex; align-items: center; gap: var(--space-3); }
+  .mobile-user .who { display: flex; flex-direction: column; flex: 1; min-width: 0; }
   .nav-item { width: var(--size-nav-item-mobile); height: var(--size-rail-item); flex-direction: column; gap: 2px; font: var(--text-overline); font-weight: 500; }
   .nav-item span { display: block; }
   .nav-item[aria-current="page"] { background: var(--color-panel); box-shadow: none; font-weight: 600; }

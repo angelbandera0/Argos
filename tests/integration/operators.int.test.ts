@@ -231,6 +231,35 @@ describe("operators and PIN login", () => {
     await expect(users.sessions.setActiveStore(claims.sessionId!, storeB)).rejects.toMatchObject({ name: "SessionExpired" });
   });
 
+  it("sign-out: operator ends app_sessions and the token loses access; repeating on an expired session does not fail", async () => {
+    const other = await newOperator("so");
+    const { client } = await operatorSession(other.id);
+    expect(await enterWithPinFlow(client, { username: other.username, pin: other.pin })).not.toBeNull();
+    const claims = (await readClaims(client))!;
+    const users = makeUsers(client);
+    await users.chooseStore(actorOf(claims), { storeId: storeA });
+    expect((await client.from("products").select("id")).data).toHaveLength(1);
+
+    await users.logout(actorOf(claims));
+    expect((await admin.from("app_sessions").select("ended_at").eq("session_id", claims.sessionId!).single()).data!.ended_at).not.toBeNull();
+    expect((await client.from("products").select("id")).data).toEqual([]);
+    expect((await client.auth.signOut({ scope: "local" })).error).toBeNull();
+    await users.logout(actorOf(claims));
+    expect((await client.auth.signOut({ scope: "local" })).error).toBeNull();
+  });
+
+  it("sign-out: admin local signOut revokes the Auth session", async () => {
+    const { client, id, actor } = await aal2Admin("so");
+    const token = (await client.auth.getSession()).data.session!.access_token;
+    expect((await fresh().auth.getUser(token)).error).toBeNull();
+    await makeUsers(client).logout(actor);
+    expect((await client.auth.signOut({ scope: "local" })).error).toBeNull();
+    const after = await fresh().auth.getUser(token);
+    expect(after.error).not.toBeNull();
+    expect(id).toBeTruthy();
+    expect((await client.auth.signOut({ scope: "local" })).error).toBeNull();
+  });
+
   it("Review Focus 2: no PIN in audit_log, auth_events or console output", async () => {
     const audit = JSON.stringify((await admin.from("audit_log").select("*").eq("company_id", companyId)).data);
     const events = JSON.stringify((await admin.from("auth_events").select("*").in("user_id", operatorIds)).data);

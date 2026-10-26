@@ -139,3 +139,7 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 ## Task 31 (menores)
 - Cambiar el activo de un producto es una segunda escritura tras updateProduct (no atomico); el operador necesita Editar para ambas.
 - Pantallas de producto leen la lista completa para encontrar un producto por id (sin getProduct en los casos de uso).
+
+## Shell sign-out (menores)
+- Un token de acceso de administrador ya emitido sigue valido hasta expirar tras signOut local (la sesion de Auth se revoca, el JWT no); solo getUser lo rechaza.
+- La fila .mobile-user en movil no esta en la maqueta; confirmar en /verificar-ui.

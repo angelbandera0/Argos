@@ -29,6 +29,7 @@
 - **Compañía activa [mi decisión].** Un administrador puede tener varias compañías. Una lista desplegable arriba elige con cuál trabaja; usuarios, categorías, productos y historial se filtran por ella. Un operador tiene una sola compañía y no ve el selector.
 - **Tienda activa.** Un operador ve su tienda actual en la cabecera y puede cambiarla sin PIN (DR-013).
 - **Historial** agrupa dos pestañas: "Operaciones" (por módulo) y "Accesos" (solo administradores).
+- **Cerrar sesión [mi decisión].** Todos los roles tienen un botón de icono "Cerrar sesión" (Power en la maqueta, `LogOut` en código) junto al nombre y rol del usuario: al pie del panel lateral (web), al pie de la barra de iconos (tablet) y, en móvil, en una fila de usuario al inicio de la página, sin tocar la barra inferior. Un operador termina su sesión de app (`ended_at`) y vuelve a `/entrar`; administradores y superadmin cierran su sesión de Auth y vuelven a `/login`. Si la sesión ya expiró, redirige igual sin error. Se borra la compañía activa del navegador.
 - En móvil, "Accesos" y los ajustes de compañía viven dentro de sus pantallas, no en la barra inferior.
 
 ## 3. Inventario de pantallas
