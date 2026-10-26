@@ -8,7 +8,7 @@ import { AlertasSection, BannerSection, DialogosSection, InsigniasSection, Toast
 import { AccordionSection, BreadcrumbsSection, CompanySelectorSection, SidebarGallerySection, StepsSection, TabsSection } from "./sections/navegacion";
 import { ComposedSection, DatatableSection, FormSection } from "./sections/datos";
 import { DatepickerSection } from "./sections/fechas";
-import { HistorialSection } from "./sections/historial";
+import { FiltrosSection, HistorialSection } from "./sections/historial";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 
 export const metadata = { title: "Argos UI — galería" };
@@ -38,7 +38,8 @@ const sections = [
   { id: "selector-compania", title: "Selector de compañía", description: "Panel lateral; en riel solo avatar, en móvil avatar en la barra superior [decisión del usuario].", content: <CompanySelectorSection /> },
   { id: "datatable", title: "Datatable", description: "Tabla genérica DataTable<T> (guía §6.33).", content: <DatatableSection /> },
   { id: "compuestos", title: "PageHeader, ListToolbar y EmptyState", description: "Compuestos de página montados juntos.", content: <ComposedSection /> },
-  { id: "historial", title: "Historial", description: "Tabla de operaciones y detalle de cambios (H-01).", content: <HistorialSection /> },
+  { id: "filtros", title: "FilterBar, FilterPill y Avatar", description: "Barra de filtros de una página (guía §6.35).", content: <FiltrosSection /> },
+  { id: "historial", title: "AuditTable e Historial", description: "Tabla de auditoría agrupada por día (guía §6.36) y página completa (H-01/H-02).", content: <HistorialSection /> },
   { id: "formshell", title: "FormShell", description: "Formulario de ejemplo.", content: <FormSection /> },
 ];
 

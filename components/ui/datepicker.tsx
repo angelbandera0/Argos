@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Popover } from "@base-ui/react/popover";
 import { NAV_ICONS } from "@/components/icons";
 import { Button } from "./button";
+import { FilterPill } from "./filter-pill";
 import {
   MONTHS, MONTHS_SHORT, WEEKDAYS, addDays, addMonths, clampIso, daysInMonth, endOfMonth, endOfWeek, formatDisplay, formatLong,
   formatShortRange, isDisabledDay, isValidIso, maskDisplay, monthMatrix, monthTitle, normalizeRange, parseDisplay, parseIso, pickRangeDay,
@@ -312,8 +313,10 @@ function PopupShell({
   finalFocus,
   label,
   className,
+  renderTrigger,
   children,
 }: {
+  renderTrigger?: () => React.ReactNode;
   open: boolean;
   onOpenChange: (o: boolean) => void;
   anchor: React.RefObject<HTMLElement | null>;
@@ -325,9 +328,13 @@ function PopupShell({
   const popup = useRef<HTMLDivElement>(null);
   return (
     <Popover.Root open={open} onOpenChange={onOpenChange}>
-      <Popover.Trigger className="dp-trigger" aria-label="Abrir calendario" data-open={open || undefined}>
-        <CalendarIcon aria-hidden="true" />
-      </Popover.Trigger>
+      {renderTrigger ? (
+        renderTrigger()
+      ) : (
+        <Popover.Trigger className="dp-trigger" aria-label="Abrir calendario" data-open={open || undefined}>
+          <CalendarIcon aria-hidden="true" />
+        </Popover.Trigger>
+      )}
       <Popover.Portal>
         <Popover.Positioner className="ui-positioner" anchor={anchor} sideOffset={8} align="start">
           <Popover.Popup
@@ -439,6 +446,8 @@ export type DateRangePickerProps = BaseProps & {
   onValueChange?: (value: DateRange) => void;
   presets?: boolean;
   months?: 1 | 2;
+  /** Filter-pill mode: a FilterPill trigger («Fechas: 20 – 26 oct 2026», ✕ to remove) instead of the two fields. */
+  pill?: { label: string; emptyText?: string };
   "aria-label"?: string;
 };
 
@@ -458,6 +467,7 @@ export function DateRangePicker({
   today: todayProp,
   presets = true,
   months,
+  pill,
   className,
   "aria-label": ariaLabel = "Rango de fechas",
   "aria-describedby": describedBy,
@@ -467,12 +477,66 @@ export function DateRangePicker({
   const [open, setOpen] = useState(false);
   const field = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const pillButton = useRef<HTMLButtonElement>(null);
   const reversed = typedRangeError(value.from, value.to);
 
   function commit(next: DateRange) {
     if (next.from === value.from && next.to === value.to) return;
     setInner(next);
     onValueChange?.(next);
+  }
+
+  if (pill) {
+    const text =
+      value.from && value.to
+        ? formatShortRange(value.from, value.to)
+        : value.from
+          ? `Desde ${formatDisplay(value.from)}`
+          : value.to
+            ? `Hasta ${formatDisplay(value.to)}`
+            : undefined;
+    return (
+      <PopupShell
+        open={open && !disabled}
+        onOpenChange={setOpen}
+        anchor={pillRef}
+        finalFocus={pillButton}
+        label="Elegir rango de fechas"
+        className="dp-popup-range"
+        renderTrigger={() => (
+          <FilterPill
+            ref={pillRef}
+            label={pill.label}
+            emptyText={pill.emptyText ?? "Todas"}
+            valueText={text}
+            icon={<CalendarIcon aria-hidden="true" className="filter-icon" />}
+            hideLabelWhenSet
+            open={open}
+            onClear={() => commit(EMPTY)}
+            trigger={(content, className) => (
+              <Popover.Trigger ref={pillButton} className={className} disabled={disabled}>
+                {content}
+              </Popover.Trigger>
+            )}
+          />
+        )}
+      >
+        <RangePanel
+          value={value}
+          min={min}
+          max={max}
+          today={todayProp ?? todayIso()}
+          presets={presets}
+          months={months}
+          onCancel={() => setOpen(false)}
+          onApply={(r) => {
+            commit(r);
+            setOpen(false);
+          }}
+        />
+      </PopupShell>
+    );
   }
 
   return (

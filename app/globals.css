@@ -5,6 +5,7 @@
 @import "./ui-feedback.css";
 @import "./ui-navdata.css";
 @import "./ui-dates.css";
+@import "./ui-history.css";
 
 @theme inline {
   --color-background: var(--color-surface);
