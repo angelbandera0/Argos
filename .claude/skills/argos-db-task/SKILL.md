@@ -22,6 +22,13 @@ Aplica esto al escribir una migración con sus pruebas. Todo en Modo Ponytail (C
 - Una migración ya aplicada no se reescribe: un arreglo es otra migración.
 - Pruebas: archivo `NNN_nombre.test.sql`, aserciones al inicio de línea con `plan/is/ok/matches/throws_ok/lives_ok`, ids fijos en uuid, `tests.clear_auth()` y `finish()` al final.
 
+## Pocas llamadas (cada llamada relee todo el contexto)
+
+- Lee todos los archivos necesarios en UNA llamada (`cat a b c`), no uno por uno.
+- Escribe migración y pruebas en una sola llamada (varios heredocs seguidos).
+- No releas lo que acabas de escribir; confía en el error del comando si falla.
+- Cierra con un único comando: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` (o `pnpm test:db`, según la tarea).
+
 ## Flujo
 
 1. Escribir migración y pruebas.
