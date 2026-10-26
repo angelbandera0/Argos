@@ -127,6 +127,10 @@ Las tarjetas **no** llevan sombra: se separan por color (`panel` sobre blanco).
 
 ---
 
+Tamaños de componentes base (`--size-*`) y `--color-scrim` (fondo del modal) viven en `tokens.css`.
+
+---
+
 ## 5. Layout responsivo
 
 | Breakpoint | Navegación | Contenido |

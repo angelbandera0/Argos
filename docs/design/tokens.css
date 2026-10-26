@@ -93,6 +93,18 @@
   --size-sidebar: 236px;
   --size-rail: 84px;
   --size-bottom-nav: 68px;
+  --size-nav-item: 46px;
+  --size-rail-item: 52px;
+  --size-nav-item-mobile: 56px;
+  --size-icon: 18px;
+  --size-icon-nav: 19px;
+  --size-icon-rail: 21px;
+  --size-dot: 7px;
+  --size-avatar: 40px;
+  --size-list-row: 56px;
+  --size-modal: 480px;
+  --size-focus: 3px;
+  --color-scrim: rgba(28, 28, 30, 0.4);
 
   /* ---- Carga (ver DESIGN.md §6.15) ---- */
   --skeleton-on-surface: var(--color-panel);   /* placeholder sobre fondo blanco */
