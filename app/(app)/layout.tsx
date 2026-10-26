@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
+import { CATEGORIES, PRODUCTS, operatorNav } from "@/components/shell/catalog-nav";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeOrg } from "@/infrastructure/supabase/org-factory";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
@@ -17,7 +18,6 @@ import { makeUsers } from "@/infrastructure/supabase/users-factory";
 const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
 const ROLES: NavItem = { id: "roles", label: "Roles", href: "/roles", icon: "KeyRound" };
 const USERS: NavItem = { id: "usuarios", label: "Usuarios", href: "/usuarios", icon: "Users" };
-const PRODUCTS: NavItem = { id: "productos", label: "Productos", href: "/catalogo/productos", icon: "Box" };
 const ADMINS: NavItem = {
   id: "administradores",
   label: "Administradores",
@@ -56,7 +56,7 @@ async function OperatorShell({
           </form>
         </div>
       }
-      nav={active.permissions.products.view ? [PRODUCTS] : []}
+      nav={operatorNav(active.permissions.products)}
       user={{ name: profile?.displayName ?? "Operador", role: active.roleName }}
     >
       {children}
@@ -83,7 +83,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       top={selector}
-      nav={superadmin ? [ADMINS, COMPANIES] : [COMPANIES, ROLES, USERS]}
+      nav={superadmin ? [ADMINS, COMPANIES] : [COMPANIES, ROLES, USERS, CATEGORIES, PRODUCTS]}
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",

@@ -135,3 +135,7 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - Task 29A: la hora de fin de sesion usa la zona horaria del servidor (sin zona de compania); el estado "sesion terminada" no llega por el proxy (sessionEnded=false); /catalogo/productos del menu aun no existe.
 - Task 29B: con alguna asignacion de rol ajeno el admin no puede cambiar NINGUNA asignacion (assignStores exige ser dueno de todos los roles actuales); pendiente decidir la politica. Actividad usa la zona horaria del servidor; listAuthEvents sin prueba de integracion.
 Task 30B: minor (deferred): live-category check in createProduct/updateProduct is not atomic with the write (race with category delete); a DB trigger on products.category_id would close it; name-exists checks fetch all live names of a company (fine at current scale)
+
+## Task 31 (menores)
+- Cambiar el activo de un producto es una segunda escritura tras updateProduct (no atomico); el operador necesita Editar para ambas.
+- Pantallas de producto leen la lista completa para encontrar un producto por id (sin getProduct en los casos de uso).
