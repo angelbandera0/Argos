@@ -85,6 +85,7 @@ export function setup() {
     clock,
   };
   return {
+    deps,
     clock,
     sessions,
     catalog,
