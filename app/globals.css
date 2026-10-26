@@ -40,6 +40,27 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .appbar { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
 .appbar .spacer { flex: 1; }
 .appbar-context { display: flex; }
+.company { flex: none; }
+.company-side { margin-bottom: var(--space-2); }
+.company-bar { display: none; }
+.company-btn { display: flex; align-items: center; gap: var(--space-2-5); width: 100%; min-height: var(--size-control); padding: var(--space-1-5) var(--space-3) var(--space-1-5) var(--space-1-5); border: var(--border-hairline) solid var(--color-line); border-radius: var(--radius-inner); background: var(--color-surface); color: var(--color-ink); text-align: left; cursor: pointer; }
+.company-btn:hover, .company-btn[aria-expanded="true"] { background: var(--color-hover); }
+.company-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.company-text strong, .company-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.company-chevron { width: var(--size-icon-chevron); height: var(--size-icon-chevron); flex: none; color: var(--color-ink-2); }
+.co-avatar { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-icon); font: var(--text-avatar); background: var(--co-bg); color: var(--co-fg); }
+.co-tone-0 { --co-bg: var(--color-yellow); --co-fg: var(--color-ink); }
+.co-tone-1 { --co-bg: var(--color-red-tint); --co-fg: var(--color-red-hover); }
+.co-tone-2 { --co-bg: var(--color-success-tint); --co-fg: var(--color-success); }
+.co-tone-3 { --co-bg: var(--color-hover); --co-fg: var(--color-ink-2); }
+.co-tone-none { --co-bg: var(--color-hover); --co-fg: var(--color-muted); }
+.company-popup { min-width: var(--size-menu); }
+.company-label { padding: var(--space-2) var(--space-3); }
+.company-item[data-checked] { background: var(--color-panel); }
+.company-item .who { flex: 1; }
+.company-code { font: var(--text-caption); font-family: var(--font-mono); color: var(--color-muted); }
+.company-check { display: inline-flex; color: var(--color-red-strong); }
+.company-check svg { width: var(--size-icon); height: var(--size-icon); }
 .clock { white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .appbar-search { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-control); width: calc(var(--size-sidebar) - var(--space-5)); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-pill); background: var(--color-panel); color: var(--color-muted); text-align: left; cursor: not-allowed; }
 .appbar-search svg { width: var(--size-icon); height: var(--size-icon); flex: none; }
@@ -62,6 +83,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 @media (max-width: 1279px) {
   .app { gap: var(--space-4); }
   .profile-btn .who { display: none; }
+  .company-side { margin-bottom: var(--space-2); }
+  .company-side .company-btn { width: auto; min-height: 0; padding: var(--space-1); border-color: transparent; background: transparent; }
+  .company-side .company-text, .company-side .company-chevron { display: none; }
   .side { width: var(--size-rail); align-items: center; padding: var(--space-5) 0; }
   .brand { padding: 0 0 var(--space-4); }
   .brand span:last-child, .nav-item span, .nav-label { display: none; }
@@ -78,7 +102,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
     background: var(--color-surface); border: 1px solid var(--color-line-soft); box-shadow: var(--shadow-floating);
     border-radius: var(--radius-pill);
   }
-  .brand { display: none; }
+  .brand, .company-side { display: none; }
+  .company-bar { display: block; }
+  .company-bar .company-btn { width: auto; min-height: var(--size-control); padding: var(--space-1); border-radius: var(--radius-pill); }
+  .company-bar .company-text, .company-bar .company-chevron { display: none; }
   .profile-btn > svg, .appbar-search span { display: none; }
   .appbar-search { width: var(--size-control); padding: 0; justify-content: center; }
   .nav-item { width: var(--size-nav-item-mobile); height: var(--size-rail-item); flex-direction: column; gap: 2px; font: var(--text-overline); font-weight: 500; }

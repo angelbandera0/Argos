@@ -66,6 +66,7 @@
   /* ---- Tipografía ---- */
   --font-display: "Inter Tight", Arial, sans-serif;
   --font-ui: "Inter", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --text-display: 600 32px/1.1 var(--font-display);
   --text-kpi-xl: 400 44px/1 var(--font-display);
@@ -153,6 +154,7 @@
   --size-menu: 272px;
   --size-list-row: 56px;
   --size-modal: 480px;
+  --size-form: 480px;
   --size-chart: 200px;
   --size-bar-max: 44px;
   --size-focus: 3px;

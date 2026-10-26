@@ -323,6 +323,7 @@ Franja a todo el ancho arriba del contenido, para estados que afectan a toda la 
 - **Fondo:** `--color-overlay`. **Caja:** blanca, radio `--radius-dialog` (28 px), padding 28 px, `--shadow-dialog`, ancho 420 px (confirmación) a 480–560 px (formulario).
 - **Contenido:** icono en círculo de 48 px (amarillo tint para avisos, rojo tint para destructivos) → título en pregunta (Inter Tight 24 px 600) → texto 15 px `--color-ink-2` → contenido opcional (resumen en caja `--color-panel` radio 16, o campos) → acciones alineadas a la derecha, gap 10 px: Secundario ("Cancelar"/"Mantener venta") + Primario con el verbo exacto ("Cerrar turno", "Anular venta").
 - **Destructivo:** `role="alertdialog"`, explica la consecuencia y que no se puede deshacer (en negrita); pide motivo si aplica.
+- **Formulario de página [decisión del usuario]:** ancho `--size-form` (480 px, 100% en móvil), definido solo en `FormShell`.
 - **Con formulario:** cabecera con título 22 px + botón ✕ de 40 px (`--color-panel`), pie con borde superior `--color-line-soft`.
 - **Accesibilidad:** `role="dialog"` + `aria-modal="true"` + `aria-labelledby` / `aria-describedby`; foco atrapado dentro; el foco inicial va al primer campo o al botón seguro (Cancelar) en los destructivos; Esc cierra; al cerrar, el foco vuelve al botón que lo abrió; el scroll de la página se bloquea.
 - **Móvil:** se abre como **hoja inferior**: radio 28 px solo arriba, asa de 40×5 px `--color-ring`, opciones grandes (52 px) y botón principal a todo el ancho (52 px).

@@ -209,7 +209,7 @@
 .empty-state-icon svg { width: var(--size-icon-circle); height: var(--size-icon-circle); }
 .empty-state-title { margin: 0; font: var(--text-value); }
 .empty-state-text { margin: 0; max-width: var(--size-modal); color: var(--color-muted); }
-.form-shell { display: flex; flex-direction: column; gap: var(--space-4); max-width: var(--size-modal); }
+.form-shell { display: flex; flex-direction: column; gap: var(--space-4); width: 100%; max-width: var(--size-form); }
 .form-shell-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2-5); }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,5 @@
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
+import { CompanySelector, type CompanySelectorProps } from "@/components/org/company-selector";
 import { Button } from "@/components/ui/button";
 import { SidebarSection } from "@/components/ui/sidebar-section";
 import { NavLink } from "./nav-link";
@@ -13,12 +14,14 @@ export function AppShell({
   nav,
   user,
   top,
+  company,
   action,
   children,
 }: {
   nav: NavItem[];
   user: { name: string; role: string; handle?: string | null };
   top?: React.ReactNode;
+  company?: CompanySelectorProps;
   action?: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -29,6 +32,7 @@ export function AppShell({
           <span className="brand-mark" aria-hidden="true" />
           <span>Argos</span>
         </div>
+        {company && <CompanySelector {...company} variant="side" />}
         <SidebarSection title="Menú">
           {nav.map(({ id, ...item }) => (
             <NavLink key={id} {...item} />
@@ -38,6 +42,7 @@ export function AppShell({
       <main className="main">
         <div className="content">
           <div className="appbar">
+            {company && <CompanySelector {...company} variant="bar" />}
             <TopClock />
             <span className="spacer" />
             <button type="button" className="appbar-search" aria-disabled="true" aria-label="Buscar" title="Próximamente">
