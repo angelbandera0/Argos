@@ -113,3 +113,7 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 ## UI fix (icons/prerender)
 - Lección: de Server a Client Components solo pasar datos serializables (nombre de icono, no componentes Lucide). Con cacheComponents, `createServerClient` espera `connection()` antes de crear el cliente (el constructor de Supabase Auth lee `Date.now()`), y el layout muestra un skeleton del shell en el Suspense.
 - Pendiente: comprobar en el navegador (con sesión) que ya no salen ambos errores; por curl sin sesión `/companias` redirige a /login.
+
+## Task 25B (role repository)
+- create/update de roles no son atómicos (varias escrituras vía PostgREST); en create fallido se hace soft delete compensatorio. Valorar una RPC transaccional.
+- hasAssignments=true no se prueba en integración (requiere operador con user_stores; Tarea 27).
