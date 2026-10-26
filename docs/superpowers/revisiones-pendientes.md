@@ -76,3 +76,12 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `tokens.css` ganó tokens `--size-*` y `--color-scrim`; quedan px sueltos heredados de la maqueta (fuente de marca 20px, avatar 13px, ancho de `.auth-card` 440px).
 - `Dialog` usa un id fijo `dialog-title`: no apilar dos diálogos a la vez.
 - `instrumentation.ts` aborta `pnpm dev` si `.env.local` trae una contraseña inicial de superadmin de menos de 12 caracteres.
+
+## Menores diferidos de la Tarea 20
+
+- `requestPasswordReset` solo envía el correo (sin `redirectTo`): falta la página de destino que intercambie el código y fije la nueva contraseña (con TOTP exige aal2). Pendiente de diseño.
+- Cambiar la contraseña con `service_role` revoca los refresh tokens; `completeFirstLogin` vuelve a iniciar sesión con la contraseña nueva para obtener claims frescos (`must_change_password = false`).
+- `/login/2fa` y `/primer-ingreso` usan `export const instant = false` (lectura de sesión no prerenderizable; `getClaims` usa `Date.now` y la validación de navegación instantánea avisa en dev).
+- `makeChangeOwnPassword`: `users` pasó a ser opcional (no se usa; aún no existe el repositorio de usuarios).
+- Tras verificar TOTP se redirige a `/companias`, que aún no existe (404 hasta la fase de organización). Sin límite de intentos propio en TOTP (solo el de Supabase).
+- px sueltos heredados del diseño: bordes 1.5px/2px de las casillas, `font-size: 16px` del input (anti-zoom iOS).
