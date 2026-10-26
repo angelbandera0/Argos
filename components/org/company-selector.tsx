@@ -41,8 +41,8 @@ export function CompanySelector({
         <Menu.Portal>
           <Menu.Positioner className="ui-positioner" align="start" sideOffset={8}>
             <Menu.Popup className="menu-popup company-popup" aria-label="Cambiar compañía">
-              <Menu.GroupLabel className="eyebrow company-label">Cambiar compañía</Menu.GroupLabel>
               <Menu.RadioGroup value={activeId ?? ""} onValueChange={(v) => v && start(() => setActiveCompanyAction(String(v)))}>
+                <Menu.GroupLabel className="eyebrow company-label">Cambiar compañía</Menu.GroupLabel>
                 {companies.map((c) => (
                   <Menu.RadioItem key={c.id} value={c.id} className="menu-item company-item">
                     <Avatar company={c} />

@@ -44,3 +44,4 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 - Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx`.
 - Cada componente nuevo de `components/ui/` se añade a la galería (`app/ui/sections/`) y se documenta en `DESIGN-resumen.md`.
 - Pantalla nueva sin verificar a mano: anótalo en el informe y pide `/verificar-ui N`.
+- Menús de Base UI: las etiquetas de grupo (`Menu.GroupLabel`) van dentro de `Menu.Group` o `Menu.RadioGroup`; fuera lanzan «MenuGroupContext is missing». Ejemplo: `components/org/company-selector.tsx`.

@@ -45,9 +45,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .company-bar { display: none; }
 .company-btn { display: flex; align-items: center; gap: var(--space-2-5); width: 100%; min-height: var(--size-control); padding: var(--space-1-5) var(--space-3) var(--space-1-5) var(--space-1-5); border: var(--border-hairline) solid var(--color-line); border-radius: var(--radius-inner); background: var(--color-surface); color: var(--color-ink); text-align: left; cursor: pointer; }
 .company-btn:hover, .company-btn[aria-expanded="true"] { background: var(--color-hover); }
-.company-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.company-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; text-align: left; }
+.company-text .eyebrow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.company-btn:focus-visible { outline: none; border-color: var(--color-red-strong); box-shadow: var(--focus-ring-field); }
 .company-text strong, .company-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
-.company-chevron { width: var(--size-icon); height: var(--size-icon); flex: none; color: var(--color-ink-2); }
+.company-chevron { width: var(--size-icon-sm); height: var(--size-icon-sm); flex: none; color: var(--color-ink-2); stroke-width: 1.75; }
 .co-avatar { display: inline-flex; align-items: center; justify-content: center; flex: none; width: var(--size-control-sm); height: var(--size-control-sm); border-radius: var(--radius-icon); font: var(--text-avatar); background: var(--co-bg); color: var(--co-fg); }
 .co-tone-0 { --co-bg: var(--color-yellow); --co-fg: var(--color-ink); }
 .co-tone-1 { --co-bg: var(--color-red-tint); --co-fg: var(--color-red-hover); }
