@@ -37,7 +37,7 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 - **Revisión.** Se omite la revisión por tarea para avanzar; las revisiones de seguridad están diferidas en `docs/superpowers/revisiones-pendientes.md`. Cada tarea termina con sus pruebas en verde y el informe corto. Lo que se detecte se anota ahí.
 - **Pruebas.** Se escriben junto con la implementación, pero se ejecutan una sola vez al final de la tarea (sin ciclo RED/GREEN intermedio); el informe da el resultado de esa ejecución.
 - **Navegador.** Las pruebas en el navegador (Chrome) consumen mucho y tardan: no se usan por defecto. Solo con `/tarea N --browser` o con `/verificar-ui N`. Sin ellas, la verificación de UI es lint, typecheck, pruebas, build y lectura de código frente a los mockups.
-- **Diseño.** Los subagentes de UI leen `docs/design/DESIGN-resumen.md`; `DESIGN.md` solo para lo que falte (el original manda). El resumen no define el modal de "mostrar una sola vez" ni el estado vacío.
+- **Diseño.** Los subagentes de UI leen `docs/design/DESIGN-resumen.md`; `DESIGN.md` solo para lo que falte (el original manda). `docs/design/PATRONES-UI.md` recoge los patrones de página, acciones, listas, formularios y modales ya implementados. El resumen no define el modal de "mostrar una sola vez" ni el estado vacío.
 - **Una tarea cada vez.** Tras cada tarea el controlador para y espera el "sigue" del usuario.
 
 ## Architecture notes
