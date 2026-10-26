@@ -17,4 +17,6 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 20 Páginas de acceso de administradores | Sonnet (subagente; cortado por límite de sesión y reanudado) | implementación + verificación en Chrome | lint, typecheck, build, unit 281/281 | 77ee72a | subagente (solo la reanudación): 181.310 tokens, 90 llamadas, 732 s; lo gastado antes del corte no se midió |
 | 21 Páginas del superadmin | Sonnet (subagente, sin navegador) | implementación | lint, typecheck, build, unit 284/284, test:int 12/12 | 4b41246 | subagente: 122.870 tokens, 23 llamadas, 246 s |
 
+Nota de medición (2026-10-26): la columna Tokens es el tamaño del contexto al final de la corrida (`subagent_tokens` del arnés), no el gasto facturado. El gasto real es salida + escritura de caché + lectura de caché (que se relee en cada llamada); `pnpm usage <output_file>` lo calcula. En la Tarea 21: 23 llamadas, contexto 32.985 → 122.132, salida 20.146, escritura de caché 103.527, lectura de caché 1.712.301, equivalente ponderado ≈ 401.000.
+
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.

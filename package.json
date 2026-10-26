@@ -11,7 +11,8 @@
     "test:int": "vitest run --project integration --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "test:db": "node scripts/test-db.mjs",
-    "db:apply": "node scripts/db-apply.mjs"
+    "db:apply": "node scripts/db-apply.mjs",
+    "usage": "node scripts/usage.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
