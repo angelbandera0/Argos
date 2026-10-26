@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { CategoryForm } from "@/components/catalog/category-form";
+import { NewCategoryButton } from "@/components/catalog/category-dialog";
 import { CategoryRow } from "@/components/catalog/category-row";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -20,11 +20,8 @@ async function CategoryList() {
   const categories = await catalog.listCategories(actor, { companyId });
   return (
     <div className="stack">
-      <Card>
-        <CategoryForm />
-      </Card>
       {categories.length === 0 ? (
-        <EmptyState icon="Tags" title={`Aún no hay categorías en ${companyName}.`}>
+        <EmptyState icon="Tags" title={`Aún no hay categorías en ${companyName}.`} action={<NewCategoryButton />}>
           Agrega la primera para poder crear productos.
         </EmptyState>
       ) : (
@@ -42,10 +39,22 @@ async function CategoryList() {
   );
 }
 
+async function NewCategoryAction() {
+  const { companyId } = await requireCategoryAdmin();
+  return companyId ? <NewCategoryButton /> : null;
+}
+
 export default function CategoriesPage() {
   return (
     <div className="stack">
-      <PageHeader title="Categorías" />
+      <PageHeader
+        title="Categorías"
+        actions={
+          <Suspense fallback={null}>
+            <NewCategoryAction />
+          </Suspense>
+        }
+      />
       <Suspense fallback={<Loading />}>
         <CategoryList />
       </Suspense>

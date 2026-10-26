@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { CompanySelector } from "@/components/org/company-selector";
+import type { CompanySelectorProps } from "@/components/org/company-selector";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
@@ -65,18 +65,18 @@ async function Shell({ children }: { children: React.ReactNode }) {
   if (claims.kind === "operator") return <OperatorShell userId={claims.userId} sessionId={claims.sessionId}>{children}</OperatorShell>;
   const profile = await makeUserRepository(supabase).getProfile(claims.userId);
   const superadmin = claims.kind === "superadmin";
-  let selector: React.ReactNode;
+  let company: CompanySelectorProps | undefined;
   if (claims.kind === "admin" && claims.aal === "aal2" && !claims.mustChangePassword) {
     const companies = await makeOrg(supabase).listCompanies({ userId: claims.userId, kind: "admin", channel: "ui" });
     const cookieId = (await cookies()).get(ACTIVE_COMPANY_COOKIE)?.value;
     const activeId = companies.some((c) => c.id === cookieId) ? cookieId : undefined;
     if (companies.length > 0) {
-      selector = <CompanySelector companies={companies.map((c) => ({ id: c.id, name: c.name }))} activeId={activeId} />;
+      company = { companies: companies.map((c) => ({ id: c.id, name: c.name, code: c.code })), activeId };
     }
   }
   return (
     <AppShell
-      top={selector}
+      company={company}
       nav={superadmin ? [HOME, ADMINS, COMPANIES] : [HOME, COMPANIES, ROLES, USERS, CATEGORIES, PRODUCTS]}
       user={{
         name: profile?.displayName ?? claims.email,

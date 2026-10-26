@@ -26,6 +26,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Confirmación de resultado | `useToast()` (`ToastProvider` ya montado) | `components/users/assignments-form.tsx` |
 | Confirmación destructiva | `AlertDialog` (foco inicial en Cancelar) | `components/roles/delete-role-dialog.tsx` |
 | Modal con formulario | `Dialog` (`size`, `footer`) | `components/org/deactivate-dialog.tsx` |
+| Formulario corto en diálogo [decisión del usuario] | `FormDialog` (`Dialog` + `FormShell`, `(prev, formData)`, errores dentro, cierra y avisa con toast si hay éxito, foco al disparador). Se monta solo mientras está abierto (`{open && <FormDialog …/>}`). Alta y edición de compañía, ajustes de compañía y categorías ya no tienen página | `components/org/new-company-dialog.tsx`, `components/org/company-settings-dialog.tsx`, `components/catalog/category-dialog.tsx` |
 | Secreto de una sola vez | `Dialog dismissible={false}`; cierre solo tras copiar | `components/users/pin-reveal-dialog.tsx` |
 | Estado e insignias | `Badge`, `Chip`, `Tooltip` | `app/(app)/superadmin/administradores/admin-table.tsx` |
 | Carga | `Skeleton`, `Spinner`, `RouteProgress`; `Button loading` | `app/(app)/roles/loading.tsx` |
@@ -37,6 +38,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 - Acción deshabilitada por falta de permiso: botón `disabled` con la razón visible y enlazada con `aria-describedby` (ejemplo `unit-menu.tsx`, `deactivate-dialog.tsx`); acciones solo de administrador se ocultan por `actor.kind`.
 - Opción de `Select` con valor vacío («Todos»): usar `value=""` explícito (`app/(app)/usuarios/page.tsx`).
 - Iconos del shell: pasa el NOMBRE (`"Building2"`), nunca un componente de servidor a cliente; icono nuevo: añádelo a `NAV_ICONS` (`components/icons.ts`).
+- Ancho de formularios de página [decisión del usuario]: lo fija solo `FormShell` (`.form-shell`, `width: 100%`, `max-width: var(--size-form)` = 480; 100% en móvil). Las páginas ponen `FormShell` por fuera y las `Card` dentro; nunca `Card` por fuera ni anchos propios (causa del bug: `new-user-form` envolvía `FormShell` en una `Card` de ancho completo).
 - Mostrar una vez, sin cierre accidental: Escape y clic fuera no cierran (`dismissible={false}`).
 - Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx`.
 - Cada componente nuevo de `components/ui/` se añade a la galería (`app/ui/sections/`) y se documenta en `DESIGN-resumen.md`.

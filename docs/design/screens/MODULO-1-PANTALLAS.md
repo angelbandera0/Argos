@@ -47,10 +47,10 @@
 | S-01 | Administradores (lista) | `/superadmin/administradores` | Superadmin | 006 | — |
 | S-02 | Nuevo administrador (contraseña temporal mostrada una vez) | `/superadmin/administradores/nuevo` | Superadmin | 006 | — |
 | C-01 | Compañías (lista) | `/companias` | Admin, Superadmin | 005 | — |
-| C-02 | Nueva compañía | `/companias/nueva` | Administrador | 005 | — |
+| C-02 | Nueva compañía | diálogo en C-01 [decisión del usuario] | Administrador | 005 | — |
 | C-03 | Detalle de compañía: sedes y tiendas | `/companias/[id]` | Admin, Superadmin | 005 | `04` |
 | C-04 | Administradores con acceso (dar y quitar) | `/companias/[id]/administradores` | Admin, Superadmin | 005 | — |
-| C-05 | Ajustes (tope de sesión) | `/companias/[id]/ajustes` | Administrador | 005, 006 | — |
+| C-05 | Ajustes (tope de sesión) | diálogo en C-03 [decisión del usuario] | Administrador | 005, 006 | — |
 | C-06 | Desactivar y reactivar con motivo | modal en C-03, sedes y tiendas | Fundador, Superadmin | 005 | `04` |
 | U-01 | Usuarios (lista) | `/usuarios` | Administrador | 006 | — |
 | U-02 | Nuevo usuario | `/usuarios/nuevo` | Administrador | 006 | — |
@@ -124,9 +124,10 @@ Siguen los mismos componentes de `DESIGN.md`; lo específico:
 - **S-01 · C-01 · U-01 · R-01 · P-01:** lista en filas sobre panel, con buscador, filtro y botón principal "Nuevo …". Estado vacío: icono, una frase y el botón de crear.
 - **S-02:** formulario de correo y nombre; al crear, modal con la contraseña temporal mostrada una sola vez, igual que el PIN (U-04).
 - **C-04:** lista de administradores con acceso. "Quitar acceso" solo para el fundador o el superadmin; la fila del fundador lleva la etiqueta "Fundador" y no tiene esa acción (DR-005).
+- **C-02 y C-05 [decisión del usuario]:** son diálogos (no páginas): C-02 se abre desde "Nueva compañía" (cabecera y estado vacío de C-01) y C-05 desde "Ajustes" en C-03. K-01: "Nueva categoría" y "Renombrar" también abren un diálogo.
 - **C-05:** campo "Tope de sesión" (horas, máximo 24). Guardar queda en el historial.
 - **U-02:** nombre, nombre de usuario (el prefijo `código.` es fijo y se muestra delante), rol, tiendas. Al guardar, modal del PIN (U-04).
-- **K-01 y P-02:** formularios con nombre, categoría (una sola), descripción opcional y estado activo. Error de nombre repetido dentro de la compañía.
+- **K-01 y P-02:** K-01 es un diálogo con el nombre; P-02 es una página con formulario con nombre, categoría (una sola), descripción opcional y estado activo. Error de nombre repetido dentro de la compañía.
 - **H-01:** tabla con fecha, quién, acción, módulo y canal. Cada fila abre un detalle con el valor anterior y el nuevo. Filtros por módulo, usuario y fechas. Un operador solo ve los módulos que su rol puede ver.
 - **H-02:** igual que H-01, con los eventos de acceso; los PIN y contraseñas nunca aparecen.
 

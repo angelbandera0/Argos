@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Store } from "@/components/icons";
+import { CompanySettingsButton } from "@/components/org/company-settings-dialog";
 import { DeactivateDialog } from "@/components/org/deactivate-dialog";
 import { REASON_LABELS } from "@/components/org/reasons";
 import { Accordion } from "@/components/ui/accordion";
@@ -83,9 +84,7 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
               Administradores
             </Link>
             {actor.kind === "admin" && (
-              <Link className={buttonClass("secondary", "md")} href={`/companias/${id}/ajustes`}>
-                Ajustes
-              </Link>
+              <CompanySettingsButton companyId={id} name={company.name} hours={company.sessionCapSeconds / 3600} />
             )}
           </>
         }

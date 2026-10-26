@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import { Plus } from "@/components/icons";
-import { buttonClass } from "@/components/ui/button-class";
+import { NewCompanyButton } from "@/components/org/new-company-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ListToolbar } from "@/components/ui/list-toolbar";
 import { PageHeader } from "@/components/ui/page-header";
@@ -28,12 +26,7 @@ async function CompanyList({ searchParams }: { searchParams: PageProps<"/compani
         icon="Building2"
         title={canCreate ? "Aún no tienes compañías." : "Aún no hay compañías registradas."}
         action={
-          canCreate && (
-            <Link className={buttonClass("primary", "md")} href="/companias/nueva">
-              <Plus aria-hidden="true" />
-              Nueva compañía
-            </Link>
-          )
+          canCreate && <NewCompanyButton />
         }
       >
         {canCreate ? "Crea la primera para registrar sus sedes y tiendas." : undefined}
@@ -51,16 +44,20 @@ async function CompanyList({ searchParams }: { searchParams: PageProps<"/compani
   );
 }
 
+async function CreateAction() {
+  const { actor } = await requireOrgUser();
+  return actor.kind === "admin" ? <NewCompanyButton /> : null;
+}
+
 export default function CompaniasPage(props: PageProps<"/companias">) {
   return (
     <div className="stack">
       <PageHeader
         title="Compañías"
         actions={
-          <Link className={buttonClass("primary", "md")} href="/companias/nueva">
-            <Plus aria-hidden="true" />
-            Nueva compañía
-          </Link>
+          <Suspense fallback={null}>
+            <CreateAction />
+          </Suspense>
         }
       />
       <Suspense fallback={<Loading />}>
