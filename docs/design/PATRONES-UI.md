@@ -30,6 +30,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Secreto de una sola vez | `Dialog dismissible={false}`; cierre solo tras copiar | `components/users/pin-reveal-dialog.tsx` |
 | Estado e insignias | `Badge`, `Chip`, `Tooltip` | `app/(app)/superadmin/administradores/admin-table.tsx` |
 | Carga | `Skeleton`, `Spinner`, `RouteProgress`; `Button loading` | `app/(app)/roles/loading.tsx` |
+| Selector de compañía activa [decisión del usuario] | `CompanySelector` en el panel lateral (`AppShell company={…}`), avatar determinista por código (`company-avatar.ts`) | `components/org/company-selector.tsx` |
 | Shell y menú | `SidebarSection`, `SidebarItem`, `SidebarSubmenu`; `ProfileMenu` | `components/shell/app-shell.tsx` |
 
 ## Reglas transversales

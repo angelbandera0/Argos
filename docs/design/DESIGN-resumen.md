@@ -43,7 +43,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Tamaños `--size-*` (§4, tokens.css): `touch` 40 (44 táctil/móvil), `control` 40 (44 táctil/móvil), `control-sm` 36, `cta` 52, `sidebar` 236, `rail` 84, `bottom-nav` 68, `nav-item` 40, `rail-item` 52, `nav-item-mobile` 56, `icon` 18, `icon-nav` 18, `icon-rail` 21, `dot` 7, `avatar` 40, `icon-circle` 32, `menu` 272, `list-row` 56, `modal` 480, `form` 480 (ancho de `FormShell` en páginas; 100% en móvil) [decisión del usuario], `focus` 3. Overlay de modal: `--color-scrim`.
 
 ## Layout y shell
-- Web ≥ 1280 px (§5): sidebar `--color-panel`, 236 px, radio 28, con etiquetas, con etiqueta "MENÚ" y sin usuario al pie [decisión del usuario, DESIGN (2).md]. Contenido: barra superior común a todas las vistas con el menú de perfil (avatar, nombre, rol, "Cerrar sesión") a la derecha y el selector de contexto a la izquierda [mi decisión], saludo con píldoras y KPIs, grilla 1fr · 1fr · 2fr.
+- Web ≥ 1280 px (§5): sidebar `--color-panel`, 236 px, radio 28, con etiquetas, con etiqueta "MENÚ" y sin usuario al pie [decisión del usuario, DESIGN (2).md]. Contenido: barra superior común a todas las vistas con el menú de perfil (avatar, nombre, rol, "Cerrar sesión") a la derecha y el selector de tienda del operador a la izquierda; el de compañía va en el panel lateral bajo el logo (`CompanySelector`: avatar de iniciales, «COMPAÑÍA ACTIVA», popover «CAMBIAR COMPAÑÍA»; riel solo avatar; móvil avatar en la barra superior) [decisión del usuario], saludo con píldoras y KPIs, grilla 1fr · 1fr · 2fr.
 - Tablet 768–1279 px (§5): rail de iconos de 84 px a todo el alto, `--color-panel`. Activo: círculo blanco 52 con icono rojo y `--shadow-active`. "Nueva venta" rojo, sin avatar al pie. Cabecera 64 px, fila de píldoras 56 px, 3 columnas (250 · 250 · resto).
 - Móvil < 768 (§5): barra inferior flotante, píldora blanca 68 px, borde `--color-line-soft`, `--shadow-floating`. Activo: píldora `--color-panel` con icono rojo y etiqueta. Botón central rojo 52. Cabecera `--color-panel` con radio inferior 32 (saludo, cifra héroe, KPIs, píldoras) y tarjetas apiladas.
 
@@ -98,7 +98,7 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+`-ti
 - Formularios: `FormShell` (action, error general, guardando), `Field` (etiqueta, hint, error), `Input`, `Textarea`, `Select` (lista corta), `Multiselect`, `Checkbox`, `RadioGroup` (hasta 7), `Switch` (ajuste inmediato), `CodeField`, `Button` (variantes, `loading`).
 - Avisos: `Alert` (en página), `Banner` (franja global), `Toast` (`useToast`, resultado de una acción), `Dialog` (modal), `FormDialog` (formulario corto en diálogo con `useActionState`, toast y cierre en éxito) [decisión del usuario], `AlertDialog` (confirmación destructiva), `Tooltip`.
 - Estado: `Badge` (estado/contador), `Chip` (filtro o quitable).
-- Navegación y agrupación: `Tabs` (underline: secciones; segmented: vistas), `Breadcrumbs`, `Steps`, `Accordion` (list, cards, rich), `SidebarSection`/`SidebarItem`/`SidebarSubmenu`.
+- Navegación y agrupación: `Tabs` (underline: secciones; segmented: vistas), `Breadcrumbs`, `Steps`, `Accordion` (list, cards, rich), `SidebarSection`/`SidebarItem`/`SidebarSubmenu`, `CompanySelector` (`components/org/`, panel lateral) [decisión del usuario].
 - Referencias: `components/DESIGN-ampliada.md`, `tokens-ampliados.css`, `tailwind-preset-v3.js`, `components/mockups/`.
 
 ## Carga (§6.15)

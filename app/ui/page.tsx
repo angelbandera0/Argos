@@ -5,7 +5,7 @@ import { Tipografia } from "./sections/tipografia";
 import { Espaciado } from "./sections/espaciado";
 import { Componentes } from "./sections/componentes";
 import { AlertasSection, BannerSection, DialogosSection, InsigniasSection, ToastSection, TooltipSection } from "./sections/avisos";
-import { AccordionSection, BreadcrumbsSection, SidebarGallerySection, StepsSection, TabsSection } from "./sections/navegacion";
+import { AccordionSection, BreadcrumbsSection, CompanySelectorSection, SidebarGallerySection, StepsSection, TabsSection } from "./sections/navegacion";
 import { ComposedSection, DatatableSection, FormSection } from "./sections/datos";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 
@@ -32,6 +32,7 @@ const sections = [
   { id: "steps", title: "Steps", description: "Guía §6.30.", content: <StepsSection /> },
   { id: "accordion", title: "Accordion", description: "Base UI Accordion (guía §6.31).", content: <AccordionSection /> },
   { id: "sidebar", title: "Secciones del sidebar", description: "Guía §6.32; el panel real ya las usa.", content: <SidebarGallerySection /> },
+  { id: "selector-compania", title: "Selector de compañía", description: "Panel lateral; en riel solo avatar, en móvil avatar en la barra superior [decisión del usuario].", content: <CompanySelectorSection /> },
   { id: "datatable", title: "Datatable", description: "Tabla genérica DataTable<T> (guía §6.33).", content: <DatatableSection /> },
   { id: "compuestos", title: "PageHeader, ListToolbar y EmptyState", description: "Compuestos de página montados juntos.", content: <ComposedSection /> },
   { id: "formshell", title: "FormShell", description: "Formulario de ejemplo.", content: <FormSection /> },

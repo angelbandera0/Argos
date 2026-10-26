@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SidebarItem, SidebarSection, SidebarSubmenu } from "@/components/ui/sidebar-section";
 import { Steps } from "@/components/ui/steps";
 import { Tabs } from "@/components/ui/tabs";
+import { CompanySelector } from "@/components/org/company-selector";
 import { Specimen } from "../gallery";
 import { StepsDemo } from "./navegacion-demo";
 
@@ -154,5 +155,34 @@ export function SidebarGallerySection() {
         </SidebarSection>
       </div>
     </Specimen>
+  );
+}
+
+const COMPANIES = [
+  { id: "1", name: "La Nacion", code: "717d" },
+  { id: "2", name: "La Casona", code: "qbt6" },
+  { id: "3", name: "Casa Norte", code: "k3m9" },
+];
+
+export function CompanySelectorSection() {
+  return (
+    <>
+      <Specimen title="Cerrado y abierto" note="Pulsa para abrir; flechas, Escape y clic fuera funcionan. Elegir una compañía llama a la acción real de cookie (en la galería no hay sesión).">
+        <div className="ui-sidebar-demo">
+          <CompanySelector companies={COMPANIES} activeId="1" />
+        </div>
+      </Specimen>
+      <Specimen title="Una sola compañía" note="Sigue visible; el popover lista esa compañía y «Gestionar compañías».">
+        <div className="ui-sidebar-demo">
+          <CompanySelector companies={COMPANIES.slice(0, 1)} activeId="1" />
+        </div>
+      </Specimen>
+      <Specimen title="Sin compañías" note="No ocupa espacio (el componente no pinta nada).">
+        <div className="ui-sidebar-demo">
+          <CompanySelector companies={[]} />
+          <span className="caption">Nada que mostrar arriba.</span>
+        </div>
+      </Specimen>
+    </>
   );
 }
