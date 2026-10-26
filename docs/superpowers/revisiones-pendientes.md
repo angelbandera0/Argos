@@ -93,3 +93,10 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - La contrasena temporal vive solo en el estado del cliente; si el usuario cierra la pestana sin copiarla, hay que crear otro administrador (no existe aun "restablecer contrasena de administrador").
 - El error de correo duplicado se detecta buscando `email_exists` en el mensaje del gateway.
 - `.secret-reveal` usa `var(--font-geist-mono, monospace)` heredado de `.secret`; el fallback no es un token.
+
+## Menores diferidos de la Tarea 23
+
+- Las pruebas de integración de organización dejan una compañía `itest-` y su administrador fundador (el esquema impide borrarlos por API); hace falta limpieza por SQL tras cada ejecución.
+- `UnitStatusRepository.hasData` replica `app.has_data` con lecturas bajo RLS porque la función no es ejecutable por `authenticated`; si cambia la regla en la base, actualizar ambos sitios (el trigger sigue siendo la garantía).
+- `setStatus` ignora el parámetro `by`: la base usa `auth.uid()`.
+- Los repositorios no están en `container.ts` (necesitan cliente por petición).
