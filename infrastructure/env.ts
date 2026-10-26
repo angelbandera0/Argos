@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-const optionalString = z.string().min(1).optional();
+const optionalString = z.preprocess((v) => (v === "" ? undefined : v), z.string().min(1).optional());
 
 const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.url(),

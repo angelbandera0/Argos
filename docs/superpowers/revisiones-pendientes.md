@@ -55,3 +55,12 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - El superadmin no puede insertar categorías ni productos (`kind = 'admin'`, igual que sites/stores).
 
 - Task 12: audit_row omite \`failed_pin_attempts\` y \`must_change_password\` de before/after (Review Focus 2); sus cambios solos no generan fila. Canal: \`client_id\` presente se mapea a \`api\` hasta que la Tarea 27/28 defina el mapa. audit_log solo cubre insert/update (no delete físico).
+
+## Menores diferidos de la Tarea 16
+
+- Migración extra `revoke_user_sessions(uuid)` (security definer, solo `service_role`): el Admin API no permite cerrar sesiones por id de usuario (`signOut` exige el JWT), así que `revokeSessions` borra `auth.sessions`.
+- `PinVerifier.verify` deja viva la sesión de Supabase que crea; el llamador (Tarea 28) debe usarla o cerrarla. El `session_id` se lee del JWT sin verificar firma (acaba de emitirlo Auth).
+- Compensación de `createOperatorUser`/`createAdminUser` no es transaccional: si falla el borrado del usuario de Auth tras un fallo de perfil, queda un usuario huérfano.
+- `ensureSuperadmin` decide por la existencia de un perfil `superadmin`; no repara un usuario de Auth sin perfil.
+- `getEnv` trata las cadenas vacías de variables opcionales como ausentes (`.env.local` las trae vacías). Vitest carga `.env.local` con `process.loadEnvFile` y se añadió un alias vacío de `server-only` (tests/stubs).
+- La prueba limpia `audit_log`/`auth_events` de sus entidades; `audit_log` de pruebas previas no se purga.

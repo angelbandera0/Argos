@@ -1,7 +1,15 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
+try {
+  process.loadEnvFile(".env.local");
+} catch {}
+
 export default defineConfig({
-  resolve: { tsconfigPaths: true },
+  resolve: {
+    tsconfigPaths: true,
+    alias: { "server-only": fileURLToPath(new URL("./tests/stubs/server-only.ts", import.meta.url)) },
+  },
   test: {
     projects: [
       {
@@ -16,6 +24,8 @@ export default defineConfig({
         test: {
           name: "integration",
           include: ["tests/integration/**/*.int.test.ts"],
+          testTimeout: 30_000,
+          hookTimeout: 60_000,
         },
       },
     ],
