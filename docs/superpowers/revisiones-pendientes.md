@@ -101,3 +101,7 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `setStatus` ignora el parámetro `by`: la base usa `auth.uid()`.
 - Los repositorios no están en `container.ts` (necesitan cliente por petición).
 - Seguridad: `public.delete_test_company` es security definer y desactiva el trigger `company_admins_guard_founder` durante su ejecución; por eso solo es ejecutable por service_role y solo actúa sobre compañías `itest-`. Revisar que nunca se exponga a otros roles.
+
+## Task 24A
+- Aviso de compañía desactivada sin autor/fecha; foco no vuelve al disparador tras cerrar con éxito el diálogo de desactivar/reactivar/crear.
+- `setActiveCompanyAction` y `getActiveCompanyId` validan contra `listCompanies` (RLS); CompanySelector aún no montado.

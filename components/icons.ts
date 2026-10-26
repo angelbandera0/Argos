@@ -12,6 +12,7 @@ export {
   Lock,
   LockOpen,
   Plus,
+  Search,
   Power,
   ShieldCheck,
   Store,
