@@ -2,6 +2,7 @@ import "server-only";
 import { randomBytes, randomInt } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { AuthGateway } from "@/core/application/ports/auth-gateway";
+import type { MfaGateway } from "@/core/application/ports/mfa-gateway";
 import { normalizeUsername } from "@/core/domain/username";
 import { derivePinCredential, generatePin, syntheticEmail } from "@/infrastructure/auth/pin";
 import { getEnv } from "@/infrastructure/env";
@@ -139,6 +140,36 @@ export function makeAuthGateway(
         }
         throw e;
       }
+    },
+  };
+}
+
+export function makeMfaGateway(client: SupabaseClient): MfaGateway {
+  async function totpFactors() {
+    const { data, error } = await client.auth.mfa.listFactors();
+    if (error) fail("listFactors", error);
+    return data.all.filter((f) => f.factor_type === "totp");
+  }
+
+  return {
+    async hasTotp() {
+      return (await totpFactors()).some((f) => f.status === "verified");
+    },
+
+    async enrollTotp() {
+      const factors = await totpFactors();
+      if (factors.some((f) => f.status === "verified")) fail("enrollTotp", { code: "has_factor" });
+      for (const f of factors) await client.auth.mfa.unenroll({ factorId: f.id });
+      const { data, error } = await client.auth.mfa.enroll({ factorType: "totp", issuer: "Argos" });
+      if (error) fail("enrollTotp", error);
+      return { factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret };
+    },
+
+    async verifyTotp({ code, factorId }) {
+      const id = factorId ?? (await totpFactors()).find((f) => f.status === "verified")?.id;
+      if (!id) fail("verifyTotp", { code: "no_factor" });
+      const { error } = await client.auth.mfa.challengeAndVerify({ factorId: id, code });
+      if (error) fail("verifyTotp", error);
     },
   };
 }

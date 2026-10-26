@@ -6,7 +6,7 @@ import { validateAdminPassword } from "@/core/domain/password";
 
 export interface ChangeOwnPasswordDeps {
   auth: AuthGateway;
-  users: UserRepository;
+  users?: UserRepository;
 }
 
 export function makeChangeOwnPassword(deps: ChangeOwnPasswordDeps) {

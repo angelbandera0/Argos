@@ -1,13 +1,17 @@
 import "server-only";
+import { makeChangeOwnPassword } from "@/core/application/use-cases/access/change-own-password";
+import { makeAuthGateway } from "@/infrastructure/supabase/auth-gateway";
 
-// Later tasks add ports and use cases here.
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Container {}
+export interface Container {
+  changeOwnPassword: ReturnType<typeof makeChangeOwnPassword>;
+}
 
 let instance: Container | undefined;
 
 export function getContainer(): Container {
-  instance ??= {};
+  instance ??= {
+    changeOwnPassword: makeChangeOwnPassword({ auth: makeAuthGateway() }),
+  };
   return instance;
 }
 
