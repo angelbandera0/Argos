@@ -53,3 +53,5 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - Un operador con `edit` puede cambiar `category_id` a una categoría eliminada (la FK no mira `deleted_at`); y una carrera entre insertar un producto y eliminar su categoría puede dejar un producto vivo en categoría eliminada.
 - `delete_product` no devuelve error si el producto ya estaba eliminado más allá del 42501 genérico.
 - El superadmin no puede insertar categorías ni productos (`kind = 'admin'`, igual que sites/stores).
+
+- Task 12: audit_row omite \`failed_pin_attempts\` y \`must_change_password\` de before/after (Review Focus 2); sus cambios solos no generan fila. Canal: \`client_id\` presente se mapea a \`api\` hasta que la Tarea 27/28 defina el mapa. audit_log solo cubre insert/update (no delete físico).

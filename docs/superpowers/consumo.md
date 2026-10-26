@@ -11,3 +11,4 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 11 Catálogo | Sonnet (subagente) | implementación + migración extra `delete_product` | 006 39/39, 003 46/46, 005 22/22 | 7a0be8a | subagente: 139.956 tokens, 30 llamadas, 355 s |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
+| 12 Historial por triggers | Sonnet (subagente) | implementación | 007 32/32, 001-006 ok | df88ae1 | no medido |
