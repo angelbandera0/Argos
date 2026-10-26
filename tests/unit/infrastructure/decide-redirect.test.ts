@@ -87,6 +87,12 @@ describe("decideRedirect admin autenticado", () => {
       expect(go(p, session("superadmin"))).toBe("/companias");
     },
   );
+  it("/superadmin solo para el superadmin; el administrador va a /companias", () => {
+    expect(go("/superadmin/administradores", session("admin"))).toBe("/companias");
+    expect(go("/superadmin", session("admin"))).toBe("/companias");
+    expect(go("/superadmin/administradores", session("superadmin"))).toBeNull();
+    expect(go("/superadministrador", session("admin"))).toBeNull();
+  });
   it("otras rutas -> null", () => {
     expect(go("/usuarios", session("admin"))).toBeNull();
     expect(go("/usuarios-x", session("admin"))).toBeNull();

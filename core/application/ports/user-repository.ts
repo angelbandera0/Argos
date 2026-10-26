@@ -21,6 +21,8 @@ export interface UserRepository {
   /** Also finds deactivated users: usernames are never reused. */
   findByUsername(username: string): Promise<Profile | null>;
   listForCompany(companyId: string): Promise<Profile[]>;
+  /** Administrators visible to the caller (RLS); the use case restricts it to the superadmin. */
+  listAdmins(): Promise<Profile[]>;
   setStatus(userId: string, status: Profile["status"]): Promise<void>;
   /** REPLACES the user's assignments with the given list. */
   assignStores(

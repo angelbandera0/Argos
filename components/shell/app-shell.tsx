@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import { NavLink } from "./nav-link";
 
 export type NavItem = { id: string; label: string; href: string; icon: LucideIcon };
 
@@ -13,12 +13,10 @@ const initials = (name: string) =>
 
 export function AppShell({
   nav,
-  active,
   user,
   children,
 }: {
   nav: NavItem[];
-  active: string;
   user: { name: string; role: string };
   children: React.ReactNode;
 }) {
@@ -30,16 +28,8 @@ export function AppShell({
           <span>Argos</span>
         </div>
         <span className="overline">Menú</span>
-        {nav.map(({ id, label, href, icon: Icon }) => (
-          <Link
-            key={id}
-            className="nav-item"
-            href={href}
-            aria-current={id === active ? "page" : undefined}
-          >
-            <Icon aria-hidden="true" />
-            <span>{label}</span>
-          </Link>
+        {nav.map(({ id, ...item }) => (
+          <NavLink key={id} {...item} />
         ))}
         <div className="side-foot">
           <span className="avatar" role="img" aria-label={user.name}>

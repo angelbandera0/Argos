@@ -22,6 +22,10 @@ export class InMemoryUserRepository implements UserRepository {
     return [...this.profiles.values()].filter((p) => p.companyId === companyId);
   }
 
+  async listAdmins(): Promise<Profile[]> {
+    return [...this.profiles.values()].filter((p) => p.kind === "admin");
+  }
+
   async setStatus(userId: string, status: Profile["status"]): Promise<void> {
     this.statusCalls.push({ userId, status });
     const profile = this.profiles.get(userId);

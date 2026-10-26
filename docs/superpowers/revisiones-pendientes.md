@@ -85,3 +85,11 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `makeChangeOwnPassword`: `users` pasó a ser opcional (no se usa; aún no existe el repositorio de usuarios).
 - Tras verificar TOTP se redirige a `/companias`, que aún no existe (404 hasta la fase de organización). Sin límite de intentos propio en TOTP (solo el de Supabase).
 - px sueltos heredados del diseño: bordes 1.5px/2px de las casillas, `font-size: 16px` del input (anti-zoom iOS).
+
+## Menores diferidos de la Tarea 21
+
+- `/companias` sigue sin existir (404) hasta la fase de organizacion; el menu ya enlaza a ella.
+- La lista de administradores no muestra el correo (`Profile` no lo incluye; vive en `auth.users`).
+- La contrasena temporal vive solo en el estado del cliente; si el usuario cierra la pestana sin copiarla, hay que crear otro administrador (no existe aun "restablecer contrasena de administrador").
+- El error de correo duplicado se detecta buscando `email_exists` en el mensaje del gateway.
+- `.secret-reveal` usa `var(--font-geist-mono, monospace)` heredado de `.secret`; el fallback no es un token.

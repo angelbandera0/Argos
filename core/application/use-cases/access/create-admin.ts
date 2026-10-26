@@ -5,7 +5,7 @@ import { Forbidden } from "@/core/domain/errors";
 
 export interface CreateAdminDeps {
   auth: AuthGateway;
-  users: UserRepository;
+  users?: UserRepository;
 }
 
 export function makeCreateAdmin(deps: CreateAdminDeps) {

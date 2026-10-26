@@ -136,3 +136,19 @@ dialog.modal::backdrop { background: var(--color-scrim); }
 .qr { align-self: center; display: block; width: calc(var(--size-modal) / 2); max-width: 100%; aspect-ratio: 1; border-radius: var(--radius-inner); background: var(--color-surface); padding: var(--space-3); }
 .secret { font-family: var(--font-geist-mono, monospace); word-break: break-all; user-select: all; }
 .form-note { color: var(--color-ink); }
+
+.topbar { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; min-height: var(--size-control); }
+.topbar .spacer { flex: 1; }
+.page-title { margin: 0; font: var(--text-display); letter-spacing: var(--tracking-display); }
+.list { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.list-row { display: grid; align-items: center; gap: var(--space-3); background: var(--color-surface); border-radius: var(--radius-inner); padding: var(--space-3) var(--space-3-5); min-height: var(--size-list-row); }
+.admin-row { grid-template-columns: auto 1fr auto; }
+.skeleton-row { height: var(--size-list-row); }
+.icon-dot { width: var(--size-control-sm); height: var(--size-control-sm); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--color-red-tint); color: var(--color-red-strong); flex: none; }
+.icon-dot svg { width: var(--size-icon); height: var(--size-icon); }
+.empty { align-items: center; text-align: center; padding: var(--space-8) var(--space-5-5); }
+.empty p { margin: 0; max-width: var(--size-modal); color: var(--color-ink-2); }
+.notice { display: flex; gap: var(--space-3); align-items: flex-start; background: var(--color-yellow-tint); border-radius: var(--radius-inner); padding: var(--space-3) var(--space-3-5); }
+.notice p { margin: 0; }
+.notice svg { width: var(--size-icon); height: var(--size-icon); flex: none; margin-top: 2px; }
+.secret-reveal { margin: 0; padding: var(--space-5) var(--space-4); background: var(--color-panel); border-radius: var(--radius-inner); font: var(--text-value); font-family: var(--font-geist-mono, monospace); text-align: center; word-break: break-all; user-select: all; }
