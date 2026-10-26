@@ -42,8 +42,8 @@ export function Breadcrumbs({ items, withHome = false }: { items: Crumb[]; withH
                 <BaseMenu.Portal>
                   <BaseMenu.Positioner className="ui-positioner" sideOffset={8}>
                     <BaseMenu.Popup className="menu-popup">
-                      {hidden.map((c) => (
-                        <BaseMenu.LinkItem key={c.label} className="menu-item" href={c.href}>
+                      {hidden.map((c, n) => (
+                        <BaseMenu.LinkItem key={`${n}|${c.label}`} className="menu-item" href={c.href}>
                           {c.label}
                         </BaseMenu.LinkItem>
                       ))}

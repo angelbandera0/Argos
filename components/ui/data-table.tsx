@@ -52,7 +52,7 @@ function RowMenu({ label, actions }: { label: string; actions: RowAction[] }) {
         <BaseMenu.Positioner className="ui-positioner" align="end" sideOffset={8}>
           <BaseMenu.Popup className="menu-popup">
             {actions.map((a, i) => (
-              <Fragment key={a.label}>
+              <Fragment key={`${i}|${a.label}`}>
                 {a.destructive && i > 0 && !actions[i - 1].destructive && <BaseMenu.Separator className="menu-sep" />}
                 <BaseMenu.Item className={`menu-item${a.destructive ? " menu-item-danger" : ""}`} onClick={a.onSelect}>
                   {a.label}

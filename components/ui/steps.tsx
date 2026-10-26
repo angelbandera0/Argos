@@ -30,7 +30,7 @@ export function Steps({
       {steps.map((s, i) => {
         const state = stepState(i, current, errorIndex);
         return (
-          <li key={s.title} className="step" data-state={state} aria-current={state === "current" ? "step" : undefined}>
+          <li key={`${i}|${s.title}`} className="step" data-state={state} aria-current={state === "current" ? "step" : undefined}>
             <div className="step-rail">
               <span className="step-marker" aria-hidden="true">
                 {state === "complete" ? <Check /> : state === "error" ? "!" : i + 1}

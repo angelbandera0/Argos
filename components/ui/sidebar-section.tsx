@@ -107,10 +107,10 @@ export function SidebarSubmenu({
         <ChevronDown className="nav-parent-chevron" aria-hidden="true" />
       </button>
       <div id={id} className="nav-sub" hidden={!open}>
-        {items.map((i) => {
+        {items.map((i, n) => {
           const current = i.active ?? isActivePath(pathname, i.href);
           return (
-            <Link key={i.href} className="nav-item" href={i.href} aria-current={current ? "page" : undefined}>
+            <Link key={`${n}|${i.href}`} className="nav-item" href={i.href} aria-current={current ? "page" : undefined}>
               <span>{i.label}</span>
               <Badge badge={i.badge} />
             </Link>
