@@ -8,6 +8,7 @@ export interface SessionClaims {
   kind: ActorKind;
   aal: "aal1" | "aal2";
   mustChangePassword: boolean;
+  sessionId: string | null;
 }
 
 const KINDS: readonly string[] = ["superadmin", "admin", "operator"];
@@ -27,5 +28,6 @@ export async function readClaims(client: SupabaseClient): Promise<SessionClaims 
     kind: kind as ActorKind,
     aal: claims.aal === "aal2" ? "aal2" : "aal1",
     mustChangePassword: meta.must_change_password === true,
+    sessionId: typeof claims.session_id === "string" ? claims.session_id : null,
   };
 }

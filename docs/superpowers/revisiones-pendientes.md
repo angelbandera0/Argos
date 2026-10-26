@@ -120,3 +120,15 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 
 ## Task 26 (pantallas de roles)
 - Eliminar rol con usuarios asignados: el error HAS_DATA depende de hasAssignments (sin probar hasta la Tarea 27).
+
+## Task 28 (security, deferred)
+- Ban `876000h` after lock works (tested via flow); unlock lifts it inside `AuthGateway.resetPin` (`ban_duration: none`), so any PIN reset un-bans; login still requires `status = active`.
+- `PinVerifier` and `enterWithPinFlow` read `profiles` with service_role before Auth; unknown/locked/deactivated users never reach Auth and do not increment attempts. Timing differs slightly between those paths and a wrong PIN.
+- `register_pin_failure` is not atomic with the Auth sign-in: concurrent attempts can slip a few extra tries before the lock lands.
+- `app_sessions.started_at` is the DB clock (insert grant only allows session_id,user_id); the use-case Clock may skew from it.
+- A failed `loginWithPin` leaves the cookie client holding a revoked Auth session until signOut/expiry.
+- `createOperatorUser` compensation (auth user + profile + user_stores) is sequential with delete-on-failure, not a single transaction; a crash between steps can leave an orphan auth user.
+- createOperator trusts the use case for owns_role (service_role inserts bypass RLS); assign_user_stores/delete enforce it in DB.
+- `my_store_access` ignores `userId` and is guarded in the adapter via `getClaims().sub` (the SQL uses auth.uid()).
+- Integration runs leave `audit_log` rows (append-only); 007 was made hermetic.
+- Actions `chooseStore/switchStore` redirect on any error to /tienda?error=...; Task 29 must handle it. `enterWithPin` has no rate limit beyond the 5-attempt lock and Auth's own limits.

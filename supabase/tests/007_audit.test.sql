@@ -56,7 +56,7 @@ insert into products (id, company_id, category_id, name) values
 
 select ok((select count(*) from audit_log where entity_type = 'companies' and action = 'create' and actor_id is null and channel = 'system' and entity_id in ('00000000-0000-0000-0000-0000000000a1','00000000-0000-0000-0000-0000000000b2','00000000-0000-0000-0000-0000000000c3')) = 3,
   'writes without auth.uid() are logged as system with null actor');
-select is((select count(*)::int from audit_log where entity_type = 'role_permissions'), 2, 'every audited table logs inserts');
+select is((select count(*)::int from audit_log where entity_type = 'role_permissions' and entity_id in ('00000000-0000-0000-0000-0000000000d1','00000000-0000-0000-0000-0000000000d4')), 2, 'every audited table logs inserts');
 
 select tests.authenticate_as((select v from ctx where k = 'op4'), 'aal1', '00000000-0000-0000-0000-0000000005a4');
 update products set name = 'Leche entera' where id = '00000000-0000-0000-0000-000000000f01';

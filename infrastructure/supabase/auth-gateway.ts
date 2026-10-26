@@ -59,6 +59,7 @@ export function makeAuthGateway(
     const pin = generatePin(randomIntFn);
     const { error } = await admin.auth.admin.updateUserById(userId, {
       password: derivePinCredential(username, pin, getEnv().PIN_PEPPER),
+      ban_duration: "none",
     });
     if (error) fail("resetPin", error);
     return pin;

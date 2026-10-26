@@ -1,6 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Profile, UserRepository } from "@/core/application/ports/user-repository";
+import type { Assignment, Profile, UserRepository } from "@/core/application/ports/user-repository";
+import { Forbidden, RuleViolation } from "@/core/domain/errors";
 
 const COLUMNS = "id, kind, username, display_name, company_id, status, must_change_password";
 
@@ -24,9 +25,13 @@ const toProfile = (r: Row): Profile => ({
   mustChangePassword: r.must_change_password,
 });
 
-export function makeUserRepository(
-  client: SupabaseClient,
-): Pick<UserRepository, "getProfile" | "listAdmins"> {
+function fail(op: string, error: { code?: string; message?: string }): never {
+  if (error.code === "42501") throw new Forbidden();
+  if (error.message?.includes("ROLE_EXCLUDED")) throw new RuleViolation("ROLE_EXCLUDED");
+  throw new Error(`UserRepository.${op} failed (${error.code ?? "unknown"})`);
+}
+
+export function makeUserRepository(client: SupabaseClient): UserRepository {
   return {
     async getProfile(userId) {
       const { data, error } = await client
@@ -35,8 +40,30 @@ export function makeUserRepository(
         .eq("id", userId)
         .is("deleted_at", null)
         .maybeSingle();
-      if (error) throw new Error(`UserRepository.getProfile failed (${error.code ?? "unknown"})`);
+      if (error) fail("getProfile", error);
       return data ? toProfile(data as Row) : null;
+    },
+
+    async findByUsername(username) {
+      const { data, error } = await client
+        .from("profiles")
+        .select(COLUMNS)
+        .eq("username", username.trim().toLowerCase())
+        .maybeSingle();
+      if (error) fail("findByUsername", error);
+      return data ? toProfile(data as Row) : null;
+    },
+
+    async listForCompany(companyId) {
+      const { data, error } = await client
+        .from("profiles")
+        .select(COLUMNS)
+        .eq("company_id", companyId)
+        .eq("kind", "operator")
+        .is("deleted_at", null)
+        .order("username");
+      if (error) fail("listForCompany", error);
+      return (data as Row[]).map(toProfile);
     },
 
     async listAdmins() {
@@ -46,8 +73,34 @@ export function makeUserRepository(
         .eq("kind", "admin")
         .is("deleted_at", null)
         .order("created_at", { ascending: false });
-      if (error) throw new Error(`UserRepository.listAdmins failed (${error.code ?? "unknown"})`);
+      if (error) fail("listAdmins", error);
       return (data as Row[]).map(toProfile);
+    },
+
+    async setStatus(userId, status) {
+      const { error } = await client.rpc("set_operator_status", { p_user: userId, p_status: status });
+      if (error) fail("setStatus", error);
+    },
+
+    async assignStores(userId, assignments) {
+      const { error } = await client.rpc("assign_user_stores", {
+        p_user: userId,
+        p_assignments: assignments.map((a) => ({ store_id: a.storeId, role_id: a.roleId })),
+      });
+      if (error) fail("assignStores", error);
+    },
+
+    async listAssignments(userId): Promise<Assignment[]> {
+      const { data, error } = await client
+        .from("user_stores")
+        .select("user_id, store_id, role_id")
+        .eq("user_id", userId);
+      if (error) fail("listAssignments", error);
+      return (data as { user_id: string; store_id: string; role_id: string }[]).map((r) => ({
+        userId: r.user_id,
+        storeId: r.store_id,
+        roleId: r.role_id,
+      }));
     },
   };
 }
