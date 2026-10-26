@@ -7,6 +7,7 @@ import { Componentes } from "./sections/componentes";
 import { AlertasSection, BannerSection, DialogosSection, InsigniasSection, ToastSection, TooltipSection } from "./sections/avisos";
 import { AccordionSection, BreadcrumbsSection, CompanySelectorSection, SidebarGallerySection, StepsSection, TabsSection } from "./sections/navegacion";
 import { ComposedSection, DatatableSection, FormSection } from "./sections/datos";
+import { DatepickerSection } from "./sections/fechas";
 import { HistorialSection } from "./sections/historial";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 
@@ -19,6 +20,7 @@ const sections = [
   { id: "componentes", title: "Componentes existentes", description: "Pasa el cursor y usa Tab para ver hover y foco.", content: <Componentes /> },
   { id: "botones", title: "Botones", description: "Variantes, tamaños y estados (guía §6.1).", content: <BotonesSection /> },
   { id: "campos", title: "Campos de texto", description: "Input y Textarea con Field (guía §6.17).", content: <CamposSection /> },
+  { id: "datepicker", title: "Datepicker", description: "Fecha única y rango (guía §6.34). Cadenas ISO, escribible, popover Base UI.", content: <DatepickerSection /> },
   { id: "casillas", title: "Casillas, radio e interruptores", description: "Guía §6.18.", content: <ChecksSection /> },
   { id: "select", title: "Select", description: "Base UI Select (guía §6.19).", content: <SelectSection /> },
   { id: "multiselect", title: "Multiselect", description: "Base UI Combobox múltiple (guía §6.20).", content: <MultiselectSection /> },

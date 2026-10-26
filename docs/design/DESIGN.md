@@ -415,7 +415,7 @@ Para listados con más de ~10 filas que se buscan, filtran u ordenan. Contenedor
 - **Móvil (< 768 px):** la tabla se convierte en **tarjetas** (una por fila: id + estado arriba, cliente y hora, total grande a la derecha, "⋯"); filtros en una hoja inferior con botón "Filtros (n)"; la selección múltiple se activa con un botón "Seleccionar".
 
 ### 6.34 Datepicker [ampliada: DESIGN (4).md]
-- **El campo manda:** siempre se puede escribir la fecha (`dd/mm/aaaa`, `inputmode="numeric"`, las barras se insertan solas). El calendario es una ayuda que se abre al enfocar o con el icono. No uses el `<input type="date">` nativo en escritorio (su aspecto no se puede controlar); en móvil sí puede usarse el nativo si se prefiere.
+- **El campo manda:** siempre se puede escribir la fecha (`dd/mm/aaaa`, `inputmode="numeric"`, las barras se insertan solas). El calendario es una ayuda que se abre con el icono o con ↓ [decisión del repo: no al enfocar, para que el autoenfoque de un diálogo no lo abra]. No uses el `<input type="date">` nativo en escritorio (su aspecto no se puede controlar); en móvil sí puede usarse el nativo si se prefiere.
 - **Densidad del repo [decisión del usuario]:** gana la escala reducida de §3 y `--size-field`/`--size-control`, no los 48/40/42 px de la maqueta: día = `--size-day` (36), campo = `--size-field`, botones ‹ › = `--size-close`; columna de atajos `--size-calendar-presets`. Radio del popover `--radius-popover`, z `--z-popup` (sobre diálogos).
 - **Campo:** igual que 6.17 + icono de calendario 18 px a la derecha (rojo cuando está abierto). Error: "Esa fecha no existe…" / "La fecha final debe ser posterior a la inicial".
 - **Popover:** blanco, radio 22, `--shadow-popover`, padding 14–16 px.

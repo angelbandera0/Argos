@@ -20,6 +20,7 @@ export type ToolbarFilter = {
 export function ListToolbar({
   search,
   filters = [],
+  extra,
   primary,
   submitLabel = "Filtrar",
   ...form
@@ -33,6 +34,7 @@ export function ListToolbar({
     onValueChange?: (value: string) => void;
   };
   filters?: ToolbarFilter[];
+  extra?: React.ReactNode;
   primary?: React.ReactNode;
   submitLabel?: string | false;
 }) {
@@ -69,6 +71,7 @@ export function ListToolbar({
           />
         </div>
       ))}
+      {extra}
       {submitLabel !== false && (filters.length > 0 || search) && (
         <Button type="submit" variant="secondary">
           {submitLabel}

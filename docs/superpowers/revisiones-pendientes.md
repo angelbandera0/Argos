@@ -209,3 +209,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 ## Fix ProfileMenu / server actions (menores)
 - El proxy deja pasar toda petición con `next-action`: las server actions deben validar sesión por sí mismas (revisar que todas lo hagan en la revisión de seguridad).
 - El error «unexpected response» en login puede además deberse a IDs de acción obsoletos tras Fast Refresh en dev.
+
+## Datepicker (menores)
+- Verificar a mano en /ui: apertura dentro de Dialog (foco/Esc anidados), foco inicial en el día y retorno al campo, 2 meses en <768 px (se decide al abrir con matchMedia).
+- El calendario no se abre al enfocar (decisión por autoenfoque en diálogos); el spec lo refleja.
+- Rango escrito al revés: se marca inválido pero el `FormData` lleva ambas cadenas tal cual; el servidor debe normalizar (`orderRange`) y validar con `isValidIso`.
+- Años < 1000 no se admiten (parseIso).
