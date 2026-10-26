@@ -15,5 +15,6 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 17 Primer superadmin | Sonnet (subagente) | implementación | unit 281/281, test:int 9/9, typecheck y lint limpios | 4bb7504 | subagente: 54.742 tokens, 12 llamadas, 91 s |
 | 18 Base de la interfaz | Sonnet (subagente) | implementación + verificación en Chrome (web, tablet, móvil) | lint, typecheck y build en verde | 30ea23c | subagente: 104.895 tokens, 38 llamadas, 298 s |
 | 20 Páginas de acceso de administradores | Sonnet (subagente; cortado por límite de sesión y reanudado) | implementación + verificación en Chrome | lint, typecheck, build, unit 281/281 | 77ee72a | subagente (solo la reanudación): 181.310 tokens, 90 llamadas, 732 s; lo gastado antes del corte no se midió |
+| 21 Páginas del superadmin | Sonnet (subagente, sin navegador) | implementación | lint, typecheck, build, unit 284/284, test:int 12/12 | 4b41246 | pendiente |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
