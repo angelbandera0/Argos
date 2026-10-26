@@ -161,3 +161,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - "Hoy" del gráfico usa la zona horaria del servidor; pasar al navegador cuando haya datos reales.
 - `docs/REQUIREMENTS.md` y `docs/README.md` son de solo lectura: la nota provisional no se añadió ahí.
 - Pestañas del gráfico sin navegación por flechas; verificar en navegador la escala reducida y el dashboard en 3 vistas.
+
+## Argos UI fase 0 (menores)
+- `/ui` usa `notFound()` en producción, pero el build la prerrenderiza como estática: verificar que en `pnpm start` responde 404.
+- La galería lee `docs/design/tokens.css` con `fs` (solo desarrollo); si se mueve el archivo, actualizar `app/ui/tokens.ts`.
+- `.next/dev/types` quedó obsoleto al añadir rutas: `next typegen` lo regenera antes de `pnpm typecheck`.
+- Guía ampliada: alturas de 48 px aplicadas con `--size-field` (= `--size-control`); revisar en navegador cuando haya campos nuevos.
