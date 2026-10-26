@@ -45,6 +45,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 - Ancho de formularios de página [decisión del usuario]: lo fija solo `FormShell` (`.form-shell`, `width: 100%`, `max-width: var(--size-form)` = 480; 100% en móvil). Las páginas ponen `FormShell` por fuera y las `Card` dentro; nunca `Card` por fuera ni anchos propios (causa del bug: `new-user-form` envolvía `FormShell` en una `Card` de ancho completo).
 - Mostrar una vez, sin cierre accidental: Escape y clic fuera no cierran (`dismissible={false}`).
 - Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx`.
+- Herramientas para agentes de UI (en lugar de leer `DESIGN.md` o las maquetas enteras): `pnpm design:section 6.34` (o título; `--list`, `--resumen`), `pnpm mockup docs/design/components/mockups/Comp-X.dc.html` (valores con token, textos, estados) y `pnpm new:ui <nombre> [--client] [--css]` para crear un componente nuevo ya registrado en galería, CSS e índice.
 - Cada componente nuevo de `components/ui/` se añade a la galería (`app/ui/sections/`) y se documenta en `DESIGN-resumen.md`.
 - Pantalla nueva sin verificar a mano: anótalo en el informe y pide `/verificar-ui N`.
 - Menús de Base UI: las etiquetas de grupo (`Menu.GroupLabel`) van dentro de `Menu.Group` o `Menu.RadioGroup`; fuera lanzan «MenuGroupContext is missing». Ejemplo: `components/org/company-selector.tsx`.

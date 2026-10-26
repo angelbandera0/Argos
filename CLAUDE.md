@@ -53,5 +53,5 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 
 - `pnpm verify` (o `pnpm verify:fast` sin build; `--int`, `--db`): typegen si hace falta, lint, typecheck, pruebas y build, una línea por paso y solo el final del log si falla. Úsalo en lugar de componer los comandos a mano; no ejecutes `build` con `next dev` activo.
 - `pnpm consumo <.output> "<fila>" "<commits>" [--status --tokens --duration]`: el controlador anota así el consumo en `docs/superpowers/consumo.md` (`--dry-run`, `--replace`).
-- Antes de escribir UI lee `docs/design/TRAMPAS-BASE-UI.md`.
+- Antes de escribir UI lee `docs/design/TRAMPAS-BASE-UI.md`. Los agentes de UI NO leen `DESIGN.md` ni las maquetas completas: `pnpm design:section <n.º|título>` (`--list`, `--resumen`) imprime solo una sección; `pnpm mockup <ruta .dc.html>` (`--raw-values`, `--text`, `--max-lines N`) resume estructura, valores con su token, textos y estados; `pnpm new:ui <nombre> [--client] [--css] [--dry-run]` crea componente, sección de galería, registro, fila en `PATRONES-UI.md` y test pendiente (reinicia `pnpm dev`).
 - Tamaño de subagentes: no deben superar ~20 llamadas ni ~100.000 de contexto; si una tarea lo excede, divídela en pasos que dejan algo funcionando; cada subagente de UI lee solo las secciones de diseño que necesita.

@@ -224,3 +224,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - Contadores: una consulta `count` por módulo (+1 para Accesos) en cada carga; revisar coste con volumen. «Todos» suma los módulos conocidos (`HISTORY_MODULES`); el contador del grupo es solo de la página.
 - Móvil: la tabla de auditoría hace scroll horizontal (sin tarjetas); verificación visual y de teclado pendiente (`/ui`, `/historial/todos`).
 - Cambios de insignia: desactivación = error, reactivación = éxito, edición = aviso.
+
+## Dev tooling (menores)
+
+- `pnpm verify`: la detección de `next dev` es heurística (`ps`), no comprueba que comparta directorio `.next`; el recuento de pruebas depende del formato de salida de Vitest.
+- `pnpm mockup`: el esquema de estructura colapsa elementos repetidos por (profundidad, etiqueta, atributos); los valores salen también del JS de la maqueta (texto, no ejecución).
+- `pnpm new:ui`: la plantilla es genérica (`div`); `new:ui` no actualiza `DESIGN-resumen.md` (queda como recordatorio).
