@@ -14,5 +14,6 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 16 AuthGateway y PinVerifier | Sonnet (subagente) | implementación + migración extra `revoke_user_sessions` | test:int 8/8, test 279/279, typecheck y lint limpios | 959e951 | subagente: 75.781 tokens, 18 llamadas, 182 s |
 | 17 Primer superadmin | Sonnet (subagente) | implementación | unit 281/281, test:int 9/9, typecheck y lint limpios | 4bb7504 | subagente: 54.742 tokens, 12 llamadas, 91 s |
 | 18 Base de la interfaz | Sonnet (subagente) | implementación + verificación en Chrome (web, tablet, móvil) | lint, typecheck y build en verde | 30ea23c | subagente: 104.895 tokens, 38 llamadas, 298 s |
+| 20 Páginas de acceso de administradores | Sonnet (subagente; cortado por límite de sesión y reanudado) | implementación + verificación en Chrome | lint, typecheck, build, unit 281/281 | 77ee72a | pendiente |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
