@@ -8,9 +8,10 @@ import {
   unlockUserAction,
   type ActionResult,
 } from "@/app/(app)/usuarios/actions";
-import { AlertCircle, Lock, LockOpen } from "@/components/icons";
+import { Lock, LockOpen } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/dialog";
 import { PinRevealDialog } from "./pin-reveal-dialog";
 
 type Kind = "unlock" | "reset" | "deactivate";
@@ -82,24 +83,20 @@ export function UserActions({ userId, name, status }: { userId: string; name: st
       <Button variant="ghost" onClick={() => ask("deactivate")}>
         Desactivar usuario
       </Button>
-      {kind && copy && (
-        <Dialog open title={copy.title(first)} onClose={() => setKind(null)}>
+      {copy && (
+        <AlertDialog
+          open
+          onClose={() => setKind(null)}
+          onConfirm={confirm}
+          confirmLabel={busy ? copy.busy : copy.confirm}
+          loading={busy}
+          title={copy.title(first)}
+          icon={kind === "deactivate" ? "Trash2" : "KeyRound"}
+          tone={kind === "deactivate" ? "danger" : "warning"}
+        >
           <p className="muted">{copy.text}</p>
-          {error && (
-            <p className="form-error" role="alert">
-              <AlertCircle aria-hidden="true" />
-              {error}
-            </p>
-          )}
-          <div className="modal-actions">
-            <Button variant="secondary" onClick={() => setKind(null)}>
-              Cancelar
-            </Button>
-            <Button loading={busy} onClick={confirm}>
-              {busy ? copy.busy : copy.confirm}
-            </Button>
-          </div>
-        </Dialog>
+          {error && <Alert variant="danger">{error}</Alert>}
+        </AlertDialog>
       )}
       {pin && (
         <PinRevealDialog

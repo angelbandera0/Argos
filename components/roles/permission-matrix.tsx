@@ -1,6 +1,7 @@
 "use client";
 
 import type { Module, Op, PermissionSet } from "@/core/domain/permissions";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const MODULES: { key: Module; label: string; hint: string }[] = [
   {
@@ -36,15 +37,13 @@ export function PermissionMatrix({
           <strong>{label}</strong>
           <div className="perm-grid" role="group" aria-label={`Permisos sobre ${label}`}>
             {OPS.map(({ op, label: l }) => (
-              <label className="perm" key={op}>
-                <input
-                  type="checkbox"
-                  name={`${key}.${op}`}
-                  checked={value[key][op]}
-                  onChange={(e) => onChange({ ...value, [key]: toggle(value[key], op, e.target.checked) })}
-                />
-                {l}
-              </label>
+              <Checkbox
+                key={op}
+                name={`${key}.${op}`}
+                label={l}
+                checked={value[key][op]}
+                onCheckedChange={(on) => onChange({ ...value, [key]: toggle(value[key], op, on) })}
+              />
             ))}
           </div>
           <span className="hint">{hint}</span>

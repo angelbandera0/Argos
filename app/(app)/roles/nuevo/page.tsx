@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { PageHeader } from "@/components/ui/page-header";
 import { RoleForm } from "@/components/roles/role-form";
 import { requireRoleUser } from "../guard";
 import Loading from "./loading";
@@ -24,13 +25,11 @@ async function Editor() {
 
 export default function NewRolePage() {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Nuevo rol</h1>
-      </div>
+    <div className="stack">
+      <PageHeader title="Nuevo rol" breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: "Nuevo rol" }]} />
       <Suspense fallback={<Loading />}>
         <Editor />
       </Suspense>
-    </>
+    </div>
   );
 }

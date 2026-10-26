@@ -2,9 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { saveAssignmentsAction } from "@/app/(app)/usuarios/actions";
-import { AlertCircle, Check, Info, Lock } from "@/components/icons";
+import { Lock } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Chip } from "@/components/ui/chip";
+import { Field } from "@/components/ui/field";
+import { Select } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/toast";
 
 interface StoreRow {
   id: string;
@@ -35,60 +41,51 @@ export function AssignmentsForm({
   const [same, setSame] = useState(assignedRoles.size <= 1);
   const [shared, setShared] = useState(initial[0]?.roleId ?? firstRole);
   const [error, setError] = useState<string>();
-  const [saved, setSaved] = useState(false);
+  const toast = useToast();
+  const roleOptions = roles.map((r) => ({ value: r.id, label: r.name }));
   const [pending, start] = useTransition();
   const chosen = stores.filter((s) => sel[s.id] !== null);
 
   function save() {
     setError(undefined);
-    setSaved(false);
     start(async () => {
       const r = await saveAssignmentsAction(
         userId,
         chosen.map((s) => ({ storeId: s.id, roleId: same ? shared : (sel[s.id] as string) })),
       );
       if (r.error) setError(r.error);
-      else setSaved(true);
+      else toast.success("Cambios guardados.");
     });
   }
 
   return (
     <div className="stack">
       {blocked && (
-        <div className="notice" id="assign-blocked">
-          <Info aria-hidden="true" />
-          <p>
+        <Alert variant="info">
+          <span id="assign-blocked">
             Este usuario tiene tiendas con un rol de otro administrador. Solo su dueño puede cambiar las asignaciones;
             tú puedes desbloquear, cambiar el PIN o desactivar al usuario.
-          </p>
-        </div>
+          </span>
+        </Alert>
       )}
-      <label className="list-row switch-row inner">
-        <input
-          className="switch"
-          type="checkbox"
-          role="switch"
-          checked={same}
-          disabled={blocked}
-          onChange={(e) => setSame(e.target.checked)}
-        />
-        <span>
-          <strong>Mismo rol en todas las tiendas</strong>
-          <br />
-          <span className="caption">Desactívalo para dar un rol distinto en cada tienda.</span>
-        </span>
-      </label>
+      <Switch
+        className="inner"
+        label="Mismo rol en todas las tiendas"
+        description="Desactívalo para dar un rol distinto en cada tienda."
+        checked={same}
+        disabled={blocked}
+        onCheckedChange={setSame}
+      />
       {same && (
-        <div className="field">
-          <label htmlFor="shared-role">Rol</label>
-          <select className="select" id="shared-role" value={shared} disabled={blocked} onChange={(e) => setShared(e.target.value)}>
-            {roles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Field label="Rol" htmlFor="shared-role">
+          <Select
+            id="shared-role"
+            options={roleOptions}
+            value={shared}
+            disabled={blocked}
+            onValueChange={(v) => v && setShared(v)}
+          />
+        </Field>
       )}
       <ul className="list" aria-label="Tiendas de la compañía">
         {stores.map((s) => {
@@ -96,19 +93,13 @@ export function AssignmentsForm({
           const on = sel[s.id] !== null;
           return (
             <li className="list-row assign-row" key={s.id}>
-              <label className="perm">
-                <input
-                  type="checkbox"
-                  checked={on}
-                  disabled={blocked}
-                  onChange={(e) => setSel({ ...sel, [s.id]: e.target.checked ? shared || firstRole : null })}
-                />
-                <span>
-                  <strong>{s.name}</strong>
-                  <br />
-                  <span className="caption">Sede {s.site}</span>
-                </span>
-              </label>
+              <Checkbox
+                label={s.name}
+                description={`Sede ${s.site}`}
+                checked={on}
+                disabled={blocked}
+                onCheckedChange={(checked) => setSel({ ...sel, [s.id]: checked ? shared || firstRole : null })}
+              />
               {foreign ? (
                 <Chip variant="ring">
                   <Lock aria-hidden="true" />
@@ -116,22 +107,14 @@ export function AssignmentsForm({
                 </Chip>
               ) : on && !same ? (
                 <>
-                  <label className="sr-only" htmlFor={`role-${s.id}`}>
-                    Rol en {s.name}
-                  </label>
-                  <select
-                    className="select"
+                  <Select
                     id={`role-${s.id}`}
+                    aria-label={`Rol en ${s.name}`}
+                    options={roleOptions}
                     value={sel[s.id] ?? ""}
                     disabled={blocked}
-                    onChange={(e) => setSel({ ...sel, [s.id]: e.target.value })}
-                  >
-                    {roles.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.name}
-                      </option>
-                    ))}
-                  </select>
+                    onValueChange={(v) => v && setSel({ ...sel, [s.id]: v })}
+                  />
                 </>
               ) : (
                 <span />
@@ -141,17 +124,7 @@ export function AssignmentsForm({
           );
         })}
       </ul>
-      {error && (
-        <p className="form-error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          {error}
-        </p>
-      )}
-      {saved && (
-        <p className="caption" role="status">
-          <Check aria-hidden="true" /> Cambios guardados.
-        </p>
-      )}
+      {error && <Alert variant="danger">{error}</Alert>}
       <div className="form-actions">
         <Button
           disabled={blocked || chosen.length === 0 || roles.length === 0}

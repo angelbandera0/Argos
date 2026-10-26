@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { createUserAction, type NewUserState } from "@/app/(app)/usuarios/actions";
-import { AlertCircle } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
+import { FormShell } from "@/components/ui/form-shell";
+import { Multiselect } from "@/components/ui/multiselect";
+import { Select } from "@/components/ui/select";
 import { PinRevealDialog } from "./pin-reveal-dialog";
 
 export function NewUserForm({
@@ -20,12 +21,12 @@ export function NewUserForm({
 }) {
   const router = useRouter();
   const [state, action, pending] = useActionState<NewUserState, FormData>(createUserAction, {});
-  const [roleId, setRoleId] = useState(roles[0]?.id ?? "");
-  const [chosen, setChosen] = useState<string[]>([]);
+  const roleOptions = roles.map((r) => ({ value: r.id, label: r.name }));
+  const storeOptions = stores.map((s) => ({ value: s.id, label: `${s.name} · ${s.site}` }));
 
   return (
     <Card>
-      <form className="auth-form" action={action}>
+      <FormShell action={action} error={state.error} pending={pending} submitLabel="Crear usuario" pendingLabel="Creando…">
         <Field label="Nombre" htmlFor="displayName">
           <Input id="displayName" name="displayName" autoComplete="off" required maxLength={80} defaultValue={state.displayName} />
         </Field>
@@ -48,41 +49,12 @@ export function NewUserForm({
           </div>
         </Field>
         <Field label="Rol" htmlFor="roleId">
-          <select className="select" id="roleId" name="roleId" required value={roleId} onChange={(e) => setRoleId(e.target.value)}>
-            {roles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-              </option>
-            ))}
-          </select>
+          <Select id="roleId" name="roleId" required options={roleOptions} defaultValue={roles[0]?.id} />
         </Field>
-        <fieldset className="stack">
-          <legend className="h2">Tiendas</legend>
-          <div className="perm-grid">
-            {stores.map((s) => (
-              <label className="perm" key={s.id}>
-                <input
-                  type="checkbox"
-                  name="storeId"
-                  value={s.id}
-                  checked={chosen.includes(s.id)}
-                  onChange={(e) => setChosen(e.target.checked ? [...chosen, s.id] : chosen.filter((i) => i !== s.id))}
-                />
-                {s.name} <span className="caption">· {s.site}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        {state.error && (
-          <p className="form-error" role="alert">
-            <AlertCircle aria-hidden="true" />
-            {state.error}
-          </p>
-        )}
-        <Button type="submit" loading={pending}>
-          {pending ? "Creando…" : "Crear usuario"}
-        </Button>
-      </form>
+        <Field label="Tiendas" htmlFor="storeId">
+          <Multiselect id="storeId" name="storeId" options={storeOptions} placeholder="Elige una o varias tiendas" />
+        </Field>
+      </FormShell>
       {state.pin && state.userId && (
         <PinRevealDialog
           name={state.displayName ?? "el usuario"}

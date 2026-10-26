@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Lock } from "@/components/icons";
 import { Chip } from "@/components/ui/chip";
+import { PageHeader } from "@/components/ui/page-header";
 import { DeleteRoleDialog } from "@/components/roles/delete-role-dialog";
 import { RoleForm } from "@/components/roles/role-form";
 import { requireRoleUser } from "../guard";
@@ -23,15 +24,19 @@ async function Editor({ params }: { params: PageProps<"/roles/[id]">["params"] }
   const companies = (await org.listCompanies(actor)).map((c) => ({ id: c.id, name: c.name, code: c.code }));
   return (
     <div className="stack">
-      <div className="topbar">
-        <h1 className="page-title">Rol: {role.name}</h1>
-        <span className="spacer" />
-        <Chip variant="ring">
-          <Lock aria-hidden="true" />
-          Solo tú ves y editas este rol
-        </Chip>
-        <DeleteRoleDialog roleId={role.id} name={role.name} />
-      </div>
+      <PageHeader
+        title={`Rol: ${role.name}`}
+        breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: role.name }]}
+        actions={
+          <>
+            <Chip variant="ring">
+              <Lock aria-hidden="true" />
+              Solo tú ves y editas este rol
+            </Chip>
+            <DeleteRoleDialog roleId={role.id} name={role.name} />
+          </>
+        }
+      />
       <RoleForm roleId={role.id} companies={companies} initial={role} />
     </div>
   );

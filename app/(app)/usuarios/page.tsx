@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Plus, Search, Users } from "@/components/icons";
-import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
+import { Plus } from "@/components/icons";
+import { UserTable } from "@/components/users/user-table";
+import { buttonClass } from "@/components/ui/button-class";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ListToolbar } from "@/components/ui/list-toolbar";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireUserAdmin } from "./guard";
 import Loading from "./loading";
 
@@ -11,22 +14,14 @@ export const instant = false;
 
 export const metadata: Metadata = { title: "Usuarios · Argos" };
 
-const STATUS = {
-  active: { label: "Activo", variant: "ring" },
-  locked: { label: "Bloqueado", variant: "alert" },
-  deactivated: { label: "Desactivado", variant: "neutral" },
-} as const;
-
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
+const STATUS = { active: "Activo", locked: "Bloqueado", deactivated: "Desactivado" } as const;
+const STATUS_OPTIONS = [
+  { value: "", label: "Todos los estados" },
+  ...Object.entries(STATUS).map(([value, label]) => ({ value, label })),
+];
 
 const NewUserLink = () => (
-  <Link className="btn btn-primary" href="/usuarios/nuevo">
+  <Link className={buttonClass("primary", "md")} href="/usuarios/nuevo">
     <Plus aria-hidden="true" />
     Nuevo usuario
   </Link>
@@ -35,14 +30,7 @@ const NewUserLink = () => (
 async function UserList({ searchParams }: { searchParams: PageProps<"/usuarios">["searchParams"] }) {
   const { users, company } = await requireUserAdmin();
   if (!company) {
-    return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <Users />
-        </span>
-        <p>Elige una compañía arriba para ver sus usuarios.</p>
-      </Card>
-    );
+    return <EmptyState icon="Users" title="Elige una compañía arriba para ver sus usuarios." />;
   }
   const { q, estado } = await searchParams;
   const qs = typeof q === "string" ? q : "";
@@ -57,77 +45,32 @@ async function UserList({ searchParams }: { searchParams: PageProps<"/usuarios">
 
   if (all.length === 0) {
     return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <Users />
-        </span>
-        <p>Aún no hay usuarios en {company.name}. Crea el primero para que pueda entrar con su PIN.</p>
-        <NewUserLink />
-      </Card>
+      <EmptyState icon="Users" title={`Aún no hay usuarios en ${company.name}.`} action={<NewUserLink />}>
+        Crea el primero para que pueda entrar con su PIN.
+      </EmptyState>
     );
   }
 
   return (
-    <Card>
-      <form className="row" role="search">
-        <div className="search">
-          <label className="sr-only" htmlFor="q">
-            Buscar usuario
-          </label>
-          <Search aria-hidden="true" />
-          <input id="q" name="q" type="search" defaultValue={qs} placeholder="Buscar por nombre o usuario" />
-        </div>
-        <label className="sr-only" htmlFor="estado">
-          Estado
-        </label>
-        <select className="select" id="estado" name="estado" defaultValue={status} style={{ width: "auto" }}>
-          <option value="">Todos los estados</option>
-          {Object.entries(STATUS).map(([k, v]) => (
-            <option key={k} value={k}>
-              {v.label}
-            </option>
-          ))}
-        </select>
-        <button className="btn btn-secondary" type="submit">
-          Filtrar
-        </button>
-      </form>
-      {shown.length === 0 ? (
-        <p className="muted">Ningún usuario coincide con la búsqueda.</p>
-      ) : (
-        <ul className="list" aria-label="Usuarios">
-          {shown.map((u) => (
-            <li key={u.id}>
-              <Link className="list-row admin-row" href={`/usuarios/${u.id}`}>
-                <span className="avatar" role="img" aria-label={u.displayName}>
-                  {initials(u.displayName)}
-                </span>
-                <span>
-                  <strong>{u.displayName}</strong>
-                  <br />
-                  <span className="caption mono">{u.username}</span>
-                </span>
-                <Chip variant={STATUS[u.status].variant}>{STATUS[u.status].label}</Chip>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
+    <>
+      <ListToolbar
+        search={{ label: "Buscar usuario", placeholder: "Buscar por nombre o usuario", defaultValue: qs }}
+        filters={[{ name: "estado", label: "Estado", options: STATUS_OPTIONS, defaultValue: status }]}
+      />
+      <UserTable
+        rows={shown.map((u) => ({ id: u.id, displayName: u.displayName, username: u.username, status: u.status }))}
+      />
+    </>
   );
 }
 
 export default function UsersPage(props: PageProps<"/usuarios">) {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Usuarios</h1>
-        <span className="spacer" />
-        <NewUserLink />
-      </div>
+    <div className="stack">
+      <PageHeader title="Usuarios" actions={<NewUserLink />} />
       <Suspense fallback={<Loading />}>
         <UserList searchParams={props.searchParams} />
       </Suspense>
-    </>
+    </div>
   );
 }

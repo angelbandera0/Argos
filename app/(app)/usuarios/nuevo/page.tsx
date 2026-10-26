@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { NewUserForm } from "@/components/users/new-user-form";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { loadStores, requireUserAdmin } from "../guard";
 import Loading from "./loading";
 
@@ -45,13 +46,11 @@ async function Guarded() {
 
 export default function NewUserPage() {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Nuevo usuario</h1>
-      </div>
+    <div className="stack">
+      <PageHeader title="Nuevo usuario" breadcrumbs={[{ label: "Usuarios", href: "/usuarios" }, { label: "Nuevo usuario" }]} />
       <Suspense fallback={<Loading />}>
         <Guarded />
       </Suspense>
-    </>
+    </div>
   );
 }

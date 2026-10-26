@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Check, Lock } from "@/components/icons";
 import { AssignmentsForm } from "@/components/users/assignments-form";
 import { UserActions } from "@/components/users/user-actions";
-import { UserTabs } from "@/components/users/user-tabs";
+import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
+import { PageHeader } from "@/components/ui/page-header";
+import { Tabs } from "@/components/ui/tabs";
 import { loadStores, requireUserAdmin } from "../guard";
 import Loading from "./loading";
 
@@ -26,14 +28,6 @@ const EVENTS = {
 } as const;
 
 const CHANNELS = { ui: "Pantalla", app: "App", api: "API", mcp: "MCP", system: "Sistema" } as const;
-
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
 
 const when = new Intl.DateTimeFormat("es", { dateStyle: "medium", timeStyle: "short" });
 
@@ -60,81 +54,84 @@ async function Detail({ params }: { params: PageProps<"/usuarios/[id]">["params"
 
   return (
     <div className="stack">
-      <Card>
-        <div className="card-head row">
-          <span className="avatar" role="img" aria-label={profile.displayName}>
-            {initials(profile.displayName)}
-          </span>
-          <div className="stack">
-            <h1 className="h2">{profile.displayName}</h1>
-            <span className="caption">
-              <span className="mono">{profile.username}</span> · {company?.name}
-            </span>
-          </div>
-          {profile.status === "locked" ? (
-            <Chip variant="alert">
-              <Lock aria-hidden="true" />
-              Bloqueado
-            </Chip>
-          ) : deactivated ? (
-            <Chip>Desactivado</Chip>
-          ) : (
-            <Chip>
-              <Check aria-hidden="true" />
-              Activo
-            </Chip>
-          )}
-          <span className="spacer" />
-          <UserActions userId={profile.id} name={profile.displayName} status={profile.status} />
-        </div>
-        {profile.status === "locked" && (
-          <div className="notice notice-alert">
-            <p>
-              Este usuario se bloqueó tras 5 PIN incorrectos. Al desbloquearlo se genera un PIN nuevo y se cierran sus
-              sesiones.
-            </p>
-          </div>
-        )}
-      </Card>
-      <UserTabs
-        stores={
-          <Card>
-            <h2 className="h2">Tiendas asignadas</h2>
-            {deactivated ? (
-              <p className="muted">Este usuario está desactivado y ya no se puede modificar.</p>
-            ) : (
-              <AssignmentsForm
-                userId={profile.id}
-                stores={stores}
-                roles={options}
-                initial={assignments.map((a) => ({ storeId: a.storeId, roleId: a.roleId }))}
-                foreignStoreIds={foreignStoreIds}
-              />
-            )}
-          </Card>
+      <PageHeader
+        title={profile.displayName}
+        description={
+          <>
+            <span className="mono">{profile.username}</span> · {company?.name}
+          </>
         }
-        activity={
-          <Card>
-            <div className="card-head row">
-              <h2 className="h2">Accesos recientes</h2>
-              <span className="spacer" />
-              <span className="caption">Solo lo ven los administradores</span>
-            </div>
-            {events.length === 0 ? (
-              <p className="muted">Todavía no hay accesos registrados.</p>
+        breadcrumbs={[{ label: "Usuarios", href: "/usuarios" }, { label: profile.displayName }]}
+        actions={
+          <>
+            {profile.status === "locked" ? (
+              <Badge variant="danger">Bloqueado</Badge>
+            ) : deactivated ? (
+              <Badge variant="neutral">Desactivado</Badge>
             ) : (
-              <ul className="list" aria-label="Accesos recientes">
-                {events.map((e, i) => (
-                  <li className="list-row event-row" key={i}>
-                    <span className="caption mono">{when.format(e.createdAt)}</span>
-                    <span>{EVENTS[e.event].label}</span>
-                    <Chip variant={EVENTS[e.event].fail ? "alert" : "neutral"}>{CHANNELS[e.channel]}</Chip>
-                  </li>
-                ))}
-              </ul>
+              <Badge variant="success">Activo</Badge>
             )}
-          </Card>
+            <UserActions userId={profile.id} name={profile.displayName} status={profile.status} />
+          </>
         }
+      />
+      {profile.status === "locked" && (
+        <Alert variant="danger">
+          Este usuario se bloqueó tras 5 PIN incorrectos. Al desbloquearlo se genera un PIN nuevo y se cierran sus
+          sesiones.
+        </Alert>
+      )}
+      <Tabs
+        aria-label="Secciones del usuario"
+        defaultValue="stores"
+        items={[
+          {
+            value: "stores",
+            label: "Tiendas y rol",
+            content: (
+              <Card>
+                <h2 className="h2">Tiendas asignadas</h2>
+                {deactivated ? (
+                  <p className="muted">Este usuario está desactivado y ya no se puede modificar.</p>
+                ) : (
+                  <AssignmentsForm
+                    userId={profile.id}
+                    stores={stores}
+                    roles={options}
+                    initial={assignments.map((a) => ({ storeId: a.storeId, roleId: a.roleId }))}
+                    foreignStoreIds={foreignStoreIds}
+                  />
+                )}
+              </Card>
+            ),
+          },
+          {
+            value: "activity",
+            label: "Actividad",
+            content: (
+              <Card>
+                <div className="card-head row">
+                  <h2 className="h2">Accesos recientes</h2>
+                  <span className="spacer" />
+                  <span className="caption">Solo lo ven los administradores</span>
+                </div>
+                {events.length === 0 ? (
+                  <p className="muted">Todavía no hay accesos registrados.</p>
+                ) : (
+                  <ul className="list" aria-label="Accesos recientes">
+                    {events.map((e, i) => (
+                      <li className="list-row event-row" key={i}>
+                        <span className="caption mono">{when.format(e.createdAt)}</span>
+                        <span>{EVENTS[e.event].label}</span>
+                        <Chip variant={EVENTS[e.event].fail ? "alert" : "neutral"}>{CHANNELS[e.channel]}</Chip>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            ),
+          },
+        ]}
       />
     </div>
   );
