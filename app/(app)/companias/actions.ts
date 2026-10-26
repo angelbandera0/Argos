@@ -22,6 +22,9 @@ function fail(e: unknown, taken: string): string {
   if (e instanceof RuleViolation) {
     if (e.code === "NAME_TAKEN") return taken;
     if (e.code === "REASON_REQUIRED") return "Escribe el motivo para continuar.";
+    if (e.code === "FOUNDER_PROTECTED") return "El fundador no puede perder el acceso.";
+    if (e.code === "SESSION_TOO_LONG" || e.code === "INVALID_SESSION_SECONDS")
+      return "Escribe un tope entre media hora y 24 horas.";
   }
   return "No se pudo completar la acción. Inténtalo de nuevo.";
 }
@@ -121,4 +124,43 @@ export async function setActiveCompanyAction(companyId: string): Promise<void> {
     path: "/",
   });
   revalidatePath("/", "layout");
+}
+
+export async function grantAccessAction(companyId: string, adminId: string): Promise<ActionState> {
+  const { actor, org } = await requireOrgUser();
+  if (!adminId) return { error: "Elige un administrador." };
+  try {
+    await org.grantAccess(actor, { companyId, adminId });
+  } catch (e) {
+    return { error: fail(e, "") };
+  }
+  revalidatePath("/companias", "layout");
+  return {};
+}
+
+export async function revokeAccessAction(companyId: string, adminId: string): Promise<ActionState> {
+  const { actor, org } = await requireOrgUser();
+  try {
+    await org.revokeAccess(actor, { companyId, adminId });
+  } catch (e) {
+    return { error: fail(e, "") };
+  }
+  revalidatePath("/companias", "layout");
+  return {};
+}
+
+export async function updateSettingsAction(companyId: string, formData: FormData): Promise<ActionState> {
+  const { actor, org } = await requireOrgUser();
+  const hours = Number(text(formData, "hours").replace(",", "."));
+  const seconds = Math.round(hours * 3600);
+  if (!Number.isFinite(hours) || seconds <= 0 || seconds > 86400) {
+    return { error: "Escribe un tope entre media hora y 24 horas." };
+  }
+  try {
+    await org.updateSettings(actor, { companyId, sessionCapSeconds: seconds });
+  } catch (e) {
+    return { error: fail(e, "") };
+  }
+  revalidatePath("/companias", "layout");
+  return {};
 }

@@ -42,12 +42,16 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
   const { data } = off
     ? await supabase
         .from("companies")
-        .select("status_reason_code, status_reason_text")
+        .select("status_reason_code, status_reason_text, status_changed_by, status_changed_at")
         .eq("id", id)
         .maybeSingle()
     : { data: null };
   const code = data?.status_reason_code as ReasonCode | undefined;
   const reasonText = data?.status_reason_text as string | undefined;
+  const changedBy = data?.status_changed_by ? await org.users.getProfile(data.status_changed_by as string) : null;
+  const changedAt = data?.status_changed_at
+    ? new Intl.DateTimeFormat("es", { dateStyle: "long", timeStyle: "short" }).format(new Date(data.status_changed_at as string))
+    : null;
 
   return (
     <div className="stack">
@@ -79,7 +83,11 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
         <div className="notice notice-alert" role="status">
           <p>
             <strong>{code ? REASON_LABELS[code] : "Desactivada"}.</strong>
-            {reasonText ? ` ${reasonText}.` : ""} Mientras tanto nadie puede entrar a sus sedes y tiendas.
+            {reasonText ? ` ${reasonText}.` : ""}
+            {changedBy || changedAt
+              ? ` Desactivada${changedBy ? ` por ${changedBy.displayName}` : ""}${changedAt ? ` el ${changedAt}` : ""}.`
+              : ""}{" "}
+            Mientras tanto nadie puede entrar a sus sedes y tiendas.
           </p>
         </div>
       )}

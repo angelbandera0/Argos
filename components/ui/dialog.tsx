@@ -17,6 +17,10 @@ export function Dialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    return () => opener?.focus();
+  }, []);
+  useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (open && !d.open) d.showModal();

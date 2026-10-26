@@ -16,6 +16,8 @@ export {
   Power,
   ShieldCheck,
   Store,
+  UserMinus,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";

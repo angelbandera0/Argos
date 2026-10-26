@@ -5,7 +5,7 @@ import { Forbidden, NotFound } from "@/core/domain/errors";
 
 export interface GrantCompanyAccessDeps {
   companies: CompanyRepository;
-  users: UserRepository;
+  users: Pick<UserRepository, "getProfile">;
 }
 
 export function makeGrantCompanyAccess(deps: GrantCompanyAccessDeps) {

@@ -14,10 +14,12 @@ const initials = (name: string) =>
 export function AppShell({
   nav,
   user,
+  top,
   children,
 }: {
   nav: NavItem[];
   user: { name: string; role: string };
+  top?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -42,7 +44,10 @@ export function AppShell({
         </div>
       </nav>
       <main className="main">
-        <div className="content">{children}</div>
+        <div className="content">
+          {top}
+          {children}
+        </div>
       </main>
     </div>
   );

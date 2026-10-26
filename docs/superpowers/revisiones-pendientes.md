@@ -105,3 +105,7 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 ## Task 24A
 - Aviso de compañía desactivada sin autor/fecha; foco no vuelve al disparador tras cerrar con éxito el diálogo de desactivar/reactivar/crear.
 - `setActiveCompanyAction` y `getActiveCompanyId` validan contra `listCompanies` (RLS); CompanySelector aún no montado.
+
+## Task 24B
+- "Dar acceso" solo ofrece administradores visibles por RLS (los que comparten otra compania con el actor); el superadmin ve todos.
+- El tope de sesion acepta medias horas (0,5 a 24); no se revisa si roles existentes superan el nuevo tope.

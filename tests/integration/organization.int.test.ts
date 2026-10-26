@@ -125,4 +125,12 @@ describe("organization repositories", () => {
     expect(rows.find((r) => r.action === "create")?.actor_id).toBe(a.id);
     expect(rows.find((r) => r.action === "deactivate")?.actor_id).toBe(a.id);
   });
+
+  it("saving the session cap persists it and leaves a history row", async () => {
+    const companyId = companyIds[0];
+    await makeCompanyRepository(a.client).setSessionCap(companyId, 7200);
+    expect((await makeCompanyRepository(a.client).getById(companyId))?.sessionCapSeconds).toBe(7200);
+    const { data } = await admin.from("audit_log").select("action").eq("entity_id", companyId).eq("entity_type", "companies");
+    expect((data ?? []).length).toBeGreaterThan(1);
+  });
 });
