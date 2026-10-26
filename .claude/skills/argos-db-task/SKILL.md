@@ -26,9 +26,9 @@ Aplica esto al escribir una migración con sus pruebas. Todo en Modo Ponytail (C
 
 1. Escribir migración y pruebas.
 2. `pnpm db:apply supabase/migrations/<nombre>.sql` (renombra a la versión). Si falla la conexión, `apply_migration` del MCP y renombrar con `list_migrations`.
-3. `pnpm test:db <NNN>` **una vez**. Reejecutar `pnpm test:db` completo solo si la migración cambia funciones compartidas (p. ej. `app.has_data`, `app.can`).
+3. `pnpm test:db` completo **una vez** al final (cuesta unas pocas líneas de salida; incluye la cobertura de RLS de `099`). Mientras desarrollas, `pnpm test:db <NNN>` solo si algo falla.
 4. Commit en inglés: `feat(db): ...` con la línea `Co-Authored-By` del entorno.
-5. Ledger: línea `Task N: complete (commit X; NNN a/b)` en `.superpowers/sdd/2026-10-25-modulo-1-implementacion/progress.md`; menores en `docs/superpowers/revisiones-pendientes.md`; fila en `docs/superpowers/consumo.md`.
+5. Ledger: línea `Task N: complete (commit X; NNN a/b)` en `.superpowers/sdd/2026-10-25-modulo-1-implementacion/progress.md`; menores en `docs/superpowers/revisiones-pendientes.md`. No toques `docs/superpowers/consumo.md`: el controlador anota el consumo.
 6. Informe completo en `.superpowers/sdd/2026-10-25-modulo-1-implementacion/task-N-report.md`.
 
 ## Respuesta final
