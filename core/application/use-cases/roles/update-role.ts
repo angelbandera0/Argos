@@ -3,11 +3,11 @@ import type { Role, RoleRepository } from "@/core/application/ports/role-reposit
 import type { Actor } from "@/core/domain/actor";
 import {
   assertAdmin,
-  assertCompaniesAccessible,
   assertNameFree,
   assertPermissions,
   assertSessionSeconds,
   loadOwnedRole,
+  mergeExclusions,
   normalizeName,
 } from "./shared";
 
@@ -30,7 +30,7 @@ export function makeUpdateRole(deps: UpdateRoleDeps) {
     if (patch.sessionSeconds !== undefined) assertSessionSeconds(patch.sessionSeconds);
     if (patch.permissions !== undefined) assertPermissions(patch.permissions);
     if (patch.excludedCompanyIds !== undefined) {
-      await assertCompaniesAccessible(deps.companies, actor, patch.excludedCompanyIds);
+      clean.excludedCompanyIds = await mergeExclusions(deps.companies, actor, role.excludedCompanyIds, patch.excludedCompanyIds);
     }
     return deps.roles.update(role.id, clean);
   };

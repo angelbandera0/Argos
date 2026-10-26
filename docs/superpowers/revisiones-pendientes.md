@@ -119,5 +119,4 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - hasAssignments=true no se prueba en integración (requiere operador con user_stores; Tarea 27).
 
 ## Task 26 (pantallas de roles)
-- Al editar, las exclusiones de compañías que el administrador ya no ve se pierden (se recalculan solo con las compañías visibles).
 - Eliminar rol con usuarios asignados: el error HAS_DATA depende de hasAssignments (sin probar hasta la Tarea 27).

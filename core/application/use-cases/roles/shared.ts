@@ -45,8 +45,18 @@ export async function assertCompaniesAccessible(
   actor: Actor,
   companyIds: string[],
 ): Promise<void> {
+  await mergeExclusions(companies, actor, [], companyIds);
+}
+
+export async function mergeExclusions(
+  companies: CompanyRepository,
+  actor: Actor,
+  current: string[],
+  requested: string[],
+): Promise<string[]> {
   const allowed = new Set((await companies.listForActor(actor)).map((c) => c.id));
-  if (companyIds.some((id) => !allowed.has(id))) throw new Forbidden();
+  if (requested.some((id) => !allowed.has(id))) throw new Forbidden();
+  return [...new Set([...current.filter((id) => !allowed.has(id)), ...requested])];
 }
 
 export async function loadOwnedRole(roles: RoleRepository, actor: Actor, id: string): Promise<Role> {

@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createAdminClient } from "@/infrastructure/supabase/admin-client";
 import { makeAuthGateway, makeMfaGateway } from "@/infrastructure/supabase/auth-gateway";
 import { makeCompanyRepository } from "@/infrastructure/supabase/company-repository";
+import { makeSetRoleCompanyExclusions } from "@/core/application/use-cases/roles/set-role-company-exclusions";
 import { makeRoleRepository } from "@/infrastructure/supabase/role-repository";
 
 const admin = createAdminClient();
@@ -123,5 +124,24 @@ describe("role repository", () => {
     expect(await repo.getById(role.id)).toBeNull();
     const again = await repo.create({ ownerId: a.id, name: role.name, sessionSeconds: null, excludedCompanyIds: [], permissions: perms(true) });
     expect(again.id).not.toBe(role.id);
+  });
+
+  it("keeps an exclusion on a company the actor cannot see", async () => {
+    const hidden = await makeCompanyRepository(b.client).create({ name: `itest-t25-${run}-hidden`, founderId: b.id });
+    companyIds.push(hidden.id);
+    const repo = makeRoleRepository(a.client);
+    const role = await repo.create({
+      ownerId: a.id,
+      name: `itest-t25-${run} Oculta`,
+      sessionSeconds: null,
+      excludedCompanyIds: [companyId],
+      permissions: perms(true),
+    });
+    await admin.from("role_company_exclusions").insert({ role_id: role.id, company_id: hidden.id });
+    const set = makeSetRoleCompanyExclusions({ roles: repo, companies: makeCompanyRepository(a.client) });
+    const actor = { userId: a.id, kind: "admin", channel: "ui" } as const;
+    const out = await set(actor, { roleId: role.id, companyIds: [] });
+    expect(out.excludedCompanyIds).toEqual([hidden.id]);
+    await expect(set(actor, { roleId: role.id, companyIds: [hidden.id] })).rejects.toMatchObject({ name: "Forbidden" });
   });
 });

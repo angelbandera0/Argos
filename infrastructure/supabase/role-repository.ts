@@ -59,13 +59,20 @@ export function makeRoleRepository(client: SupabaseClient): RoleRepository {
   }
 
   async function writeExclusions(roleId: string, companyIds: string[]) {
-    const del = await client.from("role_company_exclusions").delete().eq("role_id", roleId);
-    if (del.error) roleError("RoleRepository.exclusions", del.error);
-    if (companyIds.length === 0) return;
-    const { error } = await client
-      .from("role_company_exclusions")
-      .insert(companyIds.map((company_id) => ({ role_id: roleId, company_id })));
-    if (error) roleError("RoleRepository.exclusions", error);
+    const cur = await client.from("role_company_exclusions").select("company_id").eq("role_id", roleId);
+    if (cur.error) roleError("RoleRepository.exclusions", cur.error);
+    const have = new Set((cur.data ?? []).map((e) => e.company_id as string));
+    const want = new Set(companyIds);
+    const remove = [...have].filter((id) => !want.has(id));
+    const add = [...want].filter((id) => !have.has(id));
+    if (remove.length) {
+      const del = await client.from("role_company_exclusions").delete().eq("role_id", roleId).in("company_id", remove);
+      if (del.error) roleError("RoleRepository.exclusions", del.error);
+    }
+    if (add.length) {
+      const { error } = await client.from("role_company_exclusions").insert(add.map((company_id) => ({ role_id: roleId, company_id })));
+      if (error) roleError("RoleRepository.exclusions", error);
+    }
   }
 
   async function load(id: string): Promise<Role> {

@@ -210,6 +210,17 @@ describe("makeSetRoleCompanyExclusions", () => {
     expect((await setExclusions(admin, { roleId: r.id, companyIds: [] })).excludedCompanyIds).toEqual([]);
   });
 
+  it("keeps exclusions on companies the actor cannot see; cannot touch them", async () => {
+    const { create, update, setExclusions, roles } = setup();
+    const r = await create(admin, { ...base, excludedCompanyIds: ["c1"] });
+    await roles.update(r.id, { excludedCompanyIds: ["c1", "hidden"] });
+    expect((await setExclusions(admin, { roleId: r.id, companyIds: ["c2"] })).excludedCompanyIds.sort()).toEqual(["c2", "hidden"]);
+    expect((await update(admin, r.id, { excludedCompanyIds: [] })).excludedCompanyIds).toEqual(["hidden"]);
+    await expect(setExclusions(admin, { roleId: r.id, companyIds: ["hidden"] })).rejects.toBeInstanceOf(Forbidden);
+    await expect(update(admin, r.id, { excludedCompanyIds: ["hidden"] })).rejects.toBeInstanceOf(Forbidden);
+    expect((await roles.getById(r.id))?.excludedCompanyIds).toEqual(["hidden"]);
+  });
+
   it("inaccessible company, foreign or missing role, non-admin -> Forbidden, no mutation", async () => {
     const { create, setExclusions, roles } = setup();
     const r = await create(admin, base);
