@@ -82,17 +82,21 @@ describe("decideRedirect operador", () => {
 
 describe("decideRedirect admin autenticado", () => {
   it.each(["/login", "/login/2fa", "/entrar", "/primer-ingreso", "/recuperar"])(
-    "%s -> /companias",
+    "%s -> /",
     (p) => {
-      expect(go(p, session("admin"))).toBe("/companias");
-      expect(go(p, session("superadmin"))).toBe("/companias");
+      expect(go(p, session("admin"))).toBe("/");
+      expect(go(p, session("superadmin"))).toBe("/");
     },
   );
-  it("/superadmin solo para el superadmin; el administrador va a /companias", () => {
-    expect(go("/superadmin/administradores", session("admin"))).toBe("/companias");
-    expect(go("/superadmin", session("admin"))).toBe("/companias");
+  it("/superadmin solo para el superadmin; el administrador va a /", () => {
+    expect(go("/superadmin/administradores", session("admin"))).toBe("/");
+    expect(go("/superadmin", session("admin"))).toBe("/");
     expect(go("/superadmin/administradores", session("superadmin"))).toBeNull();
     expect(go("/superadministrador", session("admin"))).toBeNull();
+  });
+  it("/ -> null (sin bucle)", () => {
+    expect(go("/", session("admin"))).toBeNull();
+    expect(go("/", session("superadmin"))).toBeNull();
   });
   it("otras rutas -> null", () => {
     expect(go("/usuarios", session("admin"))).toBeNull();

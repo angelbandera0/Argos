@@ -52,7 +52,7 @@ export function decideRedirect(i: {
     return matchesAny(pathname, OPERATOR_PATHS) ? null : "/tienda";
   }
 
-  if (matches(pathname, "/superadmin") && session.kind !== "superadmin") return "/companias";
+  if (matches(pathname, "/superadmin") && session.kind !== "superadmin") return "/";
 
-  return matchesAny(pathname, ADMIN_AUTH_PAGES) ? "/companias" : null;
+  return matchesAny(pathname, ADMIN_AUTH_PAGES) ? "/" : null;
 }

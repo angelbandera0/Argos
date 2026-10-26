@@ -155,3 +155,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - Verificar en navegador: barra superior en 3 vistas (desbordamiento del reloj en móvil), menú de perfil, teclado, y que un operador vea su compañía en `/perfil` (depende de RLS sobre `companies`).
 - La campana no muestra punto rojo (no hay notificaciones); buscador y campana deshabilitados hasta tener backend.
 - Mockups (`shell.js`) siguen sin dibujar la barra superior.
+
+## Dashboard (menores)
+- Dashboard con datos de ejemplo: sustituir por datos reales (`app/(app)/_demo/dashboard-data.ts`).
+- "Hoy" del gráfico usa la zona horaria del servidor; pasar al navegador cuando haya datos reales.
+- `docs/REQUIREMENTS.md` y `docs/README.md` son de solo lectura: la nota provisional no se añadió ahí.
+- Pestañas del gráfico sin navegación por flechas; verificar en navegador la escala reducida y el dashboard en 3 vistas.

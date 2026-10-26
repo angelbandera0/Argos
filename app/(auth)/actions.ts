@@ -46,7 +46,7 @@ export async function verifyTotp(_: FormState, formData: FormData): Promise<Form
   } catch {
     return { error: "El código es incorrecto o ya venció. Prueba con uno nuevo." };
   }
-  redirect("/companias");
+  redirect("/");
 }
 
 export async function startTotpEnrollment() {

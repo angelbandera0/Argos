@@ -22,14 +22,14 @@
 
 | Rol | Opciones del menú |
 |---|---|
-| Superadmin | Administradores · Compañías · Historial |
-| Administrador | Compañías · Usuarios · Roles · Catálogo · Historial |
-| Operador | Solo lo que su rol permite: Productos, Historial de Productos |
+| Superadmin | Inicio · Administradores · Compañías · Historial |
+| Administrador | Inicio · Compañías · Usuarios · Roles · Catálogo · Historial |
+| Operador | Inicio y lo que su rol permite: Productos, Historial de Productos |
 
 - **Compañía activa [mi decisión].** Un administrador puede tener varias compañías. Una lista desplegable arriba elige con cuál trabaja; usuarios, categorías, productos y historial se filtran por ella. Un operador tiene una sola compañía y no ve el selector.
 - **Tienda activa.** Un operador ve su tienda actual en la cabecera y puede cambiarla sin PIN (DR-013).
 - **Historial** agrupa dos pestañas: "Operaciones" (por módulo) y "Accesos" (solo administradores).
-- **Cerrar sesión [mi decisión].** Todos los roles tienen "Cerrar sesión" solo dentro del menú de perfil de la barra superior (avatar + nombre + rol, a la derecha, igual en web, tablet y móvil; `LogOut` en código); el panel lateral, el rail y la barra inferior no llevan usuario ni botón de salir. La etiqueta "MENÚ" del panel se restituye (web) [decisión del usuario, DESIGN (2).md]. La barra superior es común: fecha y hora en vivo (zona horaria del navegador, actualiza cada minuto), buscador y campana deshabilitados (`aria-disabled`, "Próximamente"; sin backend en el Módulo 1), slot de acción primaria y perfil a la derecha; el menú de perfil tiene cabecera (avatar, nombre, `usuario · rol`; correo para administradores y superadmin), "Ver perfil" (`/perfil`, solo lectura: nombre, usuario o correo, tipo de cuenta y compañía del operador) y "Cerrar sesión" en rojo. En la vista del operador la barra conserva el cambiador de tienda. La maqueta (`shell.js`) ya no muestra "Menú" ni el bloque de usuario, pero no dibuja la barra superior: divergencia anotada. Un operador termina su sesión de app (`ended_at`) y vuelve a `/entrar`; administradores y superadmin cierran su sesión de Auth y vuelven a `/login`. Si la sesión ya expiró, redirige igual sin error. Se borra la compañía activa del navegador.
+- **Cerrar sesión [mi decisión].** Todos los roles tienen "Cerrar sesión" solo dentro del menú de perfil de la barra superior (avatar + nombre + rol, a la derecha, igual en web, tablet y móvil; `LogOut` en código); el panel lateral, el rail y la barra inferior no llevan usuario ni botón de salir. Escala tipográfica reducida (display 32, kpi 36, h2 15, value 17; tablet y móvil menores) [decisión del usuario: fuentes más pequeñas]: prevalece sobre la guía de Downloads. La etiqueta "MENÚ" del panel se restituye (web) [decisión del usuario, DESIGN (2).md]. La barra superior es común: fecha y hora en vivo (zona horaria del navegador, actualiza cada minuto), buscador y campana deshabilitados (`aria-disabled`, "Próximamente"; sin backend en el Módulo 1), slot de acción primaria y perfil a la derecha; el menú de perfil tiene cabecera (avatar, nombre, `usuario · rol`; correo para administradores y superadmin), "Ver perfil" (`/perfil`, solo lectura: nombre, usuario o correo, tipo de cuenta y compañía del operador) y "Cerrar sesión" en rojo. En la vista del operador la barra conserva el cambiador de tienda. La maqueta (`shell.js`) ya no muestra "Menú" ni el bloque de usuario, pero no dibuja la barra superior: divergencia anotada. Un operador termina su sesión de app (`ended_at`) y vuelve a `/entrar`; administradores y superadmin cierran su sesión de Auth y vuelven a `/login`. Si la sesión ya expiró, redirige igual sin error. Se borra la compañía activa del navegador.
 - En móvil, "Accesos" y los ajustes de compañía viven dentro de sus pantallas, no en la barra inferior.
 
 ## 3. Inventario de pantallas
@@ -42,6 +42,7 @@
 | A-04 | Recuperar contraseña | `/recuperar` | Superadmin | 006 | — |
 | A-05 | Entrar con PIN | `/entrar` | Operador | 006 | `01` |
 | A-06 | Elegir tienda | `/tienda` | Operador | 006 | `01` |
+| H-01 | Inicio (dashboard con datos de ejemplo, provisional) | `/` | Todos | 005–009 | — |
 | A-07 | Sesión terminada / sin tiendas | `/entrar` (estados) | Operador | 006 | `01` |
 | S-01 | Administradores (lista) | `/superadmin/administradores` | Superadmin | 006 | — |
 | S-02 | Nuevo administrador (contraseña temporal mostrada una vez) | `/superadmin/administradores/nuevo` | Superadmin | 006 | — |
@@ -167,3 +168,11 @@ Definidos en `DESIGN.md` §6.15 y `tokens.css`.
 **Ajuste respecto a la referencia de login:** el diseño que me pasaste decía "PIN incorrecto. Te quedan 2 intentos." Lo cambié por el mensaje genérico, porque indicar los intentos restantes confirma que el usuario existe.
 
 **Pendientes:** el nombre de producto del sistema es provisional ("Argos"); no hay logo; los iconos son de estilo Lucide dibujados a mano en las maquetas y se sustituyen por `lucide-react` al implementar.
+
+## Inicio (H-01) [decisión del usuario]
+
+- Destino posterior al inicio de sesión: administradores y superadmin tras contraseña y TOTP; operadores tras elegir tienda. «Inicio» es el primer elemento del menú (icono `LayoutDashboard`) y está activo solo en `/`.
+- Saludo «Bienvenido/a de nuevo, <nombre>» y rejilla de tres columnas (web) que colapsa a dos (tablet) y una (móvil).
+- Administrador y superadmin: KPI con píldora y barra de progreso (compañías, sedes, tiendas, usuarios, roles, productos), gráfico de barras «Altas por semana» con pestañas segmentadas (día actual en amarillo, mejor en rojo, un solo eje, valores etiquetados y tabla alternativa), actividad reciente, usuarios bloqueados o por desbloquear y resumen por compañía.
+- Operador: tienda activa, hora de fin de sesión y accesos permitidos por su rol.
+- **Provisional:** todo el contenido son datos de ejemplo (`app/(app)/_demo/dashboard-data.ts`), sin lecturas a la base de datos; pasar a datos reales es sustituir ese módulo.

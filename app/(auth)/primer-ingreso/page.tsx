@@ -20,7 +20,7 @@ async function FirstLogin() {
   const claims = await readClaims(supabase);
   if (!claims || claims.kind === "operator") redirect("/login");
   if (!claims.mustChangePassword && (await makeMfaGateway(supabase).hasTotp())) {
-    redirect(claims.aal === "aal2" ? "/companias" : "/login/2fa");
+    redirect(claims.aal === "aal2" ? "/" : "/login/2fa");
   }
   const password = claims.mustChangePassword;
   return (
