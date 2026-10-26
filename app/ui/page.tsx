@@ -4,6 +4,7 @@ import { Colores } from "./sections/colores";
 import { Tipografia } from "./sections/tipografia";
 import { Espaciado } from "./sections/espaciado";
 import { Componentes } from "./sections/componentes";
+import { AlertasSection, BannerSection, DialogosSection, InsigniasSection, ToastSection, TooltipSection } from "./sections/avisos";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 
 export const metadata = { title: "Argos UI — galería" };
@@ -18,6 +19,12 @@ const sections = [
   { id: "casillas", title: "Casillas, radio e interruptores", description: "Guía §6.18.", content: <ChecksSection /> },
   { id: "select", title: "Select", description: "Base UI Select (guía §6.19).", content: <SelectSection /> },
   { id: "multiselect", title: "Multiselect", description: "Base UI Combobox múltiple (guía §6.20).", content: <MultiselectSection /> },
+  { id: "alertas", title: "Alertas", description: "En línea y compacta (guía §6.21).", content: <AlertasSection /> },
+  { id: "banner", title: "Banner", description: "Guía §6.22.", content: <BannerSection /> },
+  { id: "toast", title: "Toast", description: "Base UI Toast (guía §6.23).", content: <ToastSection /> },
+  { id: "dialogos", title: "Diálogos", description: "Base UI Dialog y AlertDialog (guía §6.24).", content: <DialogosSection /> },
+  { id: "insignias", title: "Insignias y chips", description: "Guía §6.25.", content: <InsigniasSection /> },
+  { id: "tooltip", title: "Tooltip", description: "Base UI Tooltip (guía §6.26).", content: <TooltipSection /> },
 ];
 
 export default function UiPage() {

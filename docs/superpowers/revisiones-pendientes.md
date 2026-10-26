@@ -175,3 +175,7 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - Altura de foco/hover en galería: hover real solo con cursor; foco simulado por estilo en línea.
 - Tokens nuevos en tokens.css (`--color-yellow-hover`, `--color-danger-tint-hover`, `--border-field*`, `--border-hairline`) sin documentar aún en DESIGN.md.
 - `.btn[disabled]` ahora usa fondo/texto desactivados de la guía en vez de opacidad.
+- Fase 2 UI: Escape cerrando primero el popup de Select y luego el Dialog, foco de retorno y Toast con pausa en hover/foco dependen de Base UI y no se probaron en navegador; verificar en `/ui`.
+- Fase 2 UI: los consumidores de dominio (`deactivate-dialog`, `delete-*`, `pin-reveal`) siguen montando `{open && <Dialog open>}`, así que no hay animación de salida; sin migrar a `open` controlado.
+- Fase 2 UI: tokens nuevos de fase 2 (`--z-popup`, `--size-dialog-*`, `--size-close*`, `--duration-overlay`, etc.) sin documentar aún en DESIGN.md; el overlay del Dialog pasó de `--color-scrim` a `--color-overlay`.
+- Fase 2 UI: Toast sin apilado en abanico de Base UI (lista simple); el tooltip es blanco con borde (sin fondo oscuro por la regla de la guía).

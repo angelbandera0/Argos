@@ -178,6 +178,19 @@
   --size-icon-circle-xl: 64px;
   --size-toast: 380px;
   --size-popover-max: 320px;
+  --size-dialog-sm: 420px;
+  --size-dialog-lg: 560px;
+  --size-sheet-handle-w: 40px;
+  --size-sheet-handle-h: 5px;
+  --size-icon-sm: 16px;
+  --size-icon-circle-sm: 28px;
+  --size-icon-circle-toast: 30px;
+  --size-close: 36px;
+  --size-close-sm: 32px;
+  --size-chip-remove: 28px;
+  --size-dot-badge: 6px;
+  --size-dot-alert: 8px;
+  --duration-overlay: 0.16s;
   --color-scrim: rgba(28, 28, 30, 0.4);
 
   /* ---- Capas (z-index) ---- */
@@ -188,6 +201,7 @@
   --z-dialog: 60;
   --z-toast: 70;
   --z-tooltip: 80;
+  --z-popup: 65;               /* popups de select/multiselect: por encima de diálogos (--z-dialog), bajo toasts */
 
   /* ---- Carga (ver DESIGN.md §6.15) ---- */
   --skeleton-on-surface: var(--color-panel);   /* placeholder sobre fondo blanco */

@@ -1,48 +1,93 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect } from "react";
+import { Dialog as BaseDialog } from "@base-ui/react/dialog";
+import { NAV_ICONS, type NavIconName } from "@/components/icons";
+
+type Size = "sm" | "md" | "lg";
+type DialogTone = "warning" | "danger";
+
+export type DialogShellProps = {
+  title: string;
+  description?: string;
+  icon?: NavIconName;
+  tone?: DialogTone;
+  size?: Size;
+  footer?: React.ReactNode;
+  showClose?: boolean;
+  initialFocus?: React.RefObject<HTMLElement | null>;
+  children?: React.ReactNode;
+};
+
+export function DialogShell({
+  title,
+  description,
+  icon,
+  tone = "warning",
+  size = "md",
+  footer,
+  showClose,
+  initialFocus,
+  children,
+}: DialogShellProps) {
+  const Icon = icon && NAV_ICONS[icon];
+  return (
+    <BaseDialog.Portal>
+      <BaseDialog.Backdrop className="dialog-backdrop" />
+      <BaseDialog.Viewport className="dialog-viewport">
+        <BaseDialog.Popup className={`dialog-popup dialog-${size}`} initialFocus={initialFocus}>
+          <div className="modal-body">
+            {Icon && (
+              <span className={`dialog-icon dialog-icon-${tone}`} aria-hidden="true">
+                <Icon />
+              </span>
+            )}
+            <div className="dialog-head">
+              <BaseDialog.Title className="h2 dialog-title">{title}</BaseDialog.Title>
+              {showClose && (
+                <BaseDialog.Close className="close-btn close-btn-panel" aria-label="Cerrar">
+                  <NAV_ICONS.X aria-hidden="true" />
+                </BaseDialog.Close>
+              )}
+            </div>
+            {description && <BaseDialog.Description className="dialog-desc">{description}</BaseDialog.Description>}
+            {children}
+          </div>
+          {footer && <div className="dialog-footer">{footer}</div>}
+        </BaseDialog.Popup>
+      </BaseDialog.Viewport>
+    </BaseDialog.Portal>
+  );
+}
 
 export function Dialog({
   open,
-  title,
   onClose,
   dismissible = true,
-  children,
-}: {
+  showClose,
+  ...shell
+}: DialogShellProps & {
   open: boolean;
-  title: string;
   onClose?: () => void;
   dismissible?: boolean;
-  children: React.ReactNode;
 }) {
-  const ref = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (!open) return;
     const opener = document.activeElement as HTMLElement | null;
     return () => opener?.focus();
-  }, []);
-  useEffect(() => {
-    const d = ref.current;
-    if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
   }, [open]);
 
   return (
-    <dialog
-      ref={ref}
-      className="modal"
-      aria-labelledby="dialog-title"
-      onCancel={(e) => {
-        if (!dismissible) e.preventDefault();
+    <BaseDialog.Root
+      open={open}
+      disablePointerDismissal
+      onOpenChange={(next, details) => {
+        if (next) return;
+        if (!dismissible) details.cancel();
+        else onClose?.();
       }}
-      onClose={onClose}
     >
-      <div className="modal-body">
-        <h2 className="h2" id="dialog-title">
-          {title}
-        </h2>
-        {children}
-      </div>
-    </dialog>
+      <DialogShell showClose={showClose && dismissible} {...shell} />
+    </BaseDialog.Root>
   );
 }

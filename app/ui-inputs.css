@@ -50,7 +50,7 @@
 .ui-chevron svg { width: var(--space-4); height: var(--space-4); transition: transform 0.15s ease; }
 .ui-trigger[data-popup-open] .ui-chevron svg, .ui-chevron[data-popup-open] svg { transform: rotate(180deg); }
 
-.ui-positioner { z-index: var(--z-menu); outline: none; }
+.ui-positioner { z-index: var(--z-popup); outline: none; }
 .ui-popup {
   min-width: var(--anchor-width); max-width: var(--available-width); padding: var(--space-1-5); background: var(--color-surface);
   border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-popover); box-shadow: var(--shadow-popover);

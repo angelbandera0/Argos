@@ -2,6 +2,7 @@
 @import "tailwindcss";
 @import "../docs/design/tokens.css";
 @import "./ui-inputs.css";
+@import "./ui-feedback.css";
 
 @theme inline {
   --color-background: var(--color-surface);
@@ -160,9 +161,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .input-outline:read-only:not(:disabled), .textarea-outline:read-only:not(:disabled) { box-shadow: none; }
 .textarea-outline { border-radius: var(--radius-textarea); }
 
-dialog.modal { border: 0; padding: 0; margin: auto; border-radius: var(--radius-card); width: min(var(--size-modal), calc(100vw - 2 * var(--space-4))); background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-floating); }
-dialog.modal::backdrop { background: var(--color-scrim); }
-.modal-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+.modal-body { padding: var(--space-7); display: flex; flex-direction: column; gap: var(--space-4); }
 .modal-actions { display: flex; gap: var(--space-3); justify-content: flex-end; flex-wrap: wrap; }
 @media (max-width: 767px) { .modal-actions .btn { flex: 1; } }
 

@@ -37,7 +37,7 @@ Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design
 
 ## 6. Modales
 
-- Base: `components/ui/dialog.tsx` (`<dialog>` con `showModal`). Al desmontarse devuelve el foco al elemento que tenía activo al abrir. `dismissible={false}` bloquea Escape.
+- Base: `components/ui/dialog.tsx` (Base UI Dialog, no `<dialog>` nativo). Al cerrarse o desmontarse devuelve el foco al elemento que tenía activo al abrir. `dismissible={false}` bloquea Escape y la cruz; el clic fuera nunca cierra.
 - Confirmación con motivo: `components/org/deactivate-dialog.tsx`. Se monta solo al abrir; confirmar se habilita con `ready`; cierra solo si la acción no devuelve error; el error va en `role="alert"`.
 - Mostrar una sola vez: `components/users/pin-reveal-dialog.tsx`. `dismissible={false}`; "Ya lo copié" está deshabilitado hasta copiar y solo entonces llama `onDone`. Si el portapapeles falla, el valor queda seleccionable.
 
@@ -67,3 +67,12 @@ Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design
 - Input (`components/ui/input.tsx`) y Textarea (`textarea.tsx`, `counter` con `maxLength`): dentro de `Field` (`optional`, `hint`, `error` con icono). `variant="outline"` = campo de la guía; sin variante = relleno de panel actual.
 - Checkbox (`checkbox.tsx`): opción suelta o `indeterminate`. RadioGroup (`radio-group.tsx`): hasta 7 opciones excluyentes. Switch (`switch.tsx`): ajuste on/off inmediato.
 - Select (`select.tsx`): una opción de lista corta, `name` envía en FormData. Multiselect (`multiselect.tsx`): varias opciones con buscador; `name` envía valores repetidos.
+
+## 12. Argos UI: avisos y capas (fase 2)
+
+- Alert (`components/ui/alert.tsx`): `variant` success/warning/danger/info, `title`, `icon` (nombre), `action` (nodo), `dismissible`, `compact`; danger = `role="alert"`.
+- Banner (`banner.tsx`): franja de página, uno a la vez, `action` opcional (Button sm).
+- Toast (`toast.tsx`): `ToastProvider` ya montado en `app/layout.tsx`; en cliente `const toast = useToast(); toast.success|info|warning|error(título, { description, action })`. Máx. 3 visibles, 5 s, el error no se cierra solo.
+- Dialog (`dialog.tsx`): `size` sm/md/lg, `description`, `icon`+`tone`, `footer`, `showClose`; popups de Select/Multiselect usan `--z-popup` (65 > `--z-dialog`) y funcionan dentro. AlertDialog (`alert-dialog.tsx`): confirmación destructiva con `role="alertdialog"`, foco inicial en Cancelar, `confirmLabel`/`cancelLabel`/`loading`.
+- Badge (`badge.tsx`): success/warning/danger/neutral/new/count. Chip (`chip.tsx`): variantes de estado con `icon`, filtro con `pressed`/`onPressedChange`, quitable con `onRemove`.
+- Tooltip (`tooltip.tsx`): `<Tooltip label side>` envolviendo un único elemento enfocable.
