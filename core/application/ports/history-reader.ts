@@ -32,18 +32,34 @@ export interface HistoryPage<T> {
   nextCursor: string | null;
 }
 
+export interface HistoryFilter {
+  companyId?: string;
+  module?: string;
+  modules?: string[];
+  actorId?: string;
+  actions?: string[];
+  channel?: string;
+  from?: Date;
+  /** Exclusive. */
+  to?: Date;
+}
+
+export interface AuthEventFilter {
+  companyId?: string;
+  userId?: string;
+  events?: string[];
+  channel?: string;
+  from?: Date;
+  /** Exclusive. */
+  to?: Date;
+}
+
 /** Newest first (created_at desc, id desc); `cursor` is opaque. Without `companyId` (superadmin) every visible company is read. */
 export interface HistoryReader {
-  list(i: {
-    companyId?: string;
-    module?: string;
-    actorId?: string;
-    from?: Date;
-    to?: Date;
-    cursor?: string;
-    limit?: number;
-  }): Promise<HistoryPage<HistoryEntry>>;
-  listAuthEvents(i: { companyId?: string; cursor?: string; limit?: number }): Promise<HistoryPage<AuthEventEntry>>;
+  list(i: HistoryFilter & { cursor?: string; limit?: number }): Promise<HistoryPage<HistoryEntry>>;
+  countByModule(i: Omit<HistoryFilter, "module" | "modules"> & { modules: string[] }): Promise<Record<string, number>>;
+  listAuthEvents(i: AuthEventFilter & { cursor?: string; limit?: number }): Promise<HistoryPage<AuthEventEntry>>;
+  countAuthEvents(i: AuthEventFilter): Promise<number>;
 }
 
 export const DEFAULT_PAGE_SIZE = 50;

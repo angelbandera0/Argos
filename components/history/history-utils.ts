@@ -1,3 +1,5 @@
+import type { NavIconName } from "@/components/icons";
+import { isValidIso, orderRange, type Iso } from "@/components/ui/datepicker-utils";
 import type { BadgeVariant } from "@/components/ui/feedback-utils";
 import { stripSensitive } from "@/core/application/use-cases/history/sanitize";
 
@@ -24,9 +26,9 @@ export const ENTITY_LABELS: Record<string, string> = {
 
 export const ACTIONS: Record<string, { label: string; variant: BadgeVariant }> = {
   create: { label: "Creación", variant: "success" },
-  update: { label: "Edición", variant: "new" },
-  deactivate: { label: "Desactivación", variant: "warning" },
-  reactivate: { label: "Reactivación", variant: "neutral" },
+  update: { label: "Edición", variant: "warning" },
+  deactivate: { label: "Desactivación", variant: "danger" },
+  reactivate: { label: "Reactivación", variant: "success" },
   delete: { label: "Eliminación", variant: "danger" },
 };
 
@@ -46,6 +48,17 @@ export const AUTH_EVENTS: Record<string, { label: string; variant: BadgeVariant 
   pin_reset: { label: "PIN restablecido", variant: "new" },
   password_changed: { label: "Contraseña cambiada", variant: "new" },
 };
+
+export const CHANNEL_ICONS: Record<string, NavIconName> = {
+  ui: "Monitor",
+  app: "Smartphone",
+  api: "Plug",
+  mcp: "Bot",
+  system: "Settings",
+};
+
+export const ACTION_KEYS = Object.keys(ACTIONS);
+export const AUTH_EVENT_KEYS = Object.keys(AUTH_EVENTS);
 
 export const actionInfo = (a: string) => ACTIONS[a] ?? { label: a, variant: "neutral" as const };
 export const channelLabel = (c: string) => CHANNELS[c] ?? c;
@@ -78,40 +91,80 @@ export function formatValue(v: unknown, timeZone?: string): string {
   return String(v);
 }
 
-export type HistoryFilters = { actor?: string; from?: string; to?: string; cursor?: string };
+export type HistoryFilters = {
+  actor?: string;
+  actions: string[];
+  channel?: string;
+  from?: Iso;
+  to?: Iso;
+  cursor?: string;
+  /** Cursors of the pages already visited ("~" = first page), oldest first. */
+  prev: string[];
+};
 type Params = Record<string, string | string[] | undefined>;
 
 const one = (v: string | string[] | undefined) => (typeof v === "string" ? v : undefined);
-const isDay = (s?: string) => !!s && /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(Date.parse(s));
+const CURSOR = /^[\w-]{1,300}$/;
 
-export function parseFilters(sp: Params): HistoryFilters {
+/** searchParams -> filters. Invalid dates are dropped (`invalidDates`); a reversed range is swapped. */
+export function parseHistoryParams(sp: Params, actionKeys: string[]): { filters: HistoryFilters; invalidDates: boolean } {
   const actor = one(sp.usuario);
-  const from = one(sp.desde);
-  const to = one(sp.hasta);
+  const channel = one(sp.canal);
   const cursor = one(sp.cursor);
+  const raw = { from: one(sp.desde) || undefined, to: one(sp.hasta) || undefined };
+  let from = raw.from && isValidIso(raw.from) ? raw.from : undefined;
+  let to = raw.to && isValidIso(raw.to) ? raw.to : undefined;
+  const invalidDates = (!!raw.from && !from) || (!!raw.to && !to);
+  if (from && to) ({ from, to } = orderRange(from, to));
+  const actions = (one(sp.accion) ?? "").split(",").filter((a) => actionKeys.includes(a));
+  const prev = (one(sp.prev) ?? "").split(".").filter((c) => c === "~" || CURSOR.test(c)).slice(-20);
   return {
-    actor: actor && /^[0-9a-f-]{36}$/i.test(actor) ? actor : undefined,
-    from: isDay(from) ? from : undefined,
-    to: isDay(to) ? to : undefined,
-    cursor: cursor && cursor.length <= 300 && /^[\w-]+$/.test(cursor) ? cursor : undefined,
+    invalidDates,
+    filters: {
+      actor: actor && /^[0-9a-f-]{36}$/i.test(actor) ? actor : undefined,
+      actions: [...new Set(actions)],
+      channel: channel && channel in CHANNELS ? channel : undefined,
+      from,
+      to,
+      cursor: cursor && CURSOR.test(cursor) ? cursor : undefined,
+      prev,
+    },
   };
 }
 
-/** searchParams for a link; `cursor` replaces the current one (undefined = first page). */
-export function filtersQuery(f: HistoryFilters, cursor?: string): string {
+/** searchParams for a link; `over` replaces fields (cursor/prev default to the first page). */
+export function filtersQuery(f: Partial<HistoryFilters>, over: { cursor?: string; prev?: string[] } = {}): string {
   const q = new URLSearchParams();
   if (f.actor) q.set("usuario", f.actor);
+  if (f.actions?.length) q.set("accion", f.actions.join(","));
+  if (f.channel) q.set("canal", f.channel);
   if (f.from) q.set("desde", f.from);
   if (f.to) q.set("hasta", f.to);
-  if (cursor) q.set("cursor", cursor);
+  if (over.cursor) q.set("cursor", over.cursor);
+  if (over.prev?.length) q.set("prev", over.prev.join("."));
   const s = q.toString();
   return s ? `?${s}` : "";
 }
 
-/** Whole days, in UTC (server zone); `to` is inclusive. */
-export function dateBounds(f: HistoryFilters): { from?: Date; to?: Date } {
+export const hasActiveFilters = (f: HistoryFilters) => !!(f.actor || f.actions.length || f.channel || f.from || f.to);
+
+/** Back/forward links of the cursor stack: `prev` is the visited pages, `next` appends the current one. */
+export function pageLinks(f: HistoryFilters, nextCursor: string | null) {
+  const last = f.prev[f.prev.length - 1];
   return {
-    from: f.from ? new Date(`${f.from}T00:00:00.000Z`) : undefined,
-    to: f.to ? new Date(`${f.to}T23:59:59.999Z`) : undefined,
+    page: f.prev.length + 1,
+    prev: last === undefined ? null : { cursor: last === "~" ? undefined : last, prev: f.prev.slice(0, -1) },
+    next: nextCursor ? { cursor: nextCursor, prev: [...f.prev, f.cursor ?? "~"] } : null,
   };
+}
+
+/** Best-effort display name of the entity from its snapshots. */
+export function entityName(before: unknown, after: unknown): string | undefined {
+  for (const snap of [after, before]) {
+    const r = asRecord(stripSensitive(snap));
+    for (const k of ["name", "display_name", "username", "code"]) {
+      if (typeof r[k] === "string" && r[k]) return r[k] as string;
+    }
+  }
+  return undefined;
 }

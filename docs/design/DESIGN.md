@@ -437,7 +437,8 @@ Para listados con filtros (Historial, Ventas, Usuarios). Va **directamente sobre
 - **Orden:** buscador de texto (240 px, fondo `--color-panel`) · separador vertical 1×24 px · filtros · "Limpiar filtros" (Texto rojo) alineado a la derecha, visible solo si hay algún filtro activo.
 - **Filtro sin valor:** píldora de 40 px, borde `1.5px --color-ring`, texto 13 px 600 con el nombre en `--color-muted` y el valor en ink ("Acción: Todas ▾"). Abre un select/multiselect (6.19/6.20) o el datepicker (6.34).
 - **Filtro con valor:** fondo `--color-red-tint`, texto `--color-red-hover`, avatar o icono a la izquierda si aplica (avatar + "Quién: Raul R."), y botón ✕ de 28 px para quitarlo (`aria-label="Quitar filtro Quién"`). Abierto: borde `2px --color-red-strong` + halo.
-- **Se aplican al instante** (sin botón "Filtrar"). La URL guarda los filtros para poder compartir la vista.
+- **Se aplican al instante** (sin botón "Filtrar"). La URL guarda los filtros para poder compartir la vista (`usuario`, `accion`, `canal`, `desde`/`hasta` ISO, `cursor`). El rango de fechas es el `DateRangePicker` en modo píldora («Fechas: 20 – 26 oct 2026», ✕ para quitarlo). Los días se cortan en la zona horaria del usuario (cookie `tz`; UTC si falta, con aviso). Un rango invertido se intercambia; una fecha inválida se ignora con un aviso.
+- **Buscador de texto:** fuera de alcance por ahora en Historial (la maqueta lo muestra; el lector no filtra por texto).
 - Si la página tiene secciones (módulos), van como **tabs subrayado con contador** (6.28) entre el título y los filtros, nunca como botones sueltos.
 - Nunca dejes el foco/halo rojo fijo en un filtro que no se está editando: el halo significa "abierto ahora".
 
@@ -448,6 +449,7 @@ Variante de 6.33 para registros de actividad.
 - **No repitas datos:** si la pestaña ya filtra el módulo, oculta la columna Módulo; si "Quién" es el sistema, el canal no vuelve a decir "Sistema" como insignia.
 - **Ver cambios:** las filas de edición/creación tienen un botón chevron (32 px, `--color-panel`; abierto `--color-red-tint` y girado 90°) que despliega debajo una tarjeta blanca con la tabla Campo · Antes → Después. "Antes" en `--color-danger-tint` / `--color-danger-text` tachado; "Después" en `--color-success-tint` / `--color-success` 600.
 - Orden fijo: del más reciente al más antiguo (no se ofrece ordenar por columnas).
+- **Pie y paginación:** «n operaciones en esta página» y «Anterior» / «Página n» / «Siguiente» (pila de cursores en la URL: `cursor` y `prev`). El contador de cada pestaña respeta los filtros activos salvo el módulo; el contador de un grupo cuenta solo las filas de la página.
 
 ---
 

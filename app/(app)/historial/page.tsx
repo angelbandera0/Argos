@@ -9,9 +9,9 @@ export const instant = false;
 export const metadata: Metadata = { title: "Historial · Argos" };
 
 async function Entry() {
-  const { modules } = await requireHistoryUser();
+  const { modules, isAdmin } = await requireHistoryUser();
   if (modules.length === 0) notFound();
-  return redirect(`/historial/${modules[0]}`);
+  return redirect(`/historial/${isAdmin || modules.length > 1 ? "todos" : modules[0]}`);
 }
 
 export default function HistoryPage() {

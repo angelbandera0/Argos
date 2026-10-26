@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import type { CompanySelectorProps } from "@/components/org/company-selector";
+import { TimeZoneSync } from "@/components/shell/time-zone-sync";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
@@ -108,8 +109,11 @@ function ShellSkeleton() {
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <Suspense fallback={<ShellSkeleton />}>
-      <Shell>{children}</Shell>
-    </Suspense>
+    <>
+      <TimeZoneSync />
+      <Suspense fallback={<ShellSkeleton />}>
+        <Shell>{children}</Shell>
+      </Suspense>
+    </>
   );
 }

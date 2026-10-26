@@ -1,5 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { makeCountAuthEvents, makeCountHistory } from "@/core/application/use-cases/history/count-history";
 import { makeListAuthEvents } from "@/core/application/use-cases/history/list-auth-events";
 import { makeListHistory } from "@/core/application/use-cases/history/list-history";
 import { makeCompanyRepository } from "./company-repository";
@@ -18,5 +19,10 @@ export function makeHistory(supabase: SupabaseClient) {
     access: makeStoreAccessReader(supabase),
     clock,
   };
-  return { listHistory: makeListHistory(deps), listAuthEvents: makeListAuthEvents(deps) };
+  return {
+    listHistory: makeListHistory(deps),
+    listAuthEvents: makeListAuthEvents(deps),
+    countHistory: makeCountHistory(deps),
+    countAuthEvents: makeCountAuthEvents(deps),
+  };
 }

@@ -1,19 +1,27 @@
 import Link from "next/link";
+import { NAV_ICONS } from "@/components/icons";
 import { buttonClass } from "@/components/ui/button-class";
-import { type HistoryFilters, filtersQuery } from "./history-utils";
+import { type HistoryFilters, filtersQuery, pageLinks } from "./history-utils";
 
+const { ChevronLeft, ChevronRight } = NAV_ICONS;
+
+/** «Anterior» / «Siguiente» over a cursor stack kept in the URL (`cursor`, `prev`). */
 export function HistoryPager({ path, filters, nextCursor }: { path: string; filters: HistoryFilters; nextCursor: string | null }) {
-  if (!filters.cursor && !nextCursor) return null;
+  const { page, prev, next } = pageLinks(filters, nextCursor);
+  if (!prev && !next) return null;
   return (
-    <nav aria-label="Paginación" className="row">
-      {filters.cursor && (
-        <Link className={buttonClass("secondary", "md")} href={`${path}${filtersQuery(filters)}`}>
-          Primera página
+    <nav aria-label="Paginación" className="audit-foot-pager">
+      {prev && (
+        <Link className={buttonClass("secondary", "sm")} href={`${path}${filtersQuery(filters, prev)}`} rel="prev">
+          <ChevronLeft aria-hidden="true" />
+          Anterior
         </Link>
       )}
-      {nextCursor && (
-        <Link className={buttonClass("secondary", "md")} href={`${path}${filtersQuery(filters, nextCursor)}`}>
+      <span aria-current="page">Página {page}</span>
+      {next && (
+        <Link className={buttonClass("secondary", "sm")} href={`${path}${filtersQuery(filters, next)}`} rel="next">
           Siguiente
+          <ChevronRight aria-hidden="true" />
         </Link>
       )}
     </nav>

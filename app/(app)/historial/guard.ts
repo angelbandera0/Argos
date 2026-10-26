@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { requireOperatorStore } from "@/core/application/use-cases/access/assert-session-active";
 import type { Actor } from "@/core/domain/actor";
 import { Forbidden, RuleViolation, SessionExpired } from "@/core/domain/errors";
+import { resolveTimeZone } from "@/components/history/time-zone";
 import { HISTORY_MODULES } from "@/components/history/history-utils";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeHistory } from "@/infrastructure/supabase/history-factory";
@@ -64,4 +65,9 @@ export async function actorNames(users: Awaited<ReturnType<typeof requireHistory
   } catch {
     return [];
   }
+}
+
+/** The user's zone from the `tz` cookie (written by TimeZoneSync); UTC and `assumed` when missing or invalid. */
+export async function userTimeZone() {
+  return resolveTimeZone((await cookies()).get("tz")?.value);
 }

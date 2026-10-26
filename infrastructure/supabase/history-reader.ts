@@ -4,6 +4,8 @@ import {
   DEFAULT_PAGE_SIZE,
   MAX_PAGE_SIZE,
   type AuthEventEntry,
+  type AuthEventFilter,
+  type HistoryFilter,
   type HistoryEntry,
   type HistoryPage,
   type HistoryReader,
@@ -35,6 +37,23 @@ type EventRow = {
 
 const AUDIT_COLS = "id, module, entity_type, entity_id, action, actor_id, store_id, channel, before, after, created_at";
 const EVENT_COLS = "id, user_id, username_attempted, event, actor_id, channel, created_at";
+// The PostgREST builder types are too deep to thread through a generic helper; the filters are applied untyped.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Query = any;
+
+function auditFilters<Q>(q: Q, i: HistoryFilter): Q {
+  let r: Query = q;
+  if (i.companyId) r = r.eq("company_id", i.companyId);
+  if (i.module) r = r.eq("module", i.module);
+  if (i.modules) r = r.in("module", i.modules);
+  if (i.actorId) r = r.eq("actor_id", i.actorId);
+  if (i.actions?.length) r = r.in("action", i.actions);
+  if (i.channel) r = r.eq("channel", i.channel);
+  if (i.from) r = r.gte("created_at", i.from.toISOString());
+  if (i.to) r = r.lt("created_at", i.to.toISOString());
+  return r as Q;
+}
+
 const NO_ROWS = { items: [], nextCursor: null };
 
 const normalizeTs = (ts: string) => new Date(ts).toISOString() === ts ? ts : ts.replace("+00:00", "Z");
@@ -66,19 +85,31 @@ function paginate<R extends { created_at: string; id: string }, T>(rows: R[], si
 }
 
 export function makeHistoryReader(supabase: SupabaseClient): HistoryReader {
+  /** Applies the filters; `null` when the company has no users (nothing to match). */
+  async function authFilters<Q>(q: Q, i: AuthEventFilter): Promise<{ q: Q } | null> {
+    let r: Query = q;
+    if (i.companyId) {
+      const { data: users, error } = await supabase.from("profiles").select("id").eq("company_id", i.companyId);
+      if (error) throw new Error(`list auth events failed (${error.code ?? "unknown"})`);
+      if (!users?.length) return null;
+      r = r.in("user_id", users.map((u) => u.id));
+    }
+    if (i.userId) r = r.eq("user_id", i.userId);
+    if (i.events?.length) r = r.in("event", i.events);
+    if (i.channel) r = r.eq("channel", i.channel);
+    if (i.from) r = r.gte("created_at", i.from.toISOString());
+    if (i.to) r = r.lt("created_at", i.to.toISOString());
+    return { q: r as Q };
+  }
+
   return {
     async list(i) {
       const size = pageSize(i.limit);
-      let q = supabase.from("audit_log").select(AUDIT_COLS);
-      if (i.companyId) q = q.eq("company_id", i.companyId);
-      if (i.module) q = q.eq("module", i.module);
-      if (i.actorId) q = q.eq("actor_id", i.actorId);
-      if (i.from) q = q.gte("created_at", i.from.toISOString());
-      if (i.to) q = q.lte("created_at", i.to.toISOString());
+      let q = auditFilters(supabase.from("audit_log").select(AUDIT_COLS), i);
       if (i.cursor) q = q.or(keysetFilter(i.cursor));
       const { data, error } = await q.order("created_at", { ascending: false }).order("id", { ascending: false }).limit(size + 1);
       if (error) throw new Error(`list history failed (${error.code ?? "unknown"})`);
-      return paginate(data as AuditRow[], size, (r) => ({
+      return paginate(data as unknown as AuditRow[], size, (r) => ({
         id: r.id,
         module: r.module,
         entityType: r.entity_type,
@@ -93,19 +124,26 @@ export function makeHistoryReader(supabase: SupabaseClient): HistoryReader {
       }));
     },
 
+    async countByModule(i) {
+      const entries = await Promise.all(
+        i.modules.map(async (m) => {
+          const { count, error } = await auditFilters(supabase.from("audit_log").select("id", { count: "exact", head: true }), { ...i, module: m });
+          if (error) throw new Error(`count history failed (${error.code ?? "unknown"})`);
+          return [m, count ?? 0] as const;
+        }),
+      );
+      return Object.fromEntries(entries);
+    },
+
     async listAuthEvents(i) {
       const size = pageSize(i.limit);
-      let q = supabase.from("auth_events").select(EVENT_COLS);
-      if (i.companyId) {
-        const { data: users, error: uerr } = await supabase.from("profiles").select("id").eq("company_id", i.companyId);
-        if (uerr) throw new Error(`list auth events failed (${uerr.code ?? "unknown"})`);
-        if (!users?.length) return NO_ROWS;
-        q = q.in("user_id", users.map((u) => u.id));
-      }
+      const scoped = await authFilters(supabase.from("auth_events").select(EVENT_COLS), i);
+      if (!scoped) return NO_ROWS;
+      let q = scoped.q;
       if (i.cursor) q = q.or(keysetFilter(i.cursor));
       const { data, error } = await q.order("created_at", { ascending: false }).order("id", { ascending: false }).limit(size + 1);
       if (error) throw new Error(`list auth events failed (${error.code ?? "unknown"})`);
-      return paginate(data as EventRow[], size, (r) => ({
+      return paginate(data as unknown as EventRow[], size, (r) => ({
         id: r.id,
         userId: r.user_id,
         usernameAttempted: r.username_attempted,
@@ -114,6 +152,14 @@ export function makeHistoryReader(supabase: SupabaseClient): HistoryReader {
         channel: r.channel,
         createdAt: new Date(r.created_at),
       }));
+    },
+
+    async countAuthEvents(i) {
+      const scoped = await authFilters(supabase.from("auth_events").select("id", { count: "exact", head: true }), i);
+      if (!scoped) return 0;
+      const { count, error } = await scoped.q;
+      if (error) throw new Error(`count auth events failed (${error.code ?? "unknown"})`);
+      return count ?? 0;
     },
   };
 }

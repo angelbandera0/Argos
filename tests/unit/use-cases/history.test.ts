@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { HistoryEntry } from "@/core/application/ports/history-reader";
+import { makeCountAuthEvents, makeCountHistory } from "@/core/application/use-cases/history/count-history";
 import { makeListAuthEvents } from "@/core/application/use-cases/history/list-auth-events";
 import { makeListHistory } from "@/core/application/use-cases/history/list-history";
 import { stripSensitive } from "@/core/application/use-cases/history/sanitize";
@@ -31,7 +32,7 @@ function make() {
     { id: "x2", companyId: "c2", userId: "u-other", usernameAttempted: null, event: "locked", actorId: null, channel: "system", createdAt: new Date() },
   );
   const deps = { ...base, history };
-  return { history, list: makeListHistory(deps), listAuth: makeListAuthEvents(deps) };
+  return { history, list: makeListHistory(deps), listAuth: makeListAuthEvents(deps), count: makeCountHistory(deps), countAuth: makeCountAuthEvents(deps) };
 }
 
 describe("history (REQ-009)", () => {
@@ -95,5 +96,47 @@ describe("history (REQ-009)", () => {
     } while (cursor);
     expect(seen).toHaveLength(6);
     expect(new Set(seen).size).toBe(6);
+  });
+
+  it("filters by action, channel, several modules and an exclusive end", async () => {
+    const { list, history } = make();
+    history.entries.push(
+      entry("f1", "products", { action: "create", channel: "app", createdAt: new Date("2026-02-01T00:00:00Z") }),
+      entry("f2", "roles", { action: "delete", createdAt: new Date("2026-01-31T23:59:59Z") }),
+    );
+    const ids = async (i: Parameters<typeof list>[1]) => (await list(admin("a1"), { companyId: "c1", ...i })).items.map((e) => e.id).sort();
+    expect(await ids({ actions: ["create"] })).toEqual(["f1"]);
+    expect(await ids({ actions: ["create", "delete"], channel: "ui" })).toEqual(["f2"]);
+    expect(await ids({ modules: ["roles"] })).toEqual(["f2", "h2"]);
+    expect(await ids({ to: new Date("2026-02-01T00:00:00Z") })).toEqual(["f2", "h1", "h2"]);
+  });
+
+  it("operator: modules list needs «Ver» on every module", async () => {
+    const { list } = make();
+    expect((await list(operator("u-view"), { modules: ["products"] })).items.map((e) => e.id)).toEqual(["h1"]);
+    await expect(list(operator("u-view"), { modules: ["products", "roles"] })).rejects.toMatchObject({ name: "Forbidden" });
+  });
+
+  it("counts per module with the filters; operators only get modules they can view", async () => {
+    const { count, history } = make();
+    history.entries.push(entry("k1", "products", { action: "create", channel: "app" }));
+    expect(await count(admin("a1"), { companyId: "c1", modules: ["products", "roles", "users"] })).toEqual({ products: 2, roles: 1, users: 0 });
+    expect(await count(admin("a1"), { companyId: "c1", modules: ["products"], actions: ["create"], channel: "app" })).toEqual({ products: 1 });
+    expect(await count(admin("a1"), { companyId: "c1", modules: ["products"], from: new Date("2027-01-01T00:00:00Z") })).toEqual({ products: 0 });
+    expect(await count(operator("u-view"), { modules: ["products", "roles"] })).toEqual({ products: 2 });
+    expect(await count(operator("u-none"), { modules: ["products"] })).toEqual({});
+    await expect(count(admin("a1"), { companyId: "c2", modules: ["products"] })).rejects.toMatchObject({ name: "Forbidden" });
+    expect(await count(superadmin, { modules: ["products"] })).toEqual({ products: 3 });
+  });
+
+  it("counts and filters auth events (admins only)", async () => {
+    const { countAuth, listAuth, history } = make();
+    history.authEvents.push({ id: "x3", companyId: "c1", userId: "u-view", usernameAttempted: null, event: "login_failed", actorId: null, channel: "ui", createdAt: new Date("2026-01-01T00:00:00Z") });
+    expect(await countAuth(admin("a1"), { companyId: "c1" })).toBe(2);
+    expect(await countAuth(admin("a1"), { companyId: "c1", events: ["login_failed"] })).toBe(1);
+    expect(await countAuth(admin("a1"), { companyId: "c1", userId: "u-all", channel: "app" })).toBe(1);
+    expect((await listAuth(admin("a1"), { companyId: "c1", events: ["login_failed"] })).items.map((e) => e.id)).toEqual(["x3"]);
+    await expect(countAuth(operator("u-all"), {})).rejects.toMatchObject({ name: "Forbidden" });
+    await expect(countAuth(admin("a1"), { companyId: "c2" })).rejects.toMatchObject({ name: "Forbidden" });
   });
 });

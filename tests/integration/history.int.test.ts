@@ -196,4 +196,28 @@ describe("history (REQ-009)", () => {
     await expect(makeHistory(b.client).listAuthEvents(b.actor, { companyId: companyA })).rejects.toMatchObject({ name: "Forbidden" });
     expect((await makeHistoryReader(b.client).listAuthEvents({ companyId: companyA })).items).toEqual([]);
   });
+
+  it("counts per module and applies the filters with the user's client (RLS)", async () => {
+    const reader = makeHistoryReader(a.client);
+    const all = await reader.countByModule({ companyId: companyA, modules: ["products", "roles"] });
+    expect(all.products).toBeGreaterThanOrEqual(2);
+    expect(all.roles).toBe(0);
+    const listed = await reader.list({ companyId: companyA, module: "products", limit: 100 });
+    expect(all.products).toBe(listed.items.length);
+    expect((await reader.countByModule({ companyId: companyA, modules: ["products"], actions: ["create"] })).products).toBe(listed.items.filter((e) => e.action === "create").length);
+    expect((await reader.countByModule({ companyId: companyA, modules: ["products"], channel: "api" })).products).toBe(0);
+    const newest = listed.items[0].createdAt;
+    expect((await reader.countByModule({ companyId: companyA, modules: ["products"], to: newest })).products).toBe(all.products - listed.items.filter((e) => e.createdAt >= newest).length);
+    expect((await reader.list({ companyId: companyA, actions: ["create"], channel: "ui", from: new Date(0) })).items.every((e) => e.action === "create")).toBe(true);
+    expect(await makeHistoryReader(b.client).countByModule({ companyId: companyA, modules: ["products"] })).toEqual({ products: 0 });
+    const op = await operator("c", { view: true, create: false, edit: false, delete: false });
+    expect(await makeHistory(op.client).countHistory(op.actor, { modules: ["products", "roles"] })).toMatchObject({ products: all.products });
+    await admin.from("auth_events").insert({ user_id: op.actor.userId, event: "login_failed", channel: "ui" });
+    const n = await makeHistory(a.client).countAuthEvents(a.actor, { companyId: companyA, events: ["login_failed"], userId: op.actor.userId });
+    expect(n).toBe(1);
+    const list = await makeHistory(a.client).listAuthEvents(a.actor, { companyId: companyA, events: ["login_failed"], channel: "ui" });
+    expect(list.items.every((e) => e.event === "login_failed")).toBe(true);
+    await expect(makeHistory(op.client).countAuthEvents(op.actor, {})).rejects.toMatchObject({ name: "Forbidden" });
+    expect(await makeHistoryReader(b.client).countAuthEvents({ companyId: companyA })).toBe(0);
+  });
 });

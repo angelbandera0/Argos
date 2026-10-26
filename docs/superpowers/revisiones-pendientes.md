@@ -215,3 +215,12 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - El calendario no se abre al enfocar (decisión por autoenfoque en diálogos); el spec lo refleja.
 - Rango escrito al revés: se marca inválido pero el `FormData` lleva ambas cadenas tal cual; el servidor debe normalizar (`orderRange`) y validar con `isValidIso`.
 - Años < 1000 no se admiten (parseIso).
+
+## History redesign, parte B (menores)
+- Resuelto de Task 33: módulo por pestañas con contador, «Anterior» (pila de cursores en `prev`) y fechas en la zona del usuario (cookie `tz`).
+- Cookie `tz` la escribe el cliente (no httpOnly); el servidor la valida con `Intl.supportedValuesOf` y cae en UTC con aviso. Primera visita: un `router.refresh` tras escribirla.
+- El resto de pantallas con `Intl.DateTimeFormat("es")` sin `timeZone` y `formatValue` fuera de Historial siguen en la zona del servidor.
+- Sin buscador de texto («Buscar entidad o ID») ni botón Exportar de la maqueta; el lector no los soporta.
+- Contadores: una consulta `count` por módulo (+1 para Accesos) en cada carga; revisar coste con volumen. «Todos» suma los módulos conocidos (`HISTORY_MODULES`); el contador del grupo es solo de la página.
+- Móvil: la tabla de auditoría hace scroll horizontal (sin tarjetas); verificación visual y de teclado pendiente (`/ui`, `/historial/todos`).
+- Cambios de insignia: desactivación = error, reactivación = éxito, edición = aviso.

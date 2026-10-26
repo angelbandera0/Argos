@@ -1,16 +1,3 @@
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { HistoryLoading } from "@/components/history/history-loading";
 
-export default function Loading() {
-  return (
-    <Card aria-busy="true">
-      <span className="sr-only">Cargando…</span>
-      <Skeleton onPanel variant="pill" />
-      <div className="list">
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} onPanel className="skeleton-row" />
-        ))}
-      </div>
-    </Card>
-  );
-}
+export default HistoryLoading;

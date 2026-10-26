@@ -1,4 +1,4 @@
-import type { AuthEventEntry, HistoryEntry, HistoryReader } from "@/core/application/ports/history-reader";
+import type { AuthEventEntry, AuthEventFilter, HistoryEntry, HistoryFilter, HistoryReader } from "@/core/application/ports/history-reader";
 
 type ListInput = Parameters<HistoryReader["list"]>[0];
 
@@ -15,23 +15,46 @@ export class InMemoryHistory implements HistoryReader {
     return { items, nextCursor: start + limit < sorted.length ? String(start + limit) : null };
   }
 
-  async list(i: ListInput) {
-    this.lastList = i;
-    return this.page(
-      this.entries.filter(
-        (e) =>
-          (!i.companyId || e.companyId === i.companyId) &&
-          (!i.module || e.module === i.module) &&
-          (!i.actorId || e.actorId === i.actorId) &&
-          (!i.from || e.createdAt >= i.from) &&
-          (!i.to || e.createdAt <= i.to),
-      ),
-      i.cursor,
-      i.limit,
+  private match(i: HistoryFilter) {
+    return this.entries.filter(
+      (e) =>
+        (!i.companyId || e.companyId === i.companyId) &&
+        (!i.module || e.module === i.module) &&
+        (!i.modules || i.modules.includes(e.module)) &&
+        (!i.actorId || e.actorId === i.actorId) &&
+        (!i.actions?.length || i.actions.includes(e.action)) &&
+        (!i.channel || e.channel === i.channel) &&
+        (!i.from || e.createdAt >= i.from) &&
+        (!i.to || e.createdAt < i.to),
     );
   }
 
-  async listAuthEvents(i: { companyId?: string; cursor?: string; limit?: number }) {
-    return this.page(this.authEvents.filter((e) => !i.companyId || e.companyId === i.companyId), i.cursor, i.limit);
+  private matchAuth(i: AuthEventFilter) {
+    return this.authEvents.filter(
+      (e) =>
+        (!i.companyId || e.companyId === i.companyId) &&
+        (!i.userId || e.userId === i.userId) &&
+        (!i.events?.length || i.events.includes(e.event)) &&
+        (!i.channel || e.channel === i.channel) &&
+        (!i.from || e.createdAt >= i.from) &&
+        (!i.to || e.createdAt < i.to),
+    );
+  }
+
+  async list(i: ListInput) {
+    this.lastList = i;
+    return this.page(this.match(i), i.cursor, i.limit);
+  }
+
+  async countByModule(i: Omit<HistoryFilter, "module" | "modules"> & { modules: string[] }) {
+    return Object.fromEntries(i.modules.map((m) => [m, this.match({ ...i, module: m }).length]));
+  }
+
+  async listAuthEvents(i: AuthEventFilter & { cursor?: string; limit?: number }) {
+    return this.page(this.matchAuth(i), i.cursor, i.limit);
+  }
+
+  async countAuthEvents(i: AuthEventFilter) {
+    return this.matchAuth(i).length;
   }
 }
