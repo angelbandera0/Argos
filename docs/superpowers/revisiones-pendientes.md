@@ -100,3 +100,5 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `UnitStatusRepository.hasData` replica `app.has_data` con lecturas bajo RLS porque la función no es ejecutable por `authenticated`; si cambia la regla en la base, actualizar ambos sitios (el trigger sigue siendo la garantía).
 - `setStatus` ignora el parámetro `by`: la base usa `auth.uid()`.
 - Los repositorios no están en `container.ts` (necesitan cliente por petición).
+- Seguridad: `public.delete_test_company` es security definer y desactiva el trigger `company_admins_guard_founder` durante su ejecución; por eso solo es ejecutable por service_role y solo actúa sobre compañías `itest-`. Revisar que nunca se exponga a otros roles.
+- `pnpm test:db`: 001-004 y 007 fallan con `profiles_single_superadmin` porque el proyecto cloud ya tiene el superadmin real (previo a la función de limpieza).

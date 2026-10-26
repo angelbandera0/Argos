@@ -51,15 +51,19 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  if (companyIds.length > 0) {
-    await admin.from("stores").delete().in("company_id", companyIds);
-    await admin.from("sites").delete().in("company_id", companyIds);
+  for (const id of companyIds) {
+    const { error } = await admin.rpc("delete_test_company", { p_company: id });
+    expect(error).toBeNull();
   }
   for (const id of userIds) {
     const factors = await admin.auth.admin.mfa.listFactors({ userId: id });
     for (const f of factors.data?.factors ?? []) await admin.auth.admin.mfa.deleteFactor({ id: f.id, userId: id });
     await admin.auth.admin.deleteUser(id);
   }
+  const companies = await admin.from("companies").select("id").like("name", `itest-t23-${run}%`);
+  expect(companies.data).toEqual([]);
+  const users = await admin.auth.admin.listUsers({ perPage: 200 });
+  expect(users.data.users.filter((u) => u.email?.startsWith(`itest-t23-${run}`))).toEqual([]);
 });
 
 describe("organization repositories", () => {
