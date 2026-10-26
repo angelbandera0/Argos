@@ -43,3 +43,7 @@ select (select count(*) from auth.users), (select count(*) from public.profiles)
 ## Advertencia
 
 `tests.create_user('superadmin', ...)` borra el superadmin real existente (auth.users y, en cascada, su perfil) para no chocar con `profiles_single_superadmin`. Solo es seguro porque toda suite corre dentro de `begin ... rollback`; nunca ejecutes `000_helpers.sql` ni las pruebas fuera de una transacción.
+
+## Regla: no asumir una base vacía
+
+El proyecto `argos` contiene datos reales creados desde la interfaz. Las pruebas no deben asumir una base vacía: acota siempre a los ids propios (`where id in (...)`, `where company_id in (...)`, `created_at >= transaction_timestamp()`) en las aserciones que cuentan o agregan filas globales donde se ve todo (postgres, superadmin, service_role). Excepción: `099_rls_coverage` ve todo el esquema.

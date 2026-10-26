@@ -165,7 +165,7 @@ select is((select name from sites where id = '00000000-0000-0000-0000-0000000000
   'sites_update: an administrator can update a site of their company');
 select is((select count(*) from sites where name = 'hack'), 0::bigint,
   'sites_update: an administrator cannot update a site of another company');
-select is((select array_agg(name order by name) from stores), array['Caja 2', 'Caja Norte 2', 'Caja Sur'],
+select is((select array_agg(name order by name) from stores where company_id in ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2')), array['Caja 2', 'Caja Norte 2', 'Caja Sur'],
   'stores_update: an administrator updates only the stores of their company');
 select throws_ok($$insert into stores (company_id, site_id, name) values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000c1', 'Caja X')$$, '42501', null,
   'REQ-005: the superadmin cannot create stores');

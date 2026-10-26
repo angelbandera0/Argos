@@ -52,7 +52,7 @@ select tests.authenticate_as((select v from ctx where k = 'op'));
 select is((select count(*)::int from roles), 0, 'an operator sees no roles');
 
 select tests.authenticate_as((select v from ctx where k = 'super'));
-select is((select count(*)::int from roles), 0, 'the superadmin sees no roles');
+select is((select count(*)::int from roles where owner_id = (select v from ctx where k = 'ana')), 0, 'the superadmin sees no roles');
 
 select tests.clear_auth();
 select * from finish();

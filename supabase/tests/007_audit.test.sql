@@ -124,7 +124,7 @@ select tests.clear_auth();
 update profiles set failed_pin_attempts = 3 where id = (select v from ctx where k = 'op1');
 select is((select count(*)::int from audit_log where entity_id = (select v from ctx where k = 'op1') and entity_type = 'profiles'), 1, 'pin counter changes are not logged');
 select is((select count(*)::int from audit_log a, lateral jsonb_object_keys(coalesce(a.before, '{}') || coalesce(a.after, '{}')) k
-  where k ~* 'pin|password|credential'), 0, 'Review Focus 2: no sensitive keys in before/after');
+  where a.created_at >= transaction_timestamp() and k ~* 'pin|password|credential'), 0, 'Review Focus 2: no sensitive keys in before/after');
 
 insert into auth_events (user_id, event, channel) values
   ((select v from ctx where k = 'op1'), 'login_failed', 'system');

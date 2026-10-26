@@ -62,6 +62,6 @@ select is(
   '{"user_kind": "admin", "must_change_password": false}'::jsonb,
   'hook adds user_kind and always must_change_password for admins, no company_id');
 
-select ok((select count(*) from auth_events where username_attempted ~* '^[0-9]{6}$') = 0, 'Review Focus 2: no PIN stored in auth_events');
+select ok((select count(*) from auth_events where created_at >= transaction_timestamp() and username_attempted ~* '^[0-9]{6}$') = 0, 'Review Focus 2: no PIN stored in auth_events');
 
 select * from finish();
