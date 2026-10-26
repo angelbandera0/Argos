@@ -18,7 +18,6 @@ Una sola pasada por bloque, con Sonnet y una lista de ataque. Opus solo si el bl
 - `profiles_update` deja al superadmin modificar operadores, pero `profiles_insert` no: unificar con §6.
 - `profiles_update`/`insert` sin límite de columnas: `id` mutable, `failed_pin_attempts` y `status` tocables sin pasar por el flujo de desbloqueo. Hacer `id` inmutable y revisar grants por columna.
 - El superadmin puede renombrar companies/sites/stores (CA-10).
-- Prueba "operador no ve tiendas de otra compañía" es trivial hasta la Tarea 10.
 - Documentar que la lectura de la propia fila a aal1 es excepción a "RLS exige aal2" (§6).
 - `is_company_admin`/`operator_company` no filtran compañías inactivas o eliminadas (válido mientras `is_operational` cubra la operación).
 
@@ -30,7 +29,7 @@ Una sola pasada por bloque, con Sonnet y una lista de ataque. Opus solo si el bl
 - Pruebas de HAS_DATA/actor no fijan mensaje ni el caso service_role.
 - Nada exige la fila de `company_admins` del fundador en INSERT directo.
 - TOCTOU entre `has_data` y el borrado lógico (aceptable hoy).
-- `has_data('store')` es falso hasta la Tarea 10; Tarea 11 añade categorías y productos a `company`.
+- `has_data('store')` ya cuenta `user_stores` (Tarea 10); Tarea 11 añade categorías y productos a `company`.
 
 ## Menores acumulados en el ledger
 
@@ -39,3 +38,11 @@ Ver `.superpowers/sdd/2026-10-25-modulo-1-implementacion/progress.md` (líneas "
 ## Revisión final
 
 Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprobar los cinco puntos de "Review Focus" del plan.
+
+## Menores diferidos de la Tarea 10
+
+- `companies_select` (rama operador) no exige `app.session_active()`; solo `stores` lo hace.
+- `app_sessions` update permite al operador poner `active_store_id` a cualquier tienda asignada sin comprobar expiración; lo cubre el caso de uso (DR-013).
+- `user_stores` no impide asignar un rol eliminado (`deleted_at`); `app.can` sí lo ignora.
+- El superadmin no puede asignar tiendas (`owns_role` exige administrador).
+- La prueba "tiendas visibles" cuenta también tiendas inactivas asignadas (por diseño: el selector las muestra deshabilitadas).
