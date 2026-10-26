@@ -2,6 +2,8 @@
 
 import { useTransition } from "react";
 import { setActiveCompanyAction } from "@/app/(app)/companias/actions";
+import { Field } from "@/components/ui/field";
+import { Select } from "@/components/ui/select";
 
 export function CompanySelector({
   companies,
@@ -12,26 +14,15 @@ export function CompanySelector({
 }) {
   const [pending, start] = useTransition();
   return (
-    <div className="field">
-      <label htmlFor="active-company">Compañía activa</label>
-      <select
+    <Field label="Compañía activa" htmlFor="active-company">
+      <Select
         id="active-company"
-        className="input"
-        value={activeId ?? ""}
+        options={companies.map((c) => ({ value: c.id, label: c.name }))}
+        placeholder="Elige una compañía"
+        value={activeId ?? null}
         disabled={pending}
-        onChange={(e) => start(() => setActiveCompanyAction(e.target.value))}
-      >
-        {!activeId && (
-          <option value="" disabled>
-            Elige una compañía
-          </option>
-        )}
-        {companies.map((c) => (
-          <option key={c.id} value={c.id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
-    </div>
+        onValueChange={(v) => v && start(() => setActiveCompanyAction(v))}
+      />
+    </Field>
   );
 }

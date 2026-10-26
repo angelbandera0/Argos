@@ -8,6 +8,7 @@ export default function Loading() {
       <Skeleton variant="title" />
       <Card>
         <Skeleton onPanel variant="title" />
+        <Skeleton onPanel variant="pill" />
         {[0, 1, 2].map((i) => (
           <Skeleton key={i} onPanel className="skeleton-row" />
         ))}

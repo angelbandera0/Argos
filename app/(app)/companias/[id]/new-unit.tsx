@@ -1,78 +1,74 @@
 "use client";
 
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
 import { Plus } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input } from "@/components/ui/field";
+import { FormShell } from "@/components/ui/form-shell";
+import { useToast } from "@/components/ui/toast";
 import { type ActionState, createSiteAction, createStoreAction } from "../actions";
 
-function Submit() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" loading={pending}>
-      {pending ? "Creando…" : "Crear"}
-    </Button>
-  );
-}
-
-export function NewUnit({
+export function NewUnitDialog({
   companyId,
   siteId,
   siteName,
+  onClose,
 }: {
   companyId: string;
   siteId?: string;
   siteName?: string;
+  onClose: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const toast = useToast();
   const [error, setError] = useState<string>();
-  const store = !!siteId;
 
   async function submit(formData: FormData) {
     const r: ActionState = siteId
       ? await createStoreAction(companyId, siteId, formData)
       : await createSiteAction(companyId, formData);
-    if (r.error) setError(r.error);
-    else setOpen(false);
+    if (r.error) return setError(r.error);
+    toast.success(siteId ? "Tienda creada." : "Sede creada.");
+    onClose();
   }
 
   return (
-    <>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          setError(undefined);
-          setOpen(true);
-        }}
+    <Dialog open title={siteId ? `Nueva tienda en ${siteName}` : "Nueva sede"} onClose={onClose}>
+      <FormShell
+        action={submit}
+        error={error}
+        submitLabel="Crear"
+        pendingLabel="Creando…"
+        cancel={
+          <Button variant="secondary" onClick={onClose}>
+            Cancelar
+          </Button>
+        }
       >
+        <Field label="Nombre" htmlFor="unit-name">
+          <Input
+            id="unit-name"
+            name="name"
+            required
+            maxLength={80}
+            autoComplete="off"
+            aria-invalid={error ? true : undefined}
+          />
+        </Field>
+      </FormShell>
+    </Dialog>
+  );
+}
+
+export function NewUnit({ companyId }: { companyId: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button variant="secondary" onClick={() => setOpen(true)}>
         <Plus aria-hidden="true" />
-        {store ? "Nueva tienda" : "Nueva sede"}
-        {store && <span className="sr-only"> en {siteName}</span>}
+        Nueva sede
       </Button>
-      {open && (
-        <Dialog open title={store ? `Nueva tienda en ${siteName}` : "Nueva sede"} onClose={() => setOpen(false)}>
-          <form className="auth-form" action={submit}>
-            <Field label="Nombre" htmlFor="unit-name" error={error}>
-              <Input
-                id="unit-name"
-                name="name"
-                required
-                maxLength={80}
-                autoComplete="off"
-                aria-invalid={error ? true : undefined}
-              />
-            </Field>
-            <div className="modal-actions">
-              <Button variant="secondary" onClick={() => setOpen(false)}>
-                Cancelar
-              </Button>
-              <Submit />
-            </div>
-          </form>
-        </Dialog>
-      )}
+      {open && <NewUnitDialog companyId={companyId} onClose={() => setOpen(false)} />}
     </>
   );
 }

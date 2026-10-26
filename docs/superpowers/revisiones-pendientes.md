@@ -188,3 +188,4 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 ## Colisiones con Tailwind
 - Clase propia `overline` renombrada a `eyebrow` (chocaba con la utilidad `overline`). Revisadas las clases propias de los CSS: ninguna otra coincide con utilidades de Tailwind con efecto visible.
 - 4a: verificar visualmente ProfileMenu (Base UI Menu), StoreSwitcher (Select) y Steps en /primer-ingreso; aun existe .select (otros bloques).
+- 4b: verificar visualmente Accordion con UnitMenu en la cabecera (action fuera del trigger), Select dentro de Dialog y toasts; el alta de compañía no muestra toast (redirect). .menu-hint añadido a ui-navdata.css.

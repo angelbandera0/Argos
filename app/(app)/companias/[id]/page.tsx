@@ -2,15 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Building2, Check, Store } from "@/components/icons";
+import { Store } from "@/components/icons";
 import { DeactivateDialog } from "@/components/org/deactivate-dialog";
 import { REASON_LABELS } from "@/components/org/reasons";
+import { Accordion } from "@/components/ui/accordion";
+import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { buttonClass } from "@/components/ui/button-class";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
+import { PageHeader } from "@/components/ui/page-header";
 import type { ReasonCode } from "@/core/domain/deactivation";
 import { requireOrgUser } from "../guard";
 import Loading from "./loading";
 import { NewUnit } from "./new-unit";
+import { UnitMenu } from "./unit-menu";
 
 export const instant = false;
 
@@ -18,8 +24,8 @@ export const metadata: Metadata = { title: "Compañía · Argos" };
 
 const count = (n: number) => `${n} ${n === 1 ? "tienda" : "tiendas"}`;
 
-function StatusChip({ status }: { status: "active" | "inactive" }) {
-  return status === "active" ? <Chip variant="ring">Activa</Chip> : <Chip variant="alert">Desactivada</Chip>;
+function StatusBadge({ status }: { status: "active" | "inactive" }) {
+  return status === "active" ? <Badge variant="success">Activa</Badge> : <Badge variant="danger">Desactivada</Badge>;
 }
 
 async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">["params"] }) {
@@ -39,6 +45,11 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
     ? undefined
     : `Solo el fundador o el superadmin pueden ${off ? "reactivarla" : "desactivarla"}. El fundador es ${founder?.displayName ?? "otro administrador"}.`;
 
+  const unitReason = (active: boolean) =>
+    canManage
+      ? undefined
+      : `Solo el fundador o el superadmin pueden ${active ? "desactivar" : "reactivar"} sedes y tiendas.`;
+
   const { data } = off
     ? await supabase
         .from("companies")
@@ -55,41 +66,39 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
 
   return (
     <div className="stack">
-      <div className="row">
-        <h1 className="page-title">{company.name}</h1>
-        <Chip variant="ring" className="mono">
-          {company.code}
-        </Chip>
-        {off ? (
-          <Chip variant="alert">Desactivada</Chip>
-        ) : (
-          <Chip>
-            <Check aria-hidden="true" />
-            Activa
-          </Chip>
-        )}
-        <span className="spacer" />
-        <Link className="btn btn-secondary" href={`/companias/${id}/administradores`}>
-          Administradores
-        </Link>
-        {actor.kind === "admin" && (
-          <Link className="btn btn-secondary" href={`/companias/${id}/ajustes`}>
-            Ajustes
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title={company.name}
+        breadcrumbs={[{ label: "Compañías", href: "/companias" }, { label: company.name }]}
+        description={
+          <span className="row">
+            <Chip variant="ring" className="mono">
+              {company.code}
+            </Chip>
+            <StatusBadge status={company.status} />
+          </span>
+        }
+        actions={
+          <>
+            <Link className={buttonClass("secondary", "md")} href={`/companias/${id}/administradores`}>
+              Administradores
+            </Link>
+            {actor.kind === "admin" && (
+              <Link className={buttonClass("secondary", "md")} href={`/companias/${id}/ajustes`}>
+                Ajustes
+              </Link>
+            )}
+          </>
+        }
+      />
 
       {off && (
-        <div className="notice notice-alert" role="status">
-          <p>
-            <strong>{code ? REASON_LABELS[code] : "Desactivada"}.</strong>
-            {reasonText ? ` ${reasonText}.` : ""}
-            {changedBy || changedAt
-              ? ` Desactivada${changedBy ? ` por ${changedBy.displayName}` : ""}${changedAt ? ` el ${changedAt}` : ""}.`
-              : ""}{" "}
-            Mientras tanto nadie puede entrar a sus sedes y tiendas.
-          </p>
-        </div>
+        <Alert variant="danger" title={code ? REASON_LABELS[code] : "Desactivada"}>
+          {reasonText ? `${reasonText}. ` : ""}
+          {changedBy || changedAt
+            ? `Desactivada${changedBy ? ` por ${changedBy.displayName}` : ""}${changedAt ? ` el ${changedAt}` : ""}. `
+            : ""}
+          Mientras tanto nadie puede entrar a sus sedes y tiendas.
+        </Alert>
       )}
 
       <Card aria-labelledby="h-est">
@@ -103,59 +112,61 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
         {sites.length === 0 ? (
           <p className="muted">Aún no hay sedes. Crea la primera para poder agregar tiendas.</p>
         ) : (
-          <ul className="list" aria-label="Sedes y tiendas">
-            {sites.map((s, i) => (
-              <li key={s.id} className="tree-group">
-                <div className="list-row tree-row">
-                  <span className="row">
-                    <span className="icon-dot" aria-hidden="true">
-                      <Building2 />
-                    </span>
-                    <span>
-                      <strong>{s.name}</strong>
-                      <br />
-                      <span className="hint">{count(stores[i].length)}</span>
-                    </span>
-                  </span>
-                  <span className="row">
-                    <StatusChip status={s.status} />
-                    {canCreate && <NewUnit companyId={id} siteId={s.id} siteName={s.name} />}
-                    {canManage && (
-                      <DeactivateDialog
-                        compact
-                        level="site"
-                        id={s.id}
-                        name={s.name}
-                        mode={s.status === "active" ? "deactivate" : "reactivate"}
-                      />
-                    )}
-                  </span>
-                </div>
-                {stores[i].map((t) => (
-                  <div key={t.id} className="list-row tree-row tree-child">
-                    <span className="row">
-                      <span className="icon-dot" aria-hidden="true">
-                        <Store />
-                      </span>
-                      <strong>{t.name}</strong>
-                    </span>
-                    <span className="row">
-                      <StatusChip status={t.status} />
-                      {canManage && (
-                        <DeactivateDialog
-                          compact
-                          level="store"
-                          id={t.id}
-                          name={t.name}
-                          mode={t.status === "active" ? "deactivate" : "reactivate"}
-                        />
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </li>
-            ))}
-          </ul>
+          <Accordion
+            variant="rich"
+            multiple
+            aria-label="Sedes y tiendas"
+            defaultValue={sites.map((s) => s.id)}
+            items={sites.map((s, i) => ({
+              value: s.id,
+              icon: "Building2",
+              title: s.name,
+              subtitle: count(stores[i].length),
+              badge: <StatusBadge status={s.status} />,
+              action: (
+                <UnitMenu
+                  companyId={id}
+                  level="site"
+                  id={s.id}
+                  name={s.name}
+                  active={s.status === "active"}
+                  canCreate={canCreate}
+                  canManage={canManage}
+                  disabledReason={unitReason(s.status === "active")}
+                />
+              ),
+              content:
+                stores[i].length === 0 ? (
+                  <p className="muted">Aún no hay tiendas en esta sede.</p>
+                ) : (
+                  <ul className="list" aria-label={`Tiendas de ${s.name}`}>
+                    {stores[i].map((t) => (
+                      <li key={t.id} className="list-row tree-row">
+                        <span className="row">
+                          <span className="icon-dot" aria-hidden="true">
+                            <Store />
+                          </span>
+                          <strong>{t.name}</strong>
+                        </span>
+                        <span className="row">
+                          <StatusBadge status={t.status} />
+                          <UnitMenu
+                            companyId={id}
+                            level="store"
+                            id={t.id}
+                            name={t.name}
+                            active={t.status === "active"}
+                            canCreate={false}
+                            canManage={canManage}
+                            disabledReason={unitReason(t.status === "active")}
+                          />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ),
+            }))}
+          />
         )}
       </Card>
 

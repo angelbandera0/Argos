@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { buttonClass } from "@/components/ui/button-class";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireOrgUser } from "../../guard";
 import Loading from "./loading";
 import { SettingsForm } from "./settings-form";
@@ -20,13 +22,19 @@ async function Settings({ params }: { params: PageProps<"/companias/[id]/ajustes
 
   return (
     <div className="stack">
-      <div className="row">
-        <h1 className="page-title">Ajustes</h1>
-        <span className="spacer" />
-        <Link className="btn btn-secondary" href={`/companias/${id}`}>
-          Volver a {company.name}
-        </Link>
-      </div>
+      <PageHeader
+        title="Ajustes"
+        breadcrumbs={[
+          { label: "Compañías", href: "/companias" },
+          { label: company.name, href: `/companias/${id}` },
+          { label: "Ajustes" },
+        ]}
+        actions={
+          <Link className={buttonClass("secondary", "md")} href={`/companias/${id}`}>
+            Volver a {company.name}
+          </Link>
+        }
+      />
       <Card aria-labelledby="h-ses">
         <h2 className="h2" id="h-ses">
           Sesión de {company.name}

@@ -214,3 +214,4 @@
 @media (prefers-reduced-motion: reduce) {
   .acc-chevron, .sb-title svg, .nav-parent-chevron { transition: none; }
 }
+.menu-hint { max-width: var(--size-menu); margin: 0; padding: var(--space-1-5) var(--space-3); }

@@ -1,39 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { useFormStatus } from "react-dom";
-import { Check } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
+import { FormShell } from "@/components/ui/form-shell";
+import { useToast } from "@/components/ui/toast";
 import { updateSettingsAction } from "../../actions";
 
-function Submit() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" loading={pending}>
-      {pending ? "Guardando…" : "Guardar"}
-    </Button>
-  );
-}
-
 export function SettingsForm({ companyId, hours }: { companyId: string; hours: number }) {
+  const toast = useToast();
   const [error, setError] = useState<string>();
-  const [saved, setSaved] = useState(false);
 
   async function submit(formData: FormData) {
-    setSaved(false);
     const r = await updateSettingsAction(companyId, formData);
     setError(r.error);
-    setSaved(!r.error);
+    if (!r.error) toast.success("Guardado.", { description: "El cambio queda en el historial." });
   }
 
   return (
-    <form className="auth-form" action={submit}>
+    <FormShell action={submit} error={error}>
       <Field
         label="Tope de sesión (horas)"
         htmlFor="hours"
         hint="Máximo 24 horas. Ningún rol puede superar este tope."
-        error={error}
       >
         <Input
           id="hours"
@@ -49,13 +37,6 @@ export function SettingsForm({ companyId, hours }: { companyId: string; hours: n
           aria-invalid={error ? true : undefined}
         />
       </Field>
-      <Submit />
-      {saved && (
-        <p className="row" role="status">
-          <Check aria-hidden="true" />
-          Guardado. El cambio queda en el historial.
-        </p>
-      )}
-    </form>
+    </FormShell>
   );
 }

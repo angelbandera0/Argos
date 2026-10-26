@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Building2, Plus, Search } from "@/components/icons";
-import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
+import { Plus } from "@/components/icons";
+import { buttonClass } from "@/components/ui/button-class";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ListToolbar } from "@/components/ui/list-toolbar";
+import { PageHeader } from "@/components/ui/page-header";
+import { CompanyTable } from "./company-table";
 import { requireOrgUser } from "./guard";
 import Loading from "./loading";
 
@@ -21,72 +24,48 @@ async function CompanyList({ searchParams }: { searchParams: PageProps<"/compani
 
   if (all.length === 0) {
     return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <Building2 />
-        </span>
-        <p>
-          {canCreate
-            ? "Aún no tienes compañías. Crea la primera para registrar sus sedes y tiendas."
-            : "Aún no hay compañías registradas."}
-        </p>
-        {canCreate && (
-          <Link className="btn btn-primary" href="/companias/nueva">
-            <Plus aria-hidden="true" />
-            Nueva compañía
-          </Link>
-        )}
-      </Card>
+      <EmptyState
+        icon="Building2"
+        title={canCreate ? "Aún no tienes compañías." : "Aún no hay compañías registradas."}
+        action={
+          canCreate && (
+            <Link className={buttonClass("primary", "md")} href="/companias/nueva">
+              <Plus aria-hidden="true" />
+              Nueva compañía
+            </Link>
+          )
+        }
+      >
+        {canCreate ? "Crea la primera para registrar sus sedes y tiendas." : undefined}
+      </EmptyState>
     );
   }
 
   return (
-    <Card>
-      <form className="search" role="search">
-        <label className="sr-only" htmlFor="q">
-          Buscar compañía
-        </label>
-        <Search aria-hidden="true" />
-        <input id="q" name="q" type="search" defaultValue={q as string | undefined} placeholder="Buscar por nombre o código" />
-      </form>
-      {companies.length === 0 ? (
-        <p className="muted">Ninguna compañía coincide con la búsqueda.</p>
-      ) : (
-        <ul className="list" aria-label="Compañías">
-          {companies.map((c) => (
-            <li key={c.id}>
-              <Link className="list-row company-row" href={`/companias/${c.id}`}>
-                <span className="icon-dot" aria-hidden="true">
-                  <Building2 />
-                </span>
-                <strong>{c.name}</strong>
-                <Chip variant="ring" className="mono">
-                  {c.code}
-                </Chip>
-                {c.status === "active" ? <Chip variant="ring">Activa</Chip> : <Chip variant="alert">Desactivada</Chip>}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
+    <>
+      <ListToolbar
+        search={{ label: "Buscar compañía", placeholder: "Buscar por nombre o código", defaultValue: typeof q === "string" ? q : undefined }}
+      />
+      <CompanyTable rows={companies.map((c) => ({ id: c.id, name: c.name, code: c.code, status: c.status }))} />
+    </>
   );
 }
 
 export default function CompaniasPage(props: PageProps<"/companias">) {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Compañías</h1>
-        <span className="spacer" />
-        <Link className="btn btn-primary" href="/companias/nueva">
-          <Plus aria-hidden="true" />
-          Nueva compañía
-        </Link>
-      </div>
+    <div className="stack">
+      <PageHeader
+        title="Compañías"
+        actions={
+          <Link className={buttonClass("primary", "md")} href="/companias/nueva">
+            <Plus aria-hidden="true" />
+            Nueva compañía
+          </Link>
+        }
+      />
       <Suspense fallback={<Loading />}>
         <CompanyList searchParams={props.searchParams} />
       </Suspense>
-    </>
+    </div>
   );
 }
