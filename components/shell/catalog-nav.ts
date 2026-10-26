@@ -6,3 +6,9 @@ export const PRODUCTS: NavItem = { id: "productos", label: "Productos", href: "/
 
 /** Operators never manage categories; "Productos" needs the role's "Ver". */
 export const operatorNav = (products: PermissionSet): NavItem[] => (products.view ? [PRODUCTS] : []);
+
+export const HISTORY: NavItem = { id: "historial", label: "Historial", href: "/historial", icon: "History" };
+const PRODUCTS_HISTORY: NavItem = { id: "historial", label: "Historial de Productos", href: "/historial/products", icon: "History" };
+
+/** Operators see «Historial de Productos» only with «Ver» on products. */
+export const operatorHistoryNav = (products: PermissionSet): NavItem[] => (products.view ? [PRODUCTS_HISTORY] : []);

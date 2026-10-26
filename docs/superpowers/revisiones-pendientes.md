@@ -202,3 +202,6 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 ## Task 32 (menores)
 - auth_events no tiene company_id: el filtro por compañía pasa por profiles (solo operadores); los eventos de administradores solo los ve el superadmin. Valorar columna company_id en Task 33/36.
 - Cada integración itest deja filas en audit_log (inmutable) con company_id de compañías borradas.
+
+## Task 33 (menores)
+- Historial: filtro de módulo por enlaces, no Select; «Anterior» sustituido por «Primera página» (cursor opaco solo avanza). Fechas desde/hasta se interpretan en UTC (zona del servidor). Nombres de actor solo vía listForCompany (operadores sin acceso ven «Usuario»); administradores fuera de la compañía también. Historial de roles/usuarios/organización listado para admins, sin pantalla de detalle específica.

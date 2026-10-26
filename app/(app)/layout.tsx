@@ -5,7 +5,7 @@ import type { CompanySelectorProps } from "@/components/org/company-selector";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
-import { CATEGORIES, PRODUCTS, operatorNav } from "@/components/shell/catalog-nav";
+import { CATEGORIES, HISTORY, PRODUCTS, operatorHistoryNav, operatorNav } from "@/components/shell/catalog-nav";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeOrg } from "@/infrastructure/supabase/org-factory";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
@@ -50,7 +50,7 @@ async function OperatorShell({
           />
         </div>
       }
-      nav={[HOME, ...operatorNav(active.permissions.products)]}
+      nav={[HOME, ...operatorNav(active.permissions.products), ...operatorHistoryNav(active.permissions.products)]}
       user={{ name: profile?.displayName ?? "Operador", role: active.roleName, handle: profile?.username }}
     >
       {children}
@@ -77,7 +77,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       company={company}
-      nav={superadmin ? [HOME, ADMINS, COMPANIES] : [HOME, COMPANIES, ROLES, USERS, CATEGORIES, PRODUCTS]}
+      nav={superadmin ? [HOME, ADMINS, COMPANIES, HISTORY] : [HOME, COMPANIES, ROLES, USERS, CATEGORIES, PRODUCTS, HISTORY]}
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",
