@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { AlertCircle } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { signInAdmin, type FormState } from "../actions";
@@ -34,12 +34,7 @@ export function LoginForm() {
           aria-invalid={state.error ? true : undefined}
         />
       </Field>
-      {state.error && (
-        <p className="form-error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          {state.error}
-        </p>
-      )}
+      {state.error && <Alert variant="danger">{state.error}</Alert>}
       <Button type="submit" loading={pending}>
         {pending ? "Entrando…" : "Entrar"}
       </Button>

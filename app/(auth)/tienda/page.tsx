@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { AccessNotice } from "@/components/auth/access-notice";
 import { ChevronRight, Store } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { effectiveExpiry, formatSessionEnd } from "@/core/domain/session";
 import { readClaims } from "@/infrastructure/supabase/claims";
@@ -55,9 +57,7 @@ async function Stores({ errored }: { errored: boolean }) {
         <p>{profile?.displayName ?? "Operador"}</p>
       </div>
       {errored && (
-        <p className="form-error" role="alert">
-          No se pudo entrar a esa tienda. Elige otra o inténtalo de nuevo.
-        </p>
+        <Alert variant="danger">No se pudo entrar a esa tienda. Elige otra o inténtalo de nuevo.</Alert>
       )}
       {[...sites].map(([site, list]) => (
         <section key={site} className="store-site">
@@ -88,9 +88,9 @@ async function Stores({ errored }: { errored: boolean }) {
         </section>
       ))}
       <form action={logout}>
-        <button type="submit" className="btn btn-ghost">
+        <Button type="submit" variant="ghost">
           Cerrar sesión
-        </button>
+        </Button>
       </form>
     </Card>
   );

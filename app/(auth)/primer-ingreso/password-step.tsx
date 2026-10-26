@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { AlertCircle } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { completeFirstLogin, type FormState } from "../actions";
@@ -44,12 +44,7 @@ export function PasswordStep() {
       <Field label="Repite la contraseña" htmlFor="confirm">
         <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={MIN} />
       </Field>
-      {state.error && (
-        <p className="form-error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          {state.error}
-        </p>
-      )}
+      {state.error && <Alert variant="danger">{state.error}</Alert>}
       <Button type="submit" loading={pending} disabled={!enough}>
         {pending ? "Guardando…" : "Guardar y continuar"}
       </Button>

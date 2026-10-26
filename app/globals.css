@@ -52,16 +52,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .profile-btn:hover, .profile-btn[aria-expanded="true"] { background: var(--color-panel); }
 .profile-btn > svg { width: var(--size-icon); height: var(--size-icon); flex: none; color: var(--color-ink-2); }
 .profile-btn[aria-expanded="true"] > svg { transform: rotate(180deg); }
-.profile-menu { position: absolute; right: 0; top: calc(100% + var(--space-2-5)); z-index: 30; width: var(--size-menu); max-width: calc(100vw - 2 * var(--space-4)); padding: var(--space-2); background: var(--color-surface); border: 1px solid var(--color-line-soft); border-radius: var(--radius-card); box-shadow: var(--shadow-menu); }
 .profile-head { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); margin-bottom: var(--space-1); border-bottom: 1px solid var(--color-line-soft); }
 .profile-head .caption { overflow-wrap: anywhere; }
-.profile-item { display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: var(--size-control); padding: 0 var(--space-2); border: 0; border-radius: var(--radius-inner); background: transparent; color: var(--color-ink); font-weight: 500; text-align: left; text-decoration: none; cursor: pointer; }
-.profile-item:hover, .profile-item:focus-visible { background: var(--color-panel); color: var(--color-ink); }
-.profile-icon { display: inline-flex; align-items: center; justify-content: center; width: var(--size-icon-circle); height: var(--size-icon-circle); border-radius: 50%; background: var(--color-panel); flex: none; }
-.profile-icon svg { width: var(--size-icon); height: var(--size-icon); }
-.profile-item-danger { color: var(--color-red-strong); font-weight: 600; }
-.profile-item-danger:hover, .profile-item-danger:focus-visible { color: var(--color-red-strong); }
-.profile-item-danger .profile-icon { background: var(--color-red-tint); }
 .profile-value { margin: 0; }
 
 .main { flex: 1 1 560px; min-width: 0; }
@@ -198,7 +190,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .meter > span { display: block; height: 100%; border-radius: var(--radius-pill); background: var(--color-red); }
 .qr { align-self: center; display: block; width: calc(var(--size-modal) / 2); max-width: 100%; aspect-ratio: 1; border-radius: var(--radius-inner); background: var(--color-surface); padding: var(--space-3); }
 .secret { font-family: var(--font-geist-mono, monospace); word-break: break-all; user-select: all; }
-.form-note { color: var(--color-ink); }
 
 .topbar { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; min-height: var(--size-control); }
 .topbar .spacer { flex: 1; }

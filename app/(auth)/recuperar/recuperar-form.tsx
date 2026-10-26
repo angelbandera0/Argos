@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { Check } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { requestPasswordReset, type FormState } from "../actions";
@@ -12,10 +12,7 @@ export function RecoverForm() {
   if (state.sent) {
     return (
       <div className="auth-form">
-        <p className="form-error form-note" role="status">
-          <Check aria-hidden="true" />
-          Si el correo está registrado, te enviamos un enlace para restablecer la contraseña.
-        </p>
+        <Alert variant="success">Si el correo está registrado, te enviamos un enlace para restablecer la contraseña.</Alert>
         <Link href="/login">Volver a entrar</Link>
       </div>
     );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeCompanyRepository } from "@/infrastructure/supabase/company-repository";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
@@ -49,9 +50,7 @@ async function ProfileData() {
 export default function PerfilPage() {
   return (
     <>
-      <div className="topbar">
-        <h1 className="page-title">Mi perfil</h1>
-      </div>
+      <PageHeader title="Mi perfil" />
       <Suspense fallback={<Loading />}>
         <ProfileData />
       </Suspense>

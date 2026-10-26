@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { AlertCircle } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CodeField } from "@/components/ui/code-field";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,10 +33,7 @@ export function TotpStep() {
   }
   if (enrollment === null) {
     return (
-      <p className="form-error" role="alert">
-        <AlertCircle aria-hidden="true" />
-        No se pudo generar el código QR. Recarga la página para intentarlo de nuevo.
-      </p>
+      <Alert variant="danger">No se pudo generar el código QR. Recarga la página para intentarlo de nuevo.</Alert>
     );
   }
   return (
@@ -48,12 +45,7 @@ export function TotpStep() {
       </p>
       <input type="hidden" name="factorId" value={enrollment.factorId} />
       <CodeField id="code" name="code" label="Código de verificación" error={!!state.error} onValueChange={setCode} />
-      {state.error && (
-        <p className="form-error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          {state.error}
-        </p>
-      )}
+      {state.error && <Alert variant="danger">{state.error}</Alert>}
       <Button type="submit" loading={pending} disabled={code.length < 6}>
         {pending ? "Verificando…" : "Verificar y continuar"}
       </Button>

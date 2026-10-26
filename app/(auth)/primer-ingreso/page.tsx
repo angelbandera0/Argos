@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Steps } from "@/components/ui/steps";
 import { makeMfaGateway } from "@/infrastructure/supabase/auth-gateway";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
@@ -26,7 +28,7 @@ async function FirstLogin() {
   return (
     <Card>
       <div className="auth-title">
-        <span className="eyebrow">Paso {password ? 1 : 2} de 2</span>
+        <Steps steps={[{ title: "Contraseña" }, { title: "Verificación" }]} current={password ? 0 : 1} aria-label="Primer ingreso" />
         <h1>{password ? "Crea tu contraseña" : "Activa la verificación en dos pasos"}</h1>
         <p>
           {password
@@ -36,9 +38,9 @@ async function FirstLogin() {
       </div>
       {password ? <PasswordStep /> : <TotpStep />}
       <form className="auth-actions" action={signOutAdmin}>
-        <button type="submit" className="btn btn-ghost">
+        <Button type="submit" variant="ghost">
           Salir
-        </button>
+        </Button>
       </form>
     </Card>
   );
