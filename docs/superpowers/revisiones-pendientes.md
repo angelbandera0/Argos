@@ -46,3 +46,10 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `user_stores` no impide asignar un rol eliminado (`deleted_at`); `app.can` sí lo ignora.
 - El superadmin no puede asignar tiendas (`owns_role` exige administrador).
 - La prueba "tiendas visibles" cuenta también tiendas inactivas asignadas (por diseño: el selector las muestra deshabilitadas).
+
+## Menores diferidos de la Tarea 11
+
+- RLS no permite al operador pasar `deleted_at` a no nulo (la política SELECT se aplica a la fila nueva): el borrado lógico de productos por operadores va por `public.delete_product(id)` (security definer, exige `app.can(..., 'delete')`); los administradores actualizan directamente.
+- Un operador con `edit` puede cambiar `category_id` a una categoría eliminada (la FK no mira `deleted_at`); y una carrera entre insertar un producto y eliminar su categoría puede dejar un producto vivo en categoría eliminada.
+- `delete_product` no devuelve error si el producto ya estaba eliminado más allá del 42501 genérico.
+- El superadmin no puede insertar categorías ni productos (`kind = 'admin'`, igual que sites/stores).
