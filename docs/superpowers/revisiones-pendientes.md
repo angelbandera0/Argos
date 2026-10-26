@@ -143,3 +143,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 ## Shell sign-out (menores)
 - Un token de acceso de administrador ya emitido sigue valido hasta expirar tras signOut local (la sesion de Auth se revoca, el JWT no); solo getUser lo rechaza.
 - La fila .mobile-user en movil no esta en la maqueta; confirmar en /verificar-ui.
+
+## Shell visual adjustments (menores)
+- El menú de perfil solo contiene "Cerrar sesión"; añadir opciones (cambiar contraseña, etc.) cuando existan pantallas.
+- La maqueta no dibuja la barra superior ni el menú de perfil (divergencia anotada en MODULO-1-PANTALLAS.md §2).
+- `.code-input` conserva 16 px suelto (evita zoom en iOS); `.spinner` y `.skeleton-*` tienen px sueltos no tipográficos.
+- Verificar en navegador: hover/focus de botones, escala tipográfica y el menú de perfil en las tres vistas.

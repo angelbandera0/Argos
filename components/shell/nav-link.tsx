@@ -10,7 +10,7 @@ export function NavLink({ href, label, icon }: Omit<NavItem, "id">) {
   const pathname = usePathname();
   const active = pathname === href || pathname.startsWith(`${href}/`);
   return (
-    <Link className="nav-item" href={href} aria-current={active ? "page" : undefined}>
+    <Link className="nav-item" href={href} title={label} aria-current={active ? "page" : undefined}>
       <Icon aria-hidden="true" />
       <span>{label}</span>
     </Link>

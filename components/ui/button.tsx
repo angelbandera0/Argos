@@ -16,6 +16,7 @@ export function Button({
       className={`btn btn-${variant}${className ? ` ${className}` : ""}`}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      title={props["aria-label"]}
       {...props}
     >
       {loading && <Spinner />}
