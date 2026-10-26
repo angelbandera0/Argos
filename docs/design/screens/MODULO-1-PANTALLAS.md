@@ -42,7 +42,7 @@
 | A-04 | Recuperar contraseña | `/recuperar` | Superadmin | 006 | — |
 | A-05 | Entrar con PIN | `/entrar` | Operador | 006 | `01` |
 | A-06 | Elegir tienda | `/tienda` | Operador | 006 | `01` |
-| H-01 | Inicio (dashboard con datos de ejemplo, provisional) | `/` | Todos | 005–009 | — |
+| D-01 | Inicio (dashboard con datos de ejemplo, provisional) | `/` | Todos | 005–009 | — |
 | A-07 | Sesión terminada / sin tiendas | `/entrar` (estados) | Operador | 006 | `01` |
 | S-01 | Administradores (lista) | `/superadmin/administradores` | Superadmin | 006 | — |
 | S-02 | Nuevo administrador (contraseña temporal mostrada una vez) | `/superadmin/administradores/nuevo` | Superadmin | 006 | — |
@@ -169,7 +169,7 @@ Definidos en `DESIGN.md` §6.15 y `tokens.css`.
 
 **Pendientes:** el nombre de producto del sistema es provisional ("Argos"); no hay logo; los iconos son de estilo Lucide dibujados a mano en las maquetas y se sustituyen por `lucide-react` al implementar.
 
-## Inicio (H-01) [decisión del usuario]
+## Inicio (D-01) [decisión del usuario]
 
 - Destino posterior al inicio de sesión: administradores y superadmin tras contraseña y TOTP; operadores tras elegir tienda. «Inicio» es el primer elemento del menú (icono `LayoutDashboard`) y está activo solo en `/`.
 - Saludo «Bienvenido/a de nuevo, <nombre>» y rejilla de tres columnas (web) que colapsa a dos (tablet) y una (móvil).
