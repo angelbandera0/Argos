@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import { Building2, ShieldCheck } from "@/components/icons";
 import { CompanySelector } from "@/components/org/company-selector";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeOrg } from "@/infrastructure/supabase/org-factory";
@@ -9,12 +9,12 @@ import { createServerClient } from "@/infrastructure/supabase/server-client";
 import { ACTIVE_COMPANY_COOKIE } from "./companias/guard";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
 
-const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: Building2 };
+const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
 const ADMINS: NavItem = {
   id: "administradores",
   label: "Administradores",
   href: "/superadmin/administradores",
-  icon: ShieldCheck,
+  icon: "ShieldCheck",
 };
 
 async function Shell({ children }: { children: React.ReactNode }) {
@@ -46,9 +46,26 @@ async function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ShellSkeleton() {
+  return (
+    <div className="app" aria-busy="true">
+      <nav className="side" aria-label="Principal">
+        <Skeleton variant="title" />
+        <Skeleton variant="pill" />
+        <Skeleton variant="pill" />
+      </nav>
+      <main className="main">
+        <div className="content">
+          <Skeleton className="skeleton-row" />
+        </div>
+      </main>
+    </div>
+  );
+}
+
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<ShellSkeleton />}>
       <Shell>{children}</Shell>
     </Suspense>
   );

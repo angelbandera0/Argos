@@ -1,11 +1,13 @@
 import "server-only";
 import { createServerClient as createSsrClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { connection } from "next/server";
 import { cookies } from "next/headers";
 import { getEnv } from "@/infrastructure/env";
 
 /** Supabase client acting with the signed-in user's JWT (cookie-based session). */
 export async function createServerClient(): Promise<SupabaseClient> {
+  await connection();
   const env = getEnv();
   const cookieStore = await cookies();
   return createSsrClient(

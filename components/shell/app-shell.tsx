@@ -1,7 +1,7 @@
-import type { LucideIcon } from "lucide-react";
+import type { NavIconName } from "@/components/icons";
 import { NavLink } from "./nav-link";
 
-export type NavItem = { id: string; label: string; href: string; icon: LucideIcon };
+export type NavItem = { id: string; label: string; href: string; icon: NavIconName };
 
 const initials = (name: string) =>
   name

@@ -1,3 +1,8 @@
+import { Building2 as NavBuilding2, ShieldCheck as NavShieldCheck } from "lucide-react";
+
+export const NAV_ICONS = { Building2: NavBuilding2, ShieldCheck: NavShieldCheck };
+export type NavIconName = keyof typeof NAV_ICONS;
+
 export {
   AlertCircle,
   Box,
