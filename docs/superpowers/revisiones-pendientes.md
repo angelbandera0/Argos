@@ -101,4 +101,3 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `setStatus` ignora el parámetro `by`: la base usa `auth.uid()`.
 - Los repositorios no están en `container.ts` (necesitan cliente por petición).
 - Seguridad: `public.delete_test_company` es security definer y desactiva el trigger `company_admins_guard_founder` durante su ejecución; por eso solo es ejecutable por service_role y solo actúa sobre compañías `itest-`. Revisar que nunca se exponga a otros roles.
-- `pnpm test:db`: 007 falla (tests 1 y 15) porque cuenta filas globales de audit_log y el proyecto cloud conserva filas inmutables de pruebas de integración previas; acotar los conteos a los ids de la prueba.

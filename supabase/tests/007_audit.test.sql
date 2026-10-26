@@ -54,7 +54,7 @@ insert into products (id, company_id, category_id, name) values
   ('00000000-0000-0000-0000-000000000f01', '00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-000000000e01', 'Leche'),
   ('00000000-0000-0000-0000-000000000f02', '00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-000000000e01', 'Queso');
 
-select ok((select count(*) from audit_log where entity_type = 'companies' and action = 'create' and actor_id is null and channel = 'system') = 3,
+select ok((select count(*) from audit_log where entity_type = 'companies' and action = 'create' and actor_id is null and channel = 'system' and entity_id in ('00000000-0000-0000-0000-0000000000a1','00000000-0000-0000-0000-0000000000b2','00000000-0000-0000-0000-0000000000c3')) = 3,
   'writes without auth.uid() are logged as system with null actor');
 select is((select count(*)::int from audit_log where entity_type = 'role_permissions'), 2, 'every audited table logs inserts');
 
@@ -85,7 +85,7 @@ select is((select count(*)::int from audit_log where entity_id = '00000000-0000-
 update profiles set status = 'locked' where id = (select v from ctx where k = 'op3');
 select is((select count(*)::int from audit_log where entity_id = (select v from ctx where k = 'op3') and action = 'deactivate'), 1, 'a status change to locked logs deactivate');
 
-select is((select count(*)::int from audit_log where entity_type = 'roles' and company_id is null), 3, 'roles carry no company');
+select is((select count(*)::int from audit_log where entity_type = 'roles' and company_id is null and entity_id in ('00000000-0000-0000-0000-0000000000d1','00000000-0000-0000-0000-0000000000d3','00000000-0000-0000-0000-0000000000d4')), 3, 'roles carry no company');
 
 select throws_ok($$update audit_log set module = 'x'$$, 'P0001', 'AUDIT_LOG_IMMUTABLE', 'CA-03: postgres cannot update audit_log');
 select throws_ok($$delete from audit_log$$, 'P0001', 'AUDIT_LOG_IMMUTABLE', 'CA-03: postgres cannot delete from audit_log');
