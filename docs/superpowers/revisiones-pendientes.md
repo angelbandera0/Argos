@@ -167,3 +167,11 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - La galería lee `docs/design/tokens.css` con `fs` (solo desarrollo); si se mueve el archivo, actualizar `app/ui/tokens.ts`.
 - `.next/dev/types` quedó obsoleto al añadir rutas: `next typegen` lo regenera antes de `pnpm typecheck`.
 - Guía ampliada: alturas de 48 px aplicadas con `--size-field` (= `--size-control`); revisar en navegador cuando haya campos nuevos.
+
+## Argos UI fase 1 (menores)
+- Multiselect: sin pie «Aplicar (n)» (la selección es inmediata) ni buscador dentro del panel (va en línea con las etiquetas).
+- Borde «con valor» (`--color-line-strong`) no implementado en Input/Select; solo normal, foco, error, desactivado, solo lectura.
+- Popups de Select/Multiselect usan `--z-menu` (30): dentro de `Dialog` nativo (top layer) habrá que montarlos con `container` del dialog.
+- Altura de foco/hover en galería: hover real solo con cursor; foco simulado por estilo en línea.
+- Tokens nuevos en tokens.css (`--color-yellow-hover`, `--color-danger-tint-hover`, `--border-field*`, `--border-hairline`) sin documentar aún en DESIGN.md.
+- `.btn[disabled]` ahora usa fondo/texto desactivados de la guía en vez de opacidad.

@@ -60,3 +60,10 @@ Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design
 ## 10. Verificación visual
 
 - Una pantalla nueva no se da por buena sin revisión visual: pídela con `/verificar-ui N` (N = número de tarea). Si queda pendiente, anótalo en el informe de la tarea.
+
+## 11. Argos UI: entradas (fase 1)
+
+- Botón: `components/ui/button.tsx`; variantes primary/secondary/outline/accent/ghost/danger/icon, `size` sm/md/lg, `iconLeft`/`iconRight` (ReactNode ya creado), `loading`. Solo icono: `variant="icon"` con `aria-label`.
+- Input (`components/ui/input.tsx`) y Textarea (`textarea.tsx`, `counter` con `maxLength`): dentro de `Field` (`optional`, `hint`, `error` con icono). `variant="outline"` = campo de la guía; sin variante = relleno de panel actual.
+- Checkbox (`checkbox.tsx`): opción suelta o `indeterminate`. RadioGroup (`radio-group.tsx`): hasta 7 opciones excluyentes. Switch (`switch.tsx`): ajuste on/off inmediato.
+- Select (`select.tsx`): una opción de lista corta, `name` envía en FormData. Multiselect (`multiselect.tsx`): varias opciones con buscador; `name` envía valores repetidos.

@@ -13,6 +13,7 @@
   --color-red-tint: #FFE6E4;     /* fondos de alerta */
   --color-red-wash: #FFF7F6;     /* fondo de campos en error */
   --color-yellow: #FFC93C;       /* hoy / abierto / efectivo — siempre con texto ink */
+  --color-yellow-hover: #F5B81F;  /* hover del botón acento (texto ink) */
   --color-yellow-tint: #FFF4CF;  /* fondos informativos */
 
   /* ---- Color: neutros ---- */
@@ -38,6 +39,7 @@
   --color-danger: #D92D25;           /* icono/borde de error */
   --color-danger-text: #B3221B;      /* texto de error (5.60:1 sobre tint) */
   --color-danger-tint: #FFE6E4;
+  --color-danger-tint-hover: #FFD3CF;  /* hover del botón peligro */
   --color-danger-border: #F8C9C5;
   --color-info: #45484D;
   --color-info-tint: #F6F8FA;
@@ -154,6 +156,9 @@
   --size-chart: 200px;
   --size-bar-max: 44px;
   --size-focus: 3px;
+  --border-field: 1.5px;
+  --border-field-active: 2px;
+  --border-hairline: 1px;
   --size-control-lg: 52px;
   --size-field: var(--size-control);   /* la guía ampliada usa 48; gana la densidad reducida del repo */
   --size-option: 44px;

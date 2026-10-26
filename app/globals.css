@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 @import "../docs/design/tokens.css";
+@import "./ui-inputs.css";
 
 @theme inline {
   --color-background: var(--color-surface);
@@ -60,7 +61,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .profile-item-danger:hover, .profile-item-danger:focus-visible { color: var(--color-red-strong); }
 .profile-item-danger .profile-icon { background: var(--color-red-tint); }
 .profile-value { margin: 0; }
-.btn-icon:focus-visible { outline: var(--size-focus) solid var(--color-red-strong); outline-offset: 2px; }
 
 .main { flex: 1 1 560px; min-width: 0; }
 .content { max-width: 1040px; display: flex; flex-direction: column; gap: var(--space-6); padding-bottom: var(--space-8); }
@@ -104,9 +104,30 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn-ghost { background: transparent; color: var(--color-red-strong); }
 .btn-ghost:hover, .btn-ghost:focus-visible { background: var(--color-red-tint); color: var(--color-red-hover); }
 .btn-ghost:active { background: var(--color-red-tint); color: var(--color-red-hover); }
+.btn-accent { background: var(--color-yellow); color: var(--color-ink); }
+.btn-accent:hover, .btn-accent:focus-visible, .btn-accent:active { background: var(--color-yellow-hover); color: var(--color-ink); }
+.btn-outline { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 var(--border-field) var(--color-line-strong); }
+.btn-outline:hover, .btn-outline:focus-visible, .btn-outline:active { background: var(--color-panel); color: var(--color-ink); }
+.btn-danger { background: var(--color-danger-tint); color: var(--color-danger-text); }
+.btn-danger:hover, .btn-danger:focus-visible, .btn-danger:active { background: var(--color-danger-tint-hover); color: var(--color-danger-text); }
 .btn-icon { width: var(--size-control); padding: 0; background: var(--color-panel); color: var(--color-ink); }
 .btn-icon:hover, .btn-icon:focus-visible, .btn-icon:active { background: var(--color-line); color: var(--color-ink); }
-.btn[disabled] { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+.btn-sm { min-height: var(--size-control-sm); padding: 0 var(--space-3-5); }
+.btn-lg { min-height: var(--size-control-lg); padding: 0 var(--space-5-5); }
+.btn-icon.btn-sm { width: var(--size-control-sm); padding: 0; }
+.btn-icon.btn-lg { width: var(--size-control-lg); padding: 0; }
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn[disabled] { background: var(--color-disabled-bg); color: var(--color-disabled-text); box-shadow: none; cursor: not-allowed; }
+.btn-ghost[disabled] { background: transparent; }
+.btn-outline[disabled] { background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-field) var(--color-line-soft); }
+.btn[aria-busy="true"] { cursor: progress; }
+.btn-primary[aria-busy="true"] { background: var(--color-red-strong); color: var(--color-surface); }
+.btn-secondary[aria-busy="true"] { background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-raised); }
+.btn-ghost[aria-busy="true"] { background: transparent; color: var(--color-red-strong); }
+.btn-accent[aria-busy="true"] { background: var(--color-yellow); color: var(--color-ink); }
+.btn-outline[aria-busy="true"] { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 var(--border-field) var(--color-line-strong); }
+.btn-danger[aria-busy="true"] { background: var(--color-danger-tint); color: var(--color-danger-text); }
+.btn-icon[aria-busy="true"] { background: var(--color-panel); color: var(--color-ink); }
 
 .card { background: var(--color-panel); border-radius: var(--radius-card); padding: var(--space-5) var(--space-5-5); display: flex; flex-direction: column; gap: var(--space-4); }
 .chip {
@@ -120,13 +141,24 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .field { display: flex; flex-direction: column; gap: var(--space-1-5); }
 .field > label { font-weight: 600; }
 .hint { font: var(--text-caption); color: var(--color-muted); }
-.error-text { font: var(--text-caption); font-weight: 600; color: var(--color-red-strong); }
+.error-text { display: flex; align-items: flex-start; gap: var(--space-1-5); font: var(--text-caption); font-weight: 600; color: var(--color-danger-text); }
+.error-text svg { width: var(--size-icon); height: var(--size-icon); flex: none; }
+.field-optional { font-weight: 400; color: var(--color-muted); }
 .input {
   width: 100%; min-height: var(--size-control); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-pill);
   background: var(--color-panel); color: var(--color-ink);
 }
 .card .input { background-color: var(--color-surface); }
-.input[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--color-red-strong); }
+.input-outline, .card .input-outline, .textarea-outline, .card .textarea-outline { background-color: var(--color-surface); box-shadow: inset 0 0 0 var(--border-field) var(--color-line); }
+.input:focus-visible, .textarea:focus-visible { outline: none; box-shadow: inset 0 0 0 var(--border-field-active) var(--color-red-strong), var(--focus-ring-field); }
+.input[aria-invalid="true"], .textarea[aria-invalid="true"], .card .input[aria-invalid="true"] { background-color: var(--color-field-error-bg); box-shadow: inset 0 0 0 var(--border-field-active) var(--color-danger); }
+.input[aria-invalid="true"]:focus-visible, .textarea[aria-invalid="true"]:focus-visible { box-shadow: inset 0 0 0 var(--border-field-active) var(--color-danger), var(--focus-ring-field); }
+.input::placeholder, .textarea::placeholder { color: var(--color-placeholder); }
+.input:disabled, .textarea:disabled, .card .input:disabled { background-color: var(--color-panel); color: var(--color-disabled-text); cursor: not-allowed; }
+.input:read-only:not(:disabled), .textarea:read-only:not(:disabled) { background-color: var(--color-panel); }
+.input-outline:disabled, .card .input-outline:disabled, .textarea-outline:disabled { background-color: var(--color-panel); box-shadow: inset 0 0 0 var(--border-field) var(--color-line-soft); }
+.input-outline:read-only:not(:disabled), .textarea-outline:read-only:not(:disabled) { box-shadow: none; }
+.textarea-outline { border-radius: var(--radius-textarea); }
 
 dialog.modal { border: 0; padding: 0; margin: auto; border-radius: var(--radius-card); width: min(var(--size-modal), calc(100vw - 2 * var(--space-4))); background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-floating); }
 dialog.modal::backdrop { background: var(--color-scrim); }
