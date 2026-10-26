@@ -2,6 +2,7 @@
 
 import { NAV_ICONS } from "@/components/icons";
 import { Button } from "./button";
+import { Input } from "./input";
 import { Select, type SelectOption } from "./select";
 
 const { Search } = NAV_ICONS;
@@ -43,10 +44,11 @@ export function ListToolbar({
             {search.label}
           </label>
           <Search aria-hidden="true" />
-          <input
+          <Input
             id={`${search.name ?? "q"}-search`}
             name={search.name ?? "q"}
             type="search"
+            variant="outline"
             placeholder={search.placeholder}
             value={search.value}
             defaultValue={search.value === undefined ? search.defaultValue : undefined}
