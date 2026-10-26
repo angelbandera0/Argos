@@ -10,6 +10,11 @@ declare
   local_part text := lower(split_part(email, '@', 1));
   uname text;
 begin
+  -- Borra el superadmin real para no chocar con profiles_single_superadmin; solo es válido porque las pruebas siempre corren en begin/rollback.
+  if kind = 'superadmin' then
+    delete from auth.users where id in (select p.id from public.profiles p where p.kind = 'superadmin' and p.created_at < now());
+  end if;
+
   insert into auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
   values (uid, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', email, '', now(), '{}', '{}', now(), now());
 

@@ -39,3 +39,7 @@ Pegar el resultado completo en `execute_sql`. Salida esperada: líneas `1..N` y 
 select (select count(*) from auth.users), (select count(*) from public.profiles),
        (select count(*) from pg_namespace where nspname = 'tests');
 ```
+
+## Advertencia
+
+`tests.create_user('superadmin', ...)` borra el superadmin real existente (auth.users y, en cascada, su perfil) para no chocar con `profiles_single_superadmin`. Solo es seguro porque toda suite corre dentro de `begin ... rollback`; nunca ejecutes `000_helpers.sql` ni las pruebas fuera de una transacción.
