@@ -29,6 +29,7 @@ export function decideRedirect(i: {
     // /login/2fa needs an aal1 session, so it is not public without one.
     if (matches(pathname, "/login/2fa")) return "/login";
     if (matchesAny(pathname, PUBLIC_PATHS)) return null;
+    if (process.env.NODE_ENV !== "production" && matches(pathname, "/ui")) return null;
     if (matches(pathname, "/entrar") || matches(pathname, "/tienda")) return "/entrar";
     return "/login";
   }

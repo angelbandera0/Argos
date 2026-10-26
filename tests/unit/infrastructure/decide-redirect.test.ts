@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ActorKind } from "@/core/domain/actor";
 import { decideRedirect } from "@/infrastructure/proxy/decide-redirect";
 
@@ -112,5 +112,19 @@ describe("decideRedirect precedencias", () => {
     expect(
       go("/companias", session("admin", { aal: "aal1", mustChangePassword: true })),
     ).toBe("/primer-ingreso");
+  });
+});
+
+describe("decideRedirect /ui (galería)", () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it("es pública sin sesión fuera de producción", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    expect(go("/ui", null)).toBeNull();
+    expect(go("/ui/otra", null)).toBeNull();
+    expect(go("/uivo", null)).toBe("/login");
+  });
+  it("en producción exige sesión", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    expect(go("/ui", null)).toBe("/login");
   });
 });

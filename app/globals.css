@@ -7,6 +7,8 @@
   --color-foreground: var(--color-ink);
   --font-sans: var(--font-ui);
   --font-mono: var(--font-geist-mono);
+  --breakpoint-tablet: 768px;
+  --breakpoint-web: 1280px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
