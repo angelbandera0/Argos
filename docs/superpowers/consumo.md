@@ -9,6 +9,7 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 9 Roles | Sonnet (subagente) | implementación | 004 15/15 (001-003 no reejecutadas) | f3ea164 | no registrado |
 | 10 Asignaciones y sesiones | Controlador (en línea) | implementación + 1 corrección de prueba | 005 22/22 | 511dd9a | contexto principal: no medido, grande (SQL pegado dos veces); reejecución por subagente Haiku: 55k tokens, 6 llamadas, 42 s |
 | 11 Catálogo | Sonnet (subagente) | implementación + migración extra `delete_product` | 006 39/39, 003 46/46, 005 22/22 | 7a0be8a | subagente: 139.956 tokens, 30 llamadas, 355 s |
+| 12 Historial por triggers | Sonnet (subagente, skill `argos-db-task`) | implementación | 007 32/32, 001-006 en verde | df88ae1 | subagente: 72.955 tokens, 13 llamadas, 146 s |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
 | 12 Historial por triggers | Sonnet (subagente) | implementación | 007 32/32, 001-006 ok | df88ae1 | no medido |
