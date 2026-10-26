@@ -69,3 +69,10 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 
 - Sin `pg_advisory_xact_lock`: la carrera la resuelven el índice único parcial y el correo único de Auth; el perdedor reintenta hasta 3 s esperando el perfil del ganador. Si el ganador falla tras crear el usuario de Auth, el perdedor lanza el error original.
 - `instrumentation.ts` no captura errores: un fallo de `ensureSuperadmin` impide arrancar el servidor (deliberado, falla visible).
+
+## Menores diferidos de la Tarea 18
+
+- `app/(app)/layout.tsx` es un paso directo: `AppShell` necesita el actor/menú reales (sesión), que llegan con las páginas de las Tareas 20-21; `active` lo pasa cada página al montar el shell.
+- `tokens.css` ganó tokens `--size-*` y `--color-scrim`; quedan px sueltos heredados de la maqueta (fuente de marca 20px, avatar 13px, ancho de `.auth-card` 440px).
+- `Dialog` usa un id fijo `dialog-title`: no apilar dos diálogos a la vez.
+- `instrumentation.ts` aborta `pnpm dev` si `.env.local` trae una contraseña inicial de superadmin de menos de 12 caracteres.
