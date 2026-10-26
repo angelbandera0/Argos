@@ -119,19 +119,26 @@ export function makeAuthGateway(
     },
 
     async ensureSuperadmin({ email, initialPassword }) {
-      const existing = await admin
-        .from("profiles")
-        .select("id")
-        .eq("kind", "superadmin")
-        .maybeSingle();
-      if (existing.error) fail("ensureSuperadmin", existing.error);
-      if (existing.data) return { created: false };
-      await createWithProfile(
-        "ensureSuperadmin",
-        { email, password: initialPassword, appMetadata: { must_change_password: true } },
-        { kind: "superadmin", display_name: "Superadmin", must_change_password: true },
-      );
-      return { created: true };
+      const exists = async () => {
+        const r = await admin.from("profiles").select("id").eq("kind", "superadmin").maybeSingle();
+        if (r.error) fail("ensureSuperadmin", r.error);
+        return r.data !== null;
+      };
+      if (await exists()) return { created: false };
+      try {
+        await createWithProfile(
+          "ensureSuperadmin",
+          { email, password: initialPassword, appMetadata: { must_change_password: true } },
+          { kind: "superadmin", display_name: "Superadmin", must_change_password: true },
+        );
+        return { created: true };
+      } catch (e) {
+        for (let n = 0; n < 10; n++) {
+          if (await exists()) return { created: false };
+          await new Promise((r) => setTimeout(r, 300));
+        }
+        throw e;
+      }
     },
   };
 }

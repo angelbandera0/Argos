@@ -64,3 +64,8 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - `ensureSuperadmin` decide por la existencia de un perfil `superadmin`; no repara un usuario de Auth sin perfil.
 - `getEnv` trata las cadenas vacías de variables opcionales como ausentes (`.env.local` las trae vacías). Vitest carga `.env.local` con `process.loadEnvFile` y se añadió un alias vacío de `server-only` (tests/stubs).
 - La prueba limpia `audit_log`/`auth_events` de sus entidades; `audit_log` de pruebas previas no se purga.
+
+## Menores diferidos de la Tarea 17
+
+- Sin `pg_advisory_xact_lock`: la carrera la resuelven el índice único parcial y el correo único de Auth; el perdedor reintenta hasta 3 s esperando el perfil del ganador. Si el ganador falla tras crear el usuario de Auth, el perdedor lanza el error original.
+- `instrumentation.ts` no captura errores: un fallo de `ensureSuperadmin` impide arrancar el servidor (deliberado, falla visible).
