@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Box, Plus, Search } from "@/components/icons";
-import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
+import { Plus } from "@/components/icons";
+import { ProductTable } from "@/components/catalog/product-table";
+import { Alert } from "@/components/ui/alert";
+import { buttonClass } from "@/components/ui/button-class";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ListToolbar } from "@/components/ui/list-toolbar";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireCatalogUser } from "../guard";
 import Loading from "./loading";
 
@@ -12,9 +16,13 @@ export const instant = false;
 export const metadata: Metadata = { title: "Productos · Argos" };
 
 const STATUS = { activo: "Activo", inactivo: "Inactivo" } as const;
+const STATUS_OPTIONS = [
+  { value: "", label: "Todos los estados" },
+  ...Object.entries(STATUS).map(([value, label]) => ({ value, label })),
+];
 
 const NewLink = () => (
-  <Link className="btn btn-primary" href="/catalogo/productos/nuevo">
+  <Link className={buttonClass("primary", "md")} href="/catalogo/productos/nuevo">
     <Plus aria-hidden="true" />
     Nuevo producto
   </Link>
@@ -23,14 +31,10 @@ const NewLink = () => (
 async function ProductList({ searchParams }: { searchParams: PageProps<"/catalogo/productos">["searchParams"] }) {
   const { actor, catalog, companyId, permissions } = await requireCatalogUser();
   if (!companyId) {
-    return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <Box />
-        </span>
-        <p>Elige una compañía arriba para ver sus productos.</p>
-      </Card>
-    );
+    return <EmptyState icon="Box" title="Elige una compañía arriba para ver sus productos." />;
+  }
+  if (!permissions.view) {
+    return <Alert variant="warning">No tienes acceso a esto. Tu rol no incluye el permiso «Ver».</Alert>;
   }
   const { q, categoria, estado } = await searchParams;
   const qs = typeof q === "string" ? q : "";
@@ -51,91 +55,48 @@ async function ProductList({ searchParams }: { searchParams: PageProps<"/catalog
 
   if (all.length === 0) {
     return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <Box />
-        </span>
-        <p>Aún no hay productos. {permissions.create ? "Crea el primero para empezar a vender." : "Cuando se agreguen, aparecerán aquí."}</p>
-        {permissions.create && <NewLink />}
-      </Card>
+      <EmptyState icon="Box" title="Aún no hay productos." action={permissions.create ? <NewLink /> : undefined}>
+        {permissions.create ? "Crea el primero para empezar a vender." : "Cuando se agreguen, aparecerán aquí."}
+      </EmptyState>
     );
   }
 
   return (
-    <Card>
-      <form className="row" role="search">
-        <div className="search">
-          <label className="sr-only" htmlFor="q">
-            Buscar producto
-          </label>
-          <Search aria-hidden="true" />
-          <input id="q" name="q" type="search" defaultValue={qs} placeholder="Buscar por nombre" />
-        </div>
-        <label className="sr-only" htmlFor="categoria">
-          Categoría
-        </label>
-        <select className="select" id="categoria" name="categoria" defaultValue={category} style={{ width: "auto" }}>
-          <option value="">Todas las categorías</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-        <label className="sr-only" htmlFor="estado">
-          Estado
-        </label>
-        <select className="select" id="estado" name="estado" defaultValue={status} style={{ width: "auto" }}>
-          <option value="">Todos los estados</option>
-          {Object.entries(STATUS).map(([k, v]) => (
-            <option key={k} value={k}>
-              {v}
-            </option>
-          ))}
-        </select>
-        <button className="btn btn-secondary" type="submit">
-          Filtrar
-        </button>
-      </form>
-      {shown.length === 0 ? (
-        <p className="muted">Ningún producto coincide con la búsqueda.</p>
-      ) : (
-        <ul className="list" aria-label="Productos">
-          {shown.map((p) => (
-            <li key={p.id}>
-              <Link className="list-row admin-row" href={`/catalogo/productos/${p.id}`}>
-                <span className="icon-dot" aria-hidden="true">
-                  <Box />
-                </span>
-                <span>
-                  <strong>{p.name}</strong>
-                  <br />
-                  <span className="caption">{names.get(p.categoryId) ?? ""}</span>
-                </span>
-                <Chip variant={p.active ? "ring" : "neutral"}>{p.active ? "Activo" : "Inactivo"}</Chip>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
+    <>
+      <ListToolbar
+        search={{ label: "Buscar producto", placeholder: "Buscar por nombre", defaultValue: qs }}
+        filters={[
+          {
+            name: "categoria",
+            label: "Categoría",
+            options: [{ value: "", label: "Todas las categorías" }, ...categories.map((c) => ({ value: c.id, label: c.name }))],
+            defaultValue: category,
+          },
+          { name: "estado", label: "Estado", options: STATUS_OPTIONS, defaultValue: status },
+        ]}
+      />
+      <ProductTable
+        rows={shown.map((p) => ({ id: p.id, name: p.name, category: names.get(p.categoryId) ?? "", active: p.active }))}
+      />
+    </>
   );
 }
 
 export default function ProductsPage(props: PageProps<"/catalogo/productos">) {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Productos</h1>
-        <span className="spacer" />
-        <Suspense>
-          <NewLinkIfAllowed />
-        </Suspense>
-      </div>
+    <div className="stack">
+      <PageHeader
+        title="Productos"
+        actions={
+          <Suspense>
+            <NewLinkIfAllowed />
+          </Suspense>
+        }
+      />
       <Suspense fallback={<Loading />}>
         <ProductList searchParams={props.searchParams} />
       </Suspense>
-    </>
+    </div>
   );
 }
 

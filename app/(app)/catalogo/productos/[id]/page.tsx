@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { DeleteProductDialog } from "@/components/catalog/delete-product-dialog";
 import { ProductForm } from "@/components/catalog/product-form";
-import { Card } from "@/components/ui/card";
+import { Alert } from "@/components/ui/alert";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireCatalogUser } from "../../guard";
 import Loading from "./loading";
 
@@ -17,8 +19,8 @@ async function Editor({ params }: { params: PageProps<"/catalogo/productos/[id]"
   const { id } = await params;
   if (!UUID.test(id)) notFound();
   const { actor, catalog, companyId, permissions } = await requireCatalogUser();
-  if (!permissions.view) return <Card>No tienes acceso a esto. Tu rol no incluye el permiso «Ver».</Card>;
-  if (!companyId) return <Card>Elige una compañía arriba para ver sus productos.</Card>;
+  if (!permissions.view) return <Alert variant="warning">No tienes acceso a esto. Tu rol no incluye el permiso «Ver».</Alert>;
+  if (!companyId) return <EmptyState icon="Box" title="Elige una compañía arriba para ver sus productos." />;
   const [products, categories] = await Promise.all([
     catalog.listProducts(actor, { companyId }),
     catalog.listCategories(actor, { companyId }),
@@ -27,11 +29,11 @@ async function Editor({ params }: { params: PageProps<"/catalogo/productos/[id]"
   if (!product) notFound();
   return (
     <div className="stack">
-      <div className="topbar">
-        <h1 className="page-title">{product.name}</h1>
-        <span className="spacer" />
-        {permissions.delete && <DeleteProductDialog productId={product.id} name={product.name} />}
-      </div>
+      <PageHeader
+        title={product.name}
+        breadcrumbs={[{ label: "Productos", href: "/catalogo/productos" }, { label: product.name }]}
+        actions={permissions.delete ? <DeleteProductDialog productId={product.id} name={product.name} /> : undefined}
+      />
       <ProductForm
         productId={product.id}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}

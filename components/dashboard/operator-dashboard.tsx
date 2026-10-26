@@ -1,6 +1,6 @@
 import { Box, Clock, Store } from "@/components/icons";
 import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
+import { Badge } from "@/components/ui/badge";
 import { operatorDemo } from "@/app/(app)/_demo/dashboard-data";
 
 export function OperatorDashboard() {
@@ -11,7 +11,7 @@ export function OperatorDashboard() {
         <div className="card-head">
           <span className="icon-dot" aria-hidden="true"><Store /></span>
           <span className="spacer" />
-          <Chip variant="open">EN TURNO</Chip>
+          <Badge variant="success">En turno</Badge>
         </div>
         <span className="eyebrow">Tienda activa</span>
         <h2 className="h2" id="op-store">{store.name}</h2>

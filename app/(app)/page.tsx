@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AdminDashboard } from "@/components/dashboard/admin-dashboard";
 import { OperatorDashboard } from "@/components/dashboard/operator-dashboard";
+import { PageHeader } from "@/components/ui/page-header";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
@@ -20,10 +21,7 @@ async function Home() {
   const today = (new Date().getDay() + 6) % 7;
   return (
     <>
-      <div className="topbar">
-        <h1 className="page-title">Bienvenido/a de nuevo, {first}</h1>
-      </div>
-      <p className="caption">Vista con datos de ejemplo.</p>
+      <PageHeader title={`Bienvenido/a de nuevo, ${first}`} description="Vista con datos de ejemplo." />
       {claims.kind === "operator" ? <OperatorDashboard /> : <AdminDashboard today={today} />}
     </>
   );

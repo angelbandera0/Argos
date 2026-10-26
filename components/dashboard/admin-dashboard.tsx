@@ -1,12 +1,14 @@
-import { History, Lock, LockOpen, NAV_ICONS } from "@/components/icons";
+import { History, Lock, LockOpen } from "@/components/icons";
 import { Building2, Store, Box, Users, KeyRound, Tags, UserPlus } from "@/components/icons";
+import { Accordion } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Chip } from "@/components/ui/chip";
+import { EmptyState } from "@/components/ui/empty-state";
 import { adminDemo } from "@/app/(app)/_demo/dashboard-data";
 import { AnalyticsCard } from "./analytics-card";
 
 const ICONS = { Building2, Store, Box, Users, KeyRound, Tags, UserPlus, Lock };
-const { ChevronDown } = NAV_ICONS;
 
 export function AdminDashboard({ today }: { today: number }) {
   const d = adminDemo;
@@ -45,6 +47,9 @@ export function AdminDashboard({ today }: { today: number }) {
             <span className="spacer" />
             <Chip variant="alert">{d.blocked.length} PENDIENTES</Chip>
           </div>
+          {d.blocked.length === 0 ? (
+            <EmptyState icon="Users" title="No hay usuarios por atender." />
+          ) : (
           <ul className="list">
             {d.blocked.map((u) => (
               <li key={u.id} className="list-row admin-row">
@@ -53,10 +58,11 @@ export function AdminDashboard({ today }: { today: number }) {
                   <strong>{u.name}</strong>
                   <span className="caption">{u.place} · {u.note}</span>
                 </span>
-                <Chip variant={u.state === "Bloqueado" ? "alert" : "open"}>{u.state}</Chip>
+                <Badge variant={u.state === "Bloqueado" ? "danger" : "warning"}>{u.state}</Badge>
               </li>
             ))}
           </ul>
+          )}
         </Card>
         <Card aria-labelledby="dash-activity">
           <div className="card-head">
@@ -82,22 +88,20 @@ export function AdminDashboard({ today }: { today: number }) {
         </Card>
         <Card aria-labelledby="dash-companies">
           <h2 className="h2" id="dash-companies">Resumen por compañía</h2>
-          <div className="accordion">
-            {d.companies.map((c) => (
-              <details key={c.id}>
-                <summary>
-                  <span>{c.name}</span>
-                  <Chip variant={c.active ? "open" : "ring"}>{c.active ? "Activa" : "Desactivada"}</Chip>
-                  <ChevronDown aria-hidden="true" />
-                </summary>
+          <Accordion
+            items={d.companies.map((c) => ({
+              value: c.id,
+              title: c.name,
+              badge: <Badge variant={c.active ? "success" : "neutral"}>{c.active ? "Activa" : "Desactivada"}</Badge>,
+              content: (
                 <dl className="facts">
                   <div><dt className="eyebrow">Sedes</dt><dd>{c.sites}</dd></div>
                   <div><dt className="eyebrow">Tiendas</dt><dd>{c.stores}</dd></div>
                   <div><dt className="eyebrow">Usuarios</dt><dd>{c.users}</dd></div>
                 </dl>
-              </details>
-            ))}
-          </div>
+              ),
+            }))}
+          />
         </Card>
       </div>
     </>

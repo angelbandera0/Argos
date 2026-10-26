@@ -2,16 +2,22 @@
 
 import { useActionState, useState } from "react";
 import { type CatalogActionState, deleteCategoryAction, renameCategoryAction } from "@/app/(app)/catalogo/actions";
-import { AlertCircle, Tags, Trash2 } from "@/components/icons";
+import { Tags, Trash2 } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/dialog";
 import { Field, Input } from "@/components/ui/field";
+import { useToast } from "@/components/ui/toast";
 
 function Rename({ id, name, onDone }: { id: string; name: string; onDone: () => void }) {
+  const toast = useToast();
   const [state, action, pending] = useActionState<CatalogActionState, FormData>(
     async (prev, fd) => {
       const r = await renameCategoryAction(id, prev, fd);
-      if (!r.error && !r.nameError) onDone();
+      if (!r.error && !r.nameError) {
+        toast.success("Categoría renombrada.");
+        onDone();
+      }
       return r;
     },
     {},
@@ -36,13 +42,17 @@ export function CategoryRow({ id, name }: { id: string; name: string }) {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const toast = useToast();
 
   async function confirm() {
     setBusy(true);
     const r = await deleteCategoryAction(id);
     setBusy(false);
     if (r.error) setError(r.error);
-    else setDeleting(false);
+    else {
+      setDeleting(false);
+      toast.success("Categoría eliminada.");
+    }
   }
 
   return (
@@ -73,25 +83,17 @@ export function CategoryRow({ id, name }: { id: string; name: string }) {
           </span>
         </>
       )}
-      {deleting && (
-        <Dialog open title={`¿Eliminar la categoría ${name}?`} onClose={() => setDeleting(false)}>
-          <p className="muted">La categoría dejará de aparecer. Si tiene productos, no se podrá eliminar.</p>
-          {error && (
-            <p className="form-error" role="alert">
-              <AlertCircle aria-hidden="true" />
-              {error}
-            </p>
-          )}
-          <div className="modal-actions">
-            <Button variant="secondary" onClick={() => setDeleting(false)}>
-              Cancelar
-            </Button>
-            <Button loading={busy} onClick={confirm}>
-              {busy ? "Eliminando…" : "Eliminar categoría"}
-            </Button>
-          </div>
-        </Dialog>
-      )}
+      <AlertDialog
+        open={deleting}
+        onClose={() => setDeleting(false)}
+        onConfirm={confirm}
+        confirmLabel={busy ? "Eliminando…" : "Eliminar categoría"}
+        loading={busy}
+        title={`¿Eliminar la categoría ${name}?`}
+      >
+        <p className="muted">La categoría dejará de aparecer. Si tiene productos, no se podrá eliminar.</p>
+        {error && <Alert variant="danger">{error}</Alert>}
+      </AlertDialog>
     </div>
   );
 }

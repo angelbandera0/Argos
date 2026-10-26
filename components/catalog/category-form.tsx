@@ -2,16 +2,27 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { type CatalogActionState, createCategoryAction } from "@/app/(app)/catalogo/actions";
-import { AlertCircle, Plus } from "@/components/icons";
+import { Plus } from "@/components/icons";
+import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
+import { useToast } from "@/components/ui/toast";
 
 export function CategoryForm() {
   const [state, action, pending] = useActionState<CatalogActionState, FormData>(createCategoryAction, {});
   const ref = useRef<HTMLFormElement>(null);
+  const toast = useToast();
+  const wasPending = useRef(false);
   useEffect(() => {
-    if (!pending && !state.error && !state.nameError) ref.current?.reset();
-  }, [pending, state]);
+    if (pending) wasPending.current = true;
+    else if (wasPending.current) {
+      wasPending.current = false;
+      if (!state.error && !state.nameError) {
+        ref.current?.reset();
+        toast.success("Categoría agregada.");
+      }
+    }
+  }, [pending, state, toast]);
 
   return (
     <form ref={ref} className="stack" action={action}>
@@ -26,12 +37,7 @@ export function CategoryForm() {
           aria-invalid={state.nameError ? true : undefined}
         />
       </Field>
-      {state.error && (
-        <p className="form-error" role="alert">
-          <AlertCircle aria-hidden="true" />
-          {state.error}
-        </p>
-      )}
+      {state.error && <Alert variant="danger">{state.error}</Alert>}
       <div className="form-actions">
         <Button type="submit" loading={pending}>
           <Plus aria-hidden="true" />

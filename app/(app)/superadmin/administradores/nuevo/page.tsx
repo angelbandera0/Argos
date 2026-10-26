@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireSuperadmin } from "../../guard";
 import Loading from "./loading";
 import { NewAdminForm } from "./new-admin-form";
@@ -15,13 +16,14 @@ async function Guarded() {
 
 export default function NewAdminPage() {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Nuevo administrador</h1>
-      </div>
+    <div className="stack">
+      <PageHeader
+        title="Nuevo administrador"
+        breadcrumbs={[{ label: "Administradores", href: "/superadmin/administradores" }, { label: "Nuevo administrador" }]}
+      />
       <Suspense fallback={<Loading />}>
         <Guarded />
       </Suspense>
-    </>
+    </div>
   );
 }

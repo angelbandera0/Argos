@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Plus, ShieldCheck } from "@/components/icons";
-import { Card } from "@/components/ui/card";
-import { Chip } from "@/components/ui/chip";
+import { Plus } from "@/components/icons";
+import { buttonClass } from "@/components/ui/button-class";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { makeListAdmins } from "@/core/application/use-cases/access/list-admins";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
 import { requireSuperadmin } from "../guard";
+import { AdminTable } from "./admin-table";
 import Loading from "./loading";
 
 // The session read cannot be prerendered (T-04): opt out of instant-navigation validation.
@@ -14,12 +16,12 @@ export const instant = false;
 
 export const metadata: Metadata = { title: "Administradores · Argos" };
 
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
+const NewLink = () => (
+  <Link className={buttonClass("primary", "md")} href="/superadmin/administradores/nuevo">
+    <Plus aria-hidden="true" />
+    Nuevo administrador
+  </Link>
+);
 
 async function AdminList() {
   const { supabase, actor } = await requireSuperadmin();
@@ -27,56 +29,31 @@ async function AdminList() {
 
   if (admins.length === 0) {
     return (
-      <Card className="empty">
-        <span className="icon-dot" aria-hidden="true">
-          <ShieldCheck />
-        </span>
-        <p>Aún no hay administradores. Crea el primero para que pueda registrar compañías.</p>
-        <Link className="btn btn-primary" href="/superadmin/administradores/nuevo">
-          <Plus aria-hidden="true" />
-          Nuevo administrador
-        </Link>
-      </Card>
+      <EmptyState icon="ShieldCheck" title="Aún no hay administradores." action={<NewLink />}>
+        Crea el primero para que pueda registrar compañías.
+      </EmptyState>
     );
   }
 
   return (
-    <Card>
-      <ul className="list" aria-label="Administradores">
-        {admins.map((a) => (
-          <li className="list-row admin-row" key={a.id}>
-            <span className="avatar" role="img" aria-label={a.displayName}>
-              {initials(a.displayName)}
-            </span>
-            <strong>{a.displayName}</strong>
-            {a.status !== "active" ? (
-              <Chip variant="alert">Desactivado</Chip>
-            ) : a.mustChangePassword ? (
-              <Chip variant="open">Pendiente de primer ingreso</Chip>
-            ) : (
-              <Chip variant="ring">Activo</Chip>
-            )}
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <AdminTable
+      rows={admins.map((a) => ({
+        id: a.id,
+        displayName: a.displayName,
+        status: a.status,
+        mustChangePassword: a.mustChangePassword,
+      }))}
+    />
   );
 }
 
 export default function AdministradoresPage() {
   return (
-    <>
-      <div className="topbar">
-        <h1 className="page-title">Administradores</h1>
-        <span className="spacer" />
-        <Link className="btn btn-primary" href="/superadmin/administradores/nuevo">
-          <Plus aria-hidden="true" />
-          Nuevo administrador
-        </Link>
-      </div>
+    <div className="stack">
+      <PageHeader title="Administradores" actions={<NewLink />} />
       <Suspense fallback={<Loading />}>
         <AdminList />
       </Suspense>
-    </>
+    </div>
   );
 }
