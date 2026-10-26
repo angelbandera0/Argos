@@ -15,7 +15,7 @@ export function AdminDashboard({ today }: { today: number }) {
       <ul className="meters" aria-label="Estado de la organización (datos de ejemplo)">
         {d.meters.map((m) => (
           <li key={m.id} className="meter-item">
-            <span className="overline">{m.label} · {m.detail}</span>
+            <span className="eyebrow">{m.label} · {m.detail}</span>
             <span className="pill-track" role="img" aria-label={`${m.label}: ${m.percent} %, ${m.detail}`}>
               <span className={`pill-fill pill-${m.tone}`} style={{ width: `${m.percent}%` }}>{m.percent}%</span>
             </span>
@@ -91,9 +91,9 @@ export function AdminDashboard({ today }: { today: number }) {
                   <ChevronDown aria-hidden="true" />
                 </summary>
                 <dl className="facts">
-                  <div><dt className="overline">Sedes</dt><dd>{c.sites}</dd></div>
-                  <div><dt className="overline">Tiendas</dt><dd>{c.stores}</dd></div>
-                  <div><dt className="overline">Usuarios</dt><dd>{c.users}</dd></div>
+                  <div><dt className="eyebrow">Sedes</dt><dd>{c.sites}</dd></div>
+                  <div><dt className="eyebrow">Tiendas</dt><dd>{c.stores}</dd></div>
+                  <div><dt className="eyebrow">Usuarios</dt><dd>{c.users}</dd></div>
                 </dl>
               </details>
             ))}

@@ -33,7 +33,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Roles: `--text-display`, `--text-kpi-xl`, `--text-kpi`, `--text-stat`, `--text-card-title-lg`, `--text-h2`, `--text-value`, `--text-brand`, `--text-body`, `--text-caption`, `--text-overline` (§3).
 - Tracking: `--tracking-display`, `--tracking-kpi-xl`, `--tracking-kpi`, `--tracking-stat`, `--tracking-card-title`, `--tracking-overline` (§3).
 - Máximo 2 pesos por tarjeta. `font-variant-numeric: tabular-nums` (clase `.tabular`) en tablas y listas (§3).
-- Overline: clase `.overline` (MAYÚSCULAS, muted) para etiquetas de KPI y de sección (§3).
+- Overline: clase `.eyebrow` (no usar `overline`: choca con la utilidad de Tailwind) (MAYÚSCULAS, muted) para etiquetas de KPI y de sección (§3).
 
 ## Espaciado, radios, sombras y tamaños
 - Escala base 4 (§4): `--space-1` 4, `--space-1-5` 6, `--space-2` 8, `--space-2-5` 10, `--space-3` 12, `--space-3-5` 14, `--space-4` 16, `--space-4-5` 18, `--space-5` 20, `--space-5-5` 22, `--space-6` 24, `--space-7` 28, `--space-8` 32.

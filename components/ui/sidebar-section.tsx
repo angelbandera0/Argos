@@ -34,7 +34,7 @@ export function SidebarSection({
         <button
           type="button"
           id={`${id}-t`}
-          className="overline nav-label sb-title"
+          className="eyebrow nav-label sb-title"
           aria-expanded={open}
           aria-controls={`${id}-items`}
           onClick={() => setOpen(!open)}
@@ -44,7 +44,7 @@ export function SidebarSection({
           <ChevronDown aria-hidden="true" />
         </button>
       ) : (
-        <span id={`${id}-t`} className="overline nav-label">
+        <span id={`${id}-t`} className="eyebrow nav-label">
           {title}
         </span>
       )}

@@ -172,7 +172,7 @@ export function DataTable<T>({
                 <th
                   key={c.id}
                   scope="col"
-                  className={`overline dt-${c.align ?? "start"}`}
+                  className={`eyebrow dt-${c.align ?? "start"}`}
                   aria-sort={c.sortValue || onSortChange ? ariaSort(sort, c.id) : undefined}
                 >
                   {c.sortValue || onSortChange ? (

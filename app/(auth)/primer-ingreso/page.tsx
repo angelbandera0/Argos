@@ -26,7 +26,7 @@ async function FirstLogin() {
   return (
     <Card>
       <div className="auth-title">
-        <span className="overline">Paso {password ? 1 : 2} de 2</span>
+        <span className="eyebrow">Paso {password ? 1 : 2} de 2</span>
         <h1>{password ? "Crea tu contraseña" : "Activa la verificación en dos pasos"}</h1>
         <p>
           {password

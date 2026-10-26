@@ -168,7 +168,7 @@ body {
 a { color: var(--color-red-strong); }
 a:hover { color: var(--color-red-hover); }
 
-.overline {
+.eyebrow {
   font: var(--text-overline);
   letter-spacing: var(--tracking-overline);
   text-transform: uppercase;

@@ -9,7 +9,7 @@ export function StoreSwitcher({ stores, activeId }: { stores: SwitcherStore[]; a
   const form = useRef<HTMLFormElement>(null);
   return (
     <form ref={form} action={switchStore} className="store-switcher">
-      <label htmlFor="store-switcher" className="overline">
+      <label htmlFor="store-switcher" className="eyebrow">
         Tienda
       </label>
       <select

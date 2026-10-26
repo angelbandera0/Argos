@@ -42,7 +42,7 @@ export default function UiPage() {
   return (
     <div className="ui-gallery">
       <nav className="ui-index" aria-label="Índice de la galería">
-        <span className="overline">Argos UI</span>
+        <span className="eyebrow">Argos UI</span>
         <ul>
           {sections.map((s) => (
             <li key={s.id}>

@@ -61,7 +61,7 @@ async function Stores({ errored }: { errored: boolean }) {
       )}
       {[...sites].map(([site, list]) => (
         <section key={site} className="store-site">
-          <span className="overline">{site}</span>
+          <span className="eyebrow">{site}</span>
           {list.map((s) => (
             <form key={s.storeId} action={chooseStore}>
               <input type="hidden" name="storeId" value={s.storeId} />

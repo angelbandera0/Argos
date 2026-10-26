@@ -13,7 +13,7 @@ export function OperatorDashboard() {
           <span className="spacer" />
           <Chip variant="open">EN TURNO</Chip>
         </div>
-        <span className="overline">Tienda activa</span>
+        <span className="eyebrow">Tienda activa</span>
         <h2 className="h2" id="op-store">{store.name}</h2>
         <p className="caption">{store.site} · {store.company}</p>
       </Card>
@@ -21,7 +21,7 @@ export function OperatorDashboard() {
         <div className="card-head">
           <span className="icon-dot" aria-hidden="true"><Clock /></span>
         </div>
-        <span className="overline">Tu sesión termina a las</span>
+        <span className="eyebrow">Tu sesión termina a las</span>
         <p className="stat" id="op-session">{session.endsAt}</p>
         <p className="caption">Te quedan {session.remaining}.</p>
       </Card>

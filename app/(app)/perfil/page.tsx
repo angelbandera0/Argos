@@ -37,7 +37,7 @@ async function ProfileData() {
       <dl className="stack">
         {rows.map(([label, value]) => (
           <div key={label} className="field">
-            <dt className="overline">{label}</dt>
+            <dt className="eyebrow">{label}</dt>
             <dd className="profile-value">{value || "—"}</dd>
           </div>
         ))}

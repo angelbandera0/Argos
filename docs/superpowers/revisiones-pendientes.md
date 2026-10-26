@@ -184,3 +184,6 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - DataTable no tiene modo tarjetas en móvil (< 768 px); hoy hace scroll horizontal. Tampoco hay barra de filtros con chips ni selector de columnas.
 - SidebarSection plegable no recuerda el estado por usuario; en el riel y la barra móvil se ignora el plegado y el submenú no se muestra (el padre no navega).
 - Verificación visual de los componentes nuevos pendiente en /ui (la hace el usuario).
+
+## Colisiones con Tailwind
+- Clase propia `overline` renombrada a `eyebrow` (chocaba con la utilidad `overline`). Revisadas las clases propias de los CSS: ninguna otra coincide con utilidades de Tailwind con efecto visible.
