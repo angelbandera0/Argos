@@ -12,4 +12,3 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 12 Historial por triggers | Sonnet (subagente, skill `argos-db-task`) | implementación | 007 32/32, 001-006 en verde | df88ae1 | subagente: 72.955 tokens, 13 llamadas, 146 s |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
-| 12 Historial por triggers | Sonnet (subagente) | implementación | 007 32/32, 001-006 ok | df88ae1 | no medido |
