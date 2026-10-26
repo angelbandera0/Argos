@@ -1,16 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { signOut } from "@/app/(app)/actions";
 import { NAV_ICONS } from "@/components/icons";
-import { initials } from "./initials";
+import { initials, profileSubtitle } from "./initials";
 
-export function ProfileMenu({ name, role }: { name: string; role: string }) {
+export function ProfileMenu({ name, role, handle }: { name: string; role: string; handle: string | null }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
   const Chevron = NAV_ICONS.ChevronDown;
   const LogOut = NAV_ICONS.LogOut;
+  const User = NAV_ICONS.User;
 
   const close = () => {
     setOpen(false);
@@ -51,6 +53,7 @@ export function ProfileMenu({ name, role }: { name: string; role: string }) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls="profile-menu"
+        aria-label={`Perfil de ${name}`}
         onClick={() => setOpen((o) => !o)}
       >
         <span className="avatar" aria-hidden="true">
@@ -64,9 +67,26 @@ export function ProfileMenu({ name, role }: { name: string; role: string }) {
       </button>
       {open && (
         <div id="profile-menu" className="profile-menu" role="menu" aria-label="Perfil">
+          <div className="profile-head">
+            <span className="avatar" aria-hidden="true">
+              {initials(name)}
+            </span>
+            <span className="who">
+              <strong>{name}</strong>
+              <span className="caption">{profileSubtitle(handle, role)}</span>
+            </span>
+          </div>
+          <Link href="/perfil" role="menuitem" className="profile-item" onClick={close}>
+            <span className="profile-icon">
+              <User aria-hidden="true" />
+            </span>
+            Ver perfil
+          </Link>
           <form action={signOut} role="none">
-            <button type="submit" role="menuitem" className="profile-item">
-              <LogOut aria-hidden="true" />
+            <button type="submit" role="menuitem" className="profile-item profile-item-danger">
+              <span className="profile-icon">
+                <LogOut aria-hidden="true" />
+              </span>
               Cerrar sesión
             </button>
           </form>

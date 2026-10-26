@@ -80,19 +80,19 @@ Fuentes (Google Fonts):
 
 | Rol | Fuente | Peso | Tamaño / interlínea | Tracking | Uso |
 |---|---|---|---|---|---|
-| `display` | Inter Tight | 600 | 32 / 1.1 (tablet 27, móvil 23) [mi decisión: era 40 / 32 / 28] | -0.9px | Saludo de página |
-| `kpi-xl` | Inter Tight | 400 | 44 / 1 [mi decisión: era 52] | -1.6px | Cifra héroe en móvil |
-| `kpi` | Inter Tight | 400 | 36 / 1 (tablet 29, móvil 24) [mi decisión: era 44 / 34 / 28] | -1.2px | KPIs de cabecera |
-| `stat` | Inter Tight | 500 | 28 / 1.1 [mi decisión: era 34] | -0.8px | Cifras en tarjetas (7h 12m, 3:20) |
-| `card-title-lg` | Inter Tight | 400 | 21 / 1.15 [mi decisión: era 26] | -0.5px | Título "editorial" de tarjeta |
-| `h2` | Inter | 700 | 15 / 1.3 [mi decisión: era 17 / 16] | 0 | Título de tarjeta |
-| `value` | Inter Tight | 600 | 17 / 1.2 [mi decisión: era 20] | 0 | Montos en mini‑tarjetas |
-| `brand` | Inter Tight | 600 | 17 / 1 [mi decisión: era 20 suelto en CSS] | -0.4px | Marca "Argos" del panel lateral |
+| `display` | Inter Tight | 600 | 40 / 1.1 (tablet 32, móvil 28) [decisión del usuario, DESIGN (2).md] | -1.2px | Saludo de página |
+| `kpi-xl` | Inter Tight | 400 | 52 / 1 | -2px | Cifra héroe en móvil |
+| `kpi` | Inter Tight | 400 | 44 / 1 (tablet 34, móvil 28) | -1.6px | KPIs de cabecera |
+| `stat` | Inter Tight | 500 | 34 / 1.1 | -1px | Cifras en tarjetas (7h 12m, 3:20) |
+| `card-title-lg` | Inter Tight | 400 | 26 / 1.15 | -0.6px | Título "editorial" de tarjeta |
+| `h2` | Inter | 700 | 17 / 1.3 (tablet 16) | 0 | Título de tarjeta |
+| `value` | Inter Tight | 600 | 20 / 1.2 | 0 | Montos en mini‑tarjetas |
+| `brand` | Inter Tight | 600 | 20 / 1 | -0.4px | Marca "Argos" del panel lateral |
 | `body` | Inter | 400–600 | 14 / 1.45 (tablet 13) | 0 | Texto general, botones (600) |
 | `caption` | Inter | 400 | 12–13 / 1.45 | 0 | Subtítulos, fechas, leyendas |
 | `overline` | Inter | 600 | 11 / 1.3 (tablet/móvil 10) | 0.8–1.2px, MAYÚSCULAS | Etiquetas de KPI, de sección |
 
-Escala contenida [mi decisión]: tras ver la pantalla real, títulos y cifras bajan 15–25 %; `body` (14/13), `caption` (12) y `overline` (11/10) no cambian para conservar legibilidad y AA. Ningún tamaño de fuente va suelto fuera de tokens (única excepción: 16 px del input invisible del PIN, para evitar el zoom de iOS).
+Escala [decisión del usuario, DESIGN (2).md]: prevalece la escala de la guía del usuario sobre el ajuste contenido de ce340c1 (que la había bajado 15–25 %). Token nuevo `--text-avatar` (700 13 px, iniciales del avatar). Ningún tamaño de fuente va suelto fuera de tokens (única excepción: 16 px del input invisible del PIN, para evitar el zoom de iOS).
 
 Reglas: cifras con `font-variant-numeric: tabular-nums` en tablas y listas. Máximo 2 pesos por tarjeta.
 
@@ -138,8 +138,8 @@ Tamaños de componentes base (`--size-*`) y `--color-scrim` (fondo del modal) vi
 
 | Breakpoint | Navegación | Contenido |
 |---|---|---|
-| **Web ≥ 1280 px** | Sidebar `--color-panel`, ancho 236 px, radio 28, con etiquetas, sin etiqueta de sección "MENÚ" [mi decisión] y sin bloque de usuario al pie (el perfil vive en la barra superior) | Barra superior común a web, tablet y móvil [mi decisión]: a la derecha el perfil del usuario (avatar + nombre + rol) como botón de menú con "Cerrar sesión" dentro; a la izquierda el selector de contexto (compañía o tienda) → cabecera de la página (`.topbar`) → saludo + píldoras de pago + KPIs → grilla de 3 columnas (1fr · 1fr · 2fr) |
-| **Tablet 768–1279 px** | Rail de iconos 84 px a todo el alto, `--color-panel`; activo = círculo blanco 52 px con icono rojo y `--shadow-active`; botón "Nueva venta" rojo, sin avatar al pie [mi decisión] | Cabecera 64 px (saludo + KPIs a la derecha) → fila de píldoras 56 px → 3 columnas (250 · 250 · resto) |
+| **Web ≥ 1280 px** | Sidebar `--color-panel`, ancho 236 px, radio 28, con etiquetas, sección "MENÚ" [decisión del usuario, DESIGN (2).md] ("GESTIÓN" y tarjeta de caja no existen en el Módulo 1) y sin perfil al pie (el perfil vive en la barra superior) | Barra superior común a web, tablet y móvil [decisión del usuario, DESIGN (2).md]: fecha y hora en vivo a la izquierda, buscador, acción primaria de la página (slot), notificaciones y a la derecha el perfil con menú desplegable (§6.16). Buscador y campana van visibles pero deshabilitados (`aria-disabled`, `title="Próximamente"`) hasta que exista su backend. Debajo, el selector de contexto (compañía o tienda) → cabecera de la página (`.topbar`) → saludo + píldoras de pago + KPIs → grilla de 3 columnas (1fr · 1fr · 2fr) |
+| **Tablet 768–1279 px** | Rail de iconos 84 px a todo el alto, `--color-panel`; activo = círculo blanco 52 px con icono rojo y `--shadow-active`; botón "Nueva venta" rojo, sin avatar al pie | Barra superior con el perfil solo avatar + chevron (§6.16) → cabecera 64 px (saludo + KPIs a la derecha) → fila de píldoras 56 px → 3 columnas (250 · 250 · resto) |
 | **Móvil < 768 px** | Barra inferior flotante: píldora blanca 68 px, borde `--color-line-soft`, `--shadow-floating`; activo = píldora `--color-panel` con icono rojo + etiqueta; botón central rojo 52 px | Cabecera `--color-panel` con radio inferior 32 que agrupa saludo, cifra héroe, KPIs y píldoras → tarjetas apiladas |
 
 En web, usa `flex-wrap` (sidebar `flex: 1 1 236px`, contenido `flex: 999 1 560px; min-width: 0`) para que el sidebar se apile en pantallas estrechas. Tablas anchas dentro de un contenedor con `overflow-x: auto`.
@@ -151,7 +151,7 @@ En web, usa `flex-wrap` (sidebar `flex: 1 1 236px`, contenido `flex: 999 1 560px
 ### 6.1 Botones
 | Variante | Estilo |
 |---|---|
-| **Primario** | Fondo `--color-red-strong`, texto blanco 600, alto 44 (48 en móvil), radio pill, padding 0 16–18px. Icono opcional a la izquierda (18 px). |
+| **Primario** | Fondo `--color-red-strong`, texto blanco 600, alto 40 en escritorio, 44 con puntero táctil (`pointer: coarse`) y en móvil, radio pill, padding 0 16–18px [decisión del usuario, DESIGN (2).md] (la guía decía 44 / 48). Icono opcional a la izquierda (18 px). |
 | **Secundario** | Fondo blanco sobre panel (o `--color-panel` sobre blanco), texto `--color-ink` 600, alto 40–44, radio pill. |
 | **Icono** | Círculo 44 px. Blanco sobre panel con `--shadow-raised`, o `--color-panel` sobre blanco. Siempre `aria-label`. |
 | **CTA circular** | Círculo 52 px, `--color-red-strong`, icono blanco 22 px, `--shadow-cta`. |
@@ -160,7 +160,7 @@ En web, usa `flex-wrap` (sidebar `flex: 1 1 236px`, contenido `flex: 999 1 560px
 Hover: rojo → `--color-red-hover` con texto blanco; blanco → `--color-panel` con texto ink [mi decisión: se fija el color del texto en hover, focus-visible y active porque el `a:hover` global lo volvía rojo sobre rojo]. Los botones solo-icono llevan `aria-label` y `title` (tooltip nativo) con el mismo texto.
 
 ### 6.2 Navegación
-- **Item sidebar:** alto 46, radio pill, padding 0 14px, gap 12, icono 19 px. Inactivo `--color-ink-2` 500. Activo: fondo blanco, texto `--color-ink` 600, icono `--color-red-strong`, punto rojo 7 px a la derecha, `--shadow-active`.
+- **Item sidebar:** alto 40 (era 46), radio pill, padding 0 14px, gap 12, icono 18 px (era 19) [decisión del usuario, DESIGN (2).md]. Inactivo `--color-ink-2` 500. Activo: fondo blanco, texto `--color-ink` 600, icono `--color-red-strong`, punto rojo 7 px a la derecha, `--shadow-active`.
 - **Badge de contador:** 22 px, pill, fondo `--color-red-tint`, texto `--color-red-hover` 700 12 px.
 - **Punto de notificación:** 7–8 px `--color-red`.
 - **Overline de sección:** `overline` en `--color-muted`.
@@ -205,13 +205,18 @@ Contenedor sin fondo, gap 4–6. Activa: fondo blanco, texto ink 700, `--shadow-
 SVG rotado -90°: pista punteada `--color-ring` (dasharray 3 6) + arco en `--color-red` en 4 segmentos (`pathLength="400"`, `stroke-dasharray="60 40"`, trazo 8, `linecap: round`). Centro: círculo blanco con cifra `stat` y overline "MIN / CLIENTE".
 
 ### 6.12 Inputs
-Buscador: alto 44, radio pill, fondo `--color-panel` (sin borde), icono lupa 18 px a 14 px del borde, padding izquierdo 40 px. Siempre con `<label>` (puede estar visualmente oculto).
+Buscador: alto 40 (44 táctil), radio pill, fondo `--color-panel` (sin borde), icono lupa 18 px a 14 px del borde, padding izquierdo 40 px. Siempre con `<label>` (puede estar visualmente oculto).
 
-### 6.16 Menú de perfil [mi decisión]
-Botón en la barra superior (alto 44, pill, fondo `--color-panel`): avatar + nombre (600) y rol (`caption` muted) en dos líneas + chevron. `aria-haspopup="menu"`, `aria-expanded`. Menú `role="menu"` con `role="menuitem"` (hoy solo "Cerrar sesión"), fondo blanco, `--radius-inner`, `--shadow-floating`. Escape y clic fuera lo cierran y el foco vuelve al botón; flechas arriba/abajo, Inicio y Fin mueven el foco. En móvil se oculta el texto del botón salvo el avatar y el nombre.
+### 6.16 Perfil y menú desplegable [decisión del usuario, DESIGN (2).md]
+El perfil va **arriba a la derecha** (nunca en el sidebar ni en el rail). En el operador la barra conserva el cambiador de tienda.
+- **Disparador:** `<button>` con `aria-haspopup="menu"`, `aria-expanded`, `aria-controls` y `aria-label="Perfil de …"`. Separado del resto de la barra por `border-left: 1px solid var(--color-line)` y padding-left 14 px. Web: avatar + nombre (600) + rol (`caption` muted) + chevron; tablet: avatar + chevron; móvil: solo avatar. Abierto: fondo `--color-panel` y chevron girado 180°.
+- **Menú:** `role="menu"`, alineado a la derecha, `top: calc(100% + 10px)`, ancho `--size-menu` (272), fondo blanco, borde `1px --color-line-soft`, `--radius-card`, padding 8, `--shadow-menu`.
+  - Cabecera: avatar + nombre (600) + `usuario · rol` (`caption` muted), divisor `--color-line-soft`. El usuario solo existe para operadores; administradores y superadmin muestran su correo.
+  - Opciones (`role="menuitem"`, alto `--size-control`, radio inner, hover `--color-panel`), con icono en círculo de `--size-icon-circle` (32): "Ver perfil" (enlace a `/perfil`) y "Cerrar sesión" (icono sobre `--color-red-tint`, texto `--color-red-strong` 600; siempre la última).
+- **Comportamiento:** abre y cierra con clic en el disparador; se cierra con clic fuera, Escape y al elegir una opción; al abrir el foco pasa a la primera opción y al cerrar vuelve al disparador; ↑/↓, Inicio y Fin mueven el foco. La confirmación por caja abierta de la guía no aplica al Módulo 1 (no hay caja).
 
 ### 6.13 Avatar
-Círculo 40–48 px, fondo `--color-yellow`, iniciales ink 700 12 px (`caption`) [mi decisión: era 13], `role="img"` + `aria-label` con el nombre.
+Círculo 40–48 px, fondo `--color-yellow`, iniciales ink 700 13 px (`--text-avatar`), `role="img"` + `aria-label` con el nombre.
 
 ### 6.14 Campo de PIN (6 casillas)
 Para el acceso con PIN **no se usa teclado numérico en pantalla**: se muestran 6 casillas y el sistema abre su propio teclado numérico.

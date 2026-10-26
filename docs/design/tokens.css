@@ -37,23 +37,24 @@
   --font-display: "Inter Tight", Arial, sans-serif;
   --font-ui: "Inter", Arial, sans-serif;
 
-  --text-display: 600 32px/1.1 var(--font-display);
-  --text-kpi-xl: 400 44px/1 var(--font-display);
-  --text-kpi: 400 36px/1 var(--font-display);
-  --text-stat: 500 28px/1.1 var(--font-display);
-  --text-card-title-lg: 400 21px/1.15 var(--font-display);
-  --text-h2: 700 15px/1.3 var(--font-ui);
-  --text-value: 600 17px/1.2 var(--font-display);
-  --text-brand: 600 17px/1 var(--font-display);
+  --text-display: 600 40px/1.1 var(--font-display);
+  --text-kpi-xl: 400 52px/1 var(--font-display);
+  --text-kpi: 400 44px/1 var(--font-display);
+  --text-stat: 500 34px/1.1 var(--font-display);
+  --text-card-title-lg: 400 26px/1.15 var(--font-display);
+  --text-h2: 700 17px/1.3 var(--font-ui);
+  --text-value: 600 20px/1.2 var(--font-display);
+  --text-brand: 600 20px/1 var(--font-display);
   --text-body: 400 14px/1.45 var(--font-ui);
   --text-caption: 400 12px/1.45 var(--font-ui);
   --text-overline: 600 11px/1.3 var(--font-ui);
+  --text-avatar: 700 13px/1 var(--font-ui);
 
-  --tracking-display: -0.9px;
-  --tracking-kpi-xl: -1.6px;
-  --tracking-kpi: -1.2px;
-  --tracking-stat: -0.8px;
-  --tracking-card-title: -0.5px;
+  --tracking-display: -1.2px;
+  --tracking-kpi-xl: -2px;
+  --tracking-kpi: -1.6px;
+  --tracking-stat: -1px;
+  --tracking-card-title: -0.6px;
   --tracking-brand: -0.4px;
   --tracking-overline: 0.8px;
 
@@ -86,23 +87,26 @@
   --shadow-raised: 0 2px 8px rgba(28, 28, 30, 0.08);
   --shadow-cta: 0 10px 22px -10px rgba(217, 45, 37, 0.6);
   --shadow-floating: 0 12px 30px rgba(28, 28, 30, 0.08);
+  --shadow-menu: 0 1px 2px rgba(28, 28, 30, 0.05), 0 18px 40px rgba(28, 28, 30, 0.14);
 
   /* ---- Tamaños ---- */
-  --size-touch: 44px;
-  --size-control: 44px;
+  --size-touch: 40px;
+  --size-control: 40px;
   --size-control-sm: 36px;
   --size-cta: 52px;
   --size-sidebar: 236px;
   --size-rail: 84px;
   --size-bottom-nav: 68px;
-  --size-nav-item: 46px;
+  --size-nav-item: 40px;
   --size-rail-item: 52px;
   --size-nav-item-mobile: 56px;
   --size-icon: 18px;
-  --size-icon-nav: 19px;
+  --size-icon-nav: 18px;
   --size-icon-rail: 21px;
   --size-dot: 7px;
   --size-avatar: 40px;
+  --size-icon-circle: 32px;
+  --size-menu: 272px;
   --size-list-row: 56px;
   --size-modal: 480px;
   --size-focus: 3px;
@@ -119,25 +123,33 @@
 /* Tablet */
 @media (max-width: 1279px) {
   :root {
-    --text-display: 600 27px/1.15 var(--font-display);
-    --text-kpi: 400 29px/1 var(--font-display);
-    --text-h2: 700 15px/1.3 var(--font-ui);
+    --text-display: 600 32px/1.15 var(--font-display);
+    --text-kpi: 400 34px/1 var(--font-display);
+    --text-h2: 700 16px/1.3 var(--font-ui);
     --text-body: 400 13px/1.45 var(--font-ui);
     --text-overline: 600 10px/1.3 var(--font-ui);
     --radius-card: 22px;
-    --tracking-display: -0.8px;
-    --tracking-kpi: -1px;
+    --tracking-display: -1px;
+    --tracking-kpi: -1.2px;
   }
 }
 
 /* Móvil */
 @media (max-width: 767px) {
   :root {
-    --text-display: 600 23px/1.15 var(--font-display);
-    --text-kpi: 400 24px/1 var(--font-display);
+    --text-display: 600 28px/1.15 var(--font-display);
+    --text-kpi: 400 28px/1 var(--font-display);
     --text-body: 400 14px/1.45 var(--font-ui);
-    --tracking-display: -0.6px;
-    --tracking-kpi: -0.6px;
+    --tracking-display: -0.8px;
+    --tracking-kpi: -0.8px;
+  }
+}
+
+/* Puntero táctil o móvil: objetivos de 44 px */
+@media (pointer: coarse), (max-width: 767px) {
+  :root {
+    --size-touch: 44px;
+    --size-control: 44px;
   }
 }
 

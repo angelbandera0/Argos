@@ -5,3 +5,6 @@ export const initials = (name: string) =>
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
     .join("");
+
+export const profileSubtitle = (handle: string | null | undefined, role: string) =>
+  handle ? `${handle} · ${role}` : role;

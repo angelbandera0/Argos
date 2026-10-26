@@ -29,7 +29,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 ## Tipografía
 - Fuentes Google Fonts Inter Tight y Inter; `tokens.css` indica que se cargan en `app/globals.css` (§3).
 - `--font-display` (Inter Tight): títulos, cifras. `--font-ui` (Inter): resto (§3).
-- Escala contenida [mi decisión]: display 32 (tablet 27, móvil 23), kpi-xl 44, kpi 36 (29, 24), stat 28, card-title-lg 21, h2 15, value 17, brand 17; body 14/13, caption 12 y overline 11/10 sin cambios. Tamaños de fuente solo en tokens.
+- Escala [decisión del usuario, DESIGN (2).md]: display 40 (tablet 32, móvil 28), kpi-xl 52, kpi 44 (34, 28), stat 34, card-title-lg 26, h2 17 (16), value 20, brand 20, avatar 13; body 14/13, caption 12 y overline 11/10. Tamaños de fuente solo en tokens.
 - Roles: `--text-display`, `--text-kpi-xl`, `--text-kpi`, `--text-stat`, `--text-card-title-lg`, `--text-h2`, `--text-value`, `--text-brand`, `--text-body`, `--text-caption`, `--text-overline` (§3).
 - Tracking: `--tracking-display`, `--tracking-kpi-xl`, `--tracking-kpi`, `--tracking-stat`, `--tracking-card-title`, `--tracking-overline` (§3).
 - Máximo 2 pesos por tarjeta. `font-variant-numeric: tabular-nums` (clase `.tabular`) en tablas y listas (§3).
@@ -40,21 +40,21 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Página: 16 px exterior y 24 px entre sidebar y contenido. Gap entre tarjetas: 18 web, 14–16 tablet, 12–14 móvil. Padding de tarjeta: 20×22 web, 18×20 tablet, 16–18 móvil. Gap interno: 8–12 (§4).
 - Radios (§4): `--radius-pill`; `--radius-panel` 28 (sidebar web); `--radius-card` 24 (22 en tablet/móvil, ya en tokens); `--radius-inner` 16 (14 en compacto, sin token); `--radius-icon` 10; `--radius-bar` (barras de gráfico); `--radius-header-mobile` (cabecera móvil).
 - Sombras (§4): `--shadow-active` (nav activa); `--shadow-raised` (pestaña activa, botón blanco sobre panel); `--shadow-cta` (CTA circular); `--shadow-floating` (barra inferior móvil).
-- Tamaños `--size-*` (§4, tokens.css): `touch` 44, `control` 44, `control-sm` 36, `cta` 52, `sidebar` 236, `rail` 84, `bottom-nav` 68, `nav-item` 46, `rail-item` 52, `nav-item-mobile` 56, `icon` 18, `icon-nav` 19, `icon-rail` 21, `dot` 7, `avatar` 40, `list-row` 56, `modal` 480, `focus` 3. Overlay de modal: `--color-scrim`.
+- Tamaños `--size-*` (§4, tokens.css): `touch` 40 (44 táctil/móvil), `control` 40 (44 táctil/móvil), `control-sm` 36, `cta` 52, `sidebar` 236, `rail` 84, `bottom-nav` 68, `nav-item` 40, `rail-item` 52, `nav-item-mobile` 56, `icon` 18, `icon-nav` 18, `icon-rail` 21, `dot` 7, `avatar` 40, `icon-circle` 32, `menu` 272, `list-row` 56, `modal` 480, `focus` 3. Overlay de modal: `--color-scrim`.
 
 ## Layout y shell
-- Web ≥ 1280 px (§5): sidebar `--color-panel`, 236 px, radio 28, con etiquetas, sin etiqueta "MENÚ" ni usuario al pie [mi decisión]. Contenido: barra superior común a todas las vistas con el menú de perfil (avatar, nombre, rol, "Cerrar sesión") a la derecha y el selector de contexto a la izquierda [mi decisión], saludo con píldoras y KPIs, grilla 1fr · 1fr · 2fr.
+- Web ≥ 1280 px (§5): sidebar `--color-panel`, 236 px, radio 28, con etiquetas, con etiqueta "MENÚ" y sin usuario al pie [decisión del usuario, DESIGN (2).md]. Contenido: barra superior común a todas las vistas con el menú de perfil (avatar, nombre, rol, "Cerrar sesión") a la derecha y el selector de contexto a la izquierda [mi decisión], saludo con píldoras y KPIs, grilla 1fr · 1fr · 2fr.
 - Tablet 768–1279 px (§5): rail de iconos de 84 px a todo el alto, `--color-panel`. Activo: círculo blanco 52 con icono rojo y `--shadow-active`. "Nueva venta" rojo, sin avatar al pie. Cabecera 64 px, fila de píldoras 56 px, 3 columnas (250 · 250 · resto).
 - Móvil < 768 px (§5): barra inferior flotante, píldora blanca 68 px, borde `--color-line-soft`, `--shadow-floating`. Activo: píldora `--color-panel` con icono rojo y etiqueta. Botón central rojo 52. Cabecera `--color-panel` con radio inferior 32 (saludo, cifra héroe, KPIs, píldoras) y tarjetas apiladas.
 - CSS web (§5): contenedor `flex-wrap`; sidebar `flex: 1 1 236px`; contenido `flex: 999 1 560px; min-width: 0`. Tablas anchas con `overflow-x: auto`.
 
 ## Componentes
-- Botón primario (§6.1): `--color-red-strong`, texto blanco 600, alto 44 (48 móvil), pill, padding 0 16–18, icono 18 a la izquierda.
-- Botón secundario (§6.1): blanco sobre panel o panel sobre blanco, texto ink 600, alto 40–44, pill.
+- Botón primario (§6.1): `--color-red-strong`, texto blanco 600, alto 40 (44 táctil/móvil), pill, padding 0 16–18, icono 18 a la izquierda.
+- Botón secundario (§6.1): blanco sobre panel o panel sobre blanco, texto ink 600, alto 40, pill.
 - Botón icono (§6.1): círculo 44, blanco con `--shadow-raised` o panel; `aria-label` obligatorio. Filtro: círculo 40 blanco, icono red-strong.
 - CTA circular (§6.1): círculo 52, red-strong, icono blanco 22, `--shadow-cta`.
 - Hover (§6.1): rojo a `--color-red-hover` con texto blanco; blanco a `--color-panel`; botones solo-icono con `aria-label` y `title`.
-- Menú de perfil (§6.16): botón avatar+nombre+rol en la barra superior, `aria-haspopup="menu"`, `role="menu"`/`menuitem`, Escape/clic fuera, foco al botón; contiene "Cerrar sesión".
+- Perfil y menú (§6.16, [decisión del usuario, DESIGN (2).md]): barra superior con fecha y hora, buscador y campana (deshabilitados, "Próximamente"), slot de acción y perfil a la derecha (avatar+nombre+rol; tablet avatar+chevron; móvil avatar). Menú con cabecera (`usuario · rol`; correo si no es operador), "Ver perfil" (`/perfil`) y "Cerrar sesión" en rojo; `aria-haspopup="menu"`, `role="menu"`/`menuitem`, Escape/clic fuera/flechas, foco al botón.
 - Item de sidebar (§6.2): alto 46, pill, padding 0 14, gap 12, icono 19. Inactivo: ink-2 500. Activo: blanco, ink 600, icono red-strong, punto rojo 7 a la derecha, `--shadow-active`, `aria-current="page"`.
 - Badge de contador (§6.2): 22 px, pill, `--color-red-tint`, texto red-hover 700 12. Punto de notificación: 7–8 px rojo.
 - KPI de cabecera (§6.3): cifra `kpi` con flecha de tendencia rojo (15–18, trazo 2.4); overline alineado a la derecha. Separación: `border-left: 1px solid var(--color-line)`, padding 0 18–20.
@@ -66,7 +66,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Acordeón (§6.9): ancho completo, alto 48–52, texto 600, chevron 15–16 a la derecha (abierto: red-strong), separador `--color-line`, `aria-expanded`.
 - Pestañas segmentadas (§6.10): sin fondo en el contenedor, gap 4–6. Activa: blanco, ink 700, `--shadow-raised`. Inactiva: transparente, ink-2. Alto 36, pill. `role="tablist"`, `role="tab"`, `aria-selected`.
 - Anillo de tiempo (§6.11): SVG girado -90°, pista punteada `--color-ring` (dasharray 3 6), arco rojo en 4 segmentos (`pathLength="400"`, `stroke-dasharray="60 40"`, trazo 8, `linecap: round`). Centro blanco con `stat` y overline "MIN / CLIENTE".
-- Buscador (§6.12): alto 44, pill, fondo panel sin borde, lupa 18 a 14 del borde, padding izquierdo 40. Siempre con `<label>` (puede ir oculto).
+- Buscador (§6.12): alto 40 (44 táctil), pill, fondo panel sin borde, lupa 18 a 14 del borde, padding izquierdo 40. Siempre con `<label>` (puede ir oculto).
 - Avatar (§6.13): círculo 40–48, yellow, iniciales ink 700 12, `role="img"` y `aria-label`.
 - Campo PIN (§6.14):
   - Un único `<input>` (`type="password"`, `inputmode="numeric"`, `pattern="[0-9]*"`, `maxlength="6"`, `autocomplete="one-time-code"`, `font-size: 16px`) invisible (`opacity: 0`, `position: absolute; inset: 0`) sobre 6 casillas decorativas `aria-hidden="true"`.

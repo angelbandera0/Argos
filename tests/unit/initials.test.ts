@@ -9,3 +9,12 @@ describe("initials", () => {
     expect(initials("  Admin ")).toBe("A");
   });
 });
+
+import { profileSubtitle } from "@/components/shell/initials";
+
+describe("profileSubtitle", () => {
+  it("une usuario y rol, y omite el usuario si no existe", () => {
+    expect(profileSubtitle("k7m2.ana", "Cajera")).toBe("k7m2.ana · Cajera");
+    expect(profileSubtitle(null, "Administrador")).toBe("Administrador");
+  });
+});

@@ -50,7 +50,7 @@ async function OperatorShell({
         </div>
       }
       nav={operatorNav(active.permissions.products)}
-      user={{ name: profile?.displayName ?? "Operador", role: active.roleName }}
+      user={{ name: profile?.displayName ?? "Operador", role: active.roleName, handle: profile?.username }}
     >
       {children}
     </AppShell>
@@ -80,6 +80,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",
+        handle: claims.email,
       }}
     >
       {children}

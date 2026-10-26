@@ -1,6 +1,6 @@
-import { Box as NavBox, ChevronDown as NavChevronDown, Building2 as NavBuilding2, KeyRound as NavKeyRound, LogOut as NavLogOut, ShieldCheck as NavShieldCheck, Tags as NavTags, Users as NavUsers } from "lucide-react";
+import { Bell as NavBell, Box as NavBox, ChevronDown as NavChevronDown, Building2 as NavBuilding2, KeyRound as NavKeyRound, LogOut as NavLogOut, Search as NavSearch, ShieldCheck as NavShieldCheck, Tags as NavTags, User as NavUser, Users as NavUsers } from "lucide-react";
 
-export const NAV_ICONS = { Box: NavBox, ChevronDown: NavChevronDown, Building2: NavBuilding2, KeyRound: NavKeyRound, LogOut: NavLogOut, ShieldCheck: NavShieldCheck, Tags: NavTags, Users: NavUsers };
+export const NAV_ICONS = { Bell: NavBell, Box: NavBox, ChevronDown: NavChevronDown, Building2: NavBuilding2, KeyRound: NavKeyRound, LogOut: NavLogOut, Search: NavSearch, ShieldCheck: NavShieldCheck, Tags: NavTags, User: NavUser, Users: NavUsers };
 export type NavIconName = keyof typeof NAV_ICONS;
 
 export {

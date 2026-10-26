@@ -149,3 +149,9 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - La maqueta no dibuja la barra superior ni el menú de perfil (divergencia anotada en MODULO-1-PANTALLAS.md §2).
 - `.code-input` conserva 16 px suelto (evita zoom en iOS); `.spinner` y `.skeleton-*` tienen px sueltos no tipográficos.
 - Verificar en navegador: hover/focus de botones, escala tipográfica y el menú de perfil en las tres vistas.
+
+## Navbar and density (menores)
+- La escala tipográfica vuelve a la de la guía del usuario (más grande que la imagen de referencia); si se quiere más compacta, decidirlo y editar tokens.
+- Verificar en navegador: barra superior en 3 vistas (desbordamiento del reloj en móvil), menú de perfil, teclado, y que un operador vea su compañía en `/perfil` (depende de RLS sobre `companies`).
+- La campana no muestra punto rojo (no hay notificaciones); buscador y campana deshabilitados hasta tener backend.
+- Mockups (`shell.js`) siguen sin dibujar la barra superior.

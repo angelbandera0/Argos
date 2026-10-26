@@ -53,6 +53,8 @@ Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design
 
 ## 9. Fechas (deuda conocida)
 
+- La fecha y hora de la barra superior se calculan en el navegador (`components/shell/top-clock.tsx`, `format-clock.ts`), tras montar; este elemento ya no tiene deuda de zona horaria.
+
 - Hoy se formatean con `Intl.DateTimeFormat("es", ...)` sin `timeZone`, así que usan la zona del servidor. Ejemplo: `app/(app)/companias/[id]/page.tsx` (línea 390). Deuda registrada en `docs/superpowers/revisiones-pendientes.md`; no copies el patrón sin revisarla.
 
 ## 10. Verificación visual
