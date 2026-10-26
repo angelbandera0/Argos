@@ -39,7 +39,7 @@ export function ProfileMenu({ name, role, handle }: { name: string; role: string
                 Ver perfil
               </Menu.Item>
               <form action={signOut} role="none">
-                <Menu.Item className="menu-item menu-item-danger" closeOnClick={false} render={<button type="submit" />}>
+                <Menu.Item className="menu-item menu-item-danger" closeOnClick={false} nativeButton render={<button type="submit" />}>
                   <LogOut aria-hidden="true" />
                   Cerrar sesión
                 </Menu.Item>
