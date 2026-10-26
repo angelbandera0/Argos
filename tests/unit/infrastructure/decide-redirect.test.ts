@@ -32,6 +32,7 @@ describe("decideRedirect sin sesión", () => {
     expect(go("/entrar-x", null)).toBe("/login");
     expect(go("/tienda-x", null)).toBe("/login");
   });
+  it("operator keeps / after choosing a store", () => expect(go("/", session("operator"))).toBeNull());
   it("/ -> /login", () => expect(go("/", null)).toBe("/login"));
 });
 

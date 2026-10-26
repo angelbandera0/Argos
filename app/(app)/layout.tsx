@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CompanySelector } from "@/components/org/company-selector";
+import { logout } from "@/app/(auth)/entrar/actions";
+import { Button } from "@/components/ui/button";
+import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { readClaims } from "@/infrastructure/supabase/claims";
@@ -8,9 +12,11 @@ import { makeOrg } from "@/infrastructure/supabase/org-factory";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
 import { ACTIVE_COMPANY_COOKIE } from "./companias/guard";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
+import { makeUsers } from "@/infrastructure/supabase/users-factory";
 
 const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
 const ROLES: NavItem = { id: "roles", label: "Roles", href: "/roles", icon: "KeyRound" };
+const PRODUCTS: NavItem = { id: "productos", label: "Productos", href: "/catalogo/productos", icon: "Box" };
 const ADMINS: NavItem = {
   id: "administradores",
   label: "Administradores",
@@ -18,10 +24,50 @@ const ADMINS: NavItem = {
   icon: "ShieldCheck",
 };
 
+async function OperatorShell({
+  userId,
+  sessionId,
+  children,
+}: {
+  userId: string;
+  sessionId: string | null;
+  children: React.ReactNode;
+}) {
+  const supabase = await createServerClient();
+  const users = makeUsers(supabase);
+  const session = sessionId ? await users.sessions.get(sessionId) : null;
+  if (!session || session.endedAt || !session.activeStoreId) redirect("/tienda");
+  const [profile, stores] = await Promise.all([users.users.getProfile(userId), users.access.listStoreAccess(userId)]);
+  const active = stores.find((s) => s.storeId === session.activeStoreId && s.operational);
+  if (!active) redirect("/tienda");
+  return (
+    <AppShell
+      top={
+        <div className="op-bar">
+          <StoreSwitcher
+            activeId={active.storeId}
+            stores={stores.map((s) => ({ id: s.storeId, name: s.storeName, site: s.siteName, available: s.operational }))}
+          />
+          <form action={logout}>
+            <Button type="submit" variant="secondary">
+              Cerrar sesión
+            </Button>
+          </form>
+        </div>
+      }
+      nav={active.permissions.products.view ? [PRODUCTS] : []}
+      user={{ name: profile?.displayName ?? "Operador", role: active.roleName }}
+    >
+      {children}
+    </AppShell>
+  );
+}
+
 async function Shell({ children }: { children: React.ReactNode }) {
   const supabase = await createServerClient();
   const claims = await readClaims(supabase);
-  if (!claims || claims.kind === "operator") return children;
+  if (!claims) return children;
+  if (claims.kind === "operator") return <OperatorShell userId={claims.userId} sessionId={claims.sessionId}>{children}</OperatorShell>;
   const profile = await makeUserRepository(supabase).getProfile(claims.userId);
   const superadmin = claims.kind === "superadmin";
   let selector: React.ReactNode;

@@ -8,7 +8,7 @@ export interface RedirectSession {
 }
 
 const PUBLIC_PATHS = ["/login", "/entrar", "/recuperar"];
-const OPERATOR_PATHS = ["/tienda", "/catalogo/productos", "/historial"];
+const OPERATOR_PATHS = ["/", "/tienda", "/catalogo/productos", "/historial"];
 const ADMIN_AUTH_PAGES = ["/login", "/login/2fa", "/entrar", "/primer-ingreso", "/recuperar"];
 
 /** True when pathname equals prefix or lies under it, comparing whole segments. */

@@ -17,7 +17,7 @@ const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(
 
 export async function enterWithPin(_: EnterState, formData: FormData): Promise<EnterState> {
   const username = text(formData, "username").trim();
-  const generic = { error: "Usuario o PIN incorrectos.", username };
+  const generic = { error: "Usuario o PIN incorrectos, o el usuario está bloqueado. Si sigue pasando, pide ayuda a un administrador.", username };
   const pin = text(formData, "pin");
   if (!username || !/^\d{6}$/.test(pin)) return generic;
   const supabase = await createServerClient();
