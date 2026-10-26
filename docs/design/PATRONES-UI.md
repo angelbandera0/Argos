@@ -1,6 +1,6 @@
 # Patrones de UI
 
-Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI (`components/ui/`, galería en `/ui` solo en desarrollo) en lugar de marcado propio; el código manda ante cualquier duda. Tokens solo de `docs/design/tokens.css`; guía en `DESIGN-resumen.md` y `DESIGN.md`.
+Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI (`components/ui/`, galería en `/ui` solo en desarrollo) en lugar de marcado propio; el código manda ante cualquier duda. Tokens solo de `docs/design/tokens.css`; guía en `DESIGN-resumen.md` y `DESIGN.md`. Antes de escribir UI lee `TRAMPAS-BASE-UI.md` (errores ya vividos con Base UI y Tailwind).
 
 ## Servidor
 

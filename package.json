@@ -12,7 +12,13 @@
     "typecheck": "tsc --noEmit",
     "test:db": "node scripts/test-db.mjs",
     "db:apply": "node scripts/db-apply.mjs",
-    "usage": "node scripts/usage.mjs"
+    "usage": "node scripts/usage.mjs",
+    "verify": "node scripts/verify.mjs",
+    "verify:fast": "node scripts/verify.mjs --fast",
+    "consumo": "node scripts/record-usage.mjs",
+    "design:section": "node scripts/design-section.mjs",
+    "mockup": "node scripts/mockup-values.mjs",
+    "new:ui": "node scripts/new-ui-component.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

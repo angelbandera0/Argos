@@ -48,3 +48,10 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 - App Router only (`app/`). Path alias `@/*` maps to the repo root (not `src/`).
 - `next.config.ts` enables `cacheComponents` and `partialPrefetching`, so Cache Components / PPR semantics apply (dynamic data access must be handled per the Cache Components docs, e.g. `use cache` / Suspense boundaries).
 - Tailwind v4 is wired through Turbopack: `next.config.ts` adds a `turbopack.rules` entry running `@tailwindcss/turbopack` on `*.css`. Theme tokens live in `app/globals.css` (`@import "tailwindcss"`, `@theme inline`, light/dark CSS variables via `prefers-color-scheme`).
+
+## Herramientas de desarrollo (reducen tokens)
+
+- `pnpm verify` (o `pnpm verify:fast` sin build; `--int`, `--db`): typegen si hace falta, lint, typecheck, pruebas y build, una línea por paso y solo el final del log si falla. Úsalo en lugar de componer los comandos a mano; no ejecutes `build` con `next dev` activo.
+- `pnpm consumo <.output> "<fila>" "<commits>" [--status --tokens --duration]`: el controlador anota así el consumo en `docs/superpowers/consumo.md` (`--dry-run`, `--replace`).
+- Antes de escribir UI lee `docs/design/TRAMPAS-BASE-UI.md`.
+- Tamaño de subagentes: no deben superar ~20 llamadas ni ~100.000 de contexto; si una tarea lo excede, divídela en pasos que dejan algo funcionando; cada subagente de UI lee solo las secciones de diseño que necesita.
