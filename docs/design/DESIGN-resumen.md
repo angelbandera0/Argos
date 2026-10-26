@@ -29,7 +29,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 ## Tipografía
 - Fuentes Google Fonts Inter Tight y Inter; `tokens.css` indica que se cargan en `app/globals.css` (§3).
 - `--font-display` (Inter Tight): títulos, cifras. `--font-ui` (Inter): resto (§3).
-- Escala [decisión del usuario, DESIGN (2).md]: display 40 (tablet 32, móvil 28), kpi-xl 52, kpi 44 (34, 28), stat 34, card-title-lg 26, h2 17 (16), value 20, brand 20, avatar 13; body 14/13, caption 12 y overline 11/10. Tamaños de fuente solo en tokens.
+- Escala reducida [decisión del usuario: fuentes más pequeñas]; PREVALECE sobre la guía de Downloads (DESIGN (2).md) en este punto: display 32 (tablet 27, móvil 23), kpi-xl 44, kpi 36 (29, 24), stat 28, card-title-lg 21, h2 15, value 17, brand 17, avatar 13; body 14/13, caption 12 y overline 11/10. Tamaños de fuente solo en tokens.
 - Roles: `--text-display`, `--text-kpi-xl`, `--text-kpi`, `--text-stat`, `--text-card-title-lg`, `--text-h2`, `--text-value`, `--text-brand`, `--text-body`, `--text-caption`, `--text-overline` (§3).
 - Tracking: `--tracking-display`, `--tracking-kpi-xl`, `--tracking-kpi`, `--tracking-stat`, `--tracking-card-title`, `--tracking-overline` (§3).
 - Máximo 2 pesos por tarjeta. `font-variant-numeric: tabular-nums` (clase `.tabular`) en tablas y listas (§3).

@@ -80,19 +80,19 @@ Fuentes (Google Fonts):
 
 | Rol | Fuente | Peso | Tamaño / interlínea | Tracking | Uso |
 |---|---|---|---|---|---|
-| `display` | Inter Tight | 600 | 40 / 1.1 (tablet 32, móvil 28) [decisión del usuario, DESIGN (2).md] | -1.2px | Saludo de página |
-| `kpi-xl` | Inter Tight | 400 | 52 / 1 | -2px | Cifra héroe en móvil |
-| `kpi` | Inter Tight | 400 | 44 / 1 (tablet 34, móvil 28) | -1.6px | KPIs de cabecera |
-| `stat` | Inter Tight | 500 | 34 / 1.1 | -1px | Cifras en tarjetas (7h 12m, 3:20) |
-| `card-title-lg` | Inter Tight | 400 | 26 / 1.15 | -0.6px | Título "editorial" de tarjeta |
-| `h2` | Inter | 700 | 17 / 1.3 (tablet 16) | 0 | Título de tarjeta |
-| `value` | Inter Tight | 600 | 20 / 1.2 | 0 | Montos en mini‑tarjetas |
-| `brand` | Inter Tight | 600 | 20 / 1 | -0.4px | Marca "Argos" del panel lateral |
+| `display` | Inter Tight | 600 | 32 / 1.1 (tablet 27, móvil 23) [decisión del usuario: fuentes más pequeñas] | -0.9px | Saludo de página |
+| `kpi-xl` | Inter Tight | 400 | 44 / 1 | -1.6px | Cifra héroe en móvil |
+| `kpi` | Inter Tight | 400 | 36 / 1 (tablet 29, móvil 24) | -1.2px | KPIs de cabecera |
+| `stat` | Inter Tight | 500 | 28 / 1.1 | -0.8px | Cifras en tarjetas (7h 12m, 3:20) |
+| `card-title-lg` | Inter Tight | 400 | 21 / 1.15 | -0.5px | Título "editorial" de tarjeta |
+| `h2` | Inter | 700 | 15 / 1.3 | 0 | Título de tarjeta |
+| `value` | Inter Tight | 600 | 17 / 1.2 | 0 | Montos en mini‑tarjetas |
+| `brand` | Inter Tight | 600 | 17 / 1 | -0.4px | Marca "Argos" del panel lateral |
 | `body` | Inter | 400–600 | 14 / 1.45 (tablet 13) | 0 | Texto general, botones (600) |
 | `caption` | Inter | 400 | 12–13 / 1.45 | 0 | Subtítulos, fechas, leyendas |
 | `overline` | Inter | 600 | 11 / 1.3 (tablet/móvil 10) | 0.8–1.2px, MAYÚSCULAS | Etiquetas de KPI, de sección |
 
-Escala [decisión del usuario, DESIGN (2).md]: prevalece la escala de la guía del usuario sobre el ajuste contenido de ce340c1 (que la había bajado 15–25 %). Token nuevo `--text-avatar` (700 13 px, iniciales del avatar). Ningún tamaño de fuente va suelto fuera de tokens (única excepción: 16 px del input invisible del PIN, para evitar el zoom de iOS).
+Escala reducida [decisión del usuario: fuentes más pequeñas]: PREVALECE sobre la guía de Downloads (DESIGN (2).md: display 40, kpi 44, h2 17…) en este punto; el usuario pidió títulos moderados como en su imagen de referencia. Token nuevo `--text-avatar` (700 13 px, iniciales del avatar). Ningún tamaño de fuente va suelto fuera de tokens (única excepción: 16 px del input invisible del PIN, para evitar el zoom de iOS).
 
 Reglas: cifras con `font-variant-numeric: tabular-nums` en tablas y listas. Máximo 2 pesos por tarjeta.
 
