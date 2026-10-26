@@ -205,3 +205,7 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 
 ## Task 33 (menores)
 - Historial: filtro de módulo por enlaces, no Select; «Anterior» sustituido por «Primera página» (cursor opaco solo avanza). Fechas desde/hasta se interpretan en UTC (zona del servidor). Nombres de actor solo vía listForCompany (operadores sin acceso ven «Usuario»); administradores fuera de la compañía también. Historial de roles/usuarios/organización listado para admins, sin pantalla de detalle específica.
+
+## Fix ProfileMenu / server actions (menores)
+- El proxy deja pasar toda petición con `next-action`: las server actions deben validar sesión por sí mismas (revisar que todas lo hagan en la revisión de seguridad).
+- El error «unexpected response» en login puede además deberse a IDs de acción obsoletos tras Fast Refresh en dev.

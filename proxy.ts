@@ -44,6 +44,7 @@ export async function proxy(request: NextRequest) {
   const redirectTo = decideRedirect({
     pathname: request.nextUrl.pathname,
     session: toSession(claims),
+    isServerAction: request.headers.has("next-action"),
   });
   if (!redirectTo) return response;
 

@@ -128,3 +128,21 @@ describe("decideRedirect /ui (galería)", () => {
     expect(go("/ui", null)).toBe("/login");
   });
 });
+
+describe("decideRedirect peticiones de server action", () => {
+  const act = (pathname: string, s: Session | null) =>
+    decideRedirect({ pathname, session: s, isServerAction: true });
+  it.each([
+    ["sin sesión", null],
+    ["aal1", session("superadmin", { aal: "aal1" })],
+    ["aal1 mustChangePassword", session("superadmin", { aal: "aal1", mustChangePassword: true })],
+    ["aal2", session("superadmin")],
+  ])("%s: nunca redirige", (_, s) => {
+    for (const p of ["/login", "/login/2fa", "/primer-ingreso", "/", "/usuarios"]) {
+      expect(act(p, s)).toBeNull();
+    }
+  });
+  it("sin la cabecera se sigue redirigiendo", () => {
+    expect(go("/login/2fa", null)).toBe("/login");
+  });
+});

@@ -22,8 +22,12 @@ const matchesAny = (pathname: string, prefixes: string[]) =>
 export function decideRedirect(i: {
   pathname: string;
   session: RedirectSession | null;
+  isServerAction?: boolean;
 }): string | null {
   const { pathname, session } = i;
+
+  // A redirect would answer the action POST with HTML; each action validates the session itself.
+  if (i.isServerAction) return null;
 
   if (!session) {
     // /login/2fa needs an aal1 session, so it is not public without one.
