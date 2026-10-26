@@ -12,6 +12,6 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | 12 Historial por triggers | Sonnet (subagente, skill `argos-db-task`) | implementación | 007 32/32, 001-006 en verde | df88ae1 | subagente: 72.955 tokens, 13 llamadas, 146 s |
 | 13 Hook de claims y bloqueo del PIN | Sonnet (subagente, skill `argos-db-task`) | implementación | 008 22/22 | 96e3a66 | subagente: 57.190 tokens, 14 llamadas, 75 s |
 | 16 AuthGateway y PinVerifier | Sonnet (subagente) | implementación + migración extra `revoke_user_sessions` | test:int 8/8, test 279/279, typecheck y lint limpios | 959e951 | subagente: 75.781 tokens, 18 llamadas, 182 s |
-| 17 Primer superadmin | Sonnet (subagente) | implementación | unit 281/281, test:int 9/9, typecheck y lint limpios | 4bb7504 | pendiente |
+| 17 Primer superadmin | Sonnet (subagente) | implementación | unit 281/281, test:int 9/9, typecheck y lint limpios | 4bb7504 | subagente: 54.742 tokens, 12 llamadas, 91 s |
 
 Lecciones: omitir revisiones por tarea quitó las rondas de arreglo; escribir en línea (Tarea 10) infló el contexto principal, así que la escritura va al subagente.
