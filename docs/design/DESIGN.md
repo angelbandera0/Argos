@@ -251,6 +251,170 @@ Reglas:
 
 ---
 
+### Tokens de estado y de componentes (guía ampliada)
+Estados `--color-success|warning|danger|info` con `-tint` y `-border` (y `--color-warning-text`, `--color-danger-text`, `--color-warning-dot`); campos `--color-placeholder`, `--color-disabled-bg|text`, `--color-field-error-bg` (= `--color-red-wash`), `--color-row-selected`, `--color-hover`, `--color-overlay`; `--focus-ring` (botones, enlaces) y `--focus-ring-field` (campos); radios `--radius-dialog|popover|toast|textarea|option|checkbox|alert|alert-compact|tooltip`; sombras `--shadow-popover|toast|dialog|tooltip|card-open`; tamaños `--size-control-lg|field|option|checkbox|switch-*|badge|chip-filter|tag|counter|table-head|table-row|step*|icon-circle-lg|icon-circle-xl|toast|popover-max`; capas `--z-*`. Todos en `tokens.css`.
+
+> **[decisión del usuario] Densidad:** las alturas de 40/44/48/52 px de esta guía se aplican con `--size-control` (40; 44 táctil/móvil) y `--size-field` (= `--size-control`), no con 48 fijo; los pesos tipográficos mantienen la escala reducida de §3. Donde el texto diga "48 px" para un campo, lee `--size-field`.
+
+### 6.17 Campos de texto
+- **Anatomía:** etiqueta (14 px 600, siempre visible encima; "(opcional)" en `--color-muted` si aplica) → campo → texto de ayuda o error (13 px). Nunca uses el placeholder como etiqueta.
+- **Campo:** alto `--size-field`, radio pill, borde `1.5px solid var(--color-line)`, fondo blanco, padding 0 18 px, texto 15 px (16 px en móvil), placeholder `--color-placeholder`.
+- **Estados:**
+  | Estado | Estilo |
+  |---|---|
+  | Normal | borde `--color-line` |
+  | Con valor | borde `--color-line-strong` |
+  | Foco | borde `2px --color-red-strong` + `box-shadow: var(--focus-ring-field)` |
+  | Error | borde `2px --color-danger`, fondo `--color-field-error-bg`, mensaje `--color-danger-text` 600 con icono, `aria-invalid="true"` + `aria-describedby` |
+  | Desactivado | fondo `--color-panel`, borde `--color-line-soft`, texto `--color-disabled-text` |
+  | Solo lectura | fondo `--color-panel`, sin borde, texto ink |
+- **Variantes:**
+  - *Búsqueda:* icono a la izquierda (padding 44 px), atajo "⌘ K" a la derecha en chip `--color-panel`.
+  - *Contraseña:* botón ojo de 40 px dentro, a la derecha, con `aria-label` "Mostrar/Ocultar contraseña" y `aria-pressed`.
+  - *Moneda:* prefijo "$" en `--color-muted` + sufijo "USD" en chip `--color-panel`; `inputmode="decimal"`; números `tabular-nums`.
+  - *Cantidad:* botones − (panel) y + (rojo) de 40 px dentro del campo; valor centrado 600.
+  - *Fecha:* formato dd/mm/aaaa, icono de calendario a la derecha.
+  - *Teléfono:* prefijo de país en chip `--color-panel` dentro del campo.
+  - *Área de texto:* radio `--radius-textarea` (16 px), padding 14×18, mínimo 3 líneas, contador "n/200" a la derecha bajo el campo.
+- Valida al salir del campo (blur) y al enviar, no en cada tecla. El mensaje de error dice cómo arreglarlo ("Escribe al menos 3 caracteres").
+
+### 6.18 Casillas, radio e interruptores
+- **Checkbox:** 22 px, radio `--radius-checkbox` (7 px). Sin marcar: blanco con borde `1.5px --color-line-strong`. Marcado: relleno `--color-red-strong` con check blanco. Indeterminado: relleno rojo con guion blanco. Desactivado: `--color-panel` + borde `--color-line`, texto `--color-disabled-text`.
+- **Radio:** 22 px circular. Seleccionado: borde `2px --color-red-strong` + punto interior rojo de 10 px.
+- **Switch:** pista 48×28, perilla blanca 22 px con sombra suave. Activo: pista `--color-red-strong`, perilla a la derecha. Inactivo: pista `--color-line-strong`. Usa `<button role="switch" aria-checked>`.
+- Toda la fila (etiqueta + control) es clicable, alto mínimo 44 px. Agrupa con `<fieldset>` + `<legend>`.
+- Hasta 7 opciones excluyentes → radio. Más → select.
+
+### 6.19 Select
+- **Disparador:** igual que un campo de texto (48 px, pill) + chevron 16 px a la derecha que gira 180° al abrir. `aria-haspopup="listbox"`, `aria-expanded`.
+- **Lista desplegable:** `role="listbox"`, fondo blanco, borde `1px --color-line-soft`, radio `--radius-popover` (20 px), padding 6 px, `--shadow-popover`, a 8 px bajo el disparador, máx. ~320 px de alto con scroll.
+- **Opciones:** `role="option"`, alto 44 px, radio `--radius-option` (12 px), padding 0 12 px. Hover: `--color-panel`. Seleccionada: `--color-panel`, texto 600 y check `--color-red-strong` a la derecha (`aria-selected="true"`). Desactivada: `--color-disabled-text` + subtítulo con el motivo.
+- **Grupos:** encabezado overline 11 px `--color-muted` (padding 10 12 4).
+- Teclado: ↑/↓ mueve, Enter elige, Esc cierra, escribir una letra salta a la opción. Más de 10 opciones → añade búsqueda (combobox).
+- Estados del disparador (normal, con valor, error, desactivado) iguales que 6.17.
+
+### 6.20 Multiselect
+- **Disparador:** contenedor de alto mínimo 48 px, radio 26 px, que crece en altura; muestra las elecciones como **etiquetas** (alto 30 px, `--color-panel`, 13 px 600, botón ✕ de 24 px con `aria-label="Quitar …"`). Máximo 3 visibles + etiqueta "+N" (``--color-hover``, `--color-ink-2`, sin ✕). Vacío: placeholder "Elige una o varias".
+- **Panel:** como el select, más:
+  1. Buscador interno (alto 40, pill, `--color-panel`).
+  2. Opciones con checkbox (6.18) + etiqueta + dato secundario a la derecha ("24 productos"). `aria-multiselectable="true"`.
+  3. Mensaje "Sin resultados para "…"" cuando el filtro no encuentra nada.
+  4. Pie con borde superior: "Limpiar" (botón Texto) y "Aplicar (n)" (Primario pequeño).
+- El panel no se cierra al marcar opciones; se cierra con "Aplicar", Esc o clic fuera.
+
+### 6.21 Alertas en línea
+Para mensajes dentro de la página que necesitan atención.
+- Contenedor: padding 18 px, radio 20 px, gap 14 px, fondo `--color-*-tint` y borde `1px --color-*-border` del tipo.
+- Icono en círculo de 32 px: info = blanco con borde `--color-line-strong` + icono ink; éxito = `--color-success` + check blanco; aviso = `--color-warning` + "!" ink; error = `--color-danger` + ✕ blanco.
+- Título 600–700 ink, texto `--color-ink-2`, acción opcional como enlace 600 en el color de texto del tipo (`--color-success`, `--color-warning-text`, `--color-danger-text`, ink para info). Botón ✕ de 36 px para cerrar.
+- `role="alert"` para error; `role="status"` para el resto.
+- **Compacta** (dentro de formularios/tarjetas): una línea, padding 10×14, radio 14 px, fondo tint, punto de 8 px del color del tipo, texto 13 px 500 ink.
+
+### 6.22 Banner de página
+Franja a todo el ancho arriba del contenido, para estados que afectan a toda la app (sin conexión, caja cerrada, prueba gratuita). Fondo tint del tipo, icono en círculo de 28 px, texto con la parte clave en negrita y un botón blanco pequeño a la derecha. Máximo un banner a la vez.
+
+### 6.23 Notificaciones flotantes (toast)
+- Abajo a la derecha (móvil: centrado, encima de la barra inferior), apiladas con gap 10 px, ancho 360–400 px, máximo 3.
+- Fondo blanco, radio `--radius-toast` (18 px), `--shadow-toast`, padding 12 px. Icono en círculo de 30 px (colores de 6.21), título 600 + texto 12 px muted, acción como botón Texto ("Deshacer", "Reintentar", "Ver"), ✕ de 32 px.
+- Duración: 5 s (éxito/info); los de error no desaparecen solos. Pausa al pasar el ratón. `role="status"` / `role="alert"`.
+
+### 6.24 Diálogos
+- **Cuándo:** solo para decisiones que bloquean (confirmar, anular, formularios cortos). Para avisos usa alertas o toasts.
+- **Fondo:** `--color-overlay`. **Caja:** blanca, radio `--radius-dialog` (28 px), padding 28 px, `--shadow-dialog`, ancho 420 px (confirmación) a 480–560 px (formulario).
+- **Contenido:** icono en círculo de 48 px (amarillo tint para avisos, rojo tint para destructivos) → título en pregunta (Inter Tight 24 px 600) → texto 15 px `--color-ink-2` → contenido opcional (resumen en caja `--color-panel` radio 16, o campos) → acciones alineadas a la derecha, gap 10 px: Secundario ("Cancelar"/"Mantener venta") + Primario con el verbo exacto ("Cerrar turno", "Anular venta").
+- **Destructivo:** `role="alertdialog"`, explica la consecuencia y que no se puede deshacer (en negrita); pide motivo si aplica.
+- **Con formulario:** cabecera con título 22 px + botón ✕ de 40 px (`--color-panel`), pie con borde superior `--color-line-soft`.
+- **Accesibilidad:** `role="dialog"` + `aria-modal="true"` + `aria-labelledby` / `aria-describedby`; foco atrapado dentro; el foco inicial va al primer campo o al botón seguro (Cancelar) en los destructivos; Esc cierra; al cerrar, el foco vuelve al botón que lo abrió; el scroll de la página se bloquea.
+- **Móvil:** se abre como **hoja inferior**: radio 28 px solo arriba, asa de 40×5 px `--color-ring`, opciones grandes (52 px) y botón principal a todo el ancho (52 px).
+
+### 6.25 Insignias y chips
+- **Insignia de estado:** alto 26 px, pill, padding 0 10 px, 12 px 600, punto de 6 px. Éxito "Pagado" (`--color-success-tint` / `--color-success`), Aviso "Pendiente" (`--color-warning-tint` / `--color-warning-text`, punto `--color-warning-dot`), Error "Anulado" (`--color-danger-tint` / `--color-danger-text`), Neutro "Borrador" (``--color-hover`` / `--color-ink-2`), Nuevo (`--color-yellow` / ink).
+- **Contador:** 22 px, pill, `--color-red-strong` con texto blanco 12 px 700.
+- **Chip de filtro:** alto 36 px, pill, 13 px 600. Inactivo: blanco con borde `1.5px --color-ring`. Activo: `--color-red-tint` / `--color-red-hover` con check. `aria-pressed`.
+- **Chip quitable:** `--color-panel` con botón ✕ de 28 px.
+
+### 6.26 Navegación secundaria
+- **Migas de pan:** `<nav aria-label="Migas de pan">` + `<ol>`, 14 px; enlaces `--color-ink-2`, separador chevron 14 px `--color-line-strong`, página actual ink 600 con `aria-current="page"`.
+- **Paginación:** botones circulares de 40 px; anterior/siguiente en `--color-panel`; página actual `--color-red-strong` con texto blanco y `aria-current="page"`; "…" para saltos. A la izquierda "Mostrando 11–20 de 186" en `--color-muted`.
+- **Tooltip:** fondo blanco, borde `1px --color-line-soft`, radio 12 px, sombra `--shadow-tooltip`, texto 13 px 500, flecha de 10 px. Aparece tras 400 ms de hover o con foco; `role="tooltip"` enlazado con `aria-describedby`. Nunca contenido esencial solo en un tooltip.
+- **Avatar:** 32 / 40 / 48 px, iniciales 700. Colores: `--color-yellow`, `--color-red-tint` (texto `--color-red-hover`), `--color-panel`. Grupo: superpuestos −10 px con borde blanco de 2 px y "+N" en ``--color-hover``.
+
+### 6.27 Tabla, carga y estado vacío
+- **Tabla:** encabezados overline 11 px `--color-muted`, celdas 14 px con padding 12 px, divisores `--color-line-soft`, números alineados a la derecha con `tabular-nums`, estado como insignia (6.25), acciones con botón "⋯" de 40 px (`aria-label` con el id de la fila). Hover de fila: `--color-panel`. Dentro de un contenedor con `overflow-x: auto`.
+- **Barra de progreso:** alto 8 px, pista `--color-panel`, relleno `--color-red`; etiqueta y porcentaje encima. `role="progressbar"`.
+- **Spinner:** 24 px, borde 3 px `--color-red-tint` con lado superior `--color-red-strong`, giro 0.8 s, con texto "Cargando…" (`role="status"`).
+- **Skeleton:** bloques ``--color-hover`` / ``--skeleton-on-surface`` con la forma del contenido final (círculo para avatar, píldoras para texto). Usar si la carga supera 300 ms.
+- **Estado vacío:** centrado, icono en círculo de 64 px (blanco sobre panel, icono rojo), título Inter Tight 20 px 600, una frase en `--color-muted` y, si aplica, el botón primario que resuelve el vacío ("Nueva venta").
+
+---
+
+> Las secciones 6.28–6.33 son los **componentes de navegación y datos**. Maquetas en `components/mockups/`.
+
+### 6.28 Tabs
+Tres variantes; todas con `role="tablist"` / `role="tab"` + `aria-selected` / `role="tabpanel"`, y flechas ←/→ para moverse entre pestañas (tabindex móvil: solo la activa es tabulable).
+
+| Variante | Cuándo | Estilo |
+|---|---|---|
+| **Subrayado** | Secciones de una misma página (detalle de producto, perfil) | Pestañas de texto 15 px, gap 22 px, alto 44, sobre una línea inferior `1px --color-line`. Inactiva: `--color-ink-2` 500. Activa: ink 700 + barra inferior de 3 px `--color-red-strong` (radio 3 px arriba). Contador opcional: píldora 20 px (``--color-hover``/`--color-ink-2`; activa `--color-red-tint`/`--color-red-hover`). |
+| **Segmentado** | Cambiar vista o periodo (Hoy/Semana/Mes), máx. 4 opciones cortas | Contenedor ``--color-hover`` pill, padding 4 px; activa blanca ink 700 con `--shadow-raised`. Alto 36. |
+| **En tarjeta** | Dentro de un panel gris (gráficos) | Sin contenedor; activa blanca con `--shadow-raised`; punto de color de 8 px opcional que identifica la serie. |
+
+Si no caben, la fila hace scroll horizontal (nunca dos líneas de pestañas). En móvil, el subrayado ocupa todo el ancho con scroll.
+
+### 6.29 Breadcrumbs
+Amplía 6.26.
+- **Simple:** enlaces `--color-ink-2` (hover: ink + subrayado), separador chevron 14 px `--color-line-strong`, actual ink 600 con `aria-current="page"`.
+- **Con inicio:** el primer nivel es un botón circular de 32 px (`--color-panel`) con icono de casa y `aria-label="Inicio"`.
+- **Colapsado:** con más de 4 niveles se muestran el primero, "…" y los dos últimos. "…" es un botón pill 28 px (`--color-panel`, 700) que abre un menú (estilo 6.16) con los niveles ocultos.
+- **Móvil:** solo un enlace "‹ Nivel anterior" (chevron rojo, texto ink 600, alto 44).
+
+### 6.30 Steps (pasos)
+Para procesos de 3–5 pasos (venta, apertura de caja, alta de producto). `<ol>` con `aria-current="step"` en el paso actual.
+- **Círculo:** 36 px horizontal / 30 px vertical, número 13–14 px 700.
+  | Estado | Estilo |
+  |---|---|
+  | Completado | relleno `--color-red-strong`, check blanco |
+  | Actual | blanco, borde `2px --color-red-strong`, número rojo, halo `0 0 0 4px var(--color-red-tint)`; título ink 700 |
+  | Pendiente | `--color-panel`, borde `1.5px --color-line`, número `--color-muted`; título `--color-muted` 500 |
+  | Error | `--color-danger-tint`, borde `2px --color-danger`, "!" `--color-danger-text`; título y subtítulo en `--color-danger-text` ("Pago rechazado") |
+- **Conector:** línea de 2 px (horizontal entre círculos con margen 12 px; vertical bajo el círculo). Roja hasta el último paso completado; `--color-line` después.
+- **Horizontal:** columnas iguales; título 14 px + subtítulo 12 px `--color-muted` bajo el círculo. Botones "Atrás" (Secundario) y "Siguiente"/"Finalizar" (Primario) en el pie del proceso.
+- **Vertical:** el paso actual despliega su contenido (tarjeta blanca dentro del panel) con su acción.
+- **Compacto (móvil):** overline "PASO 2 DE 4" + "Siguiente: Pago" a la derecha, título del paso (Inter Tight 20 px) y barra segmentada de 4 tramos de 6 px (completados `--color-red-strong`, actual `--color-red` al 55 %, pendientes `--color-line`). `role="progressbar"`.
+
+### 6.31 Acordeones
+El encabezado completo es un `<button>` dentro de un `<h3>`, con `aria-expanded` y `aria-controls`; el contenido es `role="region"` con `aria-labelledby`. Chevron 16 px que gira 180° al abrir. Enter/Espacio abren y cierran.
+
+| Variante | Comportamiento | Estilo |
+|---|---|---|
+| **Lista** | Una sección abierta a la vez (ayuda, FAQ) | Dentro de un panel `--color-panel` radio 24; filas de 56 px separadas por `1px --color-line`; título 15 px 600; hover ``--color-hover`` radio 14; abierta: chevron rojo y texto `--color-ink-2`. |
+| **Tarjetas** | Varias abiertas (formularios largos por bloques) | Cada sección es una tarjeta radio 20, gap 10 px. Cerrada: `--color-panel`. Abierta: blanca con borde `1.5px --color-line` y sombra `--shadow-card-open`. Título 15 px 600 + subtítulo 12 px; chevron en círculo de 32 px (abierta: `--color-red-tint`/rojo). Insignia de aviso si falta un dato. |
+| **Con icono y resumen** | Una abierta (historial de turnos, pedidos) | Encabezado de 68 px: icono en círculo de 40 px + título/subtítulo + dato clave (Inter Tight 18 px) + insignia de estado + chevron. El detalle se alinea con el título (sangría 66 px). Desactivada: todo en `--color-disabled-text`, `disabled`. |
+
+### 6.32 Secciones del sidebar
+Amplía 6.2.
+- **Estructura:** logo → buscador opcional (alto 40, blanco, "⌘K") → secciones → pie (botón "Contraer menú" o tarjeta de caja).
+- **Sección:** título overline 11 px `--color-muted` (padding 0 12 px, margen inferior 6 px) + 2–5 opciones. Gap entre secciones 16 px. Orden recomendado: MENÚ (uso diario), GESTIÓN, CONFIGURACIÓN.
+- **Opción:** alto 44, pill, padding 0 14 px, icono 19 px + texto 14 px; hover ``--color-hover``. Activa: blanca, 600, icono `--color-red-strong`, punto rojo de 7 px, `--shadow-active`, `aria-current="page"`.
+- **Insignias en la opción:** contador `--color-red-strong`/blanco (elementos nuevos, ej. 12 pedidos); alerta `--color-red-tint`/`--color-red-hover` (ej. 3 de inventario); "NUEVO" `--color-yellow`/ink 10 px 700 (función nueva).
+- **Submenú:** un solo nivel. El padre es un `<button aria-expanded>` (no navega) con chevron; texto ink 600 e icono rojo si un hijo está activo. Hijos: alto 40, sangría 36 px, guía vertical de 1.5 px `--color-line` a 23 px del borde; hijo activo como opción activa.
+- **Sección plegable:** el título es un botón con chevron 14 px; plegada muestra "· n ocultos". Recordar el estado por usuario.
+- **Colapsado:** riel de 84 px (ver tabla 5), iconos en círculos de 52 px, divisores de 28×1.5 px entre secciones, insignias como punto rojo de 8 px con aro del color del panel, tooltip (6.26) con nombre + dato al hacer hover/foco, botón "Expandir menú" al pie.
+
+### 6.33 Datatable
+Para listados con más de ~10 filas que se buscan, filtran u ordenan. Contenedor con borde `1px --color-line-soft`, radio 24.
+1. **Barra superior** (padding 20×24): título Inter Tight 22 px + "n pedidos · Hoy" muted; a la derecha "Exportar" (Contorno, 40 px) y la acción principal (Primario, 40 px).
+2. **Filtros** (padding 0 24 16): buscador 300 px (fondo `--color-panel`, sin borde); chips de estado con contador (6.25, activo `--color-red-tint`); selector de fecha (Contorno); "Columnas" (Texto) a la derecha.
+3. **Barra de acciones en lote** (aparece al seleccionar): fondo `--color-warning-tint`, radio 16, "n seleccionados" 700 + "Quitar selección" (texto `--color-warning-text`) y a la derecha acciones blancas (Exportar, Imprimir) y "Anular" en estilo Peligro. `role="region"`.
+4. **Encabezado:** fila `--color-panel`, alto 44, overline 11 px `--color-muted`. Columnas ordenables: botón con doble flecha 12 px (`--color-line-strong`; la dirección activa en `--color-red-strong`, texto ink) y `aria-sort` en el `<th>`. Primera columna: checkbox "seleccionar página" con estado mixto (`aria-checked="mixed"`).
+5. **Filas:** alto 60, divisor `--color-line-soft`, hover `--color-panel`, seleccionada `--color-row-selected` (`#FFF4F3`). Id como enlace ink 600; cliente con avatar de 30 px; números a la derecha `tabular-nums` (total 700); estado con insignia (6.25); última columna "⋯" (40 px, `aria-haspopup="menu"`) que abre menú: Ver detalle, Imprimir, divisor, acción destructiva en rojo.
+6. **Vacío:** fila única centrada con título, frase y "Limpiar filtros".
+7. **Pie** (padding 14×24): "Filas por página" + selector (8 / 25 / 50), "1–8 de 14", paginación (6.26) con anterior/siguiente desactivados en los extremos.
+- **Carga:** 5 filas skeleton con la forma de las columnas. **Orden por defecto:** el más reciente primero. La selección se mantiene al cambiar de página.
+- **Móvil (< 768 px):** la tabla se convierte en **tarjetas** (una por fila: id + estado arriba, cliente y hora, total grande a la derecha, "⋯"); filtros en una hoja inferior con botón "Filtros (n)"; la selección múltiple se activa con un botón "Seleccionar".
+
+---
+
 ## 7. Gráficos
 
 - **Barras semanales:** barras neutras `--color-line-strong`; **mejor día** `--color-red`; **hoy (en curso)** `--color-yellow`. Ancho máx. 40–44 px, gap 10–12, radio 10 10 4 4.
@@ -315,3 +479,12 @@ Reglas:
 - [ ] Cada gráfico tiene leyenda, `aria-label` por marca y solo valores destacados rotulados.
 - [ ] Todos los controles miden ≥ 44 px y tienen etiqueta accesible.
 - [ ] Números formateados en español.
+
+---
+
+## 13. Librería Argos UI [decisión del usuario]
+- **Ubicación:** componentes en `components/ui/` del proyecto, sin paquete aparte. Galería de evaluación manual solo en desarrollo: `/ui`.
+- **Primitivas:** las complejas (select, multiselect, diálogo, tabs, acordeón, tooltip, menú, toast) usan `@base-ui/react` (sin estilo; aportan accesibilidad y teclado) con nuestros tokens y atributos de datos (`data-open`, `data-checked`, etc.). Los envoltorios son Client Components.
+- **Escala tipográfica:** se mantiene la reducida de §3; no se adopta la de la guía ampliada (40/32/28, kpi 52/44, stat 34, 26, 17, 20).
+- **Sin Chakra ni CSS-in-JS.** Solo CSS con tokens y, si hace falta, utilidades de Tailwind v4.
+- **Referencia:** `components/DESIGN-ampliada.md`, `tokens-ampliados.css`, `tailwind-preset-v3.js` y maquetas `components/mockups/*.dc.html`. El spec manda sobre el código.

@@ -26,6 +26,34 @@
   --color-line-soft: #ECEEF1;    /* bordes sutiles */
   --color-ring: #D6D9DE;         /* bordes de chips, pista del anillo */
 
+  /* ---- Color: estados (alertas, insignias, validación) ---- */
+  --color-success: #1E7A50;          /* texto/icono de éxito (5.31:1 sobre blanco) */
+  --color-success-tint: #E6F4EC;
+  --color-success-border: #C4E4D2;
+  --color-warning: #FFC93C;          /* relleno de icono de aviso (texto encima: ink) */
+  --color-warning-text: #7A5200;     /* texto de aviso (6.29:1 sobre tint) */
+  --color-warning-dot: #E0A800;      /* punto de la insignia de aviso */
+  --color-warning-tint: #FFF4CF;
+  --color-warning-border: #F6E2A0;
+  --color-danger: #D92D25;           /* icono/borde de error */
+  --color-danger-text: #B3221B;      /* texto de error (5.60:1 sobre tint) */
+  --color-danger-tint: #FFE6E4;
+  --color-danger-border: #F8C9C5;
+  --color-info: #45484D;
+  --color-info-tint: #F6F8FA;
+  --color-info-border: #E4E6EA;
+
+  /* ---- Color: campos y estados de interacción ---- */
+  --color-placeholder: #8C9097;
+  --color-disabled-bg: #ECEEF1;
+  --color-disabled-text: #8C9097;
+  --color-field-error-bg: var(--color-red-wash);
+  --color-row-selected: #FFF4F3;     /* fila seleccionada en tablas */
+  --color-hover: #ECEEF1;            /* hover sobre panel (nav, acordeón, tabs) */
+  --color-overlay: rgba(28, 28, 30, 0.32);   /* fondo de diálogos de la guía ampliada; --color-scrim (0.4) sigue vigente en dialog.modal */
+  --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #1C1C1E;   /* botones y enlaces */
+  --focus-ring-field: 0 0 0 4px #FFE6E4;                 /* campos (con borde 2px red-strong) */
+
   /* ---- Gráficos ---- */
   --chart-neutral: var(--color-line-strong);
   --chart-highlight: var(--color-red);
@@ -81,6 +109,15 @@
   --radius-icon: 10px;
   --radius-bar: 10px 10px 4px 4px;
   --radius-header-mobile: 0 0 32px 32px;
+  --radius-dialog: 28px;
+  --radius-popover: 20px;
+  --radius-toast: 18px;
+  --radius-textarea: 16px;
+  --radius-option: 12px;
+  --radius-checkbox: 7px;
+  --radius-alert: 20px;
+  --radius-alert-compact: 14px;
+  --radius-tooltip: 12px;
 
   /* ---- Sombras ---- */
   --shadow-active: 0 1px 2px rgba(28, 28, 30, 0.05), 0 6px 16px rgba(28, 28, 30, 0.06);
@@ -88,6 +125,11 @@
   --shadow-cta: 0 10px 22px -10px rgba(217, 45, 37, 0.6);
   --shadow-floating: 0 12px 30px rgba(28, 28, 30, 0.08);
   --shadow-menu: 0 1px 2px rgba(28, 28, 30, 0.05), 0 18px 40px rgba(28, 28, 30, 0.14);
+  --shadow-popover: var(--shadow-menu);
+  --shadow-toast: 0 1px 2px rgba(28, 28, 30, 0.05), 0 12px 30px rgba(28, 28, 30, 0.10);
+  --shadow-dialog: 0 24px 60px rgba(28, 28, 30, 0.22);
+  --shadow-tooltip: 0 8px 24px rgba(28, 28, 30, 0.12);
+  --shadow-card-open: 0 2px 8px rgba(28, 28, 30, 0.05);
 
   /* ---- Tamaños ---- */
   --size-touch: 40px;
@@ -112,7 +154,35 @@
   --size-chart: 200px;
   --size-bar-max: 44px;
   --size-focus: 3px;
+  --size-control-lg: 52px;
+  --size-field: var(--size-control);   /* la guía ampliada usa 48; gana la densidad reducida del repo */
+  --size-option: 44px;
+  --size-checkbox: 22px;
+  --size-switch-width: 48px;
+  --size-switch-height: 28px;
+  --size-switch-thumb: 22px;
+  --size-badge: 26px;
+  --size-chip-filter: 36px;
+  --size-tag: 30px;
+  --size-counter: 22px;
+  --size-table-head: 44px;
+  --size-table-row: 60px;
+  --size-step: 36px;
+  --size-step-vertical: 30px;
+  --size-icon-circle-lg: 48px;
+  --size-icon-circle-xl: 64px;
+  --size-toast: 380px;
+  --size-popover-max: 320px;
   --color-scrim: rgba(28, 28, 30, 0.4);
+
+  /* ---- Capas (z-index) ---- */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-menu: 30;
+  --z-progress: 50;
+  --z-dialog: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
 
   /* ---- Carga (ver DESIGN.md §6.15) ---- */
   --skeleton-on-surface: var(--color-panel);   /* placeholder sobre fondo blanco */

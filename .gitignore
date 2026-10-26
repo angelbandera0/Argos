@@ -43,3 +43,6 @@ next-env.d.ts
 
 # superpowers workspace
 .superpowers/
+
+# design component zips (datos de diseño, solo se versionan los .dc.html extraídos)
+docs/design/components/*.zip

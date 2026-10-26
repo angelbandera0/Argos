@@ -45,8 +45,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 ## Layout y shell
 - Web ≥ 1280 px (§5): sidebar `--color-panel`, 236 px, radio 28, con etiquetas, con etiqueta "MENÚ" y sin usuario al pie [decisión del usuario, DESIGN (2).md]. Contenido: barra superior común a todas las vistas con el menú de perfil (avatar, nombre, rol, "Cerrar sesión") a la derecha y el selector de contexto a la izquierda [mi decisión], saludo con píldoras y KPIs, grilla 1fr · 1fr · 2fr.
 - Tablet 768–1279 px (§5): rail de iconos de 84 px a todo el alto, `--color-panel`. Activo: círculo blanco 52 con icono rojo y `--shadow-active`. "Nueva venta" rojo, sin avatar al pie. Cabecera 64 px, fila de píldoras 56 px, 3 columnas (250 · 250 · resto).
-- Móvil < 768 px (§5): barra inferior flotante, píldora blanca 68 px, borde `--color-line-soft`, `--shadow-floating`. Activo: píldora `--color-panel` con icono rojo y etiqueta. Botón central rojo 52. Cabecera `--color-panel` con radio inferior 32 (saludo, cifra héroe, KPIs, píldoras) y tarjetas apiladas.
-- CSS web (§5): contenedor `flex-wrap`; sidebar `flex: 1 1 236px`; contenido `flex: 999 1 560px; min-width: 0`. Tablas anchas con `overflow-x: auto`.
+- Móvil < 768 (§5): barra inferior flotante, píldora blanca 68 px, borde `--color-line-soft`, `--shadow-floating`. Activo: píldora `--color-panel` con icono rojo y etiqueta. Botón central rojo 52. Cabecera `--color-panel` con radio inferior 32 (saludo, cifra héroe, KPIs, píldoras) y tarjetas apiladas.
 
 ## Componentes
 - Botón primario (§6.1): `--color-red-strong`, texto blanco 600, alto 40 (44 táctil/móvil), pill, padding 0 16–18, icono 18 a la izquierda.
@@ -65,7 +64,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Fila de tarea (§6.8): blanca dentro de panel, radio inner, padding 10–12. Icono 32–36: urgente red-tint con red-strong; normal yellow-tint con ink. Título 600, subtítulo caption muted. Menú "⋯" como botón icono 44 transparente.
 - Acordeón (§6.9): ancho completo, alto 48–52, texto 600, chevron 15–16 a la derecha (abierto: red-strong), separador `--color-line`, `aria-expanded`.
 - Pestañas segmentadas (§6.10): sin fondo en el contenedor, gap 4–6. Activa: blanco, ink 700, `--shadow-raised`. Inactiva: transparente, ink-2. Alto 36, pill. `role="tablist"`, `role="tab"`, `aria-selected`.
-- Anillo de tiempo (§6.11): SVG girado -90°, pista punteada `--color-ring` (dasharray 3 6), arco rojo en 4 segmentos (`pathLength="400"`, `stroke-dasharray="60 40"`, trazo 8, `linecap: round`). Centro blanco con `stat` y overline "MIN / CLIENTE".
+- Anillo de tiempo (§6.11): SVG girado -90°, pista punteada `--color-ring`, arco rojo en 4 segmentos, centro blanco con `stat`.
 - Buscador (§6.12): alto 40 (44 táctil), pill, fondo panel sin borde, lupa 18 a 14 del borde, padding izquierdo 40. Siempre con `<label>` (puede ir oculto).
 - Avatar (§6.13): círculo 40–48, yellow, iniciales ink 700 12, `role="img"` y `aria-label`.
 - Campo PIN (§6.14):
@@ -74,10 +73,33 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
   - Casillas: 6 columnas iguales, gap 10 móvil / 12 web, alto 60 / 68, radio 14 / 16, blancas sobre panel.
   - Estados: vacía `1.5px solid var(--color-line)`; activa `2px` red-strong, `box-shadow: 0 0 0 4px var(--color-red-tint)` y cursor rojo 2×26; llena `1.5px` line-strong con punto ink 12 (o dígito Inter Tight 26–28 si "Mostrar" está activo); error todas con `2px` red-strong y fondo `--color-red-wash`, mensaje `role="alert"` en red-hover con icono. El error se quita al volver a escribir.
   - Mensaje de error genérico, sin intentos restantes (`screens/MODULO-1-PANTALLAS.md`, A-05).
-  - "Mostrar/Ocultar": texto red-strong 13 px 600, icono de ojo, `aria-pressed`.
-  - Validación: `value.replace(/\D/g, '')` y cortar a 6.
-  - "Entrar": desactivado (fondo line, texto muted) hasta tener usuario y 6 dígitos; activo red-strong con texto blanco, alto 56, pill. Enlace "¿Olvidaste tu PIN?".
-- Diálogo, modal "mostrar una sola vez" y estado vacío: el original no define patrón para ellos. Solo existen `--size-modal` (480) y `--color-scrim`.
+      - "Entrar": desactivado (fondo line, texto muted) hasta tener usuario y 6 dígitos; activo red-strong con texto blanco, alto 56, pill. Enlace "¿Olvidaste tu PIN?".
+- Diálogo, estado vacío y resto de componentes ampliados: ver «Componentes ampliados» (§6.17-6.33).
+
+## Componentes ampliados (§6.17-6.33)
+Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+`-tint`, `-border`, `-text` en warning y danger), `--color-placeholder`, `--color-disabled-bg|text`, `--color-field-error-bg`, `--color-row-selected`, `--color-hover`, `--color-overlay`, `--focus-ring` (botones/enlaces), `--focus-ring-field` (campos), radios `--radius-dialog|popover|toast|textarea|option|checkbox`, sombras `--shadow-popover|toast|dialog|tooltip|card-open`, `--z-*`. Densidad del usuario: alturas con `--size-control`/`--size-field` (40; 44 táctil), no 48 fijo.
+- Campos (§6.17): etiqueta siempre visible encima, nunca placeholder como etiqueta; pill, borde `1.5px --color-line`; con valor `--color-line-strong`; foco borde 2px red-strong + `--focus-ring-field`; error borde 2px `--color-danger`, fondo `--color-field-error-bg`, mensaje `--color-danger-text` 600 con icono, `aria-invalid` + `aria-describedby`; desactivado `--color-panel` + `--color-disabled-text`; solo lectura panel sin borde. Variantes: búsqueda, contraseña, moneda, cantidad, fecha, teléfono, área de texto (`--radius-textarea`). Valida en blur y al enviar.
+- Casillas, radio, switch (§6.18): checkbox 22 radio 7 (marcado red-strong con check blanco; indeterminado con guion), radio 22 con punto 10, switch 48×28 `<button role="switch" aria-checked>`. Fila entera clicable, mín. 44; `fieldset`+`legend`. Hasta 7 opciones excluyentes: radio; más: select.
+- Select (§6.19): disparador como campo + chevron 16 (gira al abrir), `aria-haspopup="listbox"`, `aria-expanded`. Lista `role="listbox"`, borde line-soft, `--radius-popover`, padding 6, `--shadow-popover`, a 8 px, máx. ~320 con scroll. Opción 44, `--radius-option`; hover/seleccionada panel, seleccionada 600 + check red-strong (`aria-selected`). Teclado: flechas, Enter, Esc. Más de 10 opciones: combobox.
+- Multiselect (§6.20): disparador que crece, etiquetas de 30 px con ✕ de 24 (`aria-label="Quitar …"`), máx. 3 + "+N". Panel con buscador, checkboxes (`aria-multiselectable`), pie "Limpiar" y "Aplicar (n)".
+- Alertas (§6.21): padding 18, radio 20, fondo `-tint` y borde `-border` del tipo, icono en círculo 32, título 600, texto ink-2, acción como enlace, ✕ de 36. `role="alert"` para error, `role="status"` el resto. Banner (§6.22): uno a la vez, a todo el ancho.
+- Toast (§6.23): abajo a la derecha (móvil centrado sobre la barra), máx. 3, 360-400, blanco, `--radius-toast`, `--shadow-toast`; 5 s, el error no se cierra solo.
+- Diálogos (§6.24): solo decisiones que bloquean. `--color-overlay`, caja blanca `--radius-dialog`, padding 28, `--shadow-dialog`, 420 (confirmar) a 480-560. Icono 48, título en pregunta, texto ink-2, acciones a la derecha: Secundario + Primario con verbo exacto. Destructivo: `role="alertdialog"`, consecuencia en negrita, foco inicial en Cancelar. `aria-modal`, `aria-labelledby`, foco atrapado, Esc cierra, foco vuelve al disparador, sin scroll de fondo.
+- Insignias y chips (§6.25): insignia 26 pill 12 px 600 con punto 6 (éxito, aviso, error, neutro `--color-hover`/ink-2, nuevo yellow); contador 22 red-strong; chip de filtro 36 con `aria-pressed` (activo red-tint + check); chip quitable con ✕ 28.
+- Navegación secundaria (§6.26): migas `<nav aria-label>` + `<ol>`, actual `aria-current="page"`; paginación con botones de 40 (actual red-strong, "Mostrando 11-20 de 186"); tooltip `--radius-tooltip`, `--shadow-tooltip`, `role="tooltip"`.
+- Tabla, carga y vacío (§6.27): cabecera overline, celdas 14 con padding 12, divisores line-soft, hover panel, números a la derecha tabulares, contenedor `overflow-x: auto`. Progreso 8 px `role="progressbar"`; spinner con "Cargando…" (`role="status"`); vacío con círculo 64, título, frase y botón primario.
+- Tabs (§6.28): `tablist/tab/tabpanel`, `aria-selected`, flechas ←/→, solo la activa tabulable. Subrayado (barra 3 px red-strong), segmentado (contenedor `--color-hover`, activa blanca `--shadow-raised`, alto 36, máx. 4), en tarjeta.
+- Breadcrumbs (§6.29): simple, con inicio, colapsado con más de 4 niveles; móvil "‹ Nivel anterior".
+- Steps (§6.30): `<ol>`, `aria-current="step"`, círculo 36 (30 vertical): completado red-strong con check, actual borde 2px + halo red-tint, pendiente panel, error `--color-danger-tint` con "!". Conector 2 px.
+- Acordeones (§6.31): `<button>` dentro de `<h3>` con `aria-expanded` y `aria-controls`; contenido `role="region"` con `aria-labelledby`; chevron 16 gira 180°. Lista (una abierta, filas 56), tarjetas (varias abiertas, `--shadow-card-open`), con icono y resumen (68). Desactivado: `--color-disabled-text`.
+- Secciones del sidebar (§6.32): título overline por sección (MENÚ, GESTIÓN, CONFIGURACIÓN), opción `--size-nav-item`, insignias contador/alerta/NUEVO, submenú de un nivel (padre `<button aria-expanded>`), riel colapsado con tooltip.
+- Datatable (§6.33): contenedor borde line-soft radio 24; barra superior, filtros, barra de lote (`--color-warning-tint`, `role="region"`), cabecera 44 con `aria-sort` y checkbox mixto (`aria-checked="mixed"`), filas 60 (seleccionada `--color-row-selected`), menú "⋯" (`aria-haspopup="menu"`), pie con paginación. Móvil < 768: tarjetas.
+
+## Librería Argos UI (§13)
+- Componentes en `components/ui/` del proyecto (sin paquete aparte); galería de evaluación en `/ui` solo en desarrollo.
+- Primitivas complejas con `@base-ui/react` (sin estilo, con accesibilidad y teclado) más nuestros tokens y atributos de datos; envoltorios Client Components.
+- Se mantiene la escala tipográfica reducida. Sin Chakra ni CSS-in-JS.
+- Referencias: `components/DESIGN-ampliada.md`, `tokens-ampliados.css`, `tailwind-preset-v3.js`, `components/mockups/`.
 
 ## Carga (§6.15)
 - Contenido de pantalla o tarjeta: placeholder con la misma forma y tamaño. Clases `.skeleton` con `.skeleton-text`, `.skeleton-title`, `.skeleton-circle`, `.skeleton-pill`; dentro de panel, `.skeleton-on-panel`.
@@ -89,21 +111,16 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 - Next.js: cada ruta con datos lleva su propio `loading.tsx` con el placeholder de su pantalla.
 
 ## Gráficos (§7)
-- Barras semanales: neutras `--color-line-strong`; mejor día `--color-red`; hoy `--color-yellow`. Ancho máximo 40–44, gap 10–12, radio `--radius-bar`.
-- Solo se rotulan las barras destacadas (mejor día y hoy), 11–12 px 700 encima de la barra.
-- Meta: línea `1.5px dashed var(--color-muted)` con chip "Meta 6,5" a la derecha.
-- Ejes 10–11 px muted; cuadrícula `--color-line`; base `--color-line-strong`.
-- Leyenda obligatoria si hay más de un color (cuadrados 9–10, radio 3).
+- Barras semanales: neutras `--color-line-strong`; mejor día `--color-red`; hoy `--color-yellow`; radio `--radius-bar`.
 - Cada barra con `role="img"` y `aria-label` (p. ej. "Sábado: 9,05 mil dólares, mejor día"). El día de hoy también va en negrita en el eje.
 
 ## Iconos (§8)
 - SVG `viewBox="0 0 24 24"`, `fill="none"`, `stroke="currentColor"`, `stroke-width="2"` (2.2–2.6 en botones pequeños), `stroke-linecap` y `stroke-linejoin` round.
-- Tamaños: 18 botones, 19–21 navegación, 22 CTA. Librería: Lucide (`lucide-react`). Decorativos con `aria-hidden="true"`.
+- Lucide (`lucide-react`); decorativos con `aria-hidden="true"`.
 
 ## Contenido (§9)
 - Español, tono cercano y directo ("Bienvenida, Ana", "Nueva venta", "Cerrar turno").
 - Moneda `$7.640` y decimales con coma `$41,08`. Fecha "Domingo, 25 de octubre · 15:14".
-- Overlines en MAYÚSCULAS cortas ("VENTAS HOY", "TICKET PROMEDIO", "3 EN COLA").
 
 ## Checklist antes de entregar (§12)
 - Solo tokens; funciona en web, tablet y móvil; primarios red-strong con texto blanco; amarillo con ink.
