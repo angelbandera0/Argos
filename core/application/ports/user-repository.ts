@@ -16,6 +16,12 @@ export interface Assignment {
   roleId: string;
 }
 
+export interface AuthEvent {
+  event: "login_ok" | "login_failed" | "locked" | "unlocked" | "pin_reset" | "password_changed";
+  channel: "ui" | "api" | "app" | "mcp" | "system";
+  createdAt: Date;
+}
+
 export interface UserRepository {
   getProfile(userId: string): Promise<Profile | null>;
   /** Also finds deactivated users: usernames are never reused. */
@@ -30,4 +36,6 @@ export interface UserRepository {
     assignments: { storeId: string; roleId: string }[],
   ): Promise<void>;
   listAssignments(userId: string): Promise<Assignment[]>;
+  /** Most recent first; visible to the administrators of the user's company (RLS). */
+  listAuthEvents(userId: string, limit: number): Promise<AuthEvent[]>;
 }

@@ -1,5 +1,6 @@
 import type {
   Assignment,
+  AuthEvent,
   Profile,
   UserRepository,
 } from "@/core/application/ports/user-repository";
@@ -45,5 +46,9 @@ export class InMemoryUserRepository implements UserRepository {
 
   async listAssignments(userId: string): Promise<Assignment[]> {
     return this.assignments.get(userId) ?? [];
+  }
+
+  async listAuthEvents(): Promise<AuthEvent[]> {
+    return [];
   }
 }

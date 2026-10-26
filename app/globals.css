@@ -210,3 +210,13 @@ dialog.modal::backdrop { background: var(--color-scrim); }
 .store-info .caption { color: var(--color-muted); }
 .op-bar { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
 .store-switcher { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; flex: 1 1 var(--size-sidebar); max-width: var(--size-modal); }
+
+.tabs { display: flex; gap: var(--space-1-5); }
+.tab { min-height: var(--size-touch); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--color-ink-2); font-weight: 500; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--color-surface); color: var(--color-ink); font-weight: 700; box-shadow: var(--shadow-raised); }
+.assign-row { grid-template-columns: 1fr calc(var(--size-modal) / 2) auto; }
+.event-row { grid-template-columns: calc(var(--size-modal) / 3) 1fr auto; }
+.pin-reveal { font: var(--text-kpi); font-family: var(--font-display); letter-spacing: 0.18em; }
+.prefix { display: flex; align-items: center; gap: var(--space-2); }
+.prefix .input { flex: 1; }
+@media (max-width: 767px) { .assign-row, .event-row { grid-template-columns: 1fr; } }

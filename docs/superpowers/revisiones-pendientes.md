@@ -133,3 +133,4 @@ Antes de la Tarea 36: pasar `/code-review` sobre `main..feat/modulo-1` y comprob
 - Integration runs leave `audit_log` rows (append-only); 007 was made hermetic.
 - Actions `chooseStore/switchStore` redirect on any error to /tienda?error=...; Task 29 must handle it. `enterWithPin` has no rate limit beyond the 5-attempt lock and Auth's own limits.
 - Task 29A: la hora de fin de sesion usa la zona horaria del servidor (sin zona de compania); el estado "sesion terminada" no llega por el proxy (sessionEnded=false); /catalogo/productos del menu aun no existe.
+- Task 29B: con alguna asignacion de rol ajeno el admin no puede cambiar NINGUNA asignacion (assignStores exige ser dueno de todos los roles actuales); pendiente decidir la politica. Actividad usa la zona horaria del servidor; listAuthEvents sin prueba de integracion.

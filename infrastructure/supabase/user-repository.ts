@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Assignment, Profile, UserRepository } from "@/core/application/ports/user-repository";
+import type { Assignment, AuthEvent, Profile, UserRepository } from "@/core/application/ports/user-repository";
 import { Forbidden, RuleViolation } from "@/core/domain/errors";
 
 const COLUMNS = "id, kind, username, display_name, company_id, status, must_change_password";
@@ -100,6 +100,21 @@ export function makeUserRepository(client: SupabaseClient): UserRepository {
         userId: r.user_id,
         storeId: r.store_id,
         roleId: r.role_id,
+      }));
+    },
+
+    async listAuthEvents(userId, limit): Promise<AuthEvent[]> {
+      const { data, error } = await client
+        .from("auth_events")
+        .select("event, channel, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) fail("listAuthEvents", error);
+      return (data as { event: AuthEvent["event"]; channel: AuthEvent["channel"]; created_at: string }[]).map((r) => ({
+        event: r.event,
+        channel: r.channel,
+        createdAt: new Date(r.created_at),
       }));
     },
   };
