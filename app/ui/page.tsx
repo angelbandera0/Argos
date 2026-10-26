@@ -5,6 +5,8 @@ import { Tipografia } from "./sections/tipografia";
 import { Espaciado } from "./sections/espaciado";
 import { Componentes } from "./sections/componentes";
 import { AlertasSection, BannerSection, DialogosSection, InsigniasSection, ToastSection, TooltipSection } from "./sections/avisos";
+import { AccordionSection, BreadcrumbsSection, SidebarGallerySection, StepsSection, TabsSection } from "./sections/navegacion";
+import { ComposedSection, DatatableSection, FormSection } from "./sections/datos";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 
 export const metadata = { title: "Argos UI — galería" };
@@ -25,6 +27,14 @@ const sections = [
   { id: "dialogos", title: "Diálogos", description: "Base UI Dialog y AlertDialog (guía §6.24).", content: <DialogosSection /> },
   { id: "insignias", title: "Insignias y chips", description: "Guía §6.25.", content: <InsigniasSection /> },
   { id: "tooltip", title: "Tooltip", description: "Base UI Tooltip (guía §6.26).", content: <TooltipSection /> },
+  { id: "tabs", title: "Tabs", description: "Base UI Tabs (guía §6.28).", content: <TabsSection /> },
+  { id: "breadcrumbs", title: "Breadcrumbs", description: "Guía §6.29.", content: <BreadcrumbsSection /> },
+  { id: "steps", title: "Steps", description: "Guía §6.30.", content: <StepsSection /> },
+  { id: "accordion", title: "Accordion", description: "Base UI Accordion (guía §6.31).", content: <AccordionSection /> },
+  { id: "sidebar", title: "Secciones del sidebar", description: "Guía §6.32; el panel real ya las usa.", content: <SidebarGallerySection /> },
+  { id: "datatable", title: "Datatable", description: "Tabla genérica DataTable<T> (guía §6.33).", content: <DatatableSection /> },
+  { id: "compuestos", title: "PageHeader, ListToolbar y EmptyState", description: "Compuestos de página montados juntos.", content: <ComposedSection /> },
+  { id: "formshell", title: "FormShell", description: "Formulario de ejemplo.", content: <FormSection /> },
 ];
 
 export default function UiPage() {

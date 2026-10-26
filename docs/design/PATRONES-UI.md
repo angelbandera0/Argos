@@ -76,3 +76,13 @@ Antes de maquetar, lee `docs/design/DESIGN.md` y usa solo tokens de `docs/design
 - Dialog (`dialog.tsx`): `size` sm/md/lg, `description`, `icon`+`tone`, `footer`, `showClose`; popups de Select/Multiselect usan `--z-popup` (65 > `--z-dialog`) y funcionan dentro. AlertDialog (`alert-dialog.tsx`): confirmación destructiva con `role="alertdialog"`, foco inicial en Cancelar, `confirmLabel`/`cancelLabel`/`loading`.
 - Badge (`badge.tsx`): success/warning/danger/neutral/new/count. Chip (`chip.tsx`): variantes de estado con `icon`, filtro con `pressed`/`onPressedChange`, quitable con `onRemove`.
 - Tooltip (`tooltip.tsx`): `<Tooltip label side>` envolviendo un único elemento enfocable.
+
+## 13. Argos UI: navegación y datos (fase 3)
+
+- Tabs (`components/ui/tabs.tsx`): `items` con `count`/`disabled`/`content`; `variant` underline (secciones de página) o segmented (vista/periodo, máx. 4); `aria-label` obligatorio.
+- Breadcrumbs (`breadcrumbs.tsx`): `items` `{label, href?}` (el último sin href), `withHome`; colapsa con más de 4 niveles; en móvil solo «Nivel anterior».
+- Steps (`steps.tsx`): procesos de 3-5 pasos; `current`, `errorIndex`, `orientation`; en vertical el paso actual muestra su `content`. Lógica en `nav-utils.ts`.
+- Accordion (`accordion.tsx`): `variant` list (FAQ, una abierta), cards (formularios largos, `multiple`) o rich (icono por NOMBRE, `summary`, `badge`, `action`).
+- Sidebar (`sidebar-section.tsx`): `SidebarSection` (título, `collapsible`), `SidebarItem` (icono por nombre, `badge`, `dot`), `SidebarSubmenu` (un nivel). `AppShell` ya envuelve el menú en `SidebarSection title="Menú"`.
+- DataTable (`data-table.tsx`, lógica pura en `data-table-utils.ts`): tabla genérica `DataTable<T>` de cliente (las `cell` son funciones: úsala desde un componente cliente). Orden, selección y paginación locales; pasa `onSortChange`/`onPageChange`/`total` para controlarlos desde searchParams o server actions. Acciones por fila con `rowActions`, `loading`, `empty` (usa `EmptyState`).
+- PageHeader (`page-header.tsx`): título, descripción, migas y acciones de cada página. ListToolbar (`list-toolbar.tsx`): buscador + filtros Select + acción primaria; es un `<form>` (GET o controlado). EmptyState (`empty-state.tsx`): icono por nombre, frase y CTA. FormShell (`form-shell.tsx`): `<form action>` con error general y botón «Guardando…» vía `useFormStatus`.

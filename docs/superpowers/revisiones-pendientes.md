@@ -179,3 +179,8 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - Fase 2 UI: los consumidores de dominio (`deactivate-dialog`, `delete-*`, `pin-reveal`) siguen montando `{open && <Dialog open>}`, así que no hay animación de salida; sin migrar a `open` controlado.
 - Fase 2 UI: tokens nuevos de fase 2 (`--z-popup`, `--size-dialog-*`, `--size-close*`, `--duration-overlay`, etc.) sin documentar aún en DESIGN.md; el overlay del Dialog pasó de `--color-scrim` a `--color-overlay`.
 - Fase 2 UI: Toast sin apilado en abanico de Base UI (lista simple); el tooltip es blanco con borde (sin fondo oscuro por la regla de la guía).
+
+## Argos UI fase 3 (menores)
+- DataTable no tiene modo tarjetas en móvil (< 768 px); hoy hace scroll horizontal. Tampoco hay barra de filtros con chips ni selector de columnas.
+- SidebarSection plegable no recuerda el estado por usuario; en el riel y la barra móvil se ignora el plegado y el submenú no se muestra (el padre no navega).
+- Verificación visual de los componentes nuevos pendiente en /ui (la hace el usuario).

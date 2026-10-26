@@ -1,5 +1,6 @@
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { SidebarSection } from "@/components/ui/sidebar-section";
 import { NavLink } from "./nav-link";
 import { ProfileMenu } from "./profile-menu";
 import { TopClock } from "./top-clock";
@@ -28,10 +29,11 @@ export function AppShell({
           <span className="brand-mark" aria-hidden="true" />
           <span>Argos</span>
         </div>
-        <span className="overline nav-label">Menú</span>
-        {nav.map(({ id, ...item }) => (
-          <NavLink key={id} {...item} />
-        ))}
+        <SidebarSection title="Menú">
+          {nav.map(({ id, ...item }) => (
+            <NavLink key={id} {...item} />
+          ))}
+        </SidebarSection>
       </nav>
       <main className="main">
         <div className="content">

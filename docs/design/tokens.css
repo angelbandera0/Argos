@@ -190,6 +190,13 @@
   --size-chip-remove: 28px;
   --size-dot-badge: 6px;
   --size-dot-alert: 8px;
+  --size-tab: 44px;
+  --size-tab-bar: 3px;
+  --size-counter-sm: 20px;
+  --size-accordion-row: 56px;
+  --size-accordion-rich: 68px;
+  --size-crumb-home: 32px;
+  --size-crumb-more: 28px;
   --duration-overlay: 0.16s;
   --color-scrim: rgba(28, 28, 30, 0.4);
 
