@@ -10,6 +10,7 @@ import { ACTIVE_COMPANY_COOKIE } from "./companias/guard";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
 
 const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
+const ROLES: NavItem = { id: "roles", label: "Roles", href: "/roles", icon: "KeyRound" };
 const ADMINS: NavItem = {
   id: "administradores",
   label: "Administradores",
@@ -35,7 +36,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       top={selector}
-      nav={superadmin ? [ADMINS, COMPANIES] : [COMPANIES]}
+      nav={superadmin ? [ADMINS, COMPANIES] : [COMPANIES, ROLES]}
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",

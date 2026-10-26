@@ -1,6 +1,6 @@
-import { Building2 as NavBuilding2, ShieldCheck as NavShieldCheck } from "lucide-react";
+import { Building2 as NavBuilding2, KeyRound as NavKeyRound, ShieldCheck as NavShieldCheck } from "lucide-react";
 
-export const NAV_ICONS = { Building2: NavBuilding2, ShieldCheck: NavShieldCheck };
+export const NAV_ICONS = { Building2: NavBuilding2, KeyRound: NavKeyRound, ShieldCheck: NavShieldCheck };
 export type NavIconName = keyof typeof NAV_ICONS;
 
 export {
@@ -14,6 +14,7 @@ export {
   EyeOff,
   History,
   Info,
+  KeyRound,
   Lock,
   LockOpen,
   Plus,
@@ -21,6 +22,7 @@ export {
   Power,
   ShieldCheck,
   Store,
+  Trash2,
   UserMinus,
   UserPlus,
   Users,
