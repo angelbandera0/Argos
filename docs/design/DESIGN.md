@@ -414,6 +414,41 @@ Para listados con más de ~10 filas que se buscan, filtran u ordenan. Contenedor
 - **Carga:** 5 filas skeleton con la forma de las columnas. **Orden por defecto:** el más reciente primero. La selección se mantiene al cambiar de página.
 - **Móvil (< 768 px):** la tabla se convierte en **tarjetas** (una por fila: id + estado arriba, cliente y hora, total grande a la derecha, "⋯"); filtros en una hoja inferior con botón "Filtros (n)"; la selección múltiple se activa con un botón "Seleccionar".
 
+### 6.34 Datepicker [ampliada: DESIGN (4).md]
+- **El campo manda:** siempre se puede escribir la fecha (`dd/mm/aaaa`, `inputmode="numeric"`, las barras se insertan solas). El calendario es una ayuda que se abre al enfocar o con el icono. No uses el `<input type="date">` nativo en escritorio (su aspecto no se puede controlar); en móvil sí puede usarse el nativo si se prefiere.
+- **Densidad del repo [decisión del usuario]:** gana la escala reducida de §3 y `--size-field`/`--size-control`, no los 48/40/42 px de la maqueta: día = `--size-day` (36), campo = `--size-field`, botones ‹ › = `--size-close`; columna de atajos `--size-calendar-presets`. Radio del popover `--radius-popover`, z `--z-popup` (sobre diálogos).
+- **Campo:** igual que 6.17 + icono de calendario 18 px a la derecha (rojo cuando está abierto). Error: "Esa fecha no existe…" / "La fecha final debe ser posterior a la inicial".
+- **Popover:** blanco, radio 22, `--shadow-popover`, padding 14–16 px.
+  - Cabecera: ‹ / › en círculos de 36 px (`--color-panel`; desactivado si el mes no se puede elegir) y, al centro, "Octubre ▾" "2026 ▾" (Inter Tight 16 px 600) que abren la vista de meses/años (grilla 3×4 de píldoras de 44 px).
+  - Días de la semana: L M X J V S D, 11 px 600 `--color-muted`. **La semana empieza en lunes.**
+  - Día: círculo de 40 px (36 en rango doble, 38 en móvil), 14 px `tabular-nums`. Hover `--color-panel`. Hoy: aro `inset 0 0 0 1.5px` ink. Seleccionado: `--color-red-strong` con texto blanco 700. No disponible (futuro en reportes, pasado en entregas): `--color-line-strong`, `disabled`. Días de otros meses: ocultos o en `--color-line-strong`, no clicables.
+  - Pie (fecha única): "Hoy" (Texto rojo) y "Borrar".
+- **Rango:**
+  - Primer clic = inicio, segundo = fin (si el segundo es anterior, se intercambian). Extremos en círculo rojo; días intermedios con banda `--color-red-tint` de lado a lado y texto `--color-red-hover` 600; la banda empieza/acaba a mitad del círculo de los extremos.
+  - Escritorio: **columna de atajos** a la izquierda (170 px, fondo `--color-panel`): Hoy, Ayer, Últimos 7 días, Últimos 30 días, Este mes, Mes pasado, Personalizado. El atajo activo va blanco con texto `--color-red-hover` 700. Elegir en el calendario activa "Personalizado".
+  - Dos meses a la vista (el actual a la derecha) en escritorio; uno en filtros compactos.
+  - Pie: campos "Desde" y "Hasta" editables, "n días", "Cancelar" (Secundario) y "Aplicar" (Primario, desactivado hasta tener fin).
+  - El botón que lo abre muestra el rango ("20 – 26 oct 2026").
+- **Móvil:** hoja inferior (6.24) con atajos como chips con scroll horizontal, un mes, resumen "20 oct – 26 oct · 7 días" en la cabecera y "Aplicar" a todo el ancho.
+- **Accesibilidad:** `role="dialog"` con `aria-label`; grilla `role="grid"`, cada día `<button>` con `aria-label="26 de octubre de 2026, hoy"`; flechas mueven el foco por día, RePág/AvPág por mes, Inicio/Fin por semana, Enter elige, Esc cierra y devuelve el foco al campo.
+
+### 6.35 Barra de filtros de una página
+Para listados con filtros (Historial, Ventas, Usuarios). Va **directamente sobre la tabla, en una sola fila**, sin envolverla en otro panel.
+- **Orden:** buscador de texto (240 px, fondo `--color-panel`) · separador vertical 1×24 px · filtros · "Limpiar filtros" (Texto rojo) alineado a la derecha, visible solo si hay algún filtro activo.
+- **Filtro sin valor:** píldora de 40 px, borde `1.5px --color-ring`, texto 13 px 600 con el nombre en `--color-muted` y el valor en ink ("Acción: Todas ▾"). Abre un select/multiselect (6.19/6.20) o el datepicker (6.34).
+- **Filtro con valor:** fondo `--color-red-tint`, texto `--color-red-hover`, avatar o icono a la izquierda si aplica (avatar + "Quién: Raul R."), y botón ✕ de 28 px para quitarlo (`aria-label="Quitar filtro Quién"`). Abierto: borde `2px --color-red-strong` + halo.
+- **Se aplican al instante** (sin botón "Filtrar"). La URL guarda los filtros para poder compartir la vista.
+- Si la página tiene secciones (módulos), van como **tabs subrayado con contador** (6.28) entre el título y los filtros, nunca como botones sueltos.
+- Nunca dejes el foco/halo rojo fijo en un filtro que no se está editando: el halo significa "abierto ahora".
+
+### 6.36 Tabla de historial (auditoría)
+Variante de 6.33 para registros de actividad.
+- **Agrupada por día:** fila de grupo con overline "HOY · LUNES 26 DE OCTUBRE · 3 operaciones" (padding 16 20 6, `--color-muted`). Así la columna de tiempo solo muestra la hora (`17:41:12`, 600, `tabular-nums`).
+- **Columnas:** detalle (chevron) · Hora · Quién (avatar 30 px + nombre; "Sistema" con icono de engranaje) · Acción (insignia: Creación = éxito, Edición = aviso, Eliminación = error, Acceso = neutro) · Módulo (solo en la pestaña "Todos") · Entidad (tipo en `--color-ink-2` + nombre 600 + ID en chip monoespaciado) · Canal (icono + Web / App / Sistema / API).
+- **No repitas datos:** si la pestaña ya filtra el módulo, oculta la columna Módulo; si "Quién" es el sistema, el canal no vuelve a decir "Sistema" como insignia.
+- **Ver cambios:** las filas de edición/creación tienen un botón chevron (32 px, `--color-panel`; abierto `--color-red-tint` y girado 90°) que despliega debajo una tarjeta blanca con la tabla Campo · Antes → Después. "Antes" en `--color-danger-tint` / `--color-danger-text` tachado; "Después" en `--color-success-tint` / `--color-success` 600.
+- Orden fijo: del más reciente al más antiguo (no se ofrece ordenar por columnas).
+
 ---
 
 ## 7. Gráficos

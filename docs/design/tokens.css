@@ -194,6 +194,8 @@
   --size-chip-remove: 28px;
   --size-dot-badge: 6px;
   --size-dot-alert: 8px;
+  --size-day: 36px;                    /* celda de día del Datepicker */
+  --size-calendar-presets: 170px;      /* columna de atajos del Datepicker */
   --size-tab: 44px;
   --size-tab-bar: 3px;
   --size-counter-sm: 20px;

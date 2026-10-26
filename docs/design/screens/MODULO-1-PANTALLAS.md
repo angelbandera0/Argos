@@ -128,8 +128,8 @@ Siguen los mismos componentes de `DESIGN.md`; lo específico:
 - **C-05:** campo "Tope de sesión" (horas, máximo 24). Guardar queda en el historial.
 - **U-02:** nombre, nombre de usuario (el prefijo `código.` es fijo y se muestra delante), rol, tiendas. Al guardar, modal del PIN (U-04).
 - **K-01 y P-02:** K-01 es un diálogo con el nombre; P-02 es una página con formulario con nombre, categoría (una sola), descripción opcional y estado activo. Error de nombre repetido dentro de la compañía.
-- **H-01:** tabla con fecha, quién, acción, módulo y canal. Cada fila abre un detalle con el valor anterior y el nuevo. Filtros por módulo, usuario y fechas. Un operador solo ve los módulos que su rol puede ver.
-- **H-02:** igual que H-01, con los eventos de acceso; los PIN y contraseñas nunca aparecen.
+- **H-01:** tabla de historial agrupada por día (DESIGN §6.36) con hora, quién, acción, módulo, entidad y canal; "Ver cambios" despliega el valor anterior y el nuevo. Barra de filtros (§6.35) con módulo (pestañas), usuario, acción y rango de fechas con Datepicker (§6.34); los filtros viajan en la URL (`desde`/`hasta` ISO). Mockup: `mockups/Historial.dc.html`. Un operador solo ve los módulos que su rol puede ver.
+- **H-02:** igual que H-01 (§6.34-6.36), con los eventos de acceso; los PIN y contraseñas nunca aparecen.
 
 ## 6. Estados comunes
 
