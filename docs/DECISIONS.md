@@ -121,16 +121,16 @@
   1. Cada usuario operativo es un usuario de Supabase Auth con un correo interno sintético derivado solo del username (dominio interno no resoluble) que nadie ve ni usa. El username lleva el código de la compañía como prefijo (`código.nombre`) y es único en todo el sistema.
   2. La credencial guardada no es el PIN: es un HMAC de `username:PIN` con una clave secreta del servidor que no está en la base de datos. Así un volcado de la base no permite descubrir PIN por fuerza bruta.
   3. El login con PIN pasa siempre por una acción del servidor, nunca directo desde el navegador. Allí se limitan los intentos por username y por IP y se devuelve siempre un error genérico.
-  4. El bloqueo por usuario tras intentos fallidos se implementa con el Password Verification Hook de Supabase Auth. El límite por IP de Supabase no protege a un usuario concreto.
+  4. El bloqueo por usuario tras 5 fallos se hace en la acción del servidor del login con PIN, no con el Password Verification Hook (solo Teams y Enterprise; no existe en el plan Free). El contador `profiles.failed_pin_attempts` lo incrementa una función SQL atómica (`register_pin_failure`) con permisos elevados; al quinto fallo `status = locked` y se banea al usuario de Auth de forma prácticamente indefinida (p. ej. `876000h`; máximo aceptado no verificado, se prueba en la Tarea 16). La acción comprueba `status` antes de llamar a Auth y devuelve el mismo error genérico. Un PIN correcto reinicia el contador. Basta porque la credencial en Auth es un HMAC de 256 bits con pepper: el endpoint de contraseña de Supabase no permite probar PIN. Riesgos residuales: compromiso del servidor o del pepper, y bloqueo intencionado de un username conocido (lo desbloquea un administrador).
   5. Compañía y rol viajan como claims del JWT mediante el Custom Access Token Hook, y las políticas RLS deciden con ellos. La tienda activa y el cambio de tienda sin PIN se resuelven en el diseño.
   6. El MCP es solo para el superadmin y los administradores. Los usuarios operativos usan la API únicamente desde la app oficial, mediante el flujo de ADR-011.
   7. Superadmin y administradores usan verificación en dos pasos (TOTP).
-  8. La duración de la sesión se limita con el ajuste de Supabase si el plan lo permite; si no, se fuerza en la aplicación y en el hook. El tiempo menor por rol se aplica siempre en la aplicación.
+  8. La duración de la sesión se fuerza en la aplicación (`app_sessions`), porque el *time-box* de Supabase es solo de plan Pro y global. El tiempo menor por rol se aplica siempre en la aplicación.
   9. **Excepción a T-04 (`service_role`):** se permite usar la clave `service_role` solo para crear usuarios y restablecer PIN o contraseñas (`auth.admin`). Se aísla en un único adaptador de administración de usuarios, que antes verifica en un caso de uso que quien llama es administrador con acceso a la compañía del usuario afectado.
-  10. Bloqueo tras 5 PIN incorrectos seguidos, sin desbloqueo automático. Un administrador desbloquea y el sistema genera un PIN nuevo.
+  10. Bloqueo tras 5 PIN incorrectos seguidos, sin desbloqueo automático. Un administrador desbloquea (quita el baneo de Auth) y el sistema genera un PIN nuevo.
   11. El username es `código.nombre`, con el código de 4 caracteres que el sistema asigna a la compañía. Es único en todo el sistema (al entrar solo se escribe username y PIN) y evita revelar entre compañías qué usuarios existen.
   12. La contraseña del superadmin y de los administradores tiene un mínimo de 12 caracteres, sin reglas de composición forzadas.
-- **Consecuencias:** el superadmin único depende de la recuperación por correo. Hay que verificar si el plan de Supabase permite limitar la duración de la sesión y que el Password Verification Hook cubra el volumen esperado de intentos.
+- **Consecuencias:** el superadmin único depende de la recuperación por correo. Según el spike Q-014, y suponiendo plan Free (sin confirmar, Q-020), el plan no permite limitar la sesión en Supabase ni tiene el Password Verification Hook, por eso ambos se resuelven en la aplicación.
 
 ---
 

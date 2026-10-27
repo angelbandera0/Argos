@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Status
 
-Fresh `create-next-app` scaffold (single "Initial commit"); `app/` only contains `layout.tsx`, `page.tsx`, `globals.css`. No tests, no test runner configured.
+Módulo 1 en desarrollo (ver `docs/superpowers/`); tests con Vitest (`pnpm test`, `test:db`, `test:int`).
 
 ## Commands
 
@@ -20,11 +20,38 @@ This is Next.js 16.4.3 with React 19.3 — newer than typical training data, wit
 
 ## Design and specs
 
-- Before creating or modifying UI, follow @docs/design/DESIGN.md and use only the tokens in `docs/design/tokens.css` (imported by `app/globals.css`). No dark backgrounds, so there is no dark-mode block.
+- Before creating or modifying UI, read and follow `docs/design/DESIGN.md` (not auto-loaded, to save context; subagents on UI tasks must be told to read it) and use only the tokens in `docs/design/tokens.css` (imported by `app/globals.css`). No dark backgrounds, so there is no dark-mode block.
 - Product specs live in `docs/` (spec-anchored, see `docs/README.md`): the spec wins over code, and functional changes go through the docs first.
+
+- **Librería Argos UI**: componentes en `components/ui/` (galería en `/ui`, solo desarrollo), primitivas `@base-ui/react`, escala tipográfica reducida. Es obligatorio usar sus componentes (PageHeader, ListToolbar, DataTable, FormShell, Alert, Toast, Dialog/AlertDialog, Tabs, Accordion…) en lugar de marcado o CSS propio; los patrones están en `docs/design/PATRONES-UI.md`. Todo componente nuevo se añade a la galería y a `DESIGN-resumen.md`.
+
+## Reglas de comportamiento obligatorias (Modo Ponytail)
+
+- **Minimalismo estricto**: Escribe solo el código estrictamente necesario para cumplir la tarea.
+- **Cero sobre-ingeniería**: No añadas abstracciones, interfaces o patrones de diseño complejos a menos que se soliciten explícitamente.
+- **Sin comentarios obvios**: No comentes lo que el código ya dice por sí mismo.
+- **Sin explicaciones verbosas**: Ve directo al grano. Entrega el código y, si es necesario, una lista breve de cambios. Omite saludos, resúmenes finales o justificaciones.
+
+## Ejecución con subagentes (reglas del usuario)
+
+- **Informes cortos.** El detalle va en el archivo de informe de la tarea; la respuesta al controlador tiene como máximo 5 líneas: estado, commit, resumen de pruebas en una línea, hasta 2 inquietudes y la ruta del informe. Los revisores escriben la revisión completa en un archivo y responden con el veredicto y solo los hallazgos Críticos e Importantes (máximo 10 líneas).
+- **Modelos.** Escribir código (incluido SQL y RLS): siempre Sonnet, sin preguntar. Opus solo para planificación, diseño y decisiones de arquitectura. Tareas de muy baja complejidad (solo documentación, configuración o cambios mecánicos): Haiku, sin preguntar.
+- **Revisión.** Se omite la revisión por tarea para avanzar; las revisiones de seguridad están diferidas en `docs/superpowers/revisiones-pendientes.md`. Cada tarea termina con sus pruebas en verde y el informe corto. Lo que se detecte se anota ahí.
+- **Pruebas.** Se escriben junto con la implementación, pero se ejecutan una sola vez al final de la tarea (sin ciclo RED/GREEN intermedio); el informe da el resultado de esa ejecución.
+- **Navegador.** Las pruebas en el navegador (Chrome) consumen mucho y tardan: no se usan por defecto. Solo con `/tarea N --browser` o con `/verificar-ui N`. Sin ellas, la verificación de UI es lint, typecheck, pruebas, build y lectura de código frente a los mockups.
+- **Diseño.** Los subagentes de UI leen `docs/design/DESIGN-resumen.md`; `DESIGN.md` solo para lo que falte (el original manda). `docs/design/PATRONES-UI.md` recoge los patrones de página, acciones, listas, formularios y modales ya implementados. El resumen no define el modal de "mostrar una sola vez" ni el estado vacío.
+- **Un escritor por árbol de trabajo.** Dos subagentes que escriben a la vez nunca comparten el directorio: cada uno se lanza con `isolation: "worktree"` (rama propia en `.claude/worktrees/`) y el controlador integra con `git merge` al terminar. Al empezar, el subagente ejecuta `bash scripts/worktree-setup.sh` (instala dependencias, genera los tipos de Next; con `--env` copia `.env.local` solo si necesita pruebas de integración o `test:db`). Los comandos van de uno en uno (el aislamiento rechaza subshells y `git` dentro de comandos compuestos). Lo que modifica la base cloud compartida (migraciones, pgTAP, pruebas de integración) NO se paraleliza: el proyecto Supabase es uno solo. Un solo subagente de escritura a la vez si no hay worktree.
+- **Una tarea cada vez.** Tras cada tarea el controlador para y espera el "sigue" del usuario.
 
 ## Architecture notes
 
 - App Router only (`app/`). Path alias `@/*` maps to the repo root (not `src/`).
 - `next.config.ts` enables `cacheComponents` and `partialPrefetching`, so Cache Components / PPR semantics apply (dynamic data access must be handled per the Cache Components docs, e.g. `use cache` / Suspense boundaries).
 - Tailwind v4 is wired through Turbopack: `next.config.ts` adds a `turbopack.rules` entry running `@tailwindcss/turbopack` on `*.css`. Theme tokens live in `app/globals.css` (`@import "tailwindcss"`, `@theme inline`, light/dark CSS variables via `prefers-color-scheme`).
+
+## Herramientas de desarrollo (reducen tokens)
+
+- `pnpm verify` (o `pnpm verify:fast` sin build; `--int`, `--db`): typegen si hace falta, lint, typecheck, pruebas y build, una línea por paso y solo el final del log si falla. Úsalo en lugar de componer los comandos a mano; no ejecutes `build` con `next dev` activo.
+- `pnpm consumo <.output> "<fila>" "<commits>" [--status --tokens --duration]`: el controlador anota así el consumo en `docs/superpowers/consumo.md` (`--dry-run`, `--replace`).
+- Antes de escribir UI lee `docs/design/TRAMPAS-BASE-UI.md`. Los agentes de UI NO leen `DESIGN.md` ni las maquetas completas: `pnpm design:section <n.º|título>` (`--list`, `--resumen`) imprime solo una sección; `pnpm mockup <ruta .dc.html>` (`--raw-values`, `--text`, `--max-lines N`) resume estructura, valores con su token, textos y estados; `pnpm new:ui <nombre> [--client] [--css] [--dry-run]` crea componente, sección de galería, registro, fila en `PATRONES-UI.md` y test pendiente (reinicia `pnpm dev`).
+- Tamaño de subagentes: no deben superar ~20 llamadas ni ~100.000 de contexto; si una tarea lo excede, divídela en pasos que dejan algo funcionando; cada subagente de UI lee solo las secciones de diseño que necesita.

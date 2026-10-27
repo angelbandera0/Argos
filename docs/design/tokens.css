@@ -13,6 +13,7 @@
   --color-red-tint: #FFE6E4;     /* fondos de alerta */
   --color-red-wash: #FFF7F6;     /* fondo de campos en error */
   --color-yellow: #FFC93C;       /* hoy / abierto / efectivo — siempre con texto ink */
+  --color-yellow-hover: #F5B81F;  /* hover del botón acento (texto ink) */
   --color-yellow-tint: #FFF4CF;  /* fondos informativos */
 
   /* ---- Color: neutros ---- */
@@ -26,6 +27,35 @@
   --color-line-soft: #ECEEF1;    /* bordes sutiles */
   --color-ring: #D6D9DE;         /* bordes de chips, pista del anillo */
 
+  /* ---- Color: estados (alertas, insignias, validación) ---- */
+  --color-success: #1E7A50;          /* texto/icono de éxito (5.31:1 sobre blanco) */
+  --color-success-tint: #E6F4EC;
+  --color-success-border: #C4E4D2;
+  --color-warning: #FFC93C;          /* relleno de icono de aviso (texto encima: ink) */
+  --color-warning-text: #7A5200;     /* texto de aviso (6.29:1 sobre tint) */
+  --color-warning-dot: #E0A800;      /* punto de la insignia de aviso */
+  --color-warning-tint: #FFF4CF;
+  --color-warning-border: #F6E2A0;
+  --color-danger: #D92D25;           /* icono/borde de error */
+  --color-danger-text: #B3221B;      /* texto de error (5.60:1 sobre tint) */
+  --color-danger-tint: #FFE6E4;
+  --color-danger-tint-hover: #FFD3CF;  /* hover del botón peligro */
+  --color-danger-border: #F8C9C5;
+  --color-info: #45484D;
+  --color-info-tint: #F6F8FA;
+  --color-info-border: #E4E6EA;
+
+  /* ---- Color: campos y estados de interacción ---- */
+  --color-placeholder: #8C9097;
+  --color-disabled-bg: #ECEEF1;
+  --color-disabled-text: #8C9097;
+  --color-field-error-bg: var(--color-red-wash);
+  --color-row-selected: #FFF4F3;     /* fila seleccionada en tablas */
+  --color-hover: #ECEEF1;            /* hover sobre panel (nav, acordeón, tabs) */
+  --color-overlay: rgba(28, 28, 30, 0.32);   /* fondo de diálogos de la guía ampliada; --color-scrim (0.4) sigue vigente en dialog.modal */
+  --focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #1C1C1E;   /* botones y enlaces */
+  --focus-ring-field: 0 0 0 4px #FFE6E4;                 /* campos (con borde 2px red-strong) */
+
   /* ---- Gráficos ---- */
   --chart-neutral: var(--color-line-strong);
   --chart-highlight: var(--color-red);
@@ -36,24 +66,30 @@
   /* ---- Tipografía ---- */
   --font-display: "Inter Tight", Arial, sans-serif;
   --font-ui: "Inter", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --text-display: 600 40px/1.1 var(--font-display);
-  --text-kpi-xl: 400 52px/1 var(--font-display);
-  --text-kpi: 400 44px/1 var(--font-display);
-  --text-stat: 500 34px/1.1 var(--font-display);
-  --text-card-title-lg: 400 26px/1.15 var(--font-display);
-  --text-h2: 700 17px/1.3 var(--font-ui);
-  --text-value: 600 20px/1.2 var(--font-display);
+  --text-display: 600 32px/1.1 var(--font-display);
+  --text-kpi-xl: 400 44px/1 var(--font-display);
+  --text-kpi: 400 36px/1 var(--font-display);
+  --text-stat: 500 28px/1.1 var(--font-display);
+  --text-card-title-lg: 400 21px/1.15 var(--font-display);
+  --text-h2: 700 15px/1.3 var(--font-ui);
+  --text-value: 600 17px/1.2 var(--font-display);
+  --text-brand: 600 17px/1 var(--font-display);
   --text-body: 400 14px/1.45 var(--font-ui);
   --text-caption: 400 12px/1.45 var(--font-ui);
   --text-overline: 600 11px/1.3 var(--font-ui);
+  --text-eyebrow-sm: 600 10px/1.3 var(--font-ui);
+  --text-avatar: 700 13px/1 var(--font-ui);
 
-  --tracking-display: -1.2px;
-  --tracking-kpi-xl: -2px;
-  --tracking-kpi: -1.6px;
-  --tracking-stat: -1px;
-  --tracking-card-title: -0.6px;
+  --tracking-display: -0.9px;
+  --tracking-kpi-xl: -1.6px;
+  --tracking-kpi: -1.2px;
+  --tracking-stat: -0.8px;
+  --tracking-card-title: -0.5px;
+  --tracking-brand: -0.4px;
   --tracking-overline: 0.8px;
+  --tracking-eyebrow-sm: 0.4px;
 
   /* ---- Espaciado (base 4px) ---- */
   --space-1: 4px;
@@ -78,21 +114,107 @@
   --radius-icon: 10px;
   --radius-bar: 10px 10px 4px 4px;
   --radius-header-mobile: 0 0 32px 32px;
+  --radius-dialog: 28px;
+  --radius-popover: 20px;
+  --radius-toast: 18px;
+  --radius-textarea: 16px;
+  --radius-option: 12px;
+  --radius-checkbox: 7px;
+  --radius-alert: 20px;
+  --radius-alert-compact: 14px;
+  --radius-tooltip: 12px;
 
   /* ---- Sombras ---- */
   --shadow-active: 0 1px 2px rgba(28, 28, 30, 0.05), 0 6px 16px rgba(28, 28, 30, 0.06);
   --shadow-raised: 0 2px 8px rgba(28, 28, 30, 0.08);
   --shadow-cta: 0 10px 22px -10px rgba(217, 45, 37, 0.6);
   --shadow-floating: 0 12px 30px rgba(28, 28, 30, 0.08);
+  --shadow-menu: 0 1px 2px rgba(28, 28, 30, 0.05), 0 18px 40px rgba(28, 28, 30, 0.14);
+  --shadow-popover: var(--shadow-menu);
+  --shadow-toast: 0 1px 2px rgba(28, 28, 30, 0.05), 0 12px 30px rgba(28, 28, 30, 0.10);
+  --shadow-dialog: 0 24px 60px rgba(28, 28, 30, 0.22);
+  --shadow-tooltip: 0 8px 24px rgba(28, 28, 30, 0.12);
+  --shadow-card-open: 0 2px 8px rgba(28, 28, 30, 0.05);
 
   /* ---- Tamaños ---- */
-  --size-touch: 44px;
-  --size-control: 44px;
+  --size-touch: 40px;
+  --size-control: 40px;
   --size-control-sm: 36px;
   --size-cta: 52px;
   --size-sidebar: 236px;
   --size-rail: 84px;
   --size-bottom-nav: 68px;
+  --size-nav-item: 40px;
+  --size-rail-item: 52px;
+  --size-nav-item-mobile: 56px;
+  --size-icon: 18px;
+  --size-icon-nav: 18px;
+  --size-icon-rail: 21px;
+  --size-dot: 7px;
+  --size-avatar: 40px;
+  --size-icon-circle: 32px;
+  --size-menu: 272px;
+  --size-list-row: 56px;
+  --size-modal: 480px;
+  --size-form: 480px;
+  --size-chart: 200px;
+  --size-bar-max: 44px;
+  --size-focus: 3px;
+  --border-field: 1.5px;
+  --border-field-active: 2px;
+  --border-hairline: 1px;
+  --size-control-lg: 52px;
+  --size-field: var(--size-control);   /* la guía ampliada usa 48; gana la densidad reducida del repo */
+  --size-option: 44px;
+  --size-checkbox: 22px;
+  --size-switch-width: 48px;
+  --size-switch-height: 28px;
+  --size-switch-thumb: 22px;
+  --size-badge: 26px;
+  --size-chip-filter: 36px;
+  --size-tag: 30px;
+  --size-counter: 22px;
+  --size-table-head: 44px;
+  --size-table-row: 60px;
+  --size-step: 36px;
+  --size-step-vertical: 30px;
+  --size-icon-circle-lg: 48px;
+  --size-icon-circle-xl: 64px;
+  --size-toast: 380px;
+  --size-popover-max: 320px;
+  --size-dialog-sm: 420px;
+  --size-dialog-lg: 560px;
+  --size-sheet-handle-w: 40px;
+  --size-sheet-handle-h: 5px;
+  --size-icon-sm: 16px;
+  --size-icon-circle-sm: 28px;
+  --size-icon-circle-toast: 30px;
+  --size-close: 36px;
+  --size-close-sm: 32px;
+  --size-chip-remove: 28px;
+  --size-dot-badge: 6px;
+  --size-dot-alert: 8px;
+  --size-day: 36px;                    /* celda de día del Datepicker */
+  --size-calendar-presets: 170px;      /* columna de atajos del Datepicker */
+  --size-tab: 44px;
+  --size-tab-bar: 3px;
+  --size-counter-sm: 20px;
+  --size-accordion-row: 56px;
+  --size-accordion-rich: 68px;
+  --size-crumb-home: 32px;
+  --size-crumb-more: 28px;
+  --duration-overlay: 0.16s;
+  --color-scrim: rgba(28, 28, 30, 0.4);
+
+  /* ---- Capas (z-index) ---- */
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-menu: 30;
+  --z-progress: 50;
+  --z-dialog: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
+  --z-popup: 65;               /* popups de select/multiselect: por encima de diálogos (--z-dialog), bajo toasts */
 
   /* ---- Carga (ver DESIGN.md §6.15) ---- */
   --skeleton-on-surface: var(--color-panel);   /* placeholder sobre fondo blanco */
@@ -105,25 +227,33 @@
 /* Tablet */
 @media (max-width: 1279px) {
   :root {
-    --text-display: 600 32px/1.15 var(--font-display);
-    --text-kpi: 400 34px/1 var(--font-display);
-    --text-h2: 700 16px/1.3 var(--font-ui);
+    --text-display: 600 27px/1.15 var(--font-display);
+    --text-kpi: 400 29px/1 var(--font-display);
+    --text-h2: 700 15px/1.3 var(--font-ui);
     --text-body: 400 13px/1.45 var(--font-ui);
     --text-overline: 600 10px/1.3 var(--font-ui);
     --radius-card: 22px;
-    --tracking-display: -1px;
-    --tracking-kpi: -1.2px;
+    --tracking-display: -0.8px;
+    --tracking-kpi: -1px;
   }
 }
 
 /* Móvil */
 @media (max-width: 767px) {
   :root {
-    --text-display: 600 28px/1.15 var(--font-display);
-    --text-kpi: 400 28px/1 var(--font-display);
+    --text-display: 600 23px/1.15 var(--font-display);
+    --text-kpi: 400 24px/1 var(--font-display);
     --text-body: 400 14px/1.45 var(--font-ui);
-    --tracking-display: -0.8px;
-    --tracking-kpi: -0.8px;
+    --tracking-display: -0.6px;
+    --tracking-kpi: -0.6px;
+  }
+}
+
+/* Puntero táctil o móvil: objetivos de 44 px */
+@media (pointer: coarse), (max-width: 767px) {
+  :root {
+    --size-touch: 44px;
+    --size-control: 44px;
   }
 }
 
@@ -138,10 +268,11 @@ body {
 a { color: var(--color-red-strong); }
 a:hover { color: var(--color-red-hover); }
 
-.overline {
+.eyebrow {
   font: var(--text-overline);
   letter-spacing: var(--tracking-overline);
   text-transform: uppercase;
+  text-decoration: none;
   color: var(--color-muted);
 }
 

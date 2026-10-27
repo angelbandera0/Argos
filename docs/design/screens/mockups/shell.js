@@ -37,13 +37,8 @@ function mountShell() {
   const active = host.dataset.shell;
   host.innerHTML = `
     <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>Argos</span></div>
-    <span class="overline">Menú</span>
     ${NAV.map(([id, label, ic]) =>
-      `<a class="nav-item" href="index.html"${id === active ? ' aria-current="page"' : ''}>${icon(ic, 19)}<span>${label}</span></a>`).join('')}
-    <div class="side-foot">
-      <span class="avatar" role="img" aria-label="Ana Rivera">AR</span>
-      <span class="who"><strong>Ana Rivera</strong><br><span class="caption">Administradora</span></span>
-    </div>`;
+      `<a class="nav-item" href="index.html"${id === active ? ' aria-current="page"' : ''}>${icon(ic, 19)}<span>${label}</span></a>`).join('')}`;
 }
 
 /* Barra de estados: <div class="demo-bar" data-states="login,error,bloqueado"> con botones generados. */

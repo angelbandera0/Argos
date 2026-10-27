@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Historial</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.fbtn:hover{background:#f6f8fa}
+.day:hover{background:#f6f8fa}
+.pre:hover{background:#f6f8fa}
+.hrow:hover{background:#f6f8fa}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px">
+
+<aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 10px">
+<span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span>
+<span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span>
+</div>
+<button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)">
+<span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA</span><span style="font-size: 15px; font-weight: 600; color: #1c1c1e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">La Casona</span></span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg>
+</button>
+<div>
+<p style="margin: 0 0 8px; padding: 0 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MENÚ</p>
+<nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.active}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a>
+</sc-for>
+</nav>
+</div>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #45484d">Lunes, 26 de octubre · 17:57</p>
+<div style="display: flex; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 280px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label>
+<button type="button" aria-label="Notificaciones" style="width: 44px; height: 44px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+<div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">Admin</strong><span style="font-size: 12px; color: #6b6f76">Administrador</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div>
+<h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 44px; letter-spacing: -1.4px; line-height: 1.1">Historial</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Operaciones registradas, de la más reciente a la más antigua.</p>
+</div>
+<button type="button" style="height: 44px; padding: 0 18px 0 14px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>Exportar</button>
+</div>
+
+<div role="tablist" aria-label="Módulo" style="display: flex; gap: 26px; border-bottom: 1px solid #e4e6ea">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{t.aria}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}<span style="{{t.countStyle}}">{{t.count}}</span><span aria-hidden="true" style="{{t.bar}}"></span></button>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar entidad o ID</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar entidad o ID" style="width: 240px; height: 40px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 38px; font: inherit; color: #1c1c1e"></label>
+<span aria-hidden="true" style="width: 1px; height: 24px; background: #e4e6ea; margin: 0 4px"></span>
+
+<div style="display: inline-flex; align-items: center; height: 40px; box-sizing: border-box; border-radius: 9999px; background: #ffe6e4; color: #b3221b; padding: 0 4px 0 6px; gap: 6px; font-weight: 600; font-size: 13px">
+<span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 9999px; background: #ffc93c; color: #1c1c1e; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700">RR</span>
+<span><span style="font-weight: 500">Quién:</span> Raul R.</span>
+<button type="button" aria-label="Quitar filtro Quién" style="width: 28px; height: 28px; border: 0; border-radius: 9999px; background: transparent; color: #b3221b; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+
+<button type="button" aria-haspopup="listbox" class="fbtn" style="height: 40px; padding: 0 12px 0 16px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer"><span style="color: #6b6f76; font-weight: 500">Acción:</span> Todas<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+<button type="button" aria-haspopup="listbox" class="fbtn" style="height: 40px; padding: 0 12px 0 16px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer"><span style="color: #6b6f76; font-weight: 500">Canal:</span> Todos<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+
+<div style="position: relative">
+<button type="button" onClick="{{toggleCal}}" aria-haspopup="dialog" aria-expanded="{{calAria}}" style="{{dateBtn}}"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>{{rangeLabel}}<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="{{calChev}}"><path d="M6 9l6 6 6-6"></path></svg></button>
+<sc-if value="{{calOpen}}" hint-placeholder-val="{{ true }}">
+<button type="button" tabindex="-1" aria-label="Cerrar calendario" onClick="{{closeCal}}" style="position: fixed; inset: 0; z-index: 19; background: transparent; border: 0; cursor: default"></button>
+<div role="dialog" aria-label="Elegir rango de fechas" style="position: absolute; left: 0; top: calc(100% + 10px); z-index: 22; display: flex; background: #ffffff; border: 1px solid #eceef1; border-radius: 22px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 18px 40px rgba(28,28,30,0.14); overflow: hidden">
+<div style="width: 176px; padding: 12px 8px; background: #f6f8fa; display: flex; flex-direction: column; gap: 2px">
+<p style="margin: 0; padding: 6px 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">ATAJOS</p>
+<sc-for list="{{presets}}" as="p" hint-placeholder-count="6">
+<button type="button" onClick="{{p.pick}}" aria-pressed="{{p.aria}}" class="{{p.cls}}" style="{{p.style}}">{{p.label}}</button>
+</sc-for>
+</div>
+<div style="padding: 16px 18px 14px">
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px">
+<button type="button" aria-label="Mes anterior" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<span style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 16px; font-weight: 600">Octubre 2026</span>
+<button type="button" aria-label="Mes siguiente" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #c9cdd3; display: flex; align-items: center; justify-content: center; cursor: not-allowed"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<div role="grid" aria-label="Octubre 2026" style="display: grid; grid-template-columns: repeat(7, 40px); row-gap: 4px">
+<sc-for list="{{weekdays}}" as="w" hint-placeholder-count="7"><span role="columnheader" style="height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b6f76">{{w}}</span></sc-for>
+<sc-for list="{{cells}}" as="c" hint-placeholder-count="35">
+<div role="gridcell" style="{{c.band}}"><button type="button" tabindex="{{c.tab}}" disabled="{{c.disabled}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" class="{{c.cls}}" style="{{c.style}}">{{c.label}}</button></div>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eceef1">
+<span style="font-size: 13px; color: #45484d"><strong style="color: #1c1c1e">{{rangeLabel}}</strong> · {{rangeDays}}</span>
+<div style="display: flex; gap: 6px">
+<button type="button" onClick="{{closeCal}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" onClick="{{closeCal}}" style="height: 36px; padding: 0 14px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Aplicar</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+
+<button type="button" style="margin-left: auto; height: 40px; padding: 0 12px; border: 0; border-radius: 9999px; background: transparent; color: #d92d25; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Limpiar filtros</button>
+</div>
+</div>
+
+<div style="border: 1px solid #eceef1; border-radius: 24px; overflow: hidden">
+<table style="width: 100%; border-collapse: collapse; font-size: 14px">
+<thead><tr style="background: #f6f8fa; text-align: left; font-size: 11px; letter-spacing: 0.8px; color: #6b6f76">
+<th scope="col" style="width: 52px; height: 44px"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Detalle</span></th>
+<th scope="col" style="padding: 0 12px; font-weight: 600">HORA</th>
+<th scope="col" style="padding: 0 12px; font-weight: 600">QUIÉN</th>
+<th scope="col" style="padding: 0 12px; font-weight: 600">ACCIÓN</th>
+<sc-if value="{{showModule}}" hint-placeholder-val="{{ false }}"><th scope="col" style="padding: 0 12px; font-weight: 600">MÓDULO</th></sc-if>
+<th scope="col" style="padding: 0 12px; font-weight: 600">ENTIDAD</th>
+<th scope="col" style="padding: 0 20px 0 12px; font-weight: 600">CANAL</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<tr><td colspan="7" style="padding: 16px 20px 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76; border-top: 1px solid #eceef1">{{g.label}} <span style="font-weight: 500; letter-spacing: 0">· {{g.count}}</span></td></tr>
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+<tr class="{{r.cls}}" style="{{r.trStyle}}">
+<td style="padding: 0 0 0 12px; height: 60px; border-top: 1px solid #f1f2f4"><sc-if value="{{r.hasDiff}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{r.toggle}}" aria-expanded="{{r.aria}}" aria-label="{{r.toggleLabel}}" style="{{r.expBtn}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="{{r.chev}}"><path d="M9 6l6 6-6 6"></path></svg></button></sc-if></td>
+<td style="padding: 0 12px; border-top: 1px solid #f1f2f4; font-variant-numeric: tabular-nums; white-space: nowrap"><strong style="font-weight: 600">{{r.time}}</strong></td>
+<td style="padding: 0 12px; border-top: 1px solid #f1f2f4"><span style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 30px; height: 30px; flex: none; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700">RR</span>Raul R.</span></td>
+<td style="padding: 0 12px; border-top: 1px solid #f1f2f4"><span style="{{r.badge}}"><span aria-hidden="true" style="{{r.dot}}"></span>{{r.action}}</span></td>
+<sc-if value="{{showModule}}" hint-placeholder-val="{{ false }}"><td style="padding: 0 12px; border-top: 1px solid #f1f2f4; color: #45484d">Usuarios</td></sc-if>
+<td style="padding: 0 12px; border-top: 1px solid #f1f2f4"><span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"><span style="color: #45484d">{{r.type}}</span><strong style="font-weight: 600">{{r.entity}}</strong><span style="padding: 2px 8px; border: 1.5px solid #e4e6ea; border-radius: 9999px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #45484d">{{r.id}}</span></span></td>
+<td style="padding: 0 20px 0 12px; border-top: 1px solid #f1f2f4; color: #45484d; white-space: nowrap"><span style="display: inline-flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.channelIcon}}"></path></svg>{{r.channel}}</span></td>
+</tr>
+<sc-if value="{{r.open}}" hint-placeholder-val="{{ false }}">
+<tr style="background: #fafbfc"><td></td><td colspan="6" style="padding: 4px 20px 18px 12px">
+<div style="background: #ffffff; border: 1px solid #eceef1; border-radius: 16px; padding: 6px 16px">
+<div style="display: grid; grid-template-columns: 160px minmax(0, 1fr) 24px minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 0; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76"><span>CAMPO</span><span>ANTES</span><span></span><span>DESPUÉS</span></div>
+<sc-for list="{{r.diff}}" as="d" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: 160px minmax(0, 1fr) 24px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #f1f2f4">
+<span style="font-weight: 600">{{d.field}}</span>
+<span><span style="padding: 3px 10px; border-radius: 8px; background: #ffe6e4; color: #b3221b; text-decoration: line-through">{{d.before}}</span></span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8c9097" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+<span><span style="padding: 3px 10px; border-radius: 8px; background: #e6f4ec; color: #1e7a50; font-weight: 600">{{d.after}}</span></span>
+</div>
+</sc-for>
+</div>
+</td></tr>
+</sc-if>
+</sc-for>
+</sc-for>
+</tbody>
+</table>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid #eceef1; font-size: 13px; color: #45484d"><span>5 operaciones</span><nav aria-label="Paginación" style="display: flex; gap: 4px"><button type="button" aria-label="Página anterior" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #c9cdd3"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button><button type="button" aria-current="page" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600">1</button><button type="button" aria-label="Página siguiente" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #c9cdd3"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button></nav></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"calendarioAbierto":{"editor":"boolean","default":true,"section":"Estado"},"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cal: props.calendarioAbierto ?? true, tab: 'usuarios', start: 20, end: 26, preset: '7', pending: false, open: { a1: true } };
+  }
+  componentDidUpdate(prev) {
+    if (prev.calendarioAbierto !== this.props.calendarioAbierto) this.setState({ cal: this.props.calendarioAbierto ?? true });
+  }
+  renderVals() {
+    const st = this.state;
+    const TODAY = 26;
+    const I = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const nav = [['inicio', 'Inicio'], ['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['categorias', 'Categorías'], ['productos', 'Productos'], ['historial', 'Historial', true]].map(([k, label, active]) => ({
+      label, active: !!active, current: active ? 'page' : 'false', cls: active ? '' : 'nav-i',
+      d1: I[k][0], d2: I[k][1], d3: I[k][2], iconColor: active ? '#d92d25' : 'currentColor',
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (active ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }));
+    const tabs = [['todos', 'Todos', '12'], ['productos', 'Productos', '3'], ['roles', 'Roles', '0'], ['usuarios', 'Usuarios', '5'], ['organizacion', 'Organización', '2'], ['accesos', 'Accesos', '2']].map(([id, label, count]) => {
+      const on = st.tab === id;
+      return {
+        label, count, aria: on ? 'true' : 'false', pick: () => this.setState({ tab: id }),
+        style: 'position: relative; display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0; border: 0; background: transparent; font: inherit; font-size: 15px; cursor: pointer; ' + (on ? 'color: #1c1c1e; font-weight: 700' : 'color: #45484d; font-weight: 500'),
+        countStyle: 'min-width: 22px; height: 20px; padding: 0 7px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (on ? 'background: #ffe6e4; color: #b3221b' : 'background: #eceef1; color: #45484d'),
+        bar: 'position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: ' + (on ? '#d92d25' : 'transparent')
+      };
+    });
+    const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const s = st.start, e = st.end ?? st.start;
+    const rangeLabel = s === e ? s + ' oct 2026' : s + ' – ' + e + ' oct 2026';
+    const days = e - s + 1;
+    const weekdays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+    const cells = [];
+    [28, 29, 30].forEach((d) => cells.push({ label: String(d), outside: true }));
+    for (let d = 1; d <= 31; d++) cells.push({ label: String(d), d });
+    cells.push({ label: '1', outside: true });
+    const cellsOut = cells.map((c) => {
+      if (c.outside) return { label: c.label, disabled: true, tab: '-1', aria: '', pressed: 'false', cls: '', pick: () => {}, band: 'height: 40px', style: 'width: 40px; height: 40px; border: 0; border-radius: 9999px; background: transparent; color: #c9cdd3; font: inherit; font-size: 14px' };
+      const d = c.d, future = d > TODAY, isS = d === s, isE = d === e, inR = d > s && d < e, end = isS || isE;
+      let band = 'height: 40px; ';
+      if (inR) band += 'background: #ffe6e4';
+      else if (isS && e > s) band += 'background: linear-gradient(90deg, transparent 50%, #ffe6e4 50%)';
+      else if (isE && e > s) band += 'background: linear-gradient(90deg, #ffe6e4 50%, transparent 50%)';
+      return {
+        label: String(d), disabled: future, tab: d === s ? '0' : '-1', pressed: end || inR ? 'true' : 'false',
+        aria: d + ' de octubre de 2026' + (d === TODAY ? ', hoy' : '') + (future ? ', no disponible' : ''),
+        cls: future || end ? '' : 'day', band,
+        pick: () => {
+          if (future) return;
+          if (st.pending) { this.setState(d >= st.start ? { end: d, pending: false, preset: null } : { start: d, end: st.start, pending: false, preset: null }); }
+          else this.setState({ start: d, end: null, pending: true, preset: null });
+        },
+        style: 'width: 40px; height: 40px; border: 0; border-radius: 9999px; font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; ' + (future ? 'background: transparent; color: #c9cdd3; cursor: not-allowed' : end ? 'background: #d92d25; color: #ffffff; font-weight: 700; cursor: pointer' : inR ? 'background: transparent; color: #b3221b; font-weight: 600; cursor: pointer' : 'background: transparent; color: #1c1c1e; cursor: pointer') + (d === TODAY && !end ? '; box-shadow: inset 0 0 0 1.5px #1c1c1e' : '') + (d === TODAY && end ? '; box-shadow: inset 0 0 0 2px #ffffff, 0 0 0 1.5px #d92d25' : '')
+      };
+    });
+    const P = [['hoy', 'Hoy', 26, 26], ['ayer', 'Ayer', 25, 25], ['7', 'Últimos 7 días', 20, 26], ['30', 'Este mes', 1, 26], ['sem', 'Semana pasada', 12, 18], ['custom', 'Personalizado', null, null]];
+    const presets = P.map(([id, label, a, b]) => {
+      const on = id === 'custom' ? st.preset === null : st.preset === id;
+      return {
+        label, aria: on ? 'true' : 'false', cls: on ? '' : 'pre',
+        pick: () => { if (a !== null) this.setState({ start: a, end: b, preset: id, pending: false }); else this.setState({ preset: null }); },
+        style: 'width: 100%; min-height: 38px; padding: 0 10px; border: 0; border-radius: 10px; font: inherit; font-size: 13px; text-align: left; cursor: pointer; ' + (on ? 'background: #ffffff; color: #b3221b; font-weight: 700; box-shadow: 0 2px 8px rgba(28,28,30,0.06)' : 'background: transparent; color: #1c1c1e; font-weight: 500')
+      };
+    });
+    const A = {
+      'Creación': ['#e6f4ec', '#1e7a50', '#1e7a50'],
+      'Edición': ['#fff4cf', '#7a5200', '#e0a800'],
+      'Eliminación': ['#ffe6e4', '#b3221b', '#d92d25']
+    };
+    const CH = { Web: 'M3 5h18v11H3zM8 20h8M12 16v4', App: 'M7 3h10v18H7zM11 18h2', Sistema: 'M12 3l2 3 3.5-.5.5 3.5 3 2-3 2-.5 3.5L14 18l-2 3-2-3-3.5.5L6 15l-3-2 3-2-.5-3.5L10 6z' };
+    const mk = (key, time, action, type, entity, id, channel, diff) => {
+      const open = !!st.open[key];
+      return {
+        time, action, type, entity, id, channel, channelIcon: CH[channel],
+        hasDiff: !!diff, open: open && !!diff, aria: open ? 'true' : 'false', toggleLabel: (open ? 'Ocultar' : 'Ver') + ' cambios de ' + entity,
+        toggle: () => this.setState({ open: Object.assign({}, st.open, { [key]: !open }) }),
+        chev: 'transition: transform 0.15s; transform: rotate(' + (open ? 90 : 0) + 'deg)',
+        expBtn: 'width: 32px; height: 32px; border: 0; border-radius: 9999px; display: flex; align-items: center; justify-content: center; cursor: pointer; ' + (open ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #1c1c1e'),
+        cls: open ? '' : 'hrow', trStyle: open ? 'background: #fafbfc' : '',
+        badge: 'display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; background: ' + A[action][0] + '; color: ' + A[action][1],
+        dot: 'width: 6px; height: 6px; border-radius: 9999px; background: ' + A[action][2],
+        diff: (diff || []).map(([field, before, after]) => ({ field, before, after }))
+      };
+    };
+    const groups = [
+      { label: 'HOY · LUNES 26 DE OCTUBRE', count: '3 operaciones', rows: [
+        mk('a1', '17:41:12', 'Edición', 'Usuario', 'Ana Rodríguez', 'a91f03c2', 'Web', [['Rol', 'Cajero', 'Administrador'], ['Tiendas', 'La Casona', 'La Casona, La Nacion']]),
+        mk('a2', '17:02:03', 'Creación', 'Usuario', 'Pedro Gil', '3d829b02', 'Web', [['Usuario', '—', 'k7m2.pedro'], ['Rol', '—', 'Cajero']]),
+        mk('a3', '17:02:03', 'Creación', 'Asignación de tienda', 'Pedro Gil → La Casona', '3d829b02', 'Sistema')
+      ] },
+      { label: 'AYER · DOMINGO 25 DE OCTUBRE', count: '2 operaciones', rows: [
+        mk('b1', '19:20:45', 'Eliminación', 'Usuario', 'test.demo', '77ab10e4', 'App'),
+        mk('b2', '09:03:10', 'Edición', 'Usuario', 'Luis Martín', 'c02e5a19', 'Web', [['PIN', '••••••', 'Restablecido']])
+      ] }
+    ];
+    return {
+      nav, tabs, showModule: st.tab === 'todos', groups,
+      calOpen: st.cal, calAria: st.cal ? 'true' : 'false',
+      toggleCal: () => this.setState({ cal: !st.cal }), closeCal: () => this.setState({ cal: false, pending: false, end: st.end ?? st.start }),
+      calChev: 'transition: transform 0.15s; transform: rotate(' + (st.cal ? 180 : 0) + 'deg)',
+      dateBtn: 'position: relative; z-index: 21; height: 40px; padding: 0 12px 0 14px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; ' + (st.cal ? 'background: #ffffff; color: #1c1c1e; border: 2px solid #d92d25; box-shadow: 0 0 0 4px #ffe6e4' : 'background: #ffe6e4; color: #b3221b; border: 1.5px solid #ffe6e4'),
+      rangeLabel, rangeDays: days === 1 ? '1 día' : days + ' días', weekdays, cells: cellsOut, presets
+    };
+  }
+}
+</script>
+</body>
+</html>

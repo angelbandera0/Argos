@@ -22,13 +22,14 @@
 
 | Rol | Opciones del menú |
 |---|---|
-| Superadmin | Administradores · Compañías · Historial |
-| Administrador | Compañías · Usuarios · Roles · Catálogo · Historial |
-| Operador | Solo lo que su rol permite: Productos, Historial de Productos |
+| Superadmin | Inicio · Administradores · Compañías · Historial |
+| Administrador | Inicio · Compañías · Usuarios · Roles · Catálogo · Historial |
+| Operador | Inicio y lo que su rol permite: Productos, Historial de Productos |
 
-- **Compañía activa [mi decisión].** Un administrador puede tener varias compañías. Una lista desplegable arriba elige con cuál trabaja; usuarios, categorías, productos y historial se filtran por ella. Un operador tiene una sola compañía y no ve el selector.
+- **Compañía activa [mi decisión].** Un administrador puede tener varias compañías. El selector vive en el panel lateral, bajo el logo «Argos» [decisión del usuario]: botón con avatar de iniciales, «COMPAÑÍA ACTIVA» y nombre; el popover «CAMBIAR COMPAÑÍA» lista nombre y código con marca de verificación en la activa y «Gestionar compañías» (`/companias`). En tablet (riel) solo el avatar; en móvil, sin panel, un botón con el avatar en la barra superior abre el mismo popover. Elige con cuál trabaja; usuarios, categorías, productos y historial se filtran por ella. Un operador tiene una sola compañía y no ve el selector.
 - **Tienda activa.** Un operador ve su tienda actual en la cabecera y puede cambiarla sin PIN (DR-013).
 - **Historial** agrupa dos pestañas: "Operaciones" (por módulo) y "Accesos" (solo administradores).
+- **Cerrar sesión [mi decisión].** Todos los roles tienen "Cerrar sesión" solo dentro del menú de perfil de la barra superior (avatar + nombre + rol, a la derecha, igual en web, tablet y móvil; `LogOut` en código); el panel lateral, el rail y la barra inferior no llevan usuario ni botón de salir. Escala tipográfica reducida (display 32, kpi 36, h2 15, value 17; tablet y móvil menores) [decisión del usuario: fuentes más pequeñas]: prevalece sobre la guía de Downloads. La etiqueta "MENÚ" del panel se restituye (web) [decisión del usuario, DESIGN (2).md]. La barra superior es común: fecha y hora en vivo (zona horaria del navegador, actualiza cada minuto), buscador y campana deshabilitados (`aria-disabled`, "Próximamente"; sin backend en el Módulo 1), slot de acción primaria y perfil a la derecha; el menú de perfil tiene cabecera (avatar, nombre, `usuario · rol`; correo para administradores y superadmin), "Ver perfil" (`/perfil`, solo lectura: nombre, usuario o correo, tipo de cuenta y compañía del operador) y "Cerrar sesión" en rojo. En la vista del operador la barra conserva el cambiador de tienda. La maqueta (`shell.js`) ya no muestra "Menú" ni el bloque de usuario, pero no dibuja la barra superior: divergencia anotada. Un operador termina su sesión de app (`ended_at`) y vuelve a `/entrar`; administradores y superadmin cierran su sesión de Auth y vuelven a `/login`. Si la sesión ya expiró, redirige igual sin error. Se borra la compañía activa del navegador.
 - En móvil, "Accesos" y los ajustes de compañía viven dentro de sus pantallas, no en la barra inferior.
 
 ## 3. Inventario de pantallas
@@ -41,14 +42,15 @@
 | A-04 | Recuperar contraseña | `/recuperar` | Superadmin | 006 | — |
 | A-05 | Entrar con PIN | `/entrar` | Operador | 006 | `01` |
 | A-06 | Elegir tienda | `/tienda` | Operador | 006 | `01` |
+| D-01 | Inicio (dashboard con datos de ejemplo, provisional) | `/` | Todos | 005–009 | — |
 | A-07 | Sesión terminada / sin tiendas | `/entrar` (estados) | Operador | 006 | `01` |
 | S-01 | Administradores (lista) | `/superadmin/administradores` | Superadmin | 006 | — |
 | S-02 | Nuevo administrador (contraseña temporal mostrada una vez) | `/superadmin/administradores/nuevo` | Superadmin | 006 | — |
 | C-01 | Compañías (lista) | `/companias` | Admin, Superadmin | 005 | — |
-| C-02 | Nueva compañía | `/companias/nueva` | Administrador | 005 | — |
+| C-02 | Nueva compañía | diálogo en C-01 [decisión del usuario] | Administrador | 005 | — |
 | C-03 | Detalle de compañía: sedes y tiendas | `/companias/[id]` | Admin, Superadmin | 005 | `04` |
 | C-04 | Administradores con acceso (dar y quitar) | `/companias/[id]/administradores` | Admin, Superadmin | 005 | — |
-| C-05 | Ajustes (tope de sesión) | `/companias/[id]/ajustes` | Administrador | 005, 006 | — |
+| C-05 | Ajustes (tope de sesión) | diálogo en C-03 [decisión del usuario] | Administrador | 005, 006 | — |
 | C-06 | Desactivar y reactivar con motivo | modal en C-03, sedes y tiendas | Fundador, Superadmin | 005 | `04` |
 | U-01 | Usuarios (lista) | `/usuarios` | Administrador | 006 | — |
 | U-02 | Nuevo usuario | `/usuarios/nuevo` | Administrador | 006 | — |
@@ -122,11 +124,12 @@ Siguen los mismos componentes de `DESIGN.md`; lo específico:
 - **S-01 · C-01 · U-01 · R-01 · P-01:** lista en filas sobre panel, con buscador, filtro y botón principal "Nuevo …". Estado vacío: icono, una frase y el botón de crear.
 - **S-02:** formulario de correo y nombre; al crear, modal con la contraseña temporal mostrada una sola vez, igual que el PIN (U-04).
 - **C-04:** lista de administradores con acceso. "Quitar acceso" solo para el fundador o el superadmin; la fila del fundador lleva la etiqueta "Fundador" y no tiene esa acción (DR-005).
+- **C-02 y C-05 [decisión del usuario]:** son diálogos (no páginas): C-02 se abre desde "Nueva compañía" (cabecera y estado vacío de C-01) y C-05 desde "Ajustes" en C-03. K-01: "Nueva categoría" y "Renombrar" también abren un diálogo.
 - **C-05:** campo "Tope de sesión" (horas, máximo 24). Guardar queda en el historial.
 - **U-02:** nombre, nombre de usuario (el prefijo `código.` es fijo y se muestra delante), rol, tiendas. Al guardar, modal del PIN (U-04).
-- **K-01 y P-02:** formularios con nombre, categoría (una sola), descripción opcional y estado activo. Error de nombre repetido dentro de la compañía.
-- **H-01:** tabla con fecha, quién, acción, módulo y canal. Cada fila abre un detalle con el valor anterior y el nuevo. Filtros por módulo, usuario y fechas. Un operador solo ve los módulos que su rol puede ver.
-- **H-02:** igual que H-01, con los eventos de acceso; los PIN y contraseñas nunca aparecen.
+- **K-01 y P-02:** K-01 es un diálogo con el nombre; P-02 es una página con formulario con nombre, categoría (una sola), descripción opcional y estado activo. Error de nombre repetido dentro de la compañía.
+- **H-01:** tabla de historial agrupada por día (DESIGN §6.36) con hora, quién, acción, módulo, entidad y canal; "Ver cambios" despliega el valor anterior y el nuevo. Barra de filtros (§6.35) con módulo (pestañas), usuario, acción y rango de fechas con Datepicker (§6.34); los filtros viajan en la URL (`usuario`, `accion`, `canal`, `desde`/`hasta` ISO). Pestañas «Todos» + módulos (+ «Accesos» para administradores) con contador; «Anterior»/«Siguiente». Mockup: `mockups/Historial.dc.html`. Un operador solo ve los módulos que su rol puede ver.
+- **H-02:** igual que H-01 (§6.34-6.36), con los eventos de acceso; los PIN y contraseñas nunca aparecen.
 
 ## 6. Estados comunes
 
@@ -154,7 +157,7 @@ Definidos en `DESIGN.md` §6.15 y `tokens.css`.
 ## 8. Accesibilidad específica
 
 - El PIN es un único `<input>` real con su etiqueta y un texto de ayuda enlazado ("Faltan 2 dígitos."); las casillas son decorativas (`aria-hidden`). El campo es de tipo contraseña, así que los dígitos no se leen en voz alta salvo con "Mostrar".
-- El modal del PIN y los de confirmación usan `<dialog>`: el foco queda atrapado y vuelve al botón que lo abrió.
+- El modal del PIN y los de confirmación usan el `Dialog`/`AlertDialog` de Argos UI (Base UI): el foco queda atrapado y vuelve al botón que lo abrió.
 - Los interruptores son `role="switch"` con su etiqueta; los estados se dicen con texto además del color (chips con palabra).
 - Objetivos táctiles de 44 px o más, incluidas las casillas de permisos (con su etiqueta clicable).
 - El mensaje de error de login se anuncia con `role="alert"`.
@@ -166,3 +169,11 @@ Definidos en `DESIGN.md` §6.15 y `tokens.css`.
 **Ajuste respecto a la referencia de login:** el diseño que me pasaste decía "PIN incorrecto. Te quedan 2 intentos." Lo cambié por el mensaje genérico, porque indicar los intentos restantes confirma que el usuario existe.
 
 **Pendientes:** el nombre de producto del sistema es provisional ("Argos"); no hay logo; los iconos son de estilo Lucide dibujados a mano en las maquetas y se sustituyen por `lucide-react` al implementar.
+
+## Inicio (D-01) [decisión del usuario]
+
+- Destino posterior al inicio de sesión: administradores y superadmin tras contraseña y TOTP; operadores tras elegir tienda. «Inicio» es el primer elemento del menú (icono `LayoutDashboard`) y está activo solo en `/`.
+- Saludo «Bienvenido/a de nuevo, <nombre>» y rejilla de tres columnas (web) que colapsa a dos (tablet) y una (móvil).
+- Administrador y superadmin: KPI con píldora y barra de progreso (compañías, sedes, tiendas, usuarios, roles, productos), gráfico de barras «Altas por semana» con pestañas segmentadas (día actual en amarillo, mejor en rojo, un solo eje, valores etiquetados y tabla alternativa), actividad reciente, usuarios bloqueados o por desbloquear y resumen por compañía.
+- Operador: tienda activa, hora de fin de sesión y accesos permitidos por su rol.
+- **Provisional:** todo el contenido son datos de ejemplo (`app/(app)/_demo/dashboard-data.ts`), sin lecturas a la base de datos; pasar a datos reales es sustituir ese módulo.

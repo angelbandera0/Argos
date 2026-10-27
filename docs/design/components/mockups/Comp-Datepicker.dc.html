@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Componentes · Datepicker</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder{color:#8c9097}
+.day:hover{background:#f6f8fa}
+.pre:hover{background:#ffffff}
+.mon:hover{background:#f6f8fa}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1340px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-direction: column; gap: 32px">
+
+<header>
+<p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">COMPONENTES · ARGOS</p>
+<h1 style="margin: 6px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.2px; line-height: 1.1">Datepicker</h1>
+<p style="margin: 8px 0 0; font-size: 15px; color: #6b6f76; max-width: 820px">El campo siempre acepta escribir la fecha (dd/mm/aaaa); el calendario es una ayuda. Semana de lunes a domingo, hoy marcado con un aro, días no permitidos en gris.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: 360px 340px minmax(0, 1fr); gap: 36px">
+
+<section>
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Fecha única</h2>
+<label for="dp-single" style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px">Fecha de entrega</label>
+<div style="position: relative; display: flex; align-items: center">
+<input id="dp-single" type="text" inputmode="numeric" value="{{singleText}}" readonly="" aria-haspopup="dialog" aria-expanded="true" style="width: 100%; height: 48px; box-sizing: border-box; border: 2px solid #d92d25; box-shadow: 0 0 0 4px #ffe6e4; border-radius: 9999px; background: #ffffff; padding: 0 48px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; outline: none">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d92d25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+</div>
+<div role="dialog" aria-label="Elegir fecha de entrega" style="margin-top: 8px; width: 332px; box-sizing: border-box; background: #ffffff; border: 1px solid #eceef1; border-radius: 22px; padding: 14px 16px 12px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 18px 40px rgba(28,28,30,0.14)">
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px">
+<button type="button" aria-label="Mes anterior" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<div style="display: flex; gap: 4px">
+<button type="button" aria-label="Elegir mes" style="height: 34px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; font-family: 'Inter Tight', Arial, sans-serif; font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; cursor: pointer">Octubre<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+<button type="button" aria-label="Elegir año" style="height: 34px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; font-family: 'Inter Tight', Arial, sans-serif; font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; cursor: pointer">2026<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+<button type="button" aria-label="Mes siguiente" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<div role="grid" aria-label="Octubre 2026" style="display: grid; grid-template-columns: repeat(7, 42px); row-gap: 2px">
+<sc-for list="{{wd}}" as="w" hint-placeholder-count="7"><span role="columnheader" style="height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b6f76">{{w}}</span></sc-for>
+<sc-for list="{{single}}" as="c" hint-placeholder-count="35">
+<div role="gridcell" style="height: 42px; display: flex; align-items: center; justify-content: center"><button type="button" disabled="{{c.disabled}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" class="{{c.cls}}" style="{{c.style}}">{{c.label}}</button></div>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eceef1">
+<button type="button" onClick="{{pickToday}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #d92d25; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Hoy</button>
+<button type="button" style="height: 36px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #45484d; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Borrar</button>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Estados del campo</h2>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{fieldStates}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76; margin-bottom: 6px">{{f.tag}}</span>
+<div style="position: relative; display: flex; align-items: center">
+<input type="text" aria-label="{{f.tag}}" value="{{f.value}}" placeholder="dd/mm/aaaa" disabled="{{f.disabled}}" aria-invalid="{{f.invalid}}" readonly="" style="{{f.style}}">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{f.iconColor}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+</div>
+<sc-if value="{{f.hasHelp}}" hint-placeholder-val="{{ false }}"><p style="{{f.helpStyle}}">{{f.help}}</p></sc-if>
+</div>
+</sc-for>
+<div style="display: flex; flex-direction: column">
+<span style="font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76; margin-bottom: 6px">RANGO</span>
+<div style="display: flex; align-items: center; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 16px 0 18px; gap: 8px; font-size: 15px">
+<span style="flex: 1">20/10/2026</span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8c9097" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+<span style="flex: 1">26/10/2026</span>
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Elegir mes y año</h2>
+<p style="margin: 0 0 12px; font-size: 13px; color: #6b6f76">Se abre al tocar el nombre del mes o el año. Ideal para fechas lejanas.</p>
+<div style="background: #ffffff; border: 1px solid #eceef1; border-radius: 22px; padding: 14px 16px 16px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 18px 40px rgba(28,28,30,0.14)">
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px">
+<button type="button" aria-label="Año anterior" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<span style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 16px; font-weight: 600">2026</span>
+<button type="button" aria-label="Año siguiente" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #c9cdd3; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<div role="grid" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{monthsGrid}}" as="m" hint-placeholder-count="12">
+<button type="button" disabled="{{m.disabled}}" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}" class="{{m.cls}}" style="{{m.style}}">{{m.label}}</button>
+</sc-for>
+</div>
+</div>
+</section>
+</div>
+
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 34px; flex: 1; min-height: 0">
+<section>
+<h2 style="margin: 0 0 4px; font-size: 17px; font-weight: 700">Rango con atajos · escritorio <span style="font-size: 13px; font-weight: 500; color: #6b6f76">(pruébalo: toca un día de inicio y otro de fin)</span></h2>
+<p style="margin: 0 0 12px; font-size: 13px; color: #6b6f76">Dos meses a la vista. Los atajos cubren el 90 % de los casos; "Personalizado" se marca solo al elegir en el calendario.</p>
+<div role="dialog" aria-label="Elegir rango de fechas" style="display: flex; background: #ffffff; border: 1px solid #eceef1; border-radius: 22px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 18px 40px rgba(28,28,30,0.14); overflow: hidden">
+<div style="width: 170px; flex: none; padding: 12px 8px; background: #f6f8fa; display: flex; flex-direction: column; gap: 2px">
+<p style="margin: 0; padding: 6px 10px; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">ATAJOS</p>
+<sc-for list="{{presets}}" as="p" hint-placeholder-count="7">
+<button type="button" onClick="{{p.pick}}" aria-pressed="{{p.aria}}" class="{{p.cls}}" style="{{p.style}}">{{p.label}}</button>
+</sc-for>
+</div>
+<div style="flex: 1; padding: 16px 20px 14px">
+<div style="display: flex; gap: 24px">
+<sc-for list="{{rangeMonths}}" as="mo" hint-placeholder-count="2">
+<div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 36px; margin-bottom: 8px">
+<sc-if value="{{mo.first}}" hint-placeholder-val="{{ true }}"><button type="button" aria-label="Meses anteriores" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button></sc-if>
+<sc-if value="{{mo.last}}" hint-placeholder-val="{{ false }}"><span style="width: 36px"></span></sc-if>
+<span style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 16px; font-weight: 600">{{mo.title}}</span>
+<sc-if value="{{mo.last}}" hint-placeholder-val="{{ false }}"><button type="button" aria-label="Meses siguientes" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #c9cdd3; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button></sc-if>
+<sc-if value="{{mo.first}}" hint-placeholder-val="{{ true }}"><span style="width: 36px"></span></sc-if>
+</div>
+<div role="grid" aria-label="{{mo.title}}" style="display: grid; grid-template-columns: repeat(7, 36px); row-gap: 4px">
+<sc-for list="{{wd}}" as="w" hint-placeholder-count="7"><span role="columnheader" style="height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b6f76">{{w}}</span></sc-for>
+<sc-for list="{{mo.cells}}" as="c" hint-placeholder-count="35">
+<div role="gridcell" style="{{c.band}}"><button type="button" disabled="{{c.disabled}}" aria-label="{{c.aria}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" class="{{c.cls}}" style="{{c.style}}">{{c.label}}</button></div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #eceef1">
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.6px; color: #6b6f76">DESDE</span><input type="text" aria-label="Desde" value="{{fromText}}" readonly="" style="width: 120px; height: 40px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; padding: 0 14px; font: inherit; font-size: 14px; color: #1c1c1e"></div>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8c9097" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 16px"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.6px; color: #6b6f76">HASTA</span><input type="text" aria-label="Hasta" value="{{toText}}" placeholder="dd/mm/aaaa" readonly="" style="width: 120px; height: 40px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; padding: 0 14px; font: inherit; font-size: 14px; color: #1c1c1e"></div>
+<span style="margin: 16px 0 0 6px; font-size: 13px; color: #45484d">{{daysText}}</span>
+<div style="margin: 16px 0 0 auto; display: flex; gap: 6px">
+<button type="button" style="height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" disabled="{{applyDisabled}}" style="{{applyStyle}}">Aplicar</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="margin: 0 0 4px; font-size: 17px; font-weight: 700">Móvil · hoja inferior</h2>
+<p style="margin: 0 0 12px; font-size: 13px; color: #6b6f76">Un mes, atajos en chips y botón a todo el ancho.</p>
+<div style="height: 540px; border-radius: 32px; background: rgba(28,28,30,0.32); display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden">
+<div role="dialog" aria-label="Elegir fechas" style="background: #ffffff; border-radius: 28px 28px 0 0; padding: 10px 18px 18px">
+<div aria-hidden="true" style="width: 40px; height: 5px; border-radius: 9999px; background: #d6d9de; margin: 0 auto 12px"></div>
+<div style="display: flex; justify-content: space-between; align-items: center"><h3 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 20px; font-weight: 600">Fechas</h3><span style="font-size: 13px; color: #45484d">{{rangeShort}}</span></div>
+<div style="display: flex; gap: 6px; margin: 12px 0 10px; overflow-x: auto">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{c.aria}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.label}}</button></sc-for>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px"><span style="font-family: 'Inter Tight', Arial, sans-serif; font-size: 15px; font-weight: 600">Octubre 2026</span><span style="display: flex; gap: 4px"><button type="button" aria-label="Mes anterior" style="width: 32px; height: 32px; border: 0; border-radius: 9999px; background: #f6f8fa; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button><button type="button" aria-label="Mes siguiente" disabled="" style="width: 32px; height: 32px; border: 0; border-radius: 9999px; background: #f6f8fa; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c9cdd3" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button></span></div>
+<div role="grid" aria-label="Octubre 2026" style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 2px">
+<sc-for list="{{wd}}" as="w" hint-placeholder-count="7"><span role="columnheader" style="height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #6b6f76">{{w}}</span></sc-for>
+<sc-for list="{{mobileCells}}" as="c" hint-placeholder-count="35">
+<div role="gridcell" style="{{c.band}}"><button type="button" disabled="{{c.disabled}}" aria-label="{{c.aria}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.label}}</button></div>
+</sc-for>
+</div>
+<button type="button" style="margin-top: 12px; width: 100%; height: 52px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 16px; font-weight: 600">Aplicar</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1340}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { single: 28, rs: 922, re: 1026, pending: false, preset: null, month: 9 };
+  }
+  renderVals() {
+    const st = this.state;
+    const TODAY = 1026;
+    const MN = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const pad = (n) => (n < 10 ? '0' : '') + n;
+    const key = (m, d) => (m + 1) * 100 + d;
+    const fmt = (k) => pad(k % 100) + '/' + pad(Math.floor(k / 100)) + '/2026';
+    const shortFmt = (k) => (k % 100) + ' ' + MN[Math.floor(k / 100) - 1].slice(0, 3).toLowerCase();
+    const grid = (m) => {
+      const off = (new Date(2026, m, 1).getDay() + 6) % 7;
+      const dim = new Date(2026, m + 1, 0).getDate();
+      const prev = new Date(2026, m, 0).getDate();
+      const out = [];
+      for (let i = 0; i < off; i++) out.push({ outside: true, label: String(prev - off + 1 + i) });
+      for (let d = 1; d <= dim; d++) out.push({ d, k: key(m, d), label: String(d) });
+      let n = 1;
+      while (out.length % 7) out.push({ outside: true, label: String(n++) });
+      return out;
+    };
+    const base = (size) => 'width: ' + size + 'px; height: ' + size + 'px; border: 0; border-radius: 9999px; font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; ';
+    const wd = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+
+    const single = grid(9).map((c) => {
+      if (c.outside) return { label: c.label, disabled: true, aria: '', pressed: 'false', cls: '', pick: () => {}, style: base(40) + 'background: transparent; color: #c9cdd3' };
+      const on = st.single === c.d, today = c.k === TODAY, past = c.k < TODAY;
+      return {
+        label: c.label, disabled: past, pressed: on ? 'true' : 'false', cls: on || past ? '' : 'day',
+        aria: c.d + ' de octubre de 2026' + (today ? ', hoy' : '') + (past ? ', no disponible' : ''),
+        pick: () => this.setState({ single: c.d }),
+        style: base(40) + (on ? 'background: #d92d25; color: #ffffff; font-weight: 700; cursor: pointer' : past ? 'background: transparent; color: #c9cdd3; cursor: not-allowed' : 'background: transparent; color: #1c1c1e; cursor: pointer') + (today && !on ? '; box-shadow: inset 0 0 0 1.5px #1c1c1e' : '')
+      };
+    });
+
+    const s = st.rs, e = st.re;
+    const cell = (c, size, interactive) => {
+      if (c.outside) return { label: '', disabled: true, aria: '', pressed: 'false', cls: '', pick: () => {}, band: 'height: ' + size + 'px', style: base(size) + 'background: transparent' };
+      const k = c.k, future = k > TODAY;
+      const hasEnd = e !== null && e !== undefined;
+      const isS = k === s, isE = hasEnd && k === e, inR = hasEnd && k > s && k < e, end = isS || isE;
+      let band = 'height: ' + size + 'px; display: flex; justify-content: center; ';
+      if (inR) band += 'background: #ffe6e4';
+      else if (isS && hasEnd && e > s) band += 'background: linear-gradient(90deg, transparent 50%, #ffe6e4 50%)';
+      else if (isE && e > s) band += 'background: linear-gradient(90deg, #ffe6e4 50%, transparent 50%)';
+      return {
+        label: c.label, disabled: future, pressed: end || inR ? 'true' : 'false', cls: future || end ? '' : 'day', band,
+        aria: c.d + ' de ' + MN[Math.floor(k / 100) - 1].toLowerCase() + ' de 2026' + (k === TODAY ? ', hoy' : '') + (future ? ', no disponible' : ''),
+        pick: () => {
+          if (future || !interactive) return;
+          if (st.pending) this.setState(k >= s ? { re: k, pending: false, preset: null } : { rs: k, re: s, pending: false, preset: null });
+          else this.setState({ rs: k, re: null, pending: true, preset: null });
+        },
+        style: base(size) + (future ? 'background: transparent; color: #c9cdd3; cursor: not-allowed' : end ? 'background: #d92d25; color: #ffffff; font-weight: 700; cursor: pointer' : inR ? 'background: transparent; color: #b3221b; font-weight: 600; cursor: pointer' : 'background: transparent; color: #1c1c1e; cursor: pointer') + (k === TODAY && !end ? '; box-shadow: inset 0 0 0 1.5px #1c1c1e' : '') + (k === TODAY && end ? '; box-shadow: inset 0 0 0 2px #ffffff' : '')
+      };
+    };
+    const rangeMonths = [8, 9].map((m, i) => ({ title: MN[m] + ' 2026', first: i === 0, last: i === 1, cells: grid(m).map((c) => cell(c, 36, true)) }));
+    const mobileCells = grid(9).map((c) => cell(c, 38, true));
+
+    const P = [['hoy', 'Hoy', 1026, 1026], ['ayer', 'Ayer', 1025, 1025], ['7', 'Últimos 7 días', 1020, 1026], ['30', 'Últimos 30 días', 927, 1026], ['mes', 'Este mes', 1001, 1026], ['mesp', 'Mes pasado', 901, 930], ['custom', 'Personalizado', null, null]];
+    const presets = P.map(([id, label, a, b]) => {
+      const on = id === 'custom' ? st.preset === null : st.preset === id;
+      return {
+        label, aria: on ? 'true' : 'false', cls: on ? '' : 'pre',
+        pick: () => { if (a !== null) this.setState({ rs: a, re: b, preset: id, pending: false }); else this.setState({ preset: null }); },
+        style: 'width: 100%; min-height: 38px; padding: 0 10px; border: 0; border-radius: 10px; font: inherit; font-size: 13px; text-align: left; cursor: pointer; ' + (on ? 'background: #ffffff; color: #b3221b; font-weight: 700; box-shadow: 0 2px 8px rgba(28,28,30,0.06)' : 'background: transparent; color: #1c1c1e; font-weight: 500')
+      };
+    });
+    const chips = P.slice(0, 5).map(([id, label, a, b]) => {
+      const on = st.preset === id;
+      return { label: label.replace('Últimos ', ''), aria: on ? 'true' : 'false', pick: () => this.setState({ rs: a, re: b, preset: id, pending: false }), style: 'flex: none; height: 34px; padding: 0 12px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; ' + (on ? 'background: #ffe6e4; color: #b3221b; border: 1.5px solid #ffe6e4' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de') };
+    });
+    const dayCount = (a, b) => Math.round((new Date(2026, Math.floor(b / 100) - 1, b % 100) - new Date(2026, Math.floor(a / 100) - 1, a % 100)) / 86400000) + 1;
+    const hasE = e !== null && e !== undefined;
+    const n = hasE ? dayCount(s, e) : 0;
+
+    const M = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const monthsGrid = M.map((label, i) => {
+      const on = st.month === i, future = i > 9;
+      return {
+        label, disabled: future, pressed: on ? 'true' : 'false', cls: on || future ? '' : 'mon',
+        pick: () => this.setState({ month: i }),
+        style: 'height: 44px; border: 0; border-radius: 9999px; font: inherit; font-weight: 600; ' + (on ? 'background: #d92d25; color: #ffffff' : future ? 'background: transparent; color: #c9cdd3; cursor: not-allowed' : 'background: transparent; color: #1c1c1e; cursor: pointer') + (i === 9 && !on ? '; box-shadow: inset 0 0 0 1.5px #1c1c1e' : '')
+      };
+    });
+
+    const fb = 'width: 100%; height: 48px; box-sizing: border-box; border-radius: 9999px; padding: 0 48px 0 18px; font: inherit; font-size: 15px; outline: none; ';
+    const fieldStates = [
+      ['VACÍO', '', 'border: 1.5px solid #e4e6ea; background: #ffffff; color: #1c1c1e', '#45484d', 'Escribe la fecha o elígela en el calendario.', 'help'],
+      ['CON VALOR', '26/10/2026', 'border: 1.5px solid #c9cdd3; background: #ffffff; color: #1c1c1e', '#45484d'],
+      ['ESCRIBIENDO', '26/10/20', 'border: 2px solid #d92d25; box-shadow: 0 0 0 4px #ffe6e4; background: #ffffff; color: #1c1c1e', '#d92d25', 'Las barras se añaden solas.', 'help'],
+      ['ERROR', '31/02/2026', 'border: 2px solid #d92d25; background: #fff7f6; color: #1c1c1e', '#d92d25', 'Esa fecha no existe. Febrero tiene 28 días en 2026.', 'error'],
+      ['DESACTIVADO', '26/10/2026', 'border: 1.5px solid #eceef1; background: #f6f8fa; color: #8c9097', '#c9cdd3', '', 'disabled']
+    ].map(([tag, value, style, iconColor, help, kind]) => ({
+      tag, value, style: fb + style, iconColor, help: help || '', hasHelp: !!help,
+      disabled: kind === 'disabled', invalid: kind === 'error' ? 'true' : 'false',
+      helpStyle: 'margin: 6px 0 0; font-size: 13px; ' + (kind === 'error' ? 'color: #b3221b; font-weight: 600' : 'color: #6b6f76')
+    }));
+
+    return {
+      wd, single, singleText: '28/10/2026'.replace('28', pad(st.single)),
+      pickToday: () => this.setState({ single: 26 }),
+      fieldStates, monthsGrid, rangeMonths, mobileCells, presets, chips,
+      fromText: fmt(s), toText: hasE ? fmt(e) : '',
+      daysText: hasE ? (n === 1 ? '1 día' : n + ' días') : 'Elige el día final',
+      rangeShort: hasE ? (s === e ? shortFmt(s) : shortFmt(s) + ' – ' + shortFmt(e)) + ' · ' + n + (n === 1 ? ' día' : ' días') : 'Elige el día final',
+      applyDisabled: !hasE,
+      applyStyle: 'height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; font: inherit; font-weight: 600; ' + (hasE ? 'background: #d92d25; color: #ffffff; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed')
+    };
+  }
+}
+</script>
+</body>
+</html>

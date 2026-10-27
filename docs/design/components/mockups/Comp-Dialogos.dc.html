@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Componentes · Diálogos</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1180px; box-sizing: border-box; padding: 48px; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-direction: column; gap: 32px">
+
+<header>
+<p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">COMPONENTES · ARGOS</p>
+<h1 style="margin: 6px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.2px; line-height: 1.1">Diálogos</h1>
+<p style="margin: 8px 0 0; font-size: 15px; color: #6b6f76; max-width: 800px">Solo para decisiones que bloquean. Título en pregunta, botones con el verbo de la acción ("Cerrar turno", no "Aceptar"). En móvil se abren como hoja inferior.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; flex: 1; min-height: 0">
+
+<section style="display: flex; flex-direction: column">
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Confirmación</h2>
+<div style="flex: 1; border-radius: 24px; background: rgba(28,28,30,0.32); display: flex; align-items: center; justify-content: center; padding: 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="d1-title" aria-describedby="d1-desc" style="width: 420px; box-sizing: border-box; background: #ffffff; border-radius: 28px; padding: 28px; box-shadow: 0 24px 60px rgba(28,28,30,0.22)">
+<span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 9999px; background: #fff4cf; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.5"></circle></svg></span>
+<h3 id="d1-title" style="margin: 16px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2">¿Cerrar el turno de la Caja 1?</h3>
+<p id="d1-desc" style="margin: 8px 0 0; font-size: 15px; color: #45484d">Se generará el reporte del día. Después no podrás registrar ventas en esta caja hasta abrirla otra vez.</p>
+<div style="margin-top: 16px; background: #f6f8fa; border-radius: 16px; padding: 4px 16px">
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e4e6ea"><span style="color: #45484d">Ventas del turno</span><strong style="font-weight: 600">$7.640</strong></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0"><span style="color: #45484d">Efectivo esperado</span><strong style="font-weight: 600">$2.868</strong></div>
+</div>
+<div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px">
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Cerrar turno</button>
+</div>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column">
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Destructivo</h2>
+<div style="flex: 1; border-radius: 24px; background: rgba(28,28,30,0.32); display: flex; align-items: center; justify-content: center; padding: 24px">
+<div role="alertdialog" aria-modal="true" aria-labelledby="d2-title" aria-describedby="d2-desc" style="width: 420px; box-sizing: border-box; background: #ffffff; border-radius: 28px; padding: 28px; box-shadow: 0 24px 60px rgba(28,28,30,0.22)">
+<span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 9999px; background: #ffe6e4; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></span>
+<h3 id="d2-title" style="margin: 16px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2">¿Anular la venta #1086?</h3>
+<p id="d2-desc" style="margin: 8px 0 0; font-size: 15px; color: #45484d">Se devolverán $54,20 a la tarjeta de María Pérez. <strong style="color: #1c1c1e">No se puede deshacer.</strong></p>
+<label for="d2-reason" style="display: block; margin-top: 16px; font-size: 14px; font-weight: 600">Motivo</label>
+<textarea id="d2-reason" rows="2" placeholder="Ej. Producto equivocado" style="margin-top: 8px; width: 100%; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 16px; padding: 12px 16px; font: inherit; font-size: 15px; color: #1c1c1e; resize: none"></textarea>
+<div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px">
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Mantener venta</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Anular venta</button>
+</div>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column">
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Con formulario</h2>
+<div style="flex: 1; border-radius: 24px; background: rgba(28,28,30,0.32); display: flex; align-items: center; justify-content: center; padding: 24px">
+<div role="dialog" aria-modal="true" aria-labelledby="d3-title" style="width: 460px; box-sizing: border-box; background: #ffffff; border-radius: 28px; box-shadow: 0 24px 60px rgba(28,28,30,0.22); overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 4px 28px">
+<h3 id="d3-title" style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.4px">Nuevo producto</h3>
+<button type="button" aria-label="Cerrar" style="width: 40px; height: 40px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div style="padding: 12px 28px 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column"><label for="d3-name" style="font-size: 14px; font-weight: 600; margin-bottom: 6px">Nombre</label><input id="d3-name" type="text" value="Té verde" style="height: 44px; box-sizing: border-box; border: 2px solid #d92d25; box-shadow: 0 0 0 4px #ffe6e4; border-radius: 9999px; padding: 0 16px; font: inherit; font-size: 15px; color: #1c1c1e; outline: none"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column"><label for="d3-price" style="font-size: 14px; font-weight: 600; margin-bottom: 6px">Precio</label><input id="d3-price" type="text" inputmode="decimal" placeholder="$0,00" style="height: 44px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; padding: 0 16px; font: inherit; font-size: 15px; color: #1c1c1e"></div>
+<div style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 6px">Categoría</span><button type="button" aria-haspopup="listbox" style="height: 44px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer">Bebidas<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+<div style="display: flex; justify-content: flex-end; gap: 10px; padding: 16px 28px 24px; border-top: 1px solid #eceef1">
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" style="height: 44px; padding: 0 18px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Guardar producto</button>
+</div>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column">
+<h2 style="margin: 0 0 12px; font-size: 17px; font-weight: 700">Hoja inferior (móvil)</h2>
+<div style="flex: 1; border-radius: 24px; background: #f6f8fa; display: flex; justify-content: center; padding: 20px 24px 0; overflow: hidden">
+<div style="width: 330px; border-radius: 32px 32px 0 0; background: rgba(28,28,30,0.32); display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden">
+<div role="dialog" aria-modal="true" aria-labelledby="d4-title" style="background: #ffffff; border-radius: 28px 28px 0 0; padding: 10px 20px 20px; box-shadow: 0 -12px 30px rgba(28,28,30,0.12)">
+<div aria-hidden="true" style="width: 40px; height: 5px; border-radius: 9999px; background: #d6d9de; margin: 0 auto 14px"></div>
+<h3 id="d4-title" style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.4px">¿Cómo paga el cliente?</h3>
+<div role="radiogroup" aria-labelledby="d4-title" style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px">
+<sc-for list="{{payOpts}}" as="p" hint-placeholder-count="3">
+<div role="radio" aria-checked="{{p.aria}}" tabindex="0" style="{{p.style}}"><span style="flex: 1; font-weight: 600">{{p.label}}</span><span aria-hidden="true" style="{{p.ring}}"><span style="{{p.dot}}"></span></span></div>
+</sc-for>
+</div>
+<button type="button" style="margin-top: 16px; width: 100%; height: 52px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 16px; font-weight: 600">Cobrar $54,20</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = 'tarjeta';
+    const payOpts = [['efectivo', 'Efectivo'], ['tarjeta', 'Tarjeta'], ['transf', 'Transferencia']].map(([id, label]) => {
+      const on = id === sel;
+      return {
+        label, aria: on ? 'true' : 'false',
+        style: 'display: flex; align-items: center; min-height: 52px; padding: 0 16px; box-sizing: border-box; border-radius: 16px; cursor: pointer; ' + (on ? 'background: #ffffff; border: 2px solid #d92d25' : 'background: #f6f8fa; border: 2px solid transparent'),
+        ring: 'width: 22px; height: 22px; box-sizing: border-box; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: #ffffff; border: ' + (on ? '2px solid #d92d25' : '1.5px solid #c9cdd3'),
+        dot: 'width: 10px; height: 10px; border-radius: 9999px; background: ' + (on ? '#d92d25' : 'transparent')
+      };
+    });
+    return { payOpts };
+  }
+}
+</script>
+</body>
+</html>
