@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { type ActionState, updateSettingsAction } from "@/app/(app)/companias/actions";
+import { type ActionState, renameUnitAction, updateSettingsAction } from "@/app/(app)/companias/actions";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
@@ -36,11 +36,18 @@ export function CompanySettingsButton({
         <FormDialog<ActionState>
           title={`Ajustes de ${name}`}
           description="El cambio queda en el historial."
-          action={(_, formData) => updateSettingsAction(companyId, formData)}
+          action={async (_, formData) => {
+            const renamed = await renameUnitAction("company", companyId, formData);
+            return renamed.error ? renamed : updateSettingsAction(companyId, formData);
+          }}
           successMessage="Guardado."
           onClose={() => setOpen(false)}
         >
           {(state) => (
+            <>
+            <Field label="Nombre" htmlFor="name">
+              <Input id="name" name="name" required maxLength={80} defaultValue={name} />
+            </Field>
             <Field label="Tope de sesión (horas)" htmlFor="hours" hint="Máximo 24 horas. Ningún rol puede superar este tope.">
               <Input
                 id="hours"
@@ -56,6 +63,7 @@ export function CompanySettingsButton({
                 aria-invalid={state.error ? true : undefined}
               />
             </Field>
+            </>
           )}
         </FormDialog>
       )}

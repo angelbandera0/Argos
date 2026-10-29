@@ -38,6 +38,8 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
   const stores = await Promise.all(sites.map((s) => org.stores.listByParent(s.id)));
   const canManage = actor.kind === "superadmin" || company.founderId === actor.userId;
   const canCreate = actor.kind === "admin";
+  const canRename = actor.kind === "superadmin" || (actor.kind === "admin" && (await org.companies.listAdmins(id)).includes(actor.userId));
+  const renameReason = canRename ? undefined : "Solo un administrador con acceso o el superadmin pueden renombrar.";
   const off = company.status === "inactive";
 
   const founder = canManage ? null : await org.users.getProfile(company.founderId);
@@ -83,6 +85,8 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
         active={s.status === "active"}
         canCreate={canCreate}
         canManage={canManage}
+        canRename={canRename}
+        renameReason={renameReason}
         disabledReason={unitReason(s.status === "active")}
       />
     ),
@@ -99,6 +103,8 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
           active={t.status === "active"}
           canCreate={false}
           canManage={canManage}
+          canRename={canRename}
+          renameReason={renameReason}
           disabledReason={unitReason(t.status === "active")}
         />
       ),

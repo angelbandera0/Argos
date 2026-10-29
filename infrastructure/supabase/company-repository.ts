@@ -83,6 +83,11 @@ export function makeCompanyRepository(client: SupabaseClient): CompanyRepository
       }
     },
 
+    async rename(companyId, name) {
+      const { error } = await client.from("companies").update({ name }).eq("id", companyId);
+      if (error) orgError("CompanyRepository.rename", error);
+    },
+
     async setSessionCap(companyId, seconds) {
       const { error } = await client
         .from("companies")

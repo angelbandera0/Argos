@@ -8,6 +8,7 @@ import { makeGrantCompanyAccess } from "@/core/application/use-cases/organizatio
 import { makeListCompanies } from "@/core/application/use-cases/organization/list-companies";
 import { makeReactivateUnit } from "@/core/application/use-cases/organization/reactivate-unit";
 import { makeRevokeCompanyAccess } from "@/core/application/use-cases/organization/revoke-company-access";
+import { makeRenameUnit } from "@/core/application/use-cases/organization/rename-unit";
 import { makeUpdateCompanySettings } from "@/core/application/use-cases/organization/update-company-settings";
 import { makeCompanyRepository } from "./company-repository";
 import { makeSiteRepository } from "./site-repository";
@@ -34,6 +35,7 @@ export function makeOrg(supabase: SupabaseClient) {
     deactivateUnit: makeDeactivateUnit({ units, companies }),
     grantAccess: makeGrantCompanyAccess({ companies, users }),
     revokeAccess: makeRevokeCompanyAccess({ companies }),
+    renameUnit: makeRenameUnit({ companies, sites, stores }),
     updateSettings: makeUpdateCompanySettings({ companies }),
     reactivateUnit: makeReactivateUnit({ units, companies }),
   };

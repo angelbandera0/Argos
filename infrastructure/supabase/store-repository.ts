@@ -44,6 +44,11 @@ export function makeStoreRepository(client: SupabaseClient): StoreRepository {
       return data ? toStore(data as Row) : null;
     },
 
+    async rename(id, name) {
+      const { error } = await client.from("stores").update({ name }).eq("id", id);
+      if (error) orgError("StoreRepository.rename", error);
+    },
+
     async listByParent(siteId) {
       const { data, error } = await client
         .from("stores")

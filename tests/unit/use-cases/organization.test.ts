@@ -8,6 +8,7 @@ import { makeGrantCompanyAccess } from "@/core/application/use-cases/organizatio
 import { makeListCompanies } from "@/core/application/use-cases/organization/list-companies";
 import { makeReactivateUnit } from "@/core/application/use-cases/organization/reactivate-unit";
 import { makeRevokeCompanyAccess } from "@/core/application/use-cases/organization/revoke-company-access";
+import { makeRenameUnit } from "@/core/application/use-cases/organization/rename-unit";
 import { makeUpdateCompanySettings } from "@/core/application/use-cases/organization/update-company-settings";
 import type { Actor } from "@/core/domain/actor";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
@@ -40,6 +41,7 @@ function setup() {
     grant: makeGrantCompanyAccess({ companies, users }),
     revoke: makeRevokeCompanyAccess({ companies }),
     update: makeUpdateCompanySettings({ companies }),
+    rename: makeRenameUnit({ companies, sites: org.siteRepo, stores: org.storeRepo }),
     createSite: makeCreateSite({ companies, sites: org.siteRepo }),
     createStore: makeCreateStore({ companies, sites: org.siteRepo, stores: org.storeRepo }),
     deactivate: makeDeactivateUnit({ units: org.unitRepo, companies }),
@@ -195,6 +197,50 @@ describe("updateCompanySettings", () => {
       expect(await update(a, { companyId: "c1", sessionCapSeconds: 3600 }).catch((e) => e)).toBeInstanceOf(Forbidden);
     }
     expect(org.companies.get("c1")?.sessionCapSeconds).toBe(28800);
+  });
+});
+
+describe("renameUnit", () => {
+  it("REQ-005 CA-15: admin with access renames company, site and store (trimmed)", async () => {
+    const { org, rename } = setup();
+    await rename(other, { level: "company", id: "c1", name: "  Nueva  Co " });
+    await rename(founder, { level: "site", id: "s1", name: "Sede B" });
+    await rename(founder, { level: "store", id: "t1", name: "Tienda B" });
+    expect(org.companies.get("c1")?.name).toBe("Nueva Co");
+    expect(org.companies.get("c1")?.code).toBe("abcd");
+    expect(org.sites.get("s1")?.name).toBe("Sede B");
+    expect(org.stores.get("t1")?.name).toBe("Tienda B");
+  });
+  it("REQ-005 CA-15: superadmin can rename", async () => {
+    const { org, rename } = setup();
+    await rename(superadmin, { level: "site", id: "s1", name: "Sede S" });
+    expect(org.sites.get("s1")?.name).toBe("Sede S");
+  });
+  it("REQ-005 CA-15: operator and admin without access get Forbidden", async () => {
+    const { org, rename } = setup();
+    for (const a of [operator, stranger]) {
+      expect(await rename(a, { level: "site", id: "s1", name: "X" }).catch((e) => e)).toBeInstanceOf(Forbidden);
+    }
+    expect(org.sites.get("s1")?.name).toBe("s1");
+  });
+  it("REQ-005 CA-15: blank or too long name throws INVALID_NAME", async () => {
+    const { rename } = setup();
+    for (const name of ["   ", "x".repeat(81)]) {
+      expect(await rename(founder, { level: "company", id: "c1", name }).catch((e) => e)).toEqual(rule("INVALID_NAME"));
+    }
+  });
+  it("REQ-005 CA-15: sibling name (any case) throws NAME_TAKEN; own case change is allowed", async () => {
+    const { org, rename } = setup();
+    org.seedSite("s3", "c1");
+    org.seedCompany("c3", "f1");
+    expect(await rename(founder, { level: "site", id: "s1", name: "S3" }).catch((e) => e)).toEqual(rule("NAME_TAKEN"));
+    expect(await rename(founder, { level: "company", id: "c1", name: "C3" }).catch((e) => e)).toEqual(rule("NAME_TAKEN"));
+    await rename(founder, { level: "site", id: "s1", name: "S1" });
+    expect(org.sites.get("s1")?.name).toBe("S1");
+  });
+  it("unknown unit is NotFound", async () => {
+    const { rename } = setup();
+    expect(await rename(founder, { level: "store", id: "zz", name: "X" }).catch((e) => e)).toBeInstanceOf(NotFound);
   });
 });
 

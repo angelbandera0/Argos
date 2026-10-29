@@ -4,7 +4,10 @@ import { Menu } from "@base-ui/react/menu";
 import { useState } from "react";
 import { NAV_ICONS } from "@/components/icons";
 import { DeactivateModal } from "@/components/org/deactivate-dialog";
+import { Field, Input } from "@/components/ui/field";
+import { FormDialog } from "@/components/ui/form-dialog";
 import { buttonClass } from "@/components/ui/button-class";
+import { type ActionState, renameUnitAction } from "../actions";
 import { NewUnitDialog } from "./new-unit";
 
 const { Ellipsis } = NAV_ICONS;
@@ -18,6 +21,8 @@ export function UnitMenu({
   canCreate,
   canManage,
   disabledReason,
+  canRename = false,
+  renameReason,
 }: {
   companyId: string;
   level: "site" | "store";
@@ -27,13 +32,16 @@ export function UnitMenu({
   canCreate: boolean;
   canManage: boolean;
   disabledReason?: string;
+  canRename?: boolean;
+  renameReason?: string;
 }) {
-  const [dialog, setDialog] = useState<"store" | "toggle">();
+  const [dialog, setDialog] = useState<"store" | "toggle" | "rename">();
   const close = () => setDialog(undefined);
   const mode = active ? "deactivate" : "reactivate";
   const verb = active ? "Desactivar" : "Reactivar";
   const noun = level === "site" ? "sede" : "tienda";
   const hintId = `perm-${id}`;
+  const renameHintId = `perm-rename-${id}`;
 
   return (
     <>
@@ -48,6 +56,19 @@ export function UnitMenu({
                 <Menu.Item className="menu-item" onClick={() => setDialog("store")}>
                   Nueva tienda
                 </Menu.Item>
+              )}
+              <Menu.Item
+                className="menu-item"
+                disabled={!canRename}
+                aria-describedby={!canRename && renameReason ? renameHintId : undefined}
+                onClick={() => setDialog("rename")}
+              >
+                Renombrar {noun}
+              </Menu.Item>
+              {!canRename && renameReason && (
+                <p className="hint menu-hint" id={renameHintId}>
+                  {renameReason}
+                </p>
               )}
               <Menu.Item
                 className="menu-item"
@@ -67,6 +88,29 @@ export function UnitMenu({
         </Menu.Portal>
       </Menu.Root>
       {dialog === "store" && <NewUnitDialog companyId={companyId} siteId={id} siteName={name} onClose={close} />}
+      {dialog === "rename" && (
+        <FormDialog<ActionState>
+          title={`Renombrar ${noun}`}
+          description="El cambio queda en el historial."
+          size="sm"
+          action={(_, formData) => renameUnitAction(level, id, formData)}
+          successMessage="Nombre actualizado."
+          onClose={close}
+        >
+          {(state) => (
+            <Field label="Nombre" htmlFor={`name-${id}`}>
+              <Input
+                id={`name-${id}`}
+                name="name"
+                required
+                maxLength={80}
+                defaultValue={name}
+                aria-invalid={state.error ? true : undefined}
+              />
+            </Field>
+          )}
+        </FormDialog>
+      )}
       {dialog === "toggle" && <DeactivateModal level={level} id={id} name={name} mode={mode} onClose={close} />}
     </>
   );
