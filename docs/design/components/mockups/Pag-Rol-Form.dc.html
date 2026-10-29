@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nuevo rol</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e;text-decoration:underline}
+.tpl:hover{background:#f6f8fa}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px">
+
+<aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div>
+<button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button>
+<div>
+<p style="margin: 0 0 8px; padding: 0 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MENÚ</p>
+<nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.active}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a>
+</sc-for>
+</nav>
+</div>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #45484d">Jueves, 29 de octubre · 01:12</p>
+<div style="display: flex; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 280px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label>
+<button type="button" aria-label="Notificaciones" style="width: 44px; height: 44px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+<div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">Admin</strong><span style="font-size: 12px; color: #6b6f76">Administrador</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+
+<div>
+<nav aria-label="Migas de pan"><ol style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px; font-size: 14px"><li><a href="#" class="crumb" style="color: #45484d; text-decoration: none">Roles</a></li><li aria-hidden="true" style="color: #c9cdd3; display: flex"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></li><li aria-current="page" style="font-weight: 600">Nuevo rol</li></ol></nav>
+<h1 style="margin: 12px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.2px; line-height: 1.1">Nuevo rol</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Define qué puede hacer y en qué compañías. Luego lo asignas a usuarios.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<form onSubmit="{{submit}}" style="flex: 1 1 560px; min-width: 0; max-width: 820px; display: flex; flex-direction: column; gap: 18px">
+
+<section aria-labelledby="s1" style="border: 1px solid #eceef1; border-radius: 24px; padding: 24px">
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span>
+<div><h2 id="s1" style="margin: 0; font-size: 18px; font-weight: 600">Datos del rol</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Cómo se llama y cuánto dura la sesión.</p></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+<div style="display: flex; flex-direction: column">
+<label for="r-name" style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Nombre</label>
+<input id="r-name" type="text" placeholder="Ej. Cajero, Almacenero" value="{{name}}" onChange="{{onName}}" aria-invalid="{{nameInvalid}}" aria-describedby="r-name-help" style="{{nameStyle}}">
+<p id="r-name-help" style="{{nameHelpStyle}}">{{nameHelp}}</p>
+</div>
+<div style="display: flex; flex-direction: column">
+<label for="r-desc" style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Descripción <span style="font-weight: 400; color: #6b6f76">(opcional)</span></label>
+<input id="r-desc" type="text" placeholder="Ej. Recibe mercancía y mantiene el catálogo" value="{{desc}}" onChange="{{onDesc}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e">
+<p style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Se ve en el listado de roles.</p>
+</div>
+</div>
+<fieldset style="border: 0; margin: 20px 0 0; padding: 0">
+<legend style="font-size: 14px; font-weight: 600; margin-bottom: 8px; padding: 0">Tiempo de sesión</legend>
+<div role="radiogroup" aria-label="Tiempo de sesión" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{sessions}}" as="s" hint-placeholder-count="5">
+<button type="button" role="radio" aria-checked="{{s.aria}}" onClick="{{s.pick}}" style="{{s.style}}"><span aria-hidden="true" style="{{s.ring}}"><span style="{{s.dot}}"></span></span>{{s.label}}<sc-if value="{{s.rec}}" hint-placeholder-val="{{ false }}"><span style="padding: 1px 8px; border-radius: 9999px; background: #e6f4ec; color: #1e7a50; font-size: 11px; font-weight: 700">Recomendado</span></sc-if></button>
+</sc-for>
+</div>
+<p style="margin: 8px 0 0; font-size: 13px; color: #6b6f76">Nunca supera el tope de la compañía de la tienda donde se trabaja (máximo 24 horas).</p>
+</fieldset>
+</section>
+
+<section aria-labelledby="s2" style="border: 1px solid #eceef1; border-radius: 24px; padding: 24px">
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">2</span>
+<div style="flex: 1"><h2 id="s2" style="margin: 0; font-size: 18px; font-weight: 600">Compañías donde vale</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Por defecto vale para todas tus compañías. Desmarca las que no lo necesiten.</p></div>
+<span style="{{countChip}}">{{countLabel}}</span>
+</div>
+<button type="button" role="checkbox" aria-checked="{{allAria}}" onClick="{{toggleAll}}" style="width: 100%; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 14px; border: 0; border-radius: 14px; background: #f6f8fa; color: #1c1c1e; font: inherit; font-weight: 600; text-align: left; cursor: pointer">
+<span aria-hidden="true" style="{{allBox}}"><sc-if value="{{allOn}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{allMixed}}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"><path d="M6 12h12"></path></svg></sc-if></span>
+Todas mis compañías
+</button>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-top: 10px">
+<sc-for list="{{companies}}" as="c" hint-placeholder-count="2">
+<button type="button" role="checkbox" aria-checked="{{c.aria}}" onClick="{{c.toggle}}" style="{{c.style}}">
+<span aria-hidden="true" style="{{c.avatar}}">{{c.initials}}</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start"><span style="font-weight: 600">{{c.name}}</span><span style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #6b6f76">{{c.code}}</span></span>
+<span aria-hidden="true" style="{{c.box}}"><sc-if value="{{c.on}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{noCompany}}" hint-placeholder-val="{{ false }}"><p role="alert" style="margin: 10px 0 0; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #b3221b"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5M12 16.5v.01"></path></svg>Elige al menos una compañía.</p></sc-if>
+</section>
+
+<section aria-labelledby="s3" style="border: 1px solid #eceef1; border-radius: 24px; padding: 24px">
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">3</span>
+<div><h2 id="s3" style="margin: 0; font-size: 18px; font-weight: 600">Permisos por módulo</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Marca lo que este rol puede hacer en cada módulo.</p></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px">
+<span style="font-size: 13px; color: #45484d; margin-right: 2px">Empezar desde:</span>
+<sc-for list="{{templates}}" as="t" hint-placeholder-count="4"><button type="button" aria-pressed="{{t.aria}}" onClick="{{t.pick}}" class="{{t.cls}}" style="{{t.style}}">{{t.label}}</button></sc-for>
+</div>
+<div style="border: 1px solid #eceef1; border-radius: 18px; overflow: hidden">
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr style="background: #f6f8fa; font-size: 11px; letter-spacing: 0.8px; color: #6b6f76">
+<th scope="col" style="text-align: left; padding: 0 16px; height: 44px; font-weight: 600">MÓDULO</th>
+<sc-for list="{{permCols}}" as="pc" hint-placeholder-count="4"><th scope="col" style="width: 80px; font-weight: 600">{{pc}}</th></sc-for>
+<th scope="col" style="width: 80px; font-weight: 600">TODO</th>
+</tr></thead>
+<tbody><tr>
+<th scope="row" style="text-align: left; padding: 14px 16px; font-weight: 400"><span style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 12px; background: #ffe6e4; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"></path><path d="M3 8v8l9 5 9-5V8"></path><path d="M12 13v8"></path></svg></span><span><span style="display: block; font-weight: 600">Productos</span><span style="display: block; font-size: 12px; color: #6b6f76">Catálogo, precios y existencias</span></span></span></th>
+<sc-for list="{{perms}}" as="p" hint-placeholder-count="4">
+<td style="text-align: center"><button type="button" role="checkbox" aria-checked="{{p.aria}}" aria-label="{{p.label}}" disabled="{{p.locked}}" onClick="{{p.toggle}}" title="{{p.title}}" style="{{p.box}}"><sc-if value="{{p.on}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button></td>
+</sc-for>
+<td style="text-align: center"><button type="button" role="checkbox" aria-checked="{{rowAria}}" aria-label="Todos los permisos de Productos" onClick="{{toggleRow}}" style="{{rowBox}}"><sc-if value="{{rowOn}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{rowMixed}}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"><path d="M6 12h12"></path></svg></sc-if></button></td>
+</tr></tbody>
+</table>
+</div>
+<sc-if value="{{verLocked}}" hint-placeholder-val="{{ true }}"><p style="margin: 10px 0 0; font-size: 13px; color: #6b6f76">"Ver" queda marcado porque es necesario para crear, editar o eliminar.</p></sc-if>
+<p style="margin: 12px 0 0; display: flex; gap: 10px; padding: 10px 14px; border-radius: 14px; background: #f6f8fa; font-size: 13px; color: #45484d"><span aria-hidden="true" style="width: 8px; height: 8px; flex: none; margin-top: 6px; border-radius: 9999px; background: #45484d"></span>Eliminar no borra: el producto se marca como eliminado y queda en el historial. Con "Ver", el rol también ve el historial de Productos.</p>
+<div style="margin-top: 14px; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1.5px dashed #d6d9de; border-radius: 16px">
+<span aria-hidden="true" style="width: 32px; height: 32px; flex: none; border-radius: 9999px; background: #fff4cf; color: #7a5200; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+<div><p style="margin: 0; font-weight: 600">Solo para administradores</p><p style="margin: 2px 0 8px; font-size: 13px; color: #6b6f76">Estos módulos no se asignan a roles.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{adminOnly}}" as="a" hint-placeholder-count="6"><span style="height: 26px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; background: #f6f8fa; color: #45484d; font-size: 12px; font-weight: 600">{{a}}</span></sc-for></div></div>
+</div>
+</section>
+</form>
+
+<aside aria-labelledby="sum-h" style="flex: 0 0 340px; max-width: 100%; position: sticky; top: 16px; background: #f6f8fa; border-radius: 24px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<p id="sum-h" style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">RESUMEN</p>
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5"></path><path d="M16.5 7.5v.01"></path></svg></span>
+<div style="min-width: 0"><p style="{{sumNameStyle}}">{{sumName}}</p><p style="margin: 0; font-size: 13px; color: #6b6f76">{{sumSession}}</p></div>
+</div>
+<div style="background: #ffffff; border-radius: 16px; padding: 4px 14px">
+<div style="padding: 10px 0; border-bottom: 1px solid #f1f2f4"><p style="margin: 0 0 6px; font-size: 12px; color: #6b6f76">Compañías</p><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{sumCos}}" as="c" hint-placeholder-count="2"><span style="height: 24px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; background: #f6f8fa; font-size: 12px; font-weight: 600">{{c}}</span></sc-for><sc-if value="{{noCompany}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #b3221b; font-weight: 600">Ninguna</span></sc-if></div></div>
+<div style="padding: 10px 0"><p style="margin: 0 0 6px; font-size: 12px; color: #6b6f76">Productos</p><p style="margin: 0; font-weight: 600">{{sumPerms}}</p></div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="3">
+<li style="display: flex; align-items: center; gap: 10px; font-size: 13px"><span aria-hidden="true" style="{{k.icon}}"><sc-if value="{{k.ok}}" hint-placeholder-val="{{ true }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{k.warn}}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1c1c1e" stroke-width="3.4" stroke-linecap="round"><path d="M12 6v8M12 18v.01"></path></svg></sc-if></span><span style="{{k.textStyle}}">{{k.text}}</span></li>
+</sc-for>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 8px; padding-top: 4px">
+<button type="button" onClick="{{submit}}" disabled="{{saveDisabled}}" style="{{saveStyle}}">Guardar rol</button>
+<a href="#" style="height: 44px; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">Cancelar</a>
+</div>
+</aside>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'Almacenero', desc: '', session: 'tope', cos: { nacion: true, casona: true }, perms: [true, true, true, false], touched: false };
+  }
+  renderVals() {
+    const st = this.state;
+    const I = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const nav = [['inicio', 'Inicio'], ['companias', 'Compañías'], ['roles', 'Roles', true], ['usuarios', 'Usuarios'], ['categorias', 'Categorías'], ['productos', 'Productos'], ['historial', 'Historial']].map(([k, label, active]) => ({
+      label, active: !!active, current: active ? 'page' : 'false', cls: active ? '' : 'nav-i',
+      d1: I[k][0], d2: I[k][1], d3: I[k][2], iconColor: active ? '#d92d25' : 'currentColor',
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (active ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }));
+    const nameOk = st.name.trim().length >= 3;
+    const showNameErr = !nameOk && st.touched;
+    const S = [['tope', 'Tope de la compañía', true], ['4', '4 h'], ['8', '8 h'], ['12', '12 h'], ['24', '24 h']];
+    const sessions = S.map(([id, label, rec]) => {
+      const on = st.session === id;
+      return {
+        label, rec: !!rec, aria: on ? 'true' : 'false', pick: () => this.setState({ session: id }),
+        style: 'height: 44px; padding: 0 14px 0 10px; display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; font: inherit; font-weight: 600; cursor: pointer; ' + (on ? 'background: #fff4f3; color: #1c1c1e; border: 1.5px solid #d92d25' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #e4e6ea'),
+        ring: 'width: 20px; height: 20px; box-sizing: border-box; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: #ffffff; border: ' + (on ? '2px solid #d92d25' : '1.5px solid #c9cdd3'),
+        dot: 'width: 9px; height: 9px; border-radius: 9999px; background: ' + (on ? '#d92d25' : 'transparent')
+      };
+    });
+    const CO = [['nacion', 'La Nacion', '717d', 'LN', '#ffc93c', '#1c1c1e'], ['casona', 'La Casona', 'qbt6', 'LC', '#ffe6e4', '#b3221b']];
+    const nOn = CO.filter((c) => st.cos[c[0]]).length;
+    const box = (on, mixed) => 'width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 7px; display: flex; align-items: center; justify-content: center; ' + (on || mixed ? 'background: #d92d25; border: 0' : 'background: #ffffff; border: 1.5px solid #c9cdd3');
+    const companies = CO.map(([id, name, code, initials, bg, fg]) => {
+      const on = !!st.cos[id];
+      return {
+        name, code, initials, on, aria: on ? 'true' : 'false', box: box(on),
+        avatar: 'width: 38px; height: 38px; flex: none; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: ' + bg + '; color: ' + fg,
+        style: 'width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px 12px 12px; border-radius: 16px; font: inherit; color: #1c1c1e; text-align: left; cursor: pointer; ' + (on ? 'background: #fff4f3; border: 1.5px solid #f8c9c5' : 'background: #ffffff; border: 1.5px solid #e4e6ea'),
+        toggle: () => this.setState({ cos: Object.assign({}, st.cos, { [id]: !on }) })
+      };
+    });
+    const allOn = nOn === CO.length, allMixed = nOn > 0 && !allOn;
+    const P = st.perms;
+    const verLocked = P[1] || P[2] || P[3];
+    const names = ['Ver', 'Crear', 'Editar', 'Eliminar'];
+    const perms = names.map((label, i) => {
+      const locked = i === 0 && verLocked;
+      const on = !!P[i];
+      return {
+        on, locked, aria: on ? 'true' : 'false', label: label + ' productos', title: locked ? 'Necesario para crear, editar o eliminar' : '',
+        box: box(on).replace('display: flex', 'display: inline-flex') + '; padding: 0; vertical-align: middle; ' + (locked ? 'opacity: 0.55; cursor: not-allowed' : 'cursor: pointer'),
+        toggle: () => {
+          if (locked) return;
+          const np = P.slice(); np[i] = !np[i]; if (i > 0 && np[i]) np[0] = true;
+          this.setState({ perms: np });
+        }
+      };
+    });
+    const nP = P.filter(Boolean).length;
+    const rowOn = nP === 4, rowMixed = nP > 0 && !rowOn;
+    const T = [['lectura', 'Solo consulta', [true, false, false, false]], ['oper', 'Operativo', [true, true, true, false]], ['full', 'Completo', [true, true, true, true]], ['none', 'Ninguno', [false, false, false, false]]];
+    const templates = T.map(([id, label, set]) => {
+      const on = set.every((v, i) => v === !!P[i]);
+      return { label, aria: on ? 'true' : 'false', cls: on ? '' : 'tpl', pick: () => this.setState({ perms: set.slice() }), style: 'height: 36px; padding: 0 14px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffe6e4; color: #b3221b; border: 1.5px solid #ffe6e4' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de') };
+    });
+    const sessLabel = { tope: 'Sesión: tope de la compañía', '4': 'Sesión de 4 horas', '8': 'Sesión de 8 horas', '12': 'Sesión de 12 horas', '24': 'Sesión de 24 horas' }[st.session];
+    const valid = nameOk && nOn > 0;
+    const ck = (ok, warn) => 'width: 20px; height: 20px; flex: none; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: ' + (ok ? '#1e7a50' : warn ? '#ffc93c' : '#eceef1');
+    const checks = [
+      { text: 'Nombre de al menos 3 letras', ok: nameOk, warn: false },
+      { text: 'Al menos una compañía', ok: nOn > 0, warn: false },
+      { text: nP ? 'Tiene permisos en Productos' : 'Sin permisos: solo podrá iniciar sesión', ok: nP > 0, warn: nP === 0 }
+    ].map((k) => Object.assign(k, { icon: ck(k.ok, k.warn), textStyle: k.ok ? 'color: #1c1c1e' : k.warn ? 'color: #7a5200; font-weight: 600' : 'color: #6b6f76' }));
+    return {
+      nav, name: st.name, desc: st.desc,
+      onName: (e) => this.setState({ name: e.target.value, touched: true }),
+      onDesc: (e) => this.setState({ desc: e.target.value }),
+      nameInvalid: showNameErr ? 'true' : 'false',
+      nameStyle: 'height: 48px; box-sizing: border-box; border-radius: 9999px; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; ' + (showNameErr ? 'border: 2px solid #d92d25; background: #fff7f6' : st.name ? 'border: 1.5px solid #c9cdd3; background: #ffffff' : 'border: 1.5px solid #e4e6ea; background: #ffffff'),
+      nameHelp: showNameErr ? 'Escribe al menos 3 letras.' : 'Así aparece al asignarlo a un usuario.',
+      nameHelpStyle: 'margin: 6px 0 0; font-size: 13px; ' + (showNameErr ? 'color: #b3221b; font-weight: 600' : 'color: #6b6f76'),
+      sessions, companies, noCompany: nOn === 0,
+      countLabel: nOn + ' de ' + CO.length,
+      countChip: 'flex: none; height: 26px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 12px; font-weight: 700; ' + (nOn ? 'background: #f6f8fa; color: #1c1c1e' : 'background: #ffe6e4; color: #b3221b'),
+      allOn, allMixed, allAria: allOn ? 'true' : allMixed ? 'mixed' : 'false', allBox: box(allOn, allMixed),
+      toggleAll: () => this.setState({ cos: allOn ? { nacion: false, casona: false } : { nacion: true, casona: true } }),
+      permCols: ['VER', 'CREAR', 'EDITAR', 'ELIMINAR'], perms, verLocked,
+      rowOn, rowMixed, rowAria: rowOn ? 'true' : rowMixed ? 'mixed' : 'false',
+      rowBox: box(rowOn, rowMixed).replace('display: flex', 'display: inline-flex') + '; padding: 0; vertical-align: middle; cursor: pointer',
+      toggleRow: () => this.setState({ perms: rowOn ? [false, false, false, false] : [true, true, true, true] }),
+      templates, adminOnly: ['Compañías', 'Sedes', 'Tiendas', 'Usuarios', 'Roles', 'Categorías'],
+      sumName: st.name.trim() || 'Sin nombre', sumNameStyle: 'margin: 0; font-family: \'Inter Tight\', Arial, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: ' + (st.name.trim() ? '#1c1c1e' : '#8c9097'),
+      sumSession: sessLabel,
+      sumCos: CO.filter((c) => st.cos[c[0]]).map((c) => c[1]),
+      sumPerms: nP ? names.filter((n, i) => P[i]).join(' · ') : 'Sin permisos',
+      checks, saveDisabled: !valid,
+      saveStyle: 'height: 48px; border: 0; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; ' + (valid ? 'background: #d92d25; color: #ffffff; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      submit: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ touched: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

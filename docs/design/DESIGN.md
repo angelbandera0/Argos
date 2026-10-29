@@ -453,6 +453,33 @@ Variante de 6.33 para registros de actividad.
 
 ---
 
+### 6.37 Tarjeta de entidad (compañías, sedes, tiendas)
+Para listados de pocas entidades con datos clave (compañías, sedes) se usa **grilla de tarjetas** con opción de cambiar a lista (tabla 6.32). Grilla: `repeat(auto-fill, minmax(320px, 1fr))`, gap 18 px (sedes: mínimo 420 px).
+- **Tarjeta:** blanca, borde `1px --color-line-soft`, radio 24, sin sombra (hover: `0 12px 30px rgba(28,28,30,.08)`). Tres franjas separadas por `1px #F1F2F4`:
+  1. **Cabecera** (padding 20 20 16): avatar cuadrado de 48 px radio 14 (iniciales; colores amarillo / rojo tint; inactiva `#ECEEF1`) o icono del tipo (sede física: edificio en `--color-red-tint`; online: globo en `--color-yellow-tint`) · nombre 17 px 600 (enlace) · debajo código en chip monoespaciado y, si aplica, chip "En uso" amarillo (la compañía activa) o subtítulo "3 tiendas · Física" · insignia de estado a la derecha (Activa éxito / Inactiva neutro / Pausada aviso).
+  2. **Datos** (padding 16 20): grilla 2×2 de etiqueta 12 px `--color-muted` + valor 15 px 600. El dato de **rendimiento** va en color de estado (Bueno `--color-success`, Normal `--color-ink-2`, Requiere atención `--color-warning-text`).
+  3. **Acciones** (padding 14 20 18, fondo `#FCFCFD`): dos botones iguales de 42 px: "Ver …" (Contorno neutro) y "Editar" (Contorno con texto `--color-red-strong` y borde `--color-danger-border`; hover `#FFF4F3`).
+- **Sede con tiendas:** entre datos y acciones, bloque `--color-panel` radio 18 con overline "TIENDAS · n" + "Añadir tienda" (Texto rojo) y filas de 52 px: icono de tienda en círculo blanco 36 px, nombre 600 + meta 12 px ("Física · Caja 1 y 2"), insignia, "⋯". Muestra 2 y "Ver las n tiendas". Sin tiendas: "Esta sede aún no tiene tiendas."
+- **Barra de la página:** buscador · chips de estado con contador · a la derecha "Ordenar: Nombre" y conmutador de vista (segmentado con iconos de grilla/lista; activo blanco con icono rojo).
+- **Detalle de la entidad:** migas → avatar 64 px + título 40 px + chips (código, estado) + meta ("Creada el … · Administra: …") → acciones secundarias (Contorno) a la derecha → fila de 4 indicadores (panel radio 20, icono rojo en círculo blanco 40 px, cifra Inter Tight 26 px) → secciones.
+- **Roles:** misma tarjeta con icono de llave (`--color-red-tint`); el rol del sistema (Administrador) lleva candado en `--color-yellow-tint`, chip "Del sistema" y en lugar de "Editar" el texto "No se puede editar". Datos: compañías (chip "Todas las compañías" o una por compañía), permisos del módulo como chips (concedido: `--color-red-tint` con check; no concedido: borde punteado `--color-ring` y texto `--color-placeholder`, con texto oculto "(no permitido)"), sesión y usuarios (pila de avatares). Menú "⋯": Duplicar, Eliminar rol. Al final de la grilla, tarjeta punteada "Crear un rol nuevo".
+- **Zona de peligro:** al final de la página, tarjeta con borde `1.5px --color-danger-border`, icono en círculo `--color-danger-tint`, título + consecuencia concreta ("sus 5 tiendas dejan de vender") y botón **Peligro** (no primario). La confirmación final es un diálogo destructivo (6.23).
+
+### 6.38 Formularios de creación/edición (ej. Nuevo rol)
+- **Dos columnas:** formulario (máx. 820 px) + **panel de resumen** de 340 px a la derecha, `position: sticky; top: 16px`, fondo `--color-panel` radio 24. En < 1024 px el resumen pasa debajo y los botones a una barra fija inferior.
+- **Secciones numeradas:** tarjetas blancas con borde `1px --color-line-soft`, radio 24, padding 24. Cabecera: número en círculo de 28 px (`--color-red-tint` / `--color-red-hover` 700) + título 18 px 600 + descripción 13 px muted; a la derecha, si aplica, un contador ("2 de 2").
+- **Campos cortos en dos columnas** (Nombre + Descripción). Opciones de 2–6 valores (tiempo de sesión) como **radio en píldoras** (44 px; elegida: borde `1.5px --color-red-strong`, fondo `#FFF4F3`); el valor por defecto lleva la etiqueta "Recomendado" (éxito). Usa select solo con más de 6 opciones.
+- **Selección de compañías:** fila "Todas mis compañías" (checkbox con estado mixto, fondo `--color-panel`) + tarjetas seleccionables de 2 columnas (avatar, nombre, código, checkbox a la derecha; elegida: fondo `#FFF4F3` y borde `--color-danger-border`). Sin ninguna: mensaje de error y contador en rojo. No uses interruptores para listas de selección: el interruptor es para activar/desactivar ajustes inmediatos.
+- **Matriz de permisos:** tabla con módulos en filas y acciones en columnas (Ver · Crear · Editar · Eliminar · Todo), checkboxes centrados de 22 px. Reglas: marcar Crear/Editar/Eliminar marca **Ver** y lo bloquea (opacidad 55 %, `title` con el motivo y nota debajo). "Todo" tiene estado mixto. Encima, **plantillas** como chips ("Solo consulta", "Operativo", "Completo", "Ninguno"); la que coincide con la selección actual se marca activa. Debajo, la aclaración del módulo (compacta, `--color-panel`) y el bloque punteado "Solo para administradores" con candado y chips de los módulos no asignables.
+- **Resumen:** icono + nombre (o "Sin nombre" en `--color-placeholder`) + sesión; tarjeta blanca con compañías (chips) y permisos ("Ver · Crear · Editar"); **lista de comprobación** (círculo de 20 px: éxito con check / aviso amarillo con "!" / gris pendiente). "Guardar" (Primario, 48 px, ancho completo) se desactiva hasta que lo obligatorio esté completo; "Cancelar" debajo. Los avisos (ej. "Sin permisos: solo podrá iniciar sesión") no bloquean.
+- **Validación:** al salir del campo o al intentar guardar; mensajes que dicen cómo arreglarlo ("Escribe al menos 3 letras").
+
+---
+
+Tamaños de fuente de 6.37 y 6.38 (17, 18, 26, 40 px…): aplica la escala reducida del proyecto (tokens); solo cambian estructura, colores y espacios.
+
+---
+
 ## 7. Gráficos
 
 - **Barras semanales:** barras neutras `--color-line-strong`; **mejor día** `--color-red`; **hoy (en curso)** `--color-yellow`. Ancho máx. 40–44 px, gap 10–12, radio 10 10 4 4.
