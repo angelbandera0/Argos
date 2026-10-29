@@ -480,6 +480,55 @@ Tamaños de fuente de 6.37 y 6.38 (17, 18, 26, 40 px…): aplica la escala reduc
 
 ---
 
+### 6.39 Listado de usuarios
+- **Cabecera:** título + subtítulo ("Personas que entran con su PIN en las tiendas de …") y "Nuevo usuario" (Primario). Debajo, 4 indicadores compactos (panel radio 20, punto de color + etiqueta + cifra Inter Tight 26 px): Usuarios · Activos (éxito) · Aún no han entrado (aviso `#E0A800`) · Inactivos (`--color-placeholder`).
+- **Filtros (6.35):** buscador "Buscar por nombre o usuario" · "Rol: Todos ▾" · "Tienda: Todas ▾" · chips de estado con contador (Todos / Activos / Inactivos). Un select con valor distinto de "Todos" se pinta en `--color-red-tint`. Sin botón "Filtrar".
+- **Columnas:** Usuario (avatar 38 px con iniciales, color por rol, + nombre 600 enlace) · Nombre de usuario (chip monoespaciado con el prefijo en `--color-placeholder`: `qbt6.`raul) · Rol (chip; Administrador en amarillo tint, el resto en rojo tint) · Tiendas (primera tienda como chip con borde + chip "+N"; "Todas las tiendas" en panel) · Último acceso ("Hoy, 08:12", "Nunca") · Estado · "⋯".
+- **Estados:** Activo (éxito) · **Aún no ha entrado** (aviso: se creó y se generó su PIN, pero no lo ha usado; quizá no se le entregó) · Inactivo (neutro; avatar al 55 %).
+- **Menú "⋯":** Editar · Generar nuevo PIN (abre el mismo diálogo de PIN de 6.40) · separador · Desactivar usuario (rojo) / Activar usuario (éxito). No se eliminan usuarios: se desactivan para conservar el historial.
+- **Pie:** "Mostrando 1–5 de 5 usuarios" + paginación (página actual en `--color-red-tint`).
+
+### 6.40 Formulario de usuario
+Sigue 6.38 con 2 secciones. **El PIN no se pide en el formulario: se genera automáticamente al crear el usuario.**
+1. **Datos de acceso:**
+   - Nombre + **Nombre de usuario con prefijo fijo** en dos columnas. El usuario es un solo campo píldora de 48 px con `qbt6.` dentro, a la izquierda, en monoespaciado `--color-muted` (no editable, fuera del `<input>`); el resto se escribe en monoespaciado, se pasa a minúsculas y sin espacios. Comprobación en vivo bajo el campo (`role="status"`): formato inválido / ya existe / "qbt6.marta está disponible" (éxito, con check verde de 22 px dentro del campo). Vacío: **sugerencia** a partir del nombre (chip rojo tint "qbt6.marta.l" que lo rellena).
+   - **Rol: select** (6.19) a todo el ancho, "Elige un rol" como placeholder y "Ver roles" (Texto rojo) junto a la etiqueta. Al elegir, debajo aparece una franja `--color-panel` con la descripción del rol y sus permisos como chips rojo tint con check. Sin elegir: ayuda "Decide qué podrá hacer. Puedes cambiarlo después."
+   - Nota en panel: qué significa el prefijo y qué caracteres valen.
+2. **Tiendas:** agrupadas por **sede**: cabecera de grupo (panel, checkbox con estado mixto, nombre + dirección, "1 de 2") y debajo tarjetas-checkbox de tienda (nombre + "Física · Caja 1"). Contador "n de N" en la cabecera de la sección; con 0, contador rojo y "Marca al menos una tienda."
+- **Resumen "ASÍ ENTRARÁ":** tarjeta blanca centrada que imita la pantalla de acceso: avatar 56 px, nombre, chip `qbt6.usuario` y 6 casillas punteadas vacías con candado + "PIN de 6 dígitos: se genera al crear". Debajo rol y tiendas, checklist (Nombre · Usuario disponible · Rol · Al menos una tienda) y **"Crear usuario y generar PIN"** (Primario) desactivado hasta cumplirla.
+- **Diálogo "Usuario creado"** (modal 460 px, radio 28, velo `rgba(28,28,30,.32)`; `role="dialog"` `aria-modal`):
+  - Icono de éxito 48 px + "Usuario creado" (Inter Tight 24) + "Marta ya puede entrar en Tienda 23 y L como Almacenero."
+  - Bloque `--color-panel` radio 20: usuario en monoespaciado con "Copiar"; separador; "PIN generado" con "Ocultar/Mostrar" y **6 casillas de 58 px** con un dígito cada una (Inter Tight 28, `tabular-nums`; ocultas como "•"); botón "Copiar usuario y PIN" (Contorno; tras copiar pasa a éxito "PIN copiado").
+  - Aviso amarillo: "**Solo se muestra esta vez.** Entrégaselo en persona. Si lo pierde, usa «Generar nuevo PIN» en su ficha."
+  - Acciones: "Crear otro" (Contorno, vacía el formulario) · "Listo" (Primario, va a la ficha o al listado).
+  - El PIN nunca se guarda visible ni se envía por la URL; tampoco aparece en el historial.
+
+### 6.41 Gestión de categorías (lista con edición en línea)
+Para catálogos simples (solo nombre) no se abre otra página ni un diálogo.
+- **Alta rápida:** franja `--color-panel` radio 24 sobre la lista con campo de 48 px "Nueva categoría, ej. Frutas" + "Agregar" (Primario, desactivado si está vacío). Enter agrega. Nombre repetido (ignorando mayúsculas y tildes): error en el campo.
+- **Lista:** tarjeta con borde `1px --color-line-soft` radio 24; cabecera con "5 categorías" + buscador. Filas de 64 px: icono de etiqueta en caja de 40 px (con productos: `--color-red-tint`; vacía: panel gris) · nombre 15 px 600 + "3 productos" (enlace al listado filtrado) · "Renombrar" (botón Texto con lápiz) · papelera de 38 px.
+- **Renombrar en línea:** la fila pasa a fondo `#FFF4F3` con campo enfocado (borde rojo + halo), "Cancelar" y "Guardar"; debajo "Se actualizará en n productos." Esc cancela, Enter guarda.
+- **Eliminar:** solo si la categoría está vacía. Con productos, la papelera queda desactivada (`--color-line-strong`, `title` "Tiene productos: muévelos a otra categoría primero"). Vacía: confirmación **en la misma fila** (`role="alertdialog"`, "¿Eliminar «Congelados»?" + Cancelar / Eliminar en Peligro) en lugar de un diálogo modal.
+- **Lateral (340 px):** "CÓMO FUNCIONAN" (reglas de renombrar y eliminar) + 2 indicadores (Categorías, Productos).
+- Nunca botones grandes "Renombrar" / "Eliminar" en cada fila: compiten con el nombre.
+
+### 6.42 Listado de productos
+- **Filtros (6.35):** buscador "Buscar por nombre o descripción" · "Categoría: Todas ▾" · chips de estado con contador.
+- **Columnas:** checkbox · Producto (icono de caja 40 px en rojo tint —gris si está inactivo— + nombre 600 + descripción 13 px en una línea con elipsis, máx. 360 px) · Categoría (chip panel con icono de etiqueta) · Estado (**interruptor** de 36×22 + texto "Activo" éxito / "Inactivo" muted; cambia al instante, `role="switch"`) · Actualizado · "⋯" (Editar · Duplicar · Ver historial · Eliminar).
+- **Selección múltiple:** el checkbox de la cabecera tiene estado mixto; al seleccionar aparece encima de la tabla una **barra de acciones** `#FFF4F3` con borde inferior `--color-danger-border`: "2 productos seleccionados" + Activar · Desactivar · Cambiar categoría (Contorno) + ✕. Las filas seleccionadas llevan fondo `#FFF4F3`.
+
+### 6.43 Formulario de producto
+Sigue 6.38 con 2 secciones:
+1. **Datos del producto:** Nombre (único; error "Ya existe un producto con ese nombre.") + Categoría (select) en dos columnas. Junto a la etiqueta de categoría, "+ Nueva categoría" (Texto rojo) cambia el select por un campo + "Crear" que la crea y la deja elegida, sin salir del formulario. Descripción (opcional) como textarea radio 20, 4 filas, con ayuda a la izquierda y contador "38 / 500" a la derecha (aviso desde 450).
+2. **Disponibilidad:** tarjeta-interruptor de ancho completo (`role="switch"`): icono de carrito, "Activo — Se ofrece en ventas desde que lo guardes" y el interruptor de 46×28. Activo: fondo `--color-success-tint`; inactivo: blanco con borde.
+- **Resumen "ASÍ SE VERÁ EN VENTAS":** vista previa de la pantalla de caja: chip de categoría (rojo, como la pestaña activa en ventas) y la tarjeta del producto (150 px, icono, nombre, descripción en 2 líneas). Inactivo: tarjeta al 60 % con chip "Pausado". Checklist (Nombre único · Categoría elegida), "Guardar producto" (Primario), "Guardar y crear otro" (Contorno) y "Cancelar".
+
+---
+
+Tamaños de fuente de 6.39–6.43 (24, 26 px…): aplica la escala reducida del proyecto (tokens); solo cambian estructura, colores y espacios.
+
+---
+
 ## 7. Gráficos
 
 - **Barras semanales:** barras neutras `--color-line-strong`; **mejor día** `--color-red`; **hoy (en curso)** `--color-yellow`. Ancho máx. 40–44 px, gap 10–12, radio 10 10 4 4.
