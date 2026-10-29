@@ -1,0 +1,21 @@
+.ui-summary-panel { display: flex; flex-direction: column; gap: var(--space-4); background: var(--color-panel); border-radius: var(--radius-card); padding: var(--space-5); position: sticky; top: var(--space-4); }
+@media (max-width: 1023px) { .ui-summary-panel { position: static; } }
+.ui-summary-eyebrow { margin: 0; font: var(--text-overline); letter-spacing: var(--tracking-eyebrow-sm); text-transform: uppercase; color: var(--color-muted); }
+.ui-summary-id { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+.ui-summary-id p { margin: 0; }
+.ui-summary-icon { display: grid; place-items: center; flex: none; width: var(--size-avatar); height: var(--size-avatar); border-radius: var(--radius-inner); background: var(--color-surface); color: var(--color-red-strong); }
+.ui-summary-icon svg { width: var(--size-icon); height: var(--size-icon); }
+.ui-summary-title { display: block; font: var(--text-value); overflow-wrap: anywhere; }
+.ui-summary-title[data-empty] { color: var(--color-placeholder); font-weight: 400; }
+.ui-summary-card { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding: var(--space-3) var(--space-3-5); background: var(--color-surface); border-radius: var(--radius-inner); }
+.ui-summary-card > div + div { padding-top: var(--space-3); border-top: var(--border-hairline) solid var(--color-line-soft); }
+.ui-summary-card dt { font: var(--text-caption); color: var(--color-muted); margin-bottom: var(--space-1-5); }
+.ui-summary-card dd { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-1-5); font: var(--text-body); font-weight: 600; }
+.ui-checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); font: var(--text-caption); color: var(--color-ink); }
+.ui-checklist li { display: flex; align-items: center; gap: var(--space-2-5); }
+.ui-checklist-mark { display: grid; place-items: center; flex: none; width: 20px; height: 20px; border-radius: 50%; border: var(--border-field) solid var(--color-line-strong); font-size: 11px; font-weight: 700; line-height: 1; }
+.ui-checklist-mark svg { width: var(--space-3); height: var(--space-3); stroke-width: 3; }
+.ui-checklist [data-state="ok"] .ui-checklist-mark { background: var(--color-success); border-color: var(--color-success); color: var(--color-surface); }
+.ui-checklist [data-state="warn"] .ui-checklist-mark { background: var(--color-warning); border-color: var(--color-warning); color: var(--color-ink); }
+.ui-summary-actions { display: flex; flex-direction: column; gap: var(--space-2); }
+.ui-summary-actions .btn { width: 100%; }

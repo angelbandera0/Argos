@@ -26,7 +26,7 @@ async function Editor() {
 export default function NewRolePage() {
   return (
     <div className="stack">
-      <PageHeader title="Nuevo rol" breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: "Nuevo rol" }]} />
+      <PageHeader title="Nuevo rol" description="Define qué puede hacer y en qué compañías. Luego lo asignas a usuarios." breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: "Nuevo rol" }]} />
       <Suspense fallback={<Loading />}>
         <Editor />
       </Suspense>

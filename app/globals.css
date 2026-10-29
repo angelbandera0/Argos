@@ -1,13 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 @import "../docs/design/tokens.css";
+@import "./ui-choice-card.css";
 @import "./ui-entity-card.css";
+@import "./ui-form-section.css";
 @import "./ui-inputs.css";
 @import "./ui-feedback.css";
 @import "./ui-navdata.css";
 @import "./ui-dates.css";
 @import "./ui-history.css";
 @import "./ui-pager.css";
+@import "./ui-role-form.css";
+@import "./ui-summary-panel.css";
 @import "./ui-view-toggle.css";
 
 @theme inline {

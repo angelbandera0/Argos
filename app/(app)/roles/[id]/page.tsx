@@ -26,6 +26,7 @@ async function Editor({ params }: { params: PageProps<"/roles/[id]">["params"] }
     <div className="stack">
       <PageHeader
         title={`Rol: ${role.name}`}
+        description="Define qué puede hacer y en qué compañías. Luego lo asignas a usuarios."
         breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: role.name }]}
         actions={
           <>

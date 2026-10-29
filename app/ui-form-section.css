@@ -1,0 +1,8 @@
+.ui-form-section { display: flex; flex-direction: column; gap: var(--space-4); background: var(--color-surface); border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-card); padding: var(--space-6); }
+.ui-form-section-head { display: flex; align-items: flex-start; gap: var(--space-3); }
+.ui-form-section-n { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--color-red-tint); color: var(--color-red-hover); font: var(--text-caption); font-weight: 700; }
+.ui-form-section-title { flex: 1; min-width: 0; }
+.ui-form-section-title h2 { margin: 0; font: var(--text-h2); }
+.ui-form-section-title p { margin: var(--space-1) 0 0; }
+.ui-form-section-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+@media (max-width: 639px) { .ui-form-section-cols { grid-template-columns: 1fr; } }

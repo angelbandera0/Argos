@@ -210,6 +210,9 @@
 .empty-state-title { margin: 0; font: var(--text-value); }
 .empty-state-text { margin: 0; max-width: var(--size-modal); color: var(--color-muted); }
 .form-shell { display: flex; flex-direction: column; gap: var(--space-4); width: 100%; max-width: var(--size-form); }
+.form-shell-main { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.form-shell-wide { display: grid; grid-template-columns: minmax(0, var(--size-form-wide)) var(--size-summary); gap: var(--space-6); align-items: start; max-width: calc(var(--size-form-wide) + var(--size-summary) + var(--space-6)); }
+@media (max-width: 1023px) { .form-shell-wide { grid-template-columns: minmax(0, 1fr); } }
 .form-shell-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2-5); }
 
 @media (prefers-reduced-motion: reduce) {

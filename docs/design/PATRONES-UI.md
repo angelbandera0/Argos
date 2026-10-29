@@ -39,6 +39,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Detalle de entidad (§6.37): fila de indicadores y zona de peligro | `StatTile` (`.ui-stat-grid`), `.ui-danger-zone` (icono, consecuencia, `DeactivateDialog` con botón Peligro), buscador `ListToolbar` controlado | `app/(app)/companias/[id]/page.tsx` |
 | Sedes con sus tiendas dentro de `EntityCard` | `EntityPanel` (TIENDAS · n, «Ver las n», vacío; `EntityCard avatarClassName`, grilla mín. 420 px con `--ui-card-min`) | `app/(app)/companias/[id]/sites-section.tsx` |
 | Roles en grilla de tarjetas (§6.37) | `EntityCard` con cuerpo propio (`.ui-role-data`, chips de permisos, pila `.ui-avatar-stack`), chips de compañía en URL (`compania`), menú «⋯» con `Menu.Group` + `DeleteRoleDialog` controlado, tarjeta punteada `.ui-role-new` | `components/roles/role-list.tsx` |
+| Formulario ancho con resumen (§6.38) [excepción al ancho de 480] | `FormShell aside` (`.form-shell-wide`: 820 + 340, tokens `--size-form-wide`/`--size-summary`), `FormSection`, `ChoiceCard`, `ChoicePills`, `SummaryPanel` + `SummaryCard` + `Checklist`, `FormSubmit` (el panel lleva Guardar/Cancelar); matriz y plantillas en `components/roles/permission-matrix.tsx`; lógica pura en `role-form-logic.ts` | `components/roles/role-form.tsx` |
 | Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
 
 ## Reglas transversales
@@ -47,6 +48,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 - Acción deshabilitada por falta de permiso: botón `disabled` con la razón visible y enlazada con `aria-describedby` (ejemplo `unit-menu.tsx`, `deactivate-dialog.tsx`); acciones solo de administrador se ocultan por `actor.kind`.
 - Opción de `Select` con valor vacío («Todos»): usar `value=""` explícito (`app/(app)/usuarios/page.tsx`).
 - Iconos del shell: pasa el NOMBRE (`"Building2"`), nunca un componente de servidor a cliente; icono nuevo: añádelo a `NAV_ICONS` (`components/icons.ts`).
+- Excepción §6.38: un formulario con panel de resumen usa `FormShell aside` (ancho 820 + 340); el resto sigue en 480.
 - Ancho de formularios de página [decisión del usuario]: lo fija solo `FormShell` (`.form-shell`, `width: 100%`, `max-width: var(--size-form)` = 480; 100% en móvil). Las páginas ponen `FormShell` por fuera y las `Card` dentro; nunca `Card` por fuera ni anchos propios (causa del bug: `new-user-form` envolvía `FormShell` en una `Card` de ancho completo).
 - Mostrar una vez, sin cierre accidental: Escape y clic fuera no cierran (`dismissible={false}`).
 - Comprobaciones previas que sustituyen al formulario por una tarjeta con enlace: `app/(app)/usuarios/nuevo/page.tsx`.

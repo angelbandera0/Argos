@@ -157,6 +157,8 @@
   --size-list-row: 56px;
   --size-modal: 480px;
   --size-form: 480px;
+  --size-form-wide: 820px;    /* columna de formulario con panel de resumen (§6.38) */
+  --size-summary: 340px;
   --size-chart: 200px;
   --size-bar-max: 44px;
   --size-focus: 3px;
