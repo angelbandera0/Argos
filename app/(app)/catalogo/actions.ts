@@ -3,11 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Forbidden, NotFound, RuleViolation, SessionExpired } from "@/core/domain/errors";
+import { wantsAnother } from "@/components/catalog/product-form-logic";
+import { nameKey } from "@/core/domain/name";
 import { requireCatalogUser, requireCategoryAdmin } from "./guard";
 
 export interface CatalogActionState {
   error?: string;
   nameError?: string;
+  categoryId?: string;
+  saved?: number;
 }
 
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
@@ -30,12 +34,12 @@ export async function createCategoryAction(_: CatalogActionState, formData: Form
   if (!companyId) return { error: "Elige una compañía arriba." };
   const name = text(formData, "name");
   try {
-    await catalog.createCategory(actor, { companyId, name });
+    const created = await catalog.createCategory(actor, { companyId, name });
+    revalidatePath("/catalogo", "layout");
+    return { categoryId: created.id };
   } catch (e) {
     return fail(e, name);
   }
-  revalidatePath("/catalogo", "layout");
-  return {};
 }
 
 export async function renameCategoryAction(
@@ -89,7 +93,16 @@ export async function saveProductAction(
     return fail(e, name);
   }
   revalidatePath("/catalogo", "layout");
+  if (wantsAnother(formData.get("again"))) return { saved: Date.now() };
   redirect("/catalogo/productos");
+}
+
+export async function checkProductNameAction(name: string, productId: string | null): Promise<{ available: boolean }> {
+  const { actor, catalog, companyId } = await requireCatalogUser();
+  if (!companyId) return { available: true };
+  const key = nameKey(name);
+  const products = await catalog.listProducts(actor, { companyId });
+  return { available: !products.some((p) => p.id !== productId && nameKey(p.name) === key) };
 }
 
 export async function deleteProductAction(id: string): Promise<CatalogActionState> {

@@ -45,6 +45,8 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
 | Casillas de PIN (vacías/dígitos/ocultas) | `PinSlots` (`size` sm/lg) | `components/users/user-created-dialog.tsx` |
 | Formulario de usuario (§6.40) | `FormShell aside` + `FormSection`, usuario con prefijo fijo y comprobación en vivo (`checkUsernameAction`), `Select` de rol con franja de permisos, tiendas por sede con casilla mixta, `SummaryPanel` «Así entrará» con `PinSlots`; diálogo «Usuario creado» (`Dialog tone="success"`, `dismissible={false}`); lógica pura en `user-form-logic.ts` | `components/users/new-user-form.tsx` |
+| Interruptor destacado de un estado (p. ej. disponibilidad) | `ToggleCard` | `components/ui/toggle-card.tsx` (galería `/ui`) |
+| Vista previa de cómo se verá algo en otra pantalla | `SalesPreview` | `components/ui/sales-preview.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

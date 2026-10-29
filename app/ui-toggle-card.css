@@ -1,0 +1,10 @@
+.ui-toggle-card { display: flex; align-items: center; gap: var(--space-3-5); width: 100%; padding: var(--space-3-5) var(--space-4); border: var(--border-hairline) solid var(--color-line); border-radius: var(--radius-inner); background: var(--color-surface); text-align: left; cursor: pointer; }
+.ui-toggle-card[aria-checked="true"] { background: var(--color-success-tint); border-color: transparent; }
+.ui-toggle-card:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ui-toggle-card:disabled { cursor: not-allowed; opacity: 0.6; }
+.ui-toggle-card-icon { display: grid; place-items: center; flex: none; width: var(--size-avatar); height: var(--size-avatar); border-radius: var(--radius-icon); background: var(--color-surface); color: var(--color-success); }
+.ui-toggle-card[aria-checked="false"] .ui-toggle-card-icon { color: var(--color-muted); background: var(--color-panel); }
+.ui-toggle-card-icon svg { width: var(--size-icon); height: var(--size-icon); }
+.ui-toggle-card-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.ui-toggle-card-text strong { font: var(--text-body); font-weight: 600; }
+.ui-toggle-card[aria-checked="true"] .ui-switch { background: var(--color-success); }

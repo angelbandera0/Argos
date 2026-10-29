@@ -19,6 +19,7 @@ export {
   Lock,
   LockOpen,
   Plus,
+  ShoppingCart,
   Search,
   Tag,
   Tags,

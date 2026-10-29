@@ -13,7 +13,9 @@
 @import "./ui-pager.css";
 @import "./ui-pin-slots.css";
 @import "./ui-role-form.css";
+@import "./ui-sales-preview.css";
 @import "./ui-summary-panel.css";
+@import "./ui-toggle-card.css";
 @import "./ui-user-form.css";
 @import "./ui-user-list.css";
 @import "./ui-product-list.css";
@@ -336,3 +338,4 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .meters, .dash-grid { grid-template-columns: 1fr; }
   .dash-grid > .card, .dash-grid > :first-child, .dash-grid > :last-child, .dash-analytics { grid-column: auto; }
 }
+@import "./ui-product-form.css";

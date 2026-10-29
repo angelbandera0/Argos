@@ -36,6 +36,7 @@ async function Editor({ params }: { params: PageProps<"/catalogo/productos/[id]"
       />
       <ProductForm
         productId={product.id}
+        canCreateCategory={actor.kind === "admin" && permissions.edit}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         initial={{
           name: product.name,

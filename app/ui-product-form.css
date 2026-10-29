@@ -1,0 +1,7 @@
+.ui-product-newcat { padding: 0; border: 0; background: none; font: var(--text-caption); font-weight: 600; color: var(--color-red-strong); cursor: pointer; }
+.ui-product-newcat:hover { text-decoration: underline; }
+.ui-product-newcat-row { display: flex; gap: var(--space-2); }
+.ui-product-newcat-row .input { flex: 1; min-width: 0; }
+.ui-product-desc-foot { display: flex; justify-content: space-between; gap: var(--space-3); }
+.ui-product-desc-foot .ui-product-count { font: var(--text-caption); color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.ui-product-desc-foot .ui-product-count[data-warn] { color: var(--color-warning-text); font-weight: 700; }

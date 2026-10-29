@@ -141,3 +141,7 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 ## PinSlots y formulario de usuario (§6.40)
 - `PinSlots` (`components/ui/pin-slots.tsx`): 6 casillas; `sm` punteadas vacías (resumen «Así entrará»), `lg` 58 px con dígitos (`tabular-nums`) u ocultas «•». `Dialog tone="success"`: icono de éxito.
 - Formulario de usuario: usuario = píldora con prefijo fijo mono + comprobación en vivo; tiendas por sede con casilla mixta (`.ui-store-group`); franja de permisos del rol (`.ui-role-strip`). CSS en `app/ui-user-form.css`.
+
+## ToggleCard y SalesPreview (§6.43)
+- `ToggleCard` (`components/ui/toggle-card.tsx`): botón `role="switch"` de ancho completo con icono, título, ayuda e interruptor; activo `--color-success-tint`, inactivo blanco con borde.
+- `SalesPreview` (`components/ui/sales-preview.tsx`): chip rojo de categoría + tarjeta de 150 px; pausado: tarjeta al 60 % y chip «Pausado». Formulario de producto: `components/catalog/product-form.tsx`, CSS `app/ui-product-form.css`.
