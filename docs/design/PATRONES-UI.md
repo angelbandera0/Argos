@@ -35,6 +35,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Carga | `Skeleton`, `Spinner`, `RouteProgress`; `Button loading` | `app/(app)/roles/loading.tsx` |
 | Selector de compañía activa [decisión del usuario] | `CompanySelector` en el panel lateral (`AppShell company={…}`), avatar determinista por código (`company-avatar.ts`) | `components/org/company-selector.tsx` |
 | Shell y menú | `SidebarSection`, `SidebarItem`, `SidebarSubmenu`; `ProfileMenu` | `components/shell/app-shell.tsx` |
+| Listado de pocas entidades en grilla de tarjetas (§6.37) | `EntityCard` (slots avatar, título, código, chip, subtítulo, badge, datos 2×2, cuerpo extra, acciones; `.ui-entity-card-grid`, `.ui-entity-card-edit`), `Chip` filtro con contador, `ViewToggle` (valor `?vista=lista`), lista = `DataTable` | `app/(app)/companias/company-list.tsx` |
 
 ## Reglas transversales
 

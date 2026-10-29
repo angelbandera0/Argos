@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { NewCompanyButton } from "@/components/org/new-company-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ListToolbar } from "@/components/ui/list-toolbar";
 import { PageHeader } from "@/components/ui/page-header";
-import { CompanyTable } from "./company-table";
-import { requireOrgUser } from "./guard";
+import { filterCompanies, parseStatus, statusCounts } from "./company-filters";
+import { CompanyList as Companies } from "./company-list";
+import { ACTIVE_COMPANY_COOKIE, requireOrgUser } from "./guard";
 import Loading from "./loading";
 
 export const instant = false;
@@ -14,10 +15,12 @@ export const metadata: Metadata = { title: "Compañías · Argos" };
 
 async function CompanyList({ searchParams }: { searchParams: PageProps<"/companias">["searchParams"] }) {
   const { actor, org } = await requireOrgUser();
-  const { q } = await searchParams;
-  const query = (typeof q === "string" ? q : "").trim().toLowerCase();
+  const { q, estado, vista } = await searchParams;
+  const text = typeof q === "string" ? q : "";
+  const status = parseStatus(estado);
   const all = await org.listCompanies(actor);
-  const companies = all.filter((c) => c.name.toLowerCase().includes(query) || c.code.includes(query));
+  const companies = filterCompanies(all, text, status);
+  const activeId = (await cookies()).get(ACTIVE_COMPANY_COOKIE)?.value;
   const canCreate = actor.kind === "admin";
 
   if (all.length === 0) {
@@ -35,12 +38,15 @@ async function CompanyList({ searchParams }: { searchParams: PageProps<"/compani
   }
 
   return (
-    <>
-      <ListToolbar
-        search={{ label: "Buscar compañía", placeholder: "Buscar por nombre o código", defaultValue: typeof q === "string" ? q : undefined }}
-      />
-      <CompanyTable rows={companies.map((c) => ({ id: c.id, name: c.name, code: c.code, status: c.status }))} />
-    </>
+    <Companies
+      rows={companies.map((c) => ({ id: c.id, name: c.name, code: c.code, status: c.status, hours: c.sessionCapSeconds / 3600 }))}
+      q={text}
+      status={status}
+      view={vista === "lista" ? "lista" : "grilla"}
+      counts={statusCounts(all, text)}
+      activeId={activeId}
+      canEdit={canCreate}
+    />
   );
 }
 

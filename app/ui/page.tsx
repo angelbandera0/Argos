@@ -10,6 +10,7 @@ import { ComposedSection, DatatableSection, FormSection } from "./sections/datos
 import { DatepickerSection } from "./sections/fechas";
 import { FiltrosSection, HistorialSection } from "./sections/historial";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
+import { EntityCardSection, ViewToggleSection } from "./sections/entity-card";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -41,6 +42,8 @@ const sections = [
   { id: "filtros", title: "FilterBar, FilterPill y Avatar", description: "Barra de filtros de una página (guía §6.35).", content: <FiltrosSection /> },
   { id: "historial", title: "AuditTable e Historial", description: "Tabla de auditoría agrupada por día (guía §6.36) y página completa (H-01/H-02).", content: <HistorialSection /> },
   { id: "formshell", title: "FormShell", description: "Formulario de ejemplo.", content: <FormSection /> },
+  { id: "entity-card", title: "EntityCard", description: "Tarjeta de entidad en tres franjas (guía §6.37).", content: <EntityCardSection /> },
+  { id: "view-toggle", title: "ViewToggle", description: "Conmutador grilla/lista (guía §6.37).", content: <ViewToggleSection /> },
 ];
 
 export default function UiPage() {
