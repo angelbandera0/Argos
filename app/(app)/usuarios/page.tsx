@@ -109,7 +109,7 @@ async function UserListContent({ searchParams }: { searchParams: PageProps<"/usu
     <>
       <div className="ui-user-stats">
         <StatTile dot="ink" label="Usuarios" value={all.length} />
-        <StatTile dot="success" label="Activos" value={stat("active") + stat("locked")} />
+        <StatTile dot="success" label="Activos" value={stat("active")} />
         <StatTile dot="warning" label="Aún no han entrado" value={stat("never")} />
         <StatTile dot="muted" label="Inactivos" value={stat("inactive")} />
       </div>
