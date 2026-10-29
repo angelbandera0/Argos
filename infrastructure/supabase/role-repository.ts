@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Role, RoleRepository } from "@/core/application/ports/role-repository";
+import type { Role, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
 import { Forbidden, RuleViolation } from "@/core/domain/errors";
 import type { Module, PermissionSet } from "@/core/domain/permissions";
 
@@ -142,6 +142,27 @@ export function makeRoleRepository(client: SupabaseClient): RoleRepository {
         .eq("role_id", roleId);
       if (error) roleError("RoleRepository.hasAssignments", error);
       return (count ?? 0) > 0;
+    },
+
+    async listUsers(roleIds) {
+      if (roleIds.length === 0) return [];
+      const links = await client.from("user_stores").select("role_id, user_id").in("role_id", roleIds);
+      if (links.error) roleError("RoleRepository.listUsers", links.error);
+      const rows = links.data as { role_id: string; user_id: string }[];
+      const userIds = [...new Set(rows.map((r) => r.user_id))];
+      if (userIds.length === 0) return [];
+      const profiles = await client.from("profiles").select("id, display_name").in("id", userIds);
+      if (profiles.error) roleError("RoleRepository.listUsers", profiles.error);
+      const names = new Map((profiles.data as { id: string; display_name: string }[]).map((p) => [p.id, p.display_name]));
+      const seen = new Set<string>();
+      const out: RoleUser[] = [];
+      for (const r of rows) {
+        const key = `${r.role_id}:${r.user_id}`;
+        if (seen.has(key) || !names.has(r.user_id)) continue;
+        seen.add(key);
+        out.push({ roleId: r.role_id, userId: r.user_id, displayName: names.get(r.user_id)! });
+      }
+      return out;
     },
   };
 }

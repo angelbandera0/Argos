@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Plus } from "@/components/icons";
-import { RoleTable } from "@/components/roles/role-table";
+import { allowedCompanies, parseCompanyFilter } from "@/components/roles/role-card-data";
+import { RoleList } from "@/components/roles/role-list";
 import { buttonClass } from "@/components/ui/button-class";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ListToolbar } from "@/components/ui/list-toolbar";
 import { PageHeader } from "@/components/ui/page-header";
 import { requireRoleUser } from "./guard";
 import Loading from "./loading";
@@ -21,12 +21,12 @@ const NewRoleLink = () => (
   </Link>
 );
 
-async function RoleList({ searchParams }: { searchParams: PageProps<"/roles">["searchParams"] }) {
-  const { actor, roles } = await requireRoleUser();
-  const { q } = await searchParams;
-  const query = (typeof q === "string" ? q : "").trim().toLowerCase();
-  const all = await roles.listRoles(actor);
-  const shown = all.filter((r) => r.name.toLowerCase().includes(query));
+async function RoleListContent({ searchParams }: { searchParams: PageProps<"/roles">["searchParams"] }) {
+  const { actor, roles, org } = await requireRoleUser();
+  const { q, compania } = await searchParams;
+  const text = typeof q === "string" ? q : "";
+  const query = text.trim().toLowerCase();
+  const [all, companies] = await Promise.all([roles.listRoles(actor), org.listCompanies(actor)]);
 
   if (all.length === 0) {
     return (
@@ -36,22 +36,33 @@ async function RoleList({ searchParams }: { searchParams: PageProps<"/roles">["s
     );
   }
 
+  const companyId = parseCompanyFilter(compania, companies.map((c) => c.id));
+  const shown = all.filter((r) => r.name.toLowerCase().includes(query) && (!companyId || !r.excludedCompanyIds.includes(companyId)));
+  const assigned = await roles.roles.listUsers(shown.map((r) => r.id));
+
   return (
-    <>
-      <ListToolbar
-        search={{ label: "Buscar rol", placeholder: "Buscar por nombre", defaultValue: typeof q === "string" ? q : undefined }}
-      />
-      <RoleTable rows={shown.map((r) => ({ id: r.id, name: r.name, excluded: r.excludedCompanyIds.length }))} />
-    </>
+    <RoleList
+      q={text}
+      companyId={companyId}
+      companies={companies.map((c) => ({ id: c.id, name: c.name }))}
+      rows={shown.map((r) => ({
+        id: r.id,
+        name: r.name,
+        companies: r.excludedCompanyIds.length === 0 ? "all" : allowedCompanies(companies, r.excludedCompanyIds).map((c) => c.name),
+        products: r.permissions.products,
+        sessionSeconds: r.sessionSeconds,
+        users: assigned.filter((u) => u.roleId === r.id).map((u) => u.displayName),
+      }))}
+    />
   );
 }
 
 export default function RolesPage(props: PageProps<"/roles">) {
   return (
     <div className="stack">
-      <PageHeader title="Roles" actions={<NewRoleLink />} />
+      <PageHeader title="Roles" description="Qué puede hacer cada persona y en qué compañías." actions={<NewRoleLink />} />
       <Suspense fallback={<Loading />}>
-        <RoleList searchParams={props.searchParams} />
+        <RoleListContent searchParams={props.searchParams} />
       </Suspense>
     </div>
   );

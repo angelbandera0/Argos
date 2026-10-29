@@ -7,8 +7,21 @@ import { Alert } from "@/components/ui/alert";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function DeleteRoleDialog({ roleId, name }: { roleId: string; name: string }) {
-  const [open, setOpen] = useState(false);
+export function DeleteRoleDialog({
+  roleId,
+  name,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  roleId: string;
+  name: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [innerOpen, setInnerOpen] = useState(false);
+  const controlled = controlledOpen !== undefined;
+  const open = controlled ? controlledOpen : innerOpen;
+  const setOpen = (v: boolean) => (controlled ? onOpenChange?.(v) : setInnerOpen(v));
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -21,16 +34,18 @@ export function DeleteRoleDialog({ roleId, name }: { roleId: string; name: strin
 
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          setError(undefined);
-          setOpen(true);
-        }}
-      >
-        <Trash2 aria-hidden="true" />
-        Eliminar rol
-      </Button>
+      {!controlled && (
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setError(undefined);
+            setOpen(true);
+          }}
+        >
+          <Trash2 aria-hidden="true" />
+          Eliminar rol
+        </Button>
+      )}
       <AlertDialog
         open={open}
         onClose={() => setOpen(false)}
