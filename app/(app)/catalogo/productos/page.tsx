@@ -2,24 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Plus } from "@/components/icons";
-import { ProductTable } from "@/components/catalog/product-table";
+import { ProductList } from "@/components/catalog/product-list";
+import { PAGE_SIZE, matchesQuery, matchesStatus, parseStatusParam, statusCounts } from "@/components/catalog/product-list-logic";
 import { Alert } from "@/components/ui/alert";
 import { buttonClass } from "@/components/ui/button-class";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ListToolbar } from "@/components/ui/list-toolbar";
 import { PageHeader } from "@/components/ui/page-header";
 import { requireCatalogUser } from "../guard";
 import Loading from "./loading";
 
+const parsePage = (v: unknown) => {
+  const n = typeof v === "string" ? Number.parseInt(v, 10) : 1;
+  return Number.isFinite(n) && n > 0 ? n : 1;
+};
+
 export const instant = false;
 
 export const metadata: Metadata = { title: "Productos · Argos" };
-
-const STATUS = { activo: "Activo", inactivo: "Inactivo" } as const;
-const STATUS_OPTIONS = [
-  { value: "", label: "Todos los estados" },
-  ...Object.entries(STATUS).map(([value, label]) => ({ value, label })),
-];
 
 const NewLink = () => (
   <Link className={buttonClass("primary", "md")} href="/catalogo/productos/nuevo">
@@ -28,7 +27,7 @@ const NewLink = () => (
   </Link>
 );
 
-async function ProductList({ searchParams }: { searchParams: PageProps<"/catalogo/productos">["searchParams"] }) {
+async function ProductListContent({ searchParams }: { searchParams: PageProps<"/catalogo/productos">["searchParams"] }) {
   const { actor, catalog, companyId, permissions } = await requireCatalogUser();
   if (!companyId) {
     return <EmptyState icon="Box" title="Elige una compañía arriba para ver sus productos." />;
@@ -36,22 +35,15 @@ async function ProductList({ searchParams }: { searchParams: PageProps<"/catalog
   if (!permissions.view) {
     return <Alert variant="warning">No tienes acceso a esto. Tu rol no incluye el permiso «Ver».</Alert>;
   }
-  const { q, categoria, estado } = await searchParams;
-  const qs = typeof q === "string" ? q : "";
-  const query = qs.trim().toLowerCase();
-  const status = typeof estado === "string" && estado in STATUS ? (estado as keyof typeof STATUS) : "";
+  const sp = await searchParams;
+  const q = typeof sp.q === "string" ? sp.q : "";
   const [all, categories] = await Promise.all([
     catalog.listProducts(actor, { companyId }),
     catalog.listCategories(actor, { companyId }),
   ]);
   const names = new Map(categories.map((c) => [c.id, c.name]));
-  const category = typeof categoria === "string" && names.has(categoria) ? categoria : "";
-  const shown = all.filter(
-    (p) =>
-      p.name.toLowerCase().includes(query) &&
-      (!category || p.categoryId === category) &&
-      (!status || p.active === (status === "activo")),
-  );
+  const categoria = typeof sp.categoria === "string" && names.has(sp.categoria) ? sp.categoria : "";
+  const estado = parseStatusParam(sp.estado);
 
   if (all.length === 0) {
     return (
@@ -61,24 +53,28 @@ async function ProductList({ searchParams }: { searchParams: PageProps<"/catalog
     );
   }
 
+  const base = all.filter((p) => matchesQuery(p, q) && (!categoria || p.categoryId === categoria));
+  const shown = base.filter((p) => matchesStatus(estado, p.active));
+  const pages = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
+  const pagina = Math.min(parsePage(sp.pagina), pages);
+
   return (
-    <>
-      <ListToolbar
-        search={{ label: "Buscar producto", placeholder: "Buscar por nombre", defaultValue: qs }}
-        filters={[
-          {
-            name: "categoria",
-            label: "Categoría",
-            options: [{ value: "", label: "Todas las categorías" }, ...categories.map((c) => ({ value: c.id, label: c.name }))],
-            defaultValue: category,
-          },
-          { name: "estado", label: "Estado", options: STATUS_OPTIONS, defaultValue: status },
-        ]}
-      />
-      <ProductTable
-        rows={shown.map((p) => ({ id: p.id, name: p.name, category: names.get(p.categoryId) ?? "", active: p.active }))}
-      />
-    </>
+    <ProductList
+      rows={shown.slice((pagina - 1) * PAGE_SIZE, pagina * PAGE_SIZE).map((p) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        category: names.get(p.categoryId) ?? "",
+        active: p.active,
+      }))}
+      total={shown.length}
+      pageSize={PAGE_SIZE}
+      filters={{ q, categoria, estado, pagina }}
+      counts={statusCounts(base)}
+      categories={categories.map((c) => ({ value: c.id, label: c.name }))}
+      canEdit={permissions.edit}
+      canDelete={permissions.delete}
+    />
   );
 }
 
@@ -87,6 +83,7 @@ export default function ProductsPage(props: PageProps<"/catalogo/productos">) {
     <div className="stack">
       <PageHeader
         title="Productos"
+        description="Lo que se ofrece en ventas. Los inactivos no aparecen en caja."
         actions={
           <Suspense>
             <NewLinkIfAllowed />
@@ -94,7 +91,7 @@ export default function ProductsPage(props: PageProps<"/catalogo/productos">) {
         }
       />
       <Suspense fallback={<Loading />}>
-        <ProductList searchParams={props.searchParams} />
+        <ProductListContent searchParams={props.searchParams} />
       </Suspense>
     </div>
   );

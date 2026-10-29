@@ -102,3 +102,36 @@ export async function deleteProductAction(id: string): Promise<CatalogActionStat
   revalidatePath("/catalogo", "layout");
   redirect("/catalogo/productos");
 }
+
+export async function setProductActiveAction(id: string, active: boolean): Promise<CatalogActionState> {
+  const { actor, catalog } = await requireCatalogUser();
+  try {
+    await catalog.setProductActive(actor, { id, active });
+  } catch (e) {
+    return fail(e, "");
+  }
+  revalidatePath("/catalogo", "layout");
+  return {};
+}
+
+export async function bulkProductsAction(
+  ids: string[],
+  op: "activate" | "deactivate" | "category",
+  categoryId?: string,
+): Promise<CatalogActionState & { done: number; failed: number }> {
+  const { actor, catalog } = await requireCatalogUser();
+  if (op === "category" && !categoryId) return { error: "Elige una categoría.", done: 0, failed: ids.length };
+  let done = 0;
+  let error: string | undefined;
+  for (const id of ids) {
+    try {
+      if (op === "category") await catalog.updateProduct(actor, { id, categoryId });
+      else await catalog.setProductActive(actor, { id, active: op === "activate" });
+      done++;
+    } catch (e) {
+      error ??= fail(e, "").error;
+    }
+  }
+  revalidatePath("/catalogo", "layout");
+  return { error, done, failed: ids.length - done };
+}

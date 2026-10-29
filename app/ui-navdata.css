@@ -219,3 +219,4 @@
   .acc-chevron, .sb-title svg, .nav-parent-chevron { transition: none; }
 }
 .menu-hint { max-width: var(--size-menu); margin: 0; padding: var(--space-1-5) var(--space-3); }
+.dt-bulk-danger { margin: 0; padding: var(--space-3) var(--space-5); border-radius: 0; background: var(--color-row-selected); border-bottom: var(--border-hairline) solid var(--color-danger-border); color: var(--color-red-hover); }

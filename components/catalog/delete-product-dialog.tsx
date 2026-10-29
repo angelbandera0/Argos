@@ -7,8 +7,20 @@ import { Alert } from "@/components/ui/alert";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function DeleteProductDialog({ productId, name }: { productId: string; name: string }) {
-  const [open, setOpen] = useState(false);
+export function DeleteProductDialog({
+  productId,
+  name,
+  open: controlled,
+  onClose,
+}: {
+  productId: string;
+  name: string;
+  open?: boolean;
+  onClose?: () => void;
+}) {
+  const [inner, setInner] = useState(false);
+  const open = controlled ?? inner;
+  const setOpen = (v: boolean) => (setInner(v), !v && onClose?.());
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -21,6 +33,7 @@ export function DeleteProductDialog({ productId, name }: { productId: string; na
 
   return (
     <>
+      {controlled === undefined && (
       <Button
         variant="secondary"
         onClick={() => {
@@ -31,6 +44,7 @@ export function DeleteProductDialog({ productId, name }: { productId: string; na
         <Trash2 aria-hidden="true" />
         Eliminar producto
       </Button>
+      )}
       <AlertDialog
         open={open}
         onClose={() => setOpen(false)}

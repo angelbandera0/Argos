@@ -16,6 +16,7 @@
 @import "./ui-summary-panel.css";
 @import "./ui-user-form.css";
 @import "./ui-user-list.css";
+@import "./ui-product-list.css";
 @import "./ui-view-toggle.css";
 
 @theme inline {
