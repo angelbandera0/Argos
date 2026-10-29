@@ -1,0 +1,45 @@
+.ui-cat-layout { display: grid; grid-template-columns: minmax(0, 1fr) var(--size-summary); gap: var(--space-6); align-items: start; }
+@media (max-width: 1023px) { .ui-cat-layout { grid-template-columns: 1fr; } }
+.ui-cat-main { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.ui-cat-add { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); background: var(--color-panel); border-radius: var(--radius-card); }
+.ui-cat-add-field { flex: 1; min-width: 0; }
+.ui-cat-add-field .input { width: 100%; border-radius: var(--radius-pill); }
+.ui-cat-card { background: var(--color-surface); border: 1px solid var(--color-line-soft); border-radius: var(--radius-card); overflow: hidden; }
+.ui-cat-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-4) var(--space-5); }
+.ui-cat-head h2 { font: var(--text-h2); margin: 0; }
+.ui-cat-head .search { flex: 0 1 240px; }
+.ui-cat-card ul { list-style: none; margin: 0; padding: 0; }
+.ui-cat-card li { border-top: 1px solid var(--color-line-soft); }
+.ui-cat-row { display: flex; align-items: center; gap: var(--space-3); min-height: 64px; padding: var(--space-2) var(--space-3) var(--space-2) var(--space-5); }
+.ui-cat-row-edit { align-items: flex-start; padding-top: var(--space-3); padding-bottom: var(--space-3); background: var(--color-row-selected); }
+.ui-cat-row-confirm { background: var(--color-red-wash); }
+.ui-cat-icon { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: var(--radius-option); background: var(--color-red-tint); color: var(--color-red-strong); }
+.ui-cat-icon svg { width: var(--size-icon); height: var(--size-icon); }
+.ui-cat-icon-empty { background: var(--color-panel); color: var(--color-muted); }
+.ui-cat-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.ui-cat-text strong { font: var(--text-body); font-weight: 600; overflow-wrap: anywhere; }
+.ui-cat-count { font: var(--text-caption); color: var(--color-ink-2); text-decoration: none; width: fit-content; }
+.ui-cat-count:hover { color: var(--color-red-hover); text-decoration: underline; }
+.ui-cat-note { margin: var(--space-1) 0 0; font: var(--text-caption); color: var(--color-muted); }
+.ui-cat-text .ui-cat-note { margin: 0; }
+.ui-cat-error { margin: var(--space-1) 0 0; font: var(--text-caption); color: var(--color-red-strong); }
+.ui-cat-text .ui-cat-error { margin: 0; }
+.ui-cat-edit-field { flex: 1; min-width: 0; }
+.ui-cat-edit-field .input { width: 100%; border-radius: var(--radius-pill); }
+.ui-cat-trash { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border: 0; border-radius: 50%; background: transparent; color: var(--color-red-strong); cursor: pointer; }
+.ui-cat-trash svg { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.ui-cat-trash:hover:not(:disabled) { background: var(--color-red-tint); }
+.ui-cat-trash:disabled { color: var(--color-line-strong); cursor: not-allowed; }
+.ui-cat-empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); padding: var(--space-8) var(--space-5); border-top: 1px solid var(--color-line-soft); text-align: center; font: var(--text-body); color: var(--color-muted); }
+.ui-cat-empty strong { color: var(--color-ink); }
+.ui-cat-aside { display: flex; flex-direction: column; gap: var(--space-4); }
+.ui-cat-how { padding: var(--space-5); background: var(--color-panel); border-radius: var(--radius-card); }
+.ui-cat-how h2 { margin: 0 0 var(--space-3); font: var(--text-overline); letter-spacing: var(--tracking-overline); color: var(--color-ink-2); }
+.ui-cat-how ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.ui-cat-how li { display: flex; gap: var(--space-3); }
+.ui-cat-how li > span { display: grid; place-items: center; flex: none; width: var(--size-icon-circle); height: var(--size-icon-circle); border-radius: 50%; background: var(--color-surface); color: var(--color-red-strong); }
+.ui-cat-how li svg { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.ui-cat-how strong { display: block; font: var(--text-body); font-weight: 600; }
+.ui-cat-how p { margin: 0; font: var(--text-caption); color: var(--color-muted); }
+.ui-cat-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.ui-cat-skel { display: block; height: 64px; }

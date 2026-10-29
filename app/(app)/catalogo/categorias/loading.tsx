@@ -1,19 +1,18 @@
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="stack" aria-busy="true">
+    <div className="ui-cat-layout" aria-busy="true">
       <span className="sr-only">Cargando…</span>
-      <Card>
-        <Skeleton onPanel variant="title" />
-        <Skeleton onPanel variant="pill" />
-      </Card>
-      <Card>
-        {[0, 1, 2].map((i) => (
-          <Skeleton key={i} onPanel className="skeleton-row" />
-        ))}
-      </Card>
+      <div className="ui-cat-main">
+        <Skeleton className="ui-cat-skel" />
+        <div className="ui-cat-card">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="ui-cat-skel" />
+          ))}
+        </div>
+      </div>
+      <Skeleton className="ui-cat-skel" />
     </div>
   );
 }

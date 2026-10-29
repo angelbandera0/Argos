@@ -8,9 +8,9 @@ export function normalizeName(raw: string): string {
   return raw.trim().replace(/\s+/g, " ");
 }
 
-/** Comparison key for uniqueness: ignores case and spacing. */
+/** Comparison key for uniqueness: ignores case, accents and spacing. */
 export function nameKey(raw: string): string {
-  return normalizeName(raw).toLowerCase();
+  return normalizeName(raw).normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 }
 
 export function validateName(raw: string): string {
