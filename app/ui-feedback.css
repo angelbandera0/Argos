@@ -56,6 +56,7 @@
 .dialog-icon svg { width: var(--size-icon-nav); height: var(--size-icon-nav); }
 .dialog-icon-warning { background: var(--color-warning-tint); color: var(--color-warning-text); }
 .dialog-icon-danger { background: var(--color-danger-tint); color: var(--color-danger-text); }
+.dialog-icon-success { background: var(--color-success-tint); color: var(--color-success); }
 .dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2-5); padding: var(--space-4) var(--space-7); border-top: var(--border-hairline) solid var(--color-line-soft); }
 @media (max-width: 767px) {
   .dialog-viewport { align-items: end; padding: 0; }

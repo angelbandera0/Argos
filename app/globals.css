@@ -10,8 +10,10 @@
 @import "./ui-dates.css";
 @import "./ui-history.css";
 @import "./ui-pager.css";
+@import "./ui-pin-slots.css";
 @import "./ui-role-form.css";
 @import "./ui-summary-panel.css";
+@import "./ui-user-form.css";
 @import "./ui-user-list.css";
 @import "./ui-view-toggle.css";
 

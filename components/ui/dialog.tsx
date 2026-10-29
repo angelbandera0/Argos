@@ -5,7 +5,7 @@ import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
 
 type Size = "sm" | "md" | "lg";
-type DialogTone = "warning" | "danger";
+type DialogTone = "warning" | "danger" | "success";
 
 export type DialogShellProps = {
   title: string;

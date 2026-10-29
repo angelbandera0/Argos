@@ -42,6 +42,8 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Formulario ancho con resumen (§6.38) [excepción al ancho de 480] | `FormShell aside` (`.form-shell-wide`: 820 + 340, tokens `--size-form-wide`/`--size-summary`), `FormSection`, `ChoiceCard`, `ChoicePills`, `SummaryPanel` + `SummaryCard` + `Checklist`, `FormSubmit` (el panel lleva Guardar/Cancelar); matriz y plantillas en `components/roles/permission-matrix.tsx`; lógica pura en `role-form-logic.ts` | `components/roles/role-form.tsx` |
 | Listado de usuarios (§6.39) | `StatTile dot` (`.ui-user-stats`), `ListToolbar` + `FilterSelect` + chips con contador (URL), `DataTable` con `rowActions` + `UserActionDialogs` (confirmación y PIN de una vez), `Avatar toneKey` (color por rol), `Pager unit`; lógica pura en `user-list-data.ts` | `components/users/user-list.tsx` |
 | Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
+| Casillas de PIN (vacías/dígitos/ocultas) | `PinSlots` (`size` sm/lg) | `components/users/user-created-dialog.tsx` |
+| Formulario de usuario (§6.40) | `FormShell aside` + `FormSection`, usuario con prefijo fijo y comprobación en vivo (`checkUsernameAction`), `Select` de rol con franja de permisos, tiendas por sede con casilla mixta, `SummaryPanel` «Así entrará» con `PinSlots`; diálogo «Usuario creado» (`Dialog tone="success"`, `dismissible={false}`); lógica pura en `user-form-logic.ts` | `components/users/new-user-form.tsx` |
 
 ## Reglas transversales
 

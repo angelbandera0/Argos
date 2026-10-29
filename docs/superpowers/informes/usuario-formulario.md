@@ -1,0 +1,9 @@
+# Formulario de nuevo usuario y diálogo «Usuario creado» (§6.40)
+
+- `new-user-form.tsx` rehecho: `FormShell aside`, sección 1 (Nombre, usuario con prefijo fijo dentro del campo, rol en `Select` con franja de permisos de Productos y «Ver roles», nota del prefijo) y sección 2 (tiendas por sede, casilla mixta, tarjetas, contador «n de N» rojo con 0). Resumen «Así entrará» (avatar, nombre, chip usuario, `PinSlots` punteadas con candado, rol, tiendas, checklist, «Crear usuario y generar PIN» deshabilitado hasta cumplirla, Cancelar). `loading.tsx` con la misma forma.
+- Nuevo `user-created-dialog.tsx` (icono éxito, usuario + Copiar, PIN Mostrar/Ocultar con 6 casillas, «Copiar usuario y PIN» → «PIN copiado», aviso amarillo, «Crear otro» vacía el formulario, «Listo» va a la ficha; `dismissible={false}`). `PinRevealDialog` se conserva solo para «Generar nuevo PIN» del listado. El PIN no va en URL/historial; contrato de `createUserAction` intacto.
+- Componentes/ampliaciones: `PinSlots` (galería, DESIGN-resumen, PATRONES-UI, test), `SummaryPanel identity`, `Dialog tone="success"`; CSS `app/ui-user-form.css` y `ui-pin-slots.css` (importados en `globals.css`). Lógica pura en `user-form-logic.ts` + test.
+- Disponibilidad en vivo: nueva `checkUsernameAction` (usa `findByUsername`, sin migraciones), con debounce 350 ms; la unicidad también se valida al enviar (NAME_TAKEN).
+- Desviaciones: el dominio no admite punto en el usuario (`[a-z0-9_-]{2,24}`), así que la sugerencia es «marta-l» y la nota dice guion/guion bajo; el modal usa `md` (480, no hay token 460).
+- Omitido (sin soporte): descripción del rol (no existe en el modelo; la franja muestra solo permisos de Productos), dirección de la sede y «Física · Caja n» en tiendas (no cargados), demo del diálogo de éxito en galería.
+- Pruebas: `pnpm verify:fast` OK (53 archivos, 436 casos). Sin navegador: pendiente `/verificar-ui`. Reiniciar `pnpm dev` (CSS y archivos nuevos).

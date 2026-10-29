@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+import { OPS } from "@/components/roles/role-form-logic";
 import { NewUserForm } from "@/components/users/new-user-form";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -38,7 +39,12 @@ async function Guarded() {
   return (
     <NewUserForm
       code={company.code}
-      roles={available.map((r) => ({ id: r.id, name: r.name }))}
+      companyName={company.name}
+      roles={available.map((r) => ({
+        id: r.id,
+        name: r.name,
+        permissions: OPS.filter(({ op }) => r.permissions.products[op]).map(({ label }) => label),
+      }))}
       stores={active.map(({ id, name, site }) => ({ id, name, site }))}
     />
   );

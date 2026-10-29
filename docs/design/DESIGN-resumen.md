@@ -137,3 +137,7 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 ## Checklist antes de entregar (§12)
 - Solo tokens; funciona en web, tablet y móvil; primarios red-strong con texto blanco; amarillo con ink.
 - Gráficos con leyenda, `aria-label` por marca y solo valores destacados; controles ≥ 44 px con etiqueta; números en español.
+
+## PinSlots y formulario de usuario (§6.40)
+- `PinSlots` (`components/ui/pin-slots.tsx`): 6 casillas; `sm` punteadas vacías (resumen «Así entrará»), `lg` 58 px con dígitos (`tabular-nums`) u ocultas «•». `Dialog tone="success"`: icono de éxito.
+- Formulario de usuario: usuario = píldora con prefijo fijo mono + comprobación en vivo; tiendas por sede con casilla mixta (`.ui-store-group`); franja de permisos del rol (`.ui-role-strip`). CSS en `app/ui-user-form.css`.

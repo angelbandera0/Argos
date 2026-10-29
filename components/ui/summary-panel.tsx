@@ -5,18 +5,21 @@ export type ChecklistItem = { state: "ok" | "warn" | "todo"; label: string };
 /** Sticky side panel of a form: identity, summary card, checklist and actions. */
 export function SummaryPanel({
   eyebrow = "Resumen",
-  icon,
-  title,
-  placeholder,
+  icon = "KeyRound",
+  title = "",
+  placeholder = "",
   subtitle,
+  identity,
   children,
   actions,
 }: {
   eyebrow?: string;
-  icon: NavIconName;
-  title: string;
-  placeholder: string;
+  icon?: NavIconName;
+  title?: string;
+  placeholder?: string;
   subtitle?: string;
+  /** Replaces the icon + title block (e.g. a card that mimics the screen the result feeds). */
+  identity?: React.ReactNode;
   children?: React.ReactNode;
   actions?: React.ReactNode;
 }) {
@@ -24,6 +27,7 @@ export function SummaryPanel({
   return (
     <aside className="ui-summary-panel" aria-label={eyebrow}>
       <p className="ui-summary-eyebrow">{eyebrow}</p>
+      {identity ?? (
       <div className="ui-summary-id">
         <span className="ui-summary-icon" aria-hidden="true">
           <Icon />
@@ -35,6 +39,7 @@ export function SummaryPanel({
           {subtitle && <p className="hint">{subtitle}</p>}
         </div>
       </div>
+      )}
       {children}
       {actions && <div className="ui-summary-actions">{actions}</div>}
     </aside>

@@ -17,6 +17,7 @@ import { PagerSection } from "./sections/pager";
 import { FormSectionSection } from "./sections/form-section";
 import { SummaryPanelSection } from "./sections/summary-panel";
 import { ChoiceCardSection } from "./sections/choice-card";
+import { PinSlotsSection } from "./sections/pin-slots";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -56,6 +57,7 @@ const sections = [
   { id: "form-section", title: "FormSection", description: "Tarjeta de formulario con número en círculo, título, descripción y slot a la derecha (contador). §6.38.", content: <FormSectionSection /> },
   { id: "summary-panel", title: "SummaryPanel", description: "Panel lateral sticky de un formulario: icono + nombre, tarjeta de resumen, lista de comprobación y acciones. §6.38.", content: <SummaryPanelSection /> },
   { id: "choice-card", title: "ChoiceCard y ChoicePills", description: "Tarjeta seleccionable con checkbox (fila «todas» con estado mixto) y radio en píldoras para 2–6 opciones. §6.38.", content: <ChoiceCardSection /> },
+  { id: "pin-slots", title: "PinSlots", description: "Seis casillas de PIN: punteadas, con dígitos u ocultas", content: <PinSlotsSection /> },
 ];
 
 export default function UiPage() {
