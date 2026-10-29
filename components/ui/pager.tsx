@@ -10,11 +10,14 @@ export function Pager({
   pageSize,
   total,
   onPageChange,
+  unit,
 }: {
   page: number;
   pageSize: number;
   total: number;
   onPageChange: (page: number) => void;
+  /** Noun after the total, e.g. «usuarios». */
+  unit?: string;
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const current = Math.min(Math.max(1, page), pages);
@@ -49,7 +52,7 @@ export function Pager({
         </button>
       </nav>
       <span className="ui-pager-range" aria-live="polite">
-        Mostrando {from}–{to} de {total}
+        Mostrando {from}–{to} de {total}{unit ? ` ${unit}` : ""}
       </span>
     </div>
   );

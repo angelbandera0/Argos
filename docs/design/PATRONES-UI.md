@@ -40,6 +40,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Sedes con sus tiendas dentro de `EntityCard` | `EntityPanel` (TIENDAS · n, «Ver las n», vacío; `EntityCard avatarClassName`, grilla mín. 420 px con `--ui-card-min`) | `app/(app)/companias/[id]/sites-section.tsx` |
 | Roles en grilla de tarjetas (§6.37) | `EntityCard` con cuerpo propio (`.ui-role-data`, chips de permisos, pila `.ui-avatar-stack`), chips de compañía en URL (`compania`), menú «⋯» con `Menu.Group` + `DeleteRoleDialog` controlado, tarjeta punteada `.ui-role-new` | `components/roles/role-list.tsx` |
 | Formulario ancho con resumen (§6.38) [excepción al ancho de 480] | `FormShell aside` (`.form-shell-wide`: 820 + 340, tokens `--size-form-wide`/`--size-summary`), `FormSection`, `ChoiceCard`, `ChoicePills`, `SummaryPanel` + `SummaryCard` + `Checklist`, `FormSubmit` (el panel lleva Guardar/Cancelar); matriz y plantillas en `components/roles/permission-matrix.tsx`; lógica pura en `role-form-logic.ts` | `components/roles/role-form.tsx` |
+| Listado de usuarios (§6.39) | `StatTile dot` (`.ui-user-stats`), `ListToolbar` + `FilterSelect` + chips con contador (URL), `DataTable` con `rowActions` + `UserActionDialogs` (confirmación y PIN de una vez), `Avatar toneKey` (color por rol), `Pager unit`; lógica pura en `user-list-data.ts` | `components/users/user-list.tsx` |
 | Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
 
 ## Reglas transversales

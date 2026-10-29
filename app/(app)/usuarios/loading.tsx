@@ -1,16 +1,20 @@
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <Card aria-busy="true">
+    <div className="stack" aria-busy="true">
       <span className="sr-only">Cargando…</span>
-      <Skeleton onPanel variant="pill" />
-      <div className="list">
-        {[0, 1, 2].map((i) => (
-          <Skeleton key={i} onPanel className="skeleton-row" />
+      <div className="ui-user-stats">
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="skeleton-row" />
         ))}
       </div>
-    </Card>
+      <Skeleton variant="pill" />
+      <div className="list">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="skeleton-row" />
+        ))}
+      </div>
+    </div>
   );
 }

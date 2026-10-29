@@ -12,6 +12,7 @@
 @import "./ui-pager.css";
 @import "./ui-role-form.css";
 @import "./ui-summary-panel.css";
+@import "./ui-user-list.css";
 @import "./ui-view-toggle.css";
 
 @theme inline {

@@ -103,6 +103,36 @@ export function makeUserRepository(client: SupabaseClient): UserRepository {
       }));
     },
 
+    async listAssignmentsFor(userIds) {
+      if (userIds.length === 0) return [];
+      const { data, error } = await client.from("user_stores").select("user_id, store_id, role_id").in("user_id", userIds);
+      if (error) fail("listAssignmentsFor", error);
+      return (data as { user_id: string; store_id: string; role_id: string }[]).map((r) => ({
+        userId: r.user_id,
+        storeId: r.store_id,
+        roleId: r.role_id,
+      }));
+    },
+
+    async lastLogins(userIds) {
+      if (userIds.length === 0) return [];
+      const { data, error } = await client
+        .from("auth_events")
+        .select("user_id, created_at")
+        .eq("event", "login_ok")
+        .in("user_id", userIds)
+        .order("created_at", { ascending: false });
+      if (error) fail("lastLogins", error);
+      const seen = new Set<string>();
+      const out: { userId: string; at: Date }[] = [];
+      for (const r of data as { user_id: string; created_at: string }[]) {
+        if (seen.has(r.user_id)) continue;
+        seen.add(r.user_id);
+        out.push({ userId: r.user_id, at: new Date(r.created_at) });
+      }
+      return out;
+    },
+
     async listAuthEvents(userId, limit): Promise<AuthEvent[]> {
       const { data, error } = await client
         .from("auth_events")

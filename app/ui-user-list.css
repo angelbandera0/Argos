@@ -1,0 +1,15 @@
+.ui-user-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+@media (max-width: 900px) { .ui-user-stats { grid-template-columns: repeat(2, 1fr); } }
+.ui-stat-tile-dot { flex: none; width: var(--size-dot-badge); height: var(--size-dot-badge); border-radius: 50%; }
+.ui-stat-dot-ink { background: var(--color-ink); }
+.ui-stat-dot-success { background: var(--color-success); }
+.ui-stat-dot-warning { background: var(--color-warning-dot); }
+.ui-stat-dot-muted { background: var(--color-placeholder); }
+.ui-user-cell { display: flex; align-items: center; gap: var(--space-3); }
+.ui-user-cell a { font-weight: 600; color: var(--color-ink); text-decoration: none; }
+.ui-user-cell a:hover { text-decoration: underline; }
+.ui-avatar-dim { opacity: 0.55; }
+.ui-username { display: inline-flex; padding: var(--space-1) var(--space-2-5, var(--space-2)); border-radius: var(--radius-pill); background: var(--color-panel); font: var(--text-caption); font-weight: 600; }
+.ui-username-prefix { color: var(--color-placeholder); }
+.ui-user-stores { display: flex; align-items: center; gap: var(--space-1-5); flex-wrap: nowrap; white-space: nowrap; }
+.ui-user-foot { padding: 0 var(--space-3); }

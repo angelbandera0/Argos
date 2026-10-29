@@ -23,6 +23,14 @@ export class InMemoryUserRepository implements UserRepository {
     return [...this.profiles.values()].filter((p) => p.companyId === companyId);
   }
 
+  async listAssignmentsFor(userIds: string[]): Promise<Assignment[]> {
+    return userIds.flatMap((id) => this.assignments.get(id) ?? []);
+  }
+
+  async lastLogins(): Promise<{ userId: string; at: Date }[]> {
+    return [];
+  }
+
   async listAdmins(): Promise<Profile[]> {
     return [...this.profiles.values()].filter((p) => p.kind === "admin");
   }
