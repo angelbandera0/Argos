@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Power } from "@/components/icons";
+import { Settings } from "lucide-react";
+import { Power, Users } from "@/components/icons";
 import { companyInitials, avatarTone } from "@/components/org/company-avatar";
 import { CompanySettingsButton } from "@/components/org/company-settings-dialog";
 import { DeactivateDialog } from "@/components/org/deactivate-dialog";
@@ -110,24 +111,25 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
         <Breadcrumbs items={[{ label: "Compañías", href: "/companias" }, { label: company.name }]} />
         <div className="page-header-row">
           <div className="ui-company-head">
-            <span className={`ui-entity-card-avatar co-tone-${off ? "none" : avatarTone(company.code)}`} aria-hidden="true">
+            <span className={`ui-entity-card-avatar co-tone-${off ? "none" : avatarTone(company.code) % 2}`} aria-hidden="true">
               {companyInitials(company.name)}
             </span>
-            <div className="stack">
+            <div className="ui-company-id">
               <h1 className="page-title">{company.name}</h1>
-              <span className="row">
+              <div className="row ui-company-meta">
                 <Chip variant="ring" className="mono">
                   {company.code}
                 </Chip>
                 <StatusBadge status={company.status} />
-              </span>
-              {admins.length > 0 && <p className="muted">Administra: {admins.join(", ")}</p>}
+                {admins.length > 0 && <span className="caption">Administra: {admins.join(", ")}</span>}
+              </div>
             </div>
           </div>
           <span className="spacer" />
           <div className="page-header-actions">
-            <Link className={buttonClass("outline", "md")} href={`/companias/${id}/administradores`}>
+            <Link className={buttonClass("outline", "sm")} href={`/companias/${id}/administradores`}>
               Administradores
+              <Users aria-hidden="true" />
             </Link>
             {actor.kind === "admin" && (
               <CompanySettingsButton
@@ -136,6 +138,8 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
                 hours={company.sessionCapSeconds / 3600}
                 label="Ajustes"
                 variant="outline"
+                size="sm"
+                icon={<Settings aria-hidden="true" />}
               />
             )}
           </div>

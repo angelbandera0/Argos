@@ -102,7 +102,7 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 - Estructura de página: `PageHeader` (título, migas, acciones), `ListToolbar` (buscador, filtros, acción), `DataTable` (lista; cliente), `EmptyState` (sin datos), `Card`, `Skeleton`/`Spinner`/`RouteProgress` (carga).
 - Formularios: `FormShell` (action, error general, guardando), `Field` (etiqueta, hint, error), `Input`, `Textarea`, `Datepicker` (fecha o rango ISO), `Select` (lista corta), `Multiselect`, `Checkbox`, `RadioGroup` (hasta 7), `Switch` (ajuste inmediato), `CodeField`, `Button` (variantes, `loading`).
 - Avisos: `Alert` (en página), `Banner` (franja global), `Toast` (`useToast`, resultado de una acción), `Dialog` (modal), `FormDialog` (formulario corto en diálogo), `AlertDialog` (confirmación destructiva), `Tooltip`.
-- Listados en tarjetas: `EntityCard` (cabecera, datos 2×2, acciones; §6.37) y `ViewToggle` (grilla/lista, `aria-pressed`).
+- Listados en tarjetas: `EntityCard` (cabecera, datos 2×2, acciones; §6.37) `ViewToggle` (grilla/lista, `aria-pressed`) y `Pager` (Anterior · páginas · Siguiente + «Mostrando a–b de n»).
 - Detalle de entidad: `StatTile` (indicador icono+cifra) y `EntityPanel` (bloque de filas «TIENDAS · n» dentro de `EntityCard`); zona de peligro `.ui-danger-zone` (borde danger, consecuencia, botón Peligro).
 - Estado: `Badge` (estado/contador), `Chip` (filtro o quitable), `Avatar` (iniciales, tono por nombre).
 - Historial: `FilterBar` con `FilterPill`/`FilterSelect` (single o `multiple`) y `DateRangePicker pill`; `AuditTable` (grupos por día, filas expandibles, `loading`, `empty`, `footer`).

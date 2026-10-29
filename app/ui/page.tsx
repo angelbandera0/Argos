@@ -13,6 +13,7 @@ import { BotonesSection, CamposSection, ChecksSection, SelectSection, Multiselec
 import { EntityCardSection, ViewToggleSection } from "./sections/entity-card";
 import { StatTileSection } from "./sections/stat-tile";
 import { EntityPanelSection } from "./sections/entity-panel";
+import { PagerSection } from "./sections/pager";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -48,6 +49,7 @@ const sections = [
   { id: "view-toggle", title: "ViewToggle", description: "Conmutador grilla/lista (guía §6.37).", content: <ViewToggleSection /> },
   { id: "stat-tile", title: "StatTile", description: "Indicador con icono rojo en círculo blanco y cifra (§6.37).", content: <StatTileSection /> },
   { id: "entity-panel", title: "EntityPanel", description: "Bloque de filas dentro de una tarjeta de entidad (TIENDAS · n).", content: <EntityPanelSection /> },
+  { id: "pager", title: "Pager", description: "Paginación Anterior · páginas · Siguiente con «Mostrando a–b de n».", content: <PagerSection /> },
 ];
 
 export default function UiPage() {

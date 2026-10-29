@@ -23,6 +23,7 @@ export function ListToolbar({
   extra,
   primary,
   submitLabel = "Filtrar",
+  className,
   ...form
 }: Omit<React.ComponentProps<"form">, "role" | "children"> & {
   search?: {
@@ -39,7 +40,7 @@ export function ListToolbar({
   submitLabel?: string | false;
 }) {
   return (
-    <form className="list-toolbar" role="search" {...form}>
+    <form className={`list-toolbar${className ? ` ${className}` : ""}`} role="search" {...form}>
       {search && (
         <div className="search list-toolbar-search">
           <label className="sr-only" htmlFor={`${search.name ?? "q"}-search`}>

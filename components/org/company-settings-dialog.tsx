@@ -13,6 +13,8 @@ export function CompanySettingsButton({
   label = "Ajustes",
   variant = "secondary",
   className,
+  size,
+  icon,
 }: {
   companyId: string;
   name: string;
@@ -20,12 +22,15 @@ export function CompanySettingsButton({
   label?: string;
   variant?: "secondary" | "outline";
   className?: string;
+  size?: "sm" | "md";
+  icon?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant={variant} className={className} onClick={() => setOpen(true)}>
+      <Button variant={variant} size={size} className={className} onClick={() => setOpen(true)}>
         {label}
+        {icon}
       </Button>
       {open && (
         <FormDialog<ActionState>

@@ -22,3 +22,18 @@ describe("company filters", () => {
     expect(statusCounts(all, "sol")).toEqual({ todas: 1, activas: 1, inactivas: 0 });
   });
 });
+
+describe("company sort and paging", () => {
+  it("ordena por nombre, código y estado", async () => {
+    const { sortCompanies } = await import("@/app/(app)/companias/company-filters");
+    expect(sortCompanies(all, "nombre").map((c) => c.code)).toEqual(["cafe", "lacasona", "sol"]);
+    expect(sortCompanies(all, "codigo").map((c) => c.code)).toEqual(["cafe", "lacasona", "sol"]);
+    expect(sortCompanies(all, "estado").map((c) => c.code)).toEqual(["lacasona", "sol", "cafe"]);
+  });
+  it("valida orden y página, y acota la página", async () => {
+    const { parseSort, parsePage, pageSlice } = await import("@/app/(app)/companias/company-filters");
+    expect(parseSort("x")).toBe("nombre");
+    expect(parsePage("0")).toBe(1);
+    expect(pageSlice([1, 2, 3], 9, 2)).toEqual({ items: [3], page: 2 });
+  });
+});

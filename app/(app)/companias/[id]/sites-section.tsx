@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Plus } from "@/components/icons";
+import { Building2, Plus, Search } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EntityCard } from "@/components/ui/entity-card";
 import { EntityPanel, type EntityPanelRow } from "@/components/ui/entity-panel";
-import { ListToolbar } from "@/components/ui/list-toolbar";
+import { Input } from "@/components/ui/input";
 import { NewUnit, NewUnitDialog } from "./new-unit";
 import { filterSites } from "./sites-filter";
 
@@ -40,15 +40,30 @@ export function SitesSection({ companyId, sites, canCreate }: { companyId: strin
   const shown = filterSites(sites, q);
   return (
     <section className="stack" aria-labelledby="h-sedes">
-      <h2 className="h2" id="h-sedes">
-        Sedes y tiendas
-      </h2>
-      <ListToolbar
-        submitLabel={false}
-        onSubmit={(e) => e.preventDefault()}
-        search={{ label: "Buscar sede o tienda", placeholder: "Buscar sede o tienda", value: q, onValueChange: setQ }}
-        primary={canCreate ? <NewUnit companyId={companyId} /> : undefined}
-      />
+      <div className="ui-sites-head">
+        <h2 className="h2" id="h-sedes">
+          Sedes y tiendas
+          <span className="caption">
+            · {sites.length} {sites.length === 1 ? "sede" : "sedes"}
+          </span>
+        </h2>
+        <form className="search" role="search" onSubmit={(e) => e.preventDefault()}>
+          <label className="sr-only" htmlFor="q-search">
+            Buscar sede o tienda
+          </label>
+          <Search aria-hidden="true" />
+          <Input
+            id="q-search"
+            name="q"
+            type="search"
+            variant="outline"
+            placeholder="Buscar sede o tienda"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+        </form>
+        {canCreate && <NewUnit companyId={companyId} />}
+      </div>
       {sites.length === 0 ? (
         <EmptyState icon="Building2" title="Aún no hay sedes.">
           Crea la primera para poder agregar tiendas.

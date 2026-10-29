@@ -38,6 +38,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Listado de pocas entidades en grilla de tarjetas (§6.37) | `EntityCard` (slots avatar, título, código, chip, subtítulo, badge, datos 2×2, cuerpo extra, acciones; `.ui-entity-card-grid`, `.ui-entity-card-edit`), `Chip` filtro con contador, `ViewToggle` (valor `?vista=lista`), lista = `DataTable` | `app/(app)/companias/company-list.tsx` |
 | Detalle de entidad (§6.37): fila de indicadores y zona de peligro | `StatTile` (`.ui-stat-grid`), `.ui-danger-zone` (icono, consecuencia, `DeactivateDialog` con botón Peligro), buscador `ListToolbar` controlado | `app/(app)/companias/[id]/page.tsx` |
 | Sedes con sus tiendas dentro de `EntityCard` | `EntityPanel` (TIENDAS · n, «Ver las n», vacío; `EntityCard avatarClassName`, grilla mín. 420 px con `--ui-card-min`) | `app/(app)/companias/[id]/sites-section.tsx` |
+| Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 
