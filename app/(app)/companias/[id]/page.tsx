@@ -2,28 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Store } from "@/components/icons";
+import { Power } from "@/components/icons";
+import { companyInitials, avatarTone } from "@/components/org/company-avatar";
 import { CompanySettingsButton } from "@/components/org/company-settings-dialog";
 import { DeactivateDialog } from "@/components/org/deactivate-dialog";
 import { REASON_LABELS } from "@/components/org/reasons";
-import { Accordion } from "@/components/ui/accordion";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button-class";
-import { Card } from "@/components/ui/card";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Chip } from "@/components/ui/chip";
-import { PageHeader } from "@/components/ui/page-header";
+import { StatTile } from "@/components/ui/stat-tile";
 import type { ReasonCode } from "@/core/domain/deactivation";
 import { requireOrgUser } from "../guard";
 import Loading from "./loading";
-import { NewUnit } from "./new-unit";
+import { SitesSection, type SiteCardData } from "./sites-section";
 import { UnitMenu } from "./unit-menu";
 
 export const instant = false;
 
 export const metadata: Metadata = { title: "Compañía · Argos" };
-
-const count = (n: number) => `${n} ${n === 1 ? "tienda" : "tiendas"}`;
 
 function StatusBadge({ status }: { status: "active" | "inactive" }) {
   return status === "active" ? <Badge variant="success">Activa</Badge> : <Badge variant="danger">Desactivada</Badge>;
@@ -51,6 +49,10 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
       ? undefined
       : `Solo el fundador o el superadmin pueden ${active ? "desactivar" : "reactivar"} sedes y tiendas.`;
 
+  const adminIds = await org.companies.listAdmins(id);
+  const admins = (await Promise.all(adminIds.map((a) => org.users.getProfile(a))))
+    .flatMap((p) => (p ? [p.displayName] : []));
+
   const { data } = off
     ? await supabase
         .from("companies")
@@ -65,30 +67,87 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
     ? new Intl.DateTimeFormat("es", { dateStyle: "long", timeStyle: "short" }).format(new Date(data.status_changed_at as string))
     : null;
 
+  const allStores = stores.flat();
+  const activeStores = allStores.filter((t) => t.status === "active").length;
+  const cards: SiteCardData[] = sites.map((s, i) => ({
+    id: s.id,
+    name: s.name,
+    active: s.status === "active",
+    menu: (
+      <UnitMenu
+        companyId={id}
+        level="site"
+        id={s.id}
+        name={s.name}
+        active={s.status === "active"}
+        canCreate={canCreate}
+        canManage={canManage}
+        disabledReason={unitReason(s.status === "active")}
+      />
+    ),
+    stores: stores[i].map((t) => ({
+      id: t.id,
+      name: t.name,
+      badge: <StatusBadge status={t.status} />,
+      menu: (
+        <UnitMenu
+          companyId={id}
+          level="store"
+          id={t.id}
+          name={t.name}
+          active={t.status === "active"}
+          canCreate={false}
+          canManage={canManage}
+          disabledReason={unitReason(t.status === "active")}
+        />
+      ),
+    })),
+  }));
+
   return (
     <div className="stack">
-      <PageHeader
-        title={company.name}
-        breadcrumbs={[{ label: "Compañías", href: "/companias" }, { label: company.name }]}
-        description={
-          <span className="row">
-            <Chip variant="ring" className="mono">
-              {company.code}
-            </Chip>
-            <StatusBadge status={company.status} />
-          </span>
-        }
-        actions={
-          <>
-            <Link className={buttonClass("secondary", "md")} href={`/companias/${id}/administradores`}>
+      <header className="page-header">
+        <Breadcrumbs items={[{ label: "Compañías", href: "/companias" }, { label: company.name }]} />
+        <div className="page-header-row">
+          <div className="ui-company-head">
+            <span className={`ui-entity-card-avatar co-tone-${off ? "none" : avatarTone(company.code)}`} aria-hidden="true">
+              {companyInitials(company.name)}
+            </span>
+            <div className="stack">
+              <h1 className="page-title">{company.name}</h1>
+              <span className="row">
+                <Chip variant="ring" className="mono">
+                  {company.code}
+                </Chip>
+                <StatusBadge status={company.status} />
+              </span>
+              {admins.length > 0 && <p className="muted">Administra: {admins.join(", ")}</p>}
+            </div>
+          </div>
+          <span className="spacer" />
+          <div className="page-header-actions">
+            <Link className={buttonClass("outline", "md")} href={`/companias/${id}/administradores`}>
               Administradores
             </Link>
             {actor.kind === "admin" && (
-              <CompanySettingsButton companyId={id} name={company.name} hours={company.sessionCapSeconds / 3600} />
+              <CompanySettingsButton
+                companyId={id}
+                name={company.name}
+                hours={company.sessionCapSeconds / 3600}
+                label="Ajustes"
+                variant="outline"
+              />
             )}
-          </>
-        }
-      />
+          </div>
+        </div>
+      </header>
+
+      <div className="ui-stat-grid">
+        <StatTile icon="Building2" label="Sedes" value={sites.length} />
+        <StatTile icon="Box" label="Tiendas" value={allStores.length} />
+        <StatTile icon="ShieldCheck" label="Tiendas activas" value={activeStores} />
+        <StatTile icon="Calendar" label="Tope de sesión" value={`${company.sessionCapSeconds / 3600} h`} />
+      </div>
 
       {off && (
         <Alert variant="danger" title={code ? REASON_LABELS[code] : "Desactivada"}>
@@ -100,85 +159,21 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
         </Alert>
       )}
 
-      <Card aria-labelledby="h-est">
-        <div className="card-head">
-          <h2 className="h2" id="h-est">
-            Sedes y tiendas
-          </h2>
-          <span className="spacer" />
-          {canCreate && <NewUnit companyId={id} />}
-        </div>
-        {sites.length === 0 ? (
-          <p className="muted">Aún no hay sedes. Crea la primera para poder agregar tiendas.</p>
-        ) : (
-          <Accordion
-            variant="rich"
-            multiple
-            aria-label="Sedes y tiendas"
-            defaultValue={sites.map((s) => s.id)}
-            items={sites.map((s, i) => ({
-              value: s.id,
-              icon: "Building2",
-              title: s.name,
-              subtitle: count(stores[i].length),
-              badge: <StatusBadge status={s.status} />,
-              action: (
-                <UnitMenu
-                  companyId={id}
-                  level="site"
-                  id={s.id}
-                  name={s.name}
-                  active={s.status === "active"}
-                  canCreate={canCreate}
-                  canManage={canManage}
-                  disabledReason={unitReason(s.status === "active")}
-                />
-              ),
-              content:
-                stores[i].length === 0 ? (
-                  <p className="muted">Aún no hay tiendas en esta sede.</p>
-                ) : (
-                  <ul className="list" aria-label={`Tiendas de ${s.name}`}>
-                    {stores[i].map((t) => (
-                      <li key={t.id} className="list-row tree-row">
-                        <span className="row">
-                          <span className="icon-dot" aria-hidden="true">
-                            <Store />
-                          </span>
-                          <strong>{t.name}</strong>
-                        </span>
-                        <span className="row">
-                          <StatusBadge status={t.status} />
-                          <UnitMenu
-                            companyId={id}
-                            level="store"
-                            id={t.id}
-                            name={t.name}
-                            active={t.status === "active"}
-                            canCreate={false}
-                            canManage={canManage}
-                            disabledReason={unitReason(t.status === "active")}
-                          />
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ),
-            }))}
-          />
-        )}
-      </Card>
+      <SitesSection companyId={id} sites={cards} canCreate={canCreate} />
 
-      <Card aria-labelledby="h-estado">
-        <h2 className="h2" id="h-estado">
-          Estado de la compañía
-        </h2>
-        <p className="muted">
-          {off
-            ? "La compañía está desactivada. Solo el fundador o el superadmin pueden reactivarla; se te pedirá un motivo."
-            : "La compañía está operando con normalidad. Solo el fundador o el superadmin pueden desactivarla."}
-        </p>
-        <div className="row">
+      <section className="ui-danger-zone" aria-labelledby="h-peligro">
+        <span className="ui-danger-zone-icon" aria-hidden="true">
+          <Power />
+        </span>
+        <div className="ui-danger-zone-text">
+          <h2 id="h-peligro">{off ? "Reactivar compañía" : "Desactivar compañía"}</h2>
+          <p className="muted">
+            {off
+              ? "La compañía está desactivada y sus tiendas no pueden vender. Solo el fundador o el superadmin pueden reactivarla; se te pedirá un motivo."
+              : `Al desactivarla, ${activeStores === 1 ? "su tienda activa deja" : `sus ${activeStores} tiendas activas dejan`} de vender. Solo el fundador o el superadmin pueden hacerlo.`}
+          </p>
+        </div>
+        <div className="stack">
           <DeactivateDialog
             level="company"
             id={id}
@@ -187,7 +182,7 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
             disabledReason={disabledReason}
           />
         </div>
-      </Card>
+      </section>
     </div>
   );
 }

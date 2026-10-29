@@ -99,6 +99,7 @@ export function DeactivateDialog({ disabledReason, ...target }: Target & { disab
   return (
     <>
       <Button
+        variant="danger"
         disabled={!!disabledReason}
         aria-describedby={disabledReason ? `perm-${target.id}` : undefined}
         onClick={() => setOpen(true)}

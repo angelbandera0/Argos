@@ -11,6 +11,8 @@ import { DatepickerSection } from "./sections/fechas";
 import { FiltrosSection, HistorialSection } from "./sections/historial";
 import { BotonesSection, CamposSection, ChecksSection, SelectSection, MultiselectSection } from "./sections/entradas";
 import { EntityCardSection, ViewToggleSection } from "./sections/entity-card";
+import { StatTileSection } from "./sections/stat-tile";
+import { EntityPanelSection } from "./sections/entity-panel";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -44,6 +46,8 @@ const sections = [
   { id: "formshell", title: "FormShell", description: "Formulario de ejemplo.", content: <FormSection /> },
   { id: "entity-card", title: "EntityCard", description: "Tarjeta de entidad en tres franjas (guía §6.37).", content: <EntityCardSection /> },
   { id: "view-toggle", title: "ViewToggle", description: "Conmutador grilla/lista (guía §6.37).", content: <ViewToggleSection /> },
+  { id: "stat-tile", title: "StatTile", description: "Indicador con icono rojo en círculo blanco y cifra (§6.37).", content: <StatTileSection /> },
+  { id: "entity-panel", title: "EntityPanel", description: "Bloque de filas dentro de una tarjeta de entidad (TIENDAS · n).", content: <EntityPanelSection /> },
 ];
 
 export default function UiPage() {
