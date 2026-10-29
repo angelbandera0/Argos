@@ -24,6 +24,7 @@ Un administrador estructura su negocio en compañías, sedes y tiendas, controla
 - CA-12: DADO una compañía, sede o tienda desactivada, CUANDO el fundador o el superadmin la reactiva indicando un motivo libre, ENTONCES vuelve a operar y la reactivación queda en el historial. Otro usuario no puede reactivarla.
 - CA-13: DADO una compañía o sede desactivada, CUANDO un usuario intenta entrar a una tienda que cuelga de ella, ENTONCES no puede, aunque la tienda esté activa; y CUANDO se reactiva la compañía o sede, ENTONCES las tiendas que estaban activas vuelven a operar y las que estaban desactivadas siguen desactivadas.
 - CA-14: DADO una compañía, sede o tienda sin datos asociados (sin usuarios, productos, categorías ni operaciones posteriores a su creación), CUANDO el fundador o el superadmin la elimina, ENTONCES se aplica borrado lógico.
+- CA-15 [decisión del usuario]: DADO una compañía, sede o tienda, CUANDO un administrador con acceso (o el superadmin) cambia su nombre, ENTONCES el cambio se aplica y queda en el historial con el nombre anterior y el nuevo. El nombre no puede quedar vacío ni repetirse entre hermanas (compañías del mismo administrador, sedes de una compañía, tiendas de una sede, sin distinguir mayúsculas). El código de la compañía no cambia.
 
 ## Restricciones
 P-01, P-02, P-03, T-03, T-04. Reglas DR-001, DR-003 a DR-007, DR-012, DR-014, DR-015.
