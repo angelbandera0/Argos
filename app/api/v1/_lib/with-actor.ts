@@ -14,7 +14,8 @@ export const resolveActorFromToken: ResolveActor = async (token) => {
   });
   const { data } = await client.auth.getClaims(token);
   const claims = parseClaims(data?.claims as Record<string, unknown> | undefined);
-  if (!claims) return null;
+  if (!claims || claims.mustChangePassword) return null;
+  if (claims.kind !== "operator" && claims.aal !== "aal2") return null;
   return {
     userId: claims.userId,
     kind: claims.kind,

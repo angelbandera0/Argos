@@ -12,7 +12,8 @@ export type RuleCode =
   | "STORE_UNAVAILABLE"
   | "INVALID_USERNAME"
   | "INVALID_SESSION_SECONDS"
-  | "INVALID_NAME";
+  | "INVALID_NAME"
+  | "INVALID_INPUT";
 
 export class Forbidden extends Error {
   constructor() {
