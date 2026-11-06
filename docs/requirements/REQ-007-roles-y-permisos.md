@@ -37,4 +37,8 @@ P-01, P-02, P-03, T-03, T-04. Reglas DR-007, DR-008, DR-014.
 REQ-005, REQ-006, REQ-008, REQ-009.
 
 ## Notas para el manual
-Se completa al implementar (D-04).
+1. En **Roles > Nuevo** el administrador pone nombre, marca para cada módulo disponible ver, crear, editar y eliminar (crear, editar y eliminar exigen "ver"), y fija el tiempo de sesión (no puede superar el tope de la compañía).
+2. Por defecto el rol vale para todas sus compañías; desmarque las que quiera excluir. Un rol excluido no se puede asignar en tiendas de esa compañía.
+3. Cada rol pertenece al administrador que lo creó: los demás no lo ven ni lo editan. En la ficha de un usuario con rol ajeno aparece "rol de otro administrador"; se puede desbloquear, cambiar el PIN o desactivar, pero no cambiar su rol ni sus tiendas.
+4. Los permisos sobre compañías, sedes, tiendas, usuarios, roles y categorías no existen para roles: son exclusivos de los administradores.
+5. Los cambios de un rol se aplican en la siguiente petición de sus usuarios. Un rol con usuarios asignados no se puede eliminar.

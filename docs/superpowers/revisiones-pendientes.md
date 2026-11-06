@@ -230,3 +230,15 @@ Task 30B: minor (deferred): live-category check in createProduct/updateProduct i
 - `pnpm verify`: la detección de `next dev` es heurística (`ps`), no comprueba que comparta directorio `.next`; el recuento de pruebas depende del formato de salida de Vitest.
 - `pnpm mockup`: el esquema de estructura colapsa elementos repetidos por (profundidad, etiqueta, atributos); los valores salen también del JS de la maqueta (texto, no ejecución).
 - `pnpm new:ui`: la plantilla es genérica (`div`); `new:ui` no actualiza `DESIGN-resumen.md` (queda como recordatorio).
+
+## Verificación final diferida
+Se hace al terminar todo el proyecto, no por tarea.
+
+**(a) Pruebas de navegador pendientes (`/verificar-ui N`)**
+- Todas las pantallas de las tareas 20 a 33 (compañías, roles, usuarios, catálogo, historial, login/2FA/primer ingreso/entrar/tienda).
+- Criterios marcados "manual" en `docs/technical/MODULO-1-TRAZABILIDAD.md`: REQ-006 CA-01 (recuperación por correo), CA-01b (TOTP), CA-04, CA-07, CA-17; REQ-007 CA-11 (etiqueta); REQ-009 CA-09 (filtros).
+
+**(b) Revisiones de seguridad pendientes**
+- Sección "Task 28 (security, deferred)" de este archivo y las demás secciones anteriores con avisos de seguridad.
+- Confirmar en el panel de Supabase que hooks y MFA están activos; revisar `get_advisors` (seguridad y rendimiento) y `list_migrations` con el MCP (Tarea 36, paso 3).
+- Pruebas SQL (pgTAP) y de integración sobre el proyecto cloud: ejecutar `pnpm test:db` / `pnpm test:int` en el cierre.
