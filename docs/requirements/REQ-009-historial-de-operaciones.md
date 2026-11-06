@@ -36,4 +36,7 @@ P-01, P-02, P-03, T-04. Reglas DR-014 y DR-017. El historial nunca registra PIN 
 Todos los REQ del módulo.
 
 ## Notas para el manual
-Se completa al implementar (D-04).
+1. **Historial** muestra quién hizo cada cambio, qué cambió (valor anterior y nuevo), cuándo, desde qué tienda y por qué canal (interfaz, API o MCP). Los registros no se pueden modificar ni borrar.
+2. Cada usuario ve solo los módulos que su rol permite "ver", dentro de sus compañías y tiendas; el administrador ve todo lo de sus compañías y el superadmin todo.
+3. Filtre por módulo, usuario y rango de fechas (también por acción y canal).
+4. **Historial > Accesos** (solo administradores) lista inicios de sesión correctos y fallidos, bloqueos, desbloqueos y cambios de PIN. El PIN y las contraseñas nunca se registran.

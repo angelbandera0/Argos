@@ -26,7 +26,8 @@ Next.js en Vercel · Supabase Cloud · Clean Architecture · API REST `/api/v1` 
 | `requirements/_TEMPLATE.md` | Plantilla de requisito |
 | `DECISIONS.md` | Registro de decisiones (ADR) y alternativas descartadas |
 | `technical/` | Diseño técnico por módulo (`MODULO-1-DISENO-TECNICO.md`) |
-| `superpowers/plans/` | Planes de implementación por módulo |
+| `technical/MODULO-1-TRAZABILIDAD.md` | Matriz de criterios de aceptación de REQ-005 a REQ-009 y la prueba que cubre cada uno |
+| `superpowers/plans/` | Planes de implementación por módulo (`2026-10-25-modulo-1-implementacion.md`) |
 | `design/` | Guía visual: `DESIGN.md`, `tokens.css`, preset de Tailwind y capturas |
 | `design/screens/` | Diseño de pantallas por módulo (`MODULO-1-PANTALLAS.md`) y maquetas HTML en `mockups/` |
 | `OPEN_QUESTIONS.md` | Dudas, contradicciones y supuestos pendientes |

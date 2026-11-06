@@ -13,6 +13,9 @@ Package manager is pnpm (`pnpm@11.1.3`).
 - `pnpm dev` — dev server at http://localhost:3000
 - `pnpm build` / `pnpm start` — production build / serve
 - `pnpm lint` — ESLint (flat config in `eslint.config.mjs`, uses `eslint-config-next`)
+- `pnpm typecheck` — tsc; `pnpm test` — Vitest unit; `pnpm test:int` — integration against the cloud Supabase project (needs `.env.local`); `pnpm test:db` — pgTAP (`supabase/tests/`)
+- `supabase start` — local stack (not used: development runs against the cloud project `argos`)
+- Layout: `core/` (`domain`, `application` use cases and ports, framework-free), `infrastructure/` (Supabase adapters, auth, container), `supabase/` (`migrations`, pgTAP `tests`, `HOOKS.md`). Traceability: `docs/technical/MODULO-1-TRAZABILIDAD.md`.
 
 ## Next.js version caveat
 

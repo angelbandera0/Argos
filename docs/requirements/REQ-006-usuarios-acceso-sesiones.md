@@ -57,4 +57,9 @@ P-01, P-02, T-04, T-05, T-06. Reglas DR-002, DR-006, DR-007, DR-009 a DR-013. El
 REQ-005, REQ-007, REQ-009. Q-014 (se verifica al diseñar).
 
 ## Notas para el manual
-Se completa al implementar (D-04).
+1. Superadmin y administradores entran en **/login** con usuario y contraseña (mínimo 12 caracteres) y verifican el segundo factor (TOTP). La contraseña se recupera por correo desde "Recuperar".
+2. El superadmin crea administradores en **Administradores**: el sistema genera una contraseña temporal que debe entregarse; el administrador la cambia en su primer ingreso.
+3. Un administrador crea usuarios operativos en **Usuarios > Nuevo**: elige compañía, nombre (el usuario queda `código.nombre`), rol y tiendas. El PIN de 6 dígitos se muestra una sola vez; anótelo antes de cerrar el aviso.
+4. El operativo entra en **/entrar** con su usuario y PIN, y elige una de sus tiendas activas. Puede cambiar de tienda sin PIN; el reloj de sesión no se reinicia y se aplican el rol y el tiempo de la nueva tienda.
+5. Tras 5 PIN incorrectos seguidos el usuario queda bloqueado; solo un administrador lo desbloquea (se genera un PIN nuevo). Un administrador también puede cambiar el PIN o desactivar al usuario; sus sesiones se cierran al instante.
+6. La sesión dura como máximo un día, y menos si lo indican el rol o el tope de la compañía.
