@@ -242,3 +242,9 @@ Se hace al terminar todo el proyecto, no por tarea.
 - Sección "Task 28 (security, deferred)" de este archivo y las demás secciones anteriores con avisos de seguridad.
 - Confirmar en el panel de Supabase que hooks y MFA están activos; revisar `get_advisors` (seguridad y rendimiento) y `list_migrations` con el MCP (Tarea 36, paso 3).
 - Pruebas SQL (pgTAP) y de integración sobre el proyecto cloud: ejecutar `pnpm test:db` / `pnpm test:int` en el cierre.
+
+## Task 36 · Avisos del proyecto Supabase (2026-11-06)
+- Migraciones: 18 de 18 aplicadas.
+- Seguridad (WARN): 5 funciones SECURITY DEFINER ejecutables por `authenticated` (`assign_user_stores`, `create_company`, `delete_product`, `my_store_access`, `set_operator_status`); revisar que sean intencionales en la revisión de seguridad final. Protección contra contraseñas filtradas desactivada (plan Free).
+- Rendimiento: 12 claves foráneas sin índice (INFO) y políticas SELECT permisivas múltiples en `stores` (`stores_select`, `stores_select_operator`).
+- Pendiente del usuario: confirmar hooks y MFA activos en el panel; pgTAP (`test:db`) no se ejecutó.

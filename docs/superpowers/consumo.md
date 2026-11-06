@@ -70,6 +70,7 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | Rediseño UI · Formulario de producto | `argos-dev` (Sonnet) | implementación | verify:fast 452/452, sin navegador | 6cad0c6 | contexto 18.750 → 77.142, 14 llamadas, 157 s; equivalente ponderado ≈ 251.000 |
 | 34 Fundamentos de la API (withActor, problem+json, OpenAPI) | `argos-dev` (Sonnet) | implementación | verify:fast 462/462, sin navegador | 4a310db | contexto 17.836 → 38.502, 21 llamadas, 109 s; equivalente ponderado ≈ 129.000 (subagent_tokens 39.148) |
 | 35 Endpoints de la API v1 | `argos-dev` (Sonnet) | implementación | verify 509/509 con build, sin navegador | e366840 | contexto 17.940 → 79.908, 29 llamadas; equivalente ponderado ≈ 342.000 |
+| 36 Trazabilidad y verificación final (matriz, notas de manual) | `argos-dev` (Sonnet) | implementación | verify:fast --int OK (2 timeouts cloud, pasan al reejecutar), sin navegador, sin build ni pgTAP | ee0ce13 | contexto 18.576 → 71.068, 45 llamadas, 452 s; equivalente ponderado ≈ 305.000 (subagent_tokens 72.453) |
 
 Nota de medición (2026-10-26): la columna Tokens es el tamaño del contexto al final de la corrida (`subagent_tokens` del arnés), no el gasto facturado. El gasto real es salida + escritura de caché + lectura de caché (que se relee en cada llamada); `pnpm usage <output_file>` lo calcula. En la Tarea 21: 23 llamadas, contexto 32.985 → 122.132, salida 20.146, escritura de caché 103.527, lectura de caché 1.712.301, equivalente ponderado ≈ 401.000.
 
