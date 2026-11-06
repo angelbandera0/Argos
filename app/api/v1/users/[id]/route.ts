@@ -2,7 +2,7 @@ import { noContent, params, parseRef, secret, svc, unknownAction } from "../../_
 import { withActor } from "../../_lib/with-actor";
 
 export const POST = withActor(async (req, actor, ctx) => {
-  const { id, action } = parseRef((await params<{ ref: string }>(ctx)).ref);
+  const { id, action } = parseRef((await params<{ id: string }>(ctx)).id);
   const { users } = svc(req);
   if (action === "reset-pin") return secret(await users.resetPin(actor, { userId: id }));
   if (action === "unlock") return secret(await users.unlockUser(actor, { userId: id }));
