@@ -56,5 +56,7 @@ export interface StockOperations {
   writeOff(c: WriteOffCommand): Promise<WriteOffResult>;
   /** Returns the movement id. */
   adjust(c: { lotId: string; delta: number; reasonText: string }): Promise<string>;
+  /** Returns the adjustment id. */
+  adjustLotCost(c: { lotId: string; newUnitCost: number; reason: string }): Promise<string>;
   registerSurplus(c: { productId: string; locationId: string; qty: number; reasonText: string; unitCost?: number | null; currencyId?: string | null }): Promise<string>;
 }

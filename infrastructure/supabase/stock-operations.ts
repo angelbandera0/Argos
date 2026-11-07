@@ -62,6 +62,7 @@ export function makeStockOperations(supabase: SupabaseClient): StockOperations {
       };
     },
     adjust: (c) => call<string>("register_adjustment", { p_lot: c.lotId, p_delta: c.delta, p_reason_text: c.reasonText }),
+    adjustLotCost: (c) => call<string>("adjust_lot_cost", { p_lot: c.lotId, p_new_unit_cost: c.newUnitCost, p_reason: c.reason }),
     registerSurplus: (c) =>
       call<string>("register_surplus", {
         p_product: c.productId,

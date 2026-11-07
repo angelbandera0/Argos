@@ -156,3 +156,36 @@ describe("adjustment and surplus", () => {
     expect(s.ops.calls.registerSurplus).toHaveLength(2);
   });
 });
+
+describe("lot cost adjustment (L8)", () => {
+  it("admin corrects the cost; operators need see_costs + correct_orders", async () => {
+    const s = opsSetup();
+    await s.adjustCost(A, { lotId: "lot1", newUnitCost: 15, reason: " error de compra " });
+    expect(s.ops.calls.adjustLotCost[0]).toEqual({ lotId: "lot1", newUnitCost: 15, reason: "error de compra" });
+    const op = operator("u-edit");
+    await expect(s.adjustCost(op, { lotId: "lot1", newUnitCost: 15, reason: "error de compra" })).rejects.toMatchObject({ name: "Forbidden" });
+    s.give("u-edit", ["see_costs", false]);
+    await expect(s.adjustCost(op, { lotId: "lot1", newUnitCost: 15, reason: "error de compra" })).rejects.toMatchObject({ name: "Forbidden" });
+    s.give("u-edit", ["see_costs", false], ["correct_orders", false]);
+    await s.adjustCost(op, { lotId: "lot1", newUnitCost: 15, reason: "error de compra" });
+    expect(s.ops.calls.adjustLotCost).toHaveLength(2);
+  });
+
+  it("never invents a cost and requires a reason", async () => {
+    const s = opsSetup();
+    for (const bad of [undefined, null, -1, Number.NaN, 1.1234567])
+      await expect(s.adjustCost(A, { lotId: "lot1", newUnitCost: bad as unknown as number, reason: "motivo" })).rejects.toMatchObject({ code: "INVALID_COST" });
+    await expect(s.adjustCost(A, { lotId: "lot1", newUnitCost: 0, reason: "  " })).rejects.toMatchObject({ code: "REASON_TEXT_REQUIRED" });
+    await expect(s.adjustCost(A, { lotId: "nope", newUnitCost: 1, reason: "motivo" })).rejects.toMatchObject({ name: "NotFound" });
+    expect(s.ops.calls.adjustLotCost).toHaveLength(0);
+  });
+
+  it("lists adjustments only with cost permission", async () => {
+    const s = opsSetup();
+    s.stock.costAdjustments.push({ id: "x", lotId: "lot1", orderId: null, oldUnitCost: 12, newUnitCost: 15, currencyId: "mxn", reason: "r", createdBy: "a1", createdAt: "2026-11-07" });
+    expect(await s.listCostAdjustments(A, { lotId: "lot1" })).toHaveLength(1);
+    await expect(s.listCostAdjustments(operator("u-edit"), { lotId: "lot1" })).rejects.toMatchObject({ name: "Forbidden" });
+    s.give("u-edit", ["see_costs", false]);
+    expect(await s.listCostAdjustments(operator("u-edit"), { lotId: "lot1" })).toHaveLength(1);
+  });
+});

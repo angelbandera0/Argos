@@ -1,6 +1,8 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { makeAdjustLot } from "@/core/application/use-cases/stock/adjust-lot";
+import { makeAdjustLotCost } from "@/core/application/use-cases/stock/adjust-lot-cost";
+import { makeListLotCostAdjustments } from "@/core/application/use-cases/stock/list-lot-cost-adjustments";
 import { makeAddMovementUnit } from "@/core/application/use-cases/stock/add-movement-unit";
 import { makeAddPresentation } from "@/core/application/use-cases/stock/add-presentation";
 import { makeClearMinimum } from "@/core/application/use-cases/stock/clear-minimum";
@@ -72,6 +74,8 @@ export function makeStock(supabase: SupabaseClient) {
     transferStock: makeTransferStock(ops),
     writeOffStock: makeWriteOffStock(ops),
     adjustLot: makeAdjustLot(ops),
+    adjustLotCost: makeAdjustLotCost(ops),
+    listLotCostAdjustments: makeListLotCostAdjustments(ops),
     registerSurplus: makeRegisterSurplus(ops),
     listWriteOffReasons: makeListWriteOffReasons(ops),
     createWriteOffReason: makeCreateWriteOffReason(ops),

@@ -117,6 +117,8 @@ const rows: Row[] = [
   ["stock/transfers", "POST", "/stock/transfers", { productId: "p1", fromLocationId: "w1", toLocationId: "l1", qty: 2, unit: "base" }, {}, "stock.transferStock", "admin", 201],
   ["stock/write-offs", "POST", "/stock/write-offs", { productId: "p1", locationId: "l1", qty: 1, unit: "base", reasonId: "r1" }, {}, "stock.writeOffStock", "operator", 201],
   ["stock/adjustments", "POST", "/stock/adjustments", { lotId: "x1", delta: 1, reasonText: "conteo" }, {}, "stock.adjustLot", "admin", 201],
+  ["stock/lots/[id]/cost-adjustments", "POST", "/stock/lots/x1/cost-adjustments", { newUnitCost: 15, reason: "error de compra" }, { id: "x1" }, "stock.adjustLotCost", "admin", 201],
+  ["stock/lots/[id]/cost-adjustments", "GET", "/stock/lots/x1/cost-adjustments", undefined, { id: "x1" }, "stock.listLotCostAdjustments", "admin", 200],
   ["stock/surplus", "POST", "/stock/surplus", { productId: "p1", locationId: "l1", qty: 1, reasonText: "conteo" }, {}, "stock.registerSurplus", "admin", 201],
   ["stock/write-off-reasons", "GET", "/stock/write-off-reasons?companyId=c1", undefined, {}, "stock.listWriteOffReasons", "admin", 200],
   ["stock/write-off-reasons", "POST", "/stock/write-off-reasons", { companyId: "c1", code: "moho", name: "Moho" }, {}, "stock.createWriteOffReason", "admin", 201],

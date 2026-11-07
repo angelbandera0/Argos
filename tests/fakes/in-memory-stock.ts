@@ -1,5 +1,6 @@
 import type {
   Location,
+  LotCostAdjustment,
   LotView,
   MovementFilters,
   MovementUnitItem,
@@ -120,6 +121,10 @@ export class InMemoryStock implements StockRepository {
   async getLot(id: string) {
     return this.lots.find((l) => l.id === id) ?? null;
   }
+  readonly costAdjustments: LotCostAdjustment[] = [];
+  async listLotCostAdjustments(lotId: string) {
+    return this.costAdjustments.filter((a) => a.lotId === lotId);
+  }
   async listLots(productId: string, locationId: string, f: { onlyAvailable: boolean }) {
     return this.lots.filter((l) => l.productId === productId && l.locationId === locationId && (!f.onlyAvailable || l.remaining > 0));
   }
@@ -168,7 +173,7 @@ export class InMemoryReasons implements WriteOffReasonRepository {
 type Calls = { [K in keyof StockOperations]: Array<Parameters<StockOperations[K]>[0]> };
 
 export class RecordingOperations implements StockOperations {
-  readonly calls: Calls = { registerInitialEntry: [], registerDirectEntry: [], transfer: [], writeOff: [], adjust: [], registerSurplus: [] };
+  readonly calls: Calls = { registerInitialEntry: [], registerDirectEntry: [], transfer: [], writeOff: [], adjust: [], adjustLotCost: [], registerSurplus: [] };
 
   async registerInitialEntry(c: Calls["registerInitialEntry"][number]) {
     this.calls.registerInitialEntry.push(c);
@@ -189,6 +194,10 @@ export class RecordingOperations implements StockOperations {
   async adjust(c: Calls["adjust"][number]) {
     this.calls.adjust.push(c);
     return "mv-new";
+  }
+  async adjustLotCost(c: Calls["adjustLotCost"][number]) {
+    this.calls.adjustLotCost.push(c);
+    return "adj-new";
   }
   async registerSurplus(c: Calls["registerSurplus"][number]) {
     this.calls.registerSurplus.push(c);

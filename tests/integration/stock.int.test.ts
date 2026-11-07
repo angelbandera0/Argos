@@ -7,6 +7,7 @@ import { makeAuthGateway, makeMfaGateway } from "@/infrastructure/supabase/auth-
 import { GET as listStockRoute } from "@/app/api/v1/stock/route";
 import { GET as productStockRoute } from "@/app/api/v1/stock/products/[id]/route";
 import { GET as movementsRoute } from "@/app/api/v1/stock/movements/route";
+import * as costAdjustRoute from "@/app/api/v1/stock/lots/[id]/cost-adjustments/route";
 import { POST as initialEntryRoute } from "@/app/api/v1/stock/entries/initial/route";
 import { POST as transferRoute } from "@/app/api/v1/stock/transfers/route";
 import { makeCatalogRepository } from "@/infrastructure/supabase/catalog-repository";
@@ -297,6 +298,16 @@ describe("stock repositories (REQ-020..)", { timeout: 120_000 }, () => {
       expect(adminDetail.json.lots.some((l: Record<string, unknown>) => "unitCost" in l)).toBe(true);
       const adminMoves = await call(movementsRoute, a.client, `/stock/movements?companyId=${companyA}&productId=${productId}`);
       expect(adminMoves.json.items.some((m: Record<string, unknown>) => "unitCost" in m)).toBe(true);
+      const costRoute = { POST: costAdjustRoute.POST, GET: costAdjustRoute.GET };
+      const ctxLot = { id: warehouseLot };
+      const fix = await call(costRoute.POST, a.client, `/stock/lots/${warehouseLot}/cost-adjustments`, { newUnitCost: 15, reason: "error de compra" }, ctxLot);
+      expect(fix.status).toBe(201);
+      const bad = await call(costRoute.POST, a.client, `/stock/lots/${warehouseLot}/cost-adjustments`, { newUnitCost: -1, reason: "error de compra" }, ctxLot);
+      expect(bad.status).toBe(422);
+      const listed = await call(costRoute.GET, a.client, `/stock/lots/${warehouseLot}/cost-adjustments`, undefined, ctxLot);
+      expect(listed.json.items[0]).toMatchObject({ oldUnitCost: 12, newUnitCost: 15, reason: "error de compra" });
+      const denied = await call(costRoute.POST, client, `/stock/lots/${warehouseLot}/cost-adjustments`, { newUnitCost: 20, reason: "sin permiso" }, ctxLot);
+      expect(denied.status).toBe(403);
       const opSvc = makeStock(client);
       const opDetail = await opSvc.getProductStock(actor, { productId, locationId: store, onlyAvailable: false });
       expect(opDetail.lots.every((l) => !("unitCost" in l))).toBe(true);

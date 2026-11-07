@@ -1,5 +1,7 @@
 import type { SpecialGrant } from "@/core/domain/permissions";
 import { makeAdjustLot } from "@/core/application/use-cases/stock/adjust-lot";
+import { makeAdjustLotCost } from "@/core/application/use-cases/stock/adjust-lot-cost";
+import { makeListLotCostAdjustments } from "@/core/application/use-cases/stock/list-lot-cost-adjustments";
 import { makeCreateWriteOffReason } from "@/core/application/use-cases/stock/create-write-off-reason";
 import { makeDeleteWriteOffReason } from "@/core/application/use-cases/stock/delete-write-off-reason";
 import { makeListWriteOffReasons } from "@/core/application/use-cases/stock/list-write-off-reasons";
@@ -43,6 +45,8 @@ export function opsSetup() {
     transfer: makeTransferStock(deps),
     writeOff: makeWriteOffStock(deps),
     adjust: makeAdjustLot(deps),
+    adjustCost: makeAdjustLotCost(deps),
+    listCostAdjustments: makeListLotCostAdjustments(deps),
     surplus: makeRegisterSurplus(deps),
     listReasons: makeListWriteOffReasons(deps),
     createReason: makeCreateWriteOffReason(deps),

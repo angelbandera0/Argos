@@ -29,6 +29,7 @@ export const ENTITY_LABELS: Record<string, string> = {
   product_movement_units: "Unidad de movimiento",
   stock_minimums: "Mínimo",
   stock_movements: "Movimiento",
+  lot_cost_adjustments: "Ajuste de costo de lote",
   write_off_reasons: "Motivo de baja",
   solicitudes: "Solicitud",
   solicitud_lineas: "Línea de solicitud",
@@ -73,6 +74,7 @@ const ORDER_STATUS: Record<string, { label: string; variant: BadgeVariant }> = {
 export function operationInfo(action: string, entityType: string, before: unknown, after: unknown) {
   const a = asRecord(after);
   if (entityType === "stock_movements" && typeof a.type === "string" && MOVEMENT_TYPES[a.type]) return MOVEMENT_TYPES[a.type];
+  if (entityType === "lot_cost_adjustments") return { label: "Ajuste de costo", variant: "warning" as const };
   if (entityType === "pedido_ajustes") return { label: "Corrección", variant: "warning" as const };
   if (entityType === "pedidos" && a.status !== asRecord(before).status && typeof a.status === "string" && ORDER_STATUS[a.status]) {
     return ORDER_STATUS[a.status];

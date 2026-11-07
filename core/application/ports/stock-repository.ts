@@ -108,6 +108,18 @@ export interface MovementFilters {
   to?: Date;
 }
 
+export interface LotCostAdjustment {
+  id: string;
+  lotId: string;
+  orderId: string | null;
+  oldUnitCost: number | null;
+  newUnitCost: number;
+  currencyId: string | null;
+  reason: string;
+  createdBy: string | null;
+  createdAt: string;
+}
+
 /**
  * Reads and configuration only. Costs come back only where the database lets the caller read
  * them; use cases strip them again. Deleted presentations/units are invisible. A base unit
@@ -134,6 +146,8 @@ export interface StockRepository {
   setMinimum(productId: string, locationId: string, minimum: number): Promise<void>;
   clearMinimum(productId: string, locationId: string): Promise<void>;
   getLot(id: string): Promise<LotView | null>;
+  /** Newest first; empty without see_costs (RLS). */
+  listLotCostAdjustments(lotId: string): Promise<LotCostAdjustment[]>;
   /** Oldest first. */
   listLots(productId: string, locationId: string, filter: { onlyAvailable: boolean }): Promise<LotView[]>;
   /** Every lot with stock in the location. */

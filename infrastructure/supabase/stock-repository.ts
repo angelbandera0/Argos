@@ -279,6 +279,26 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
       return data ? (await lotViews([data as LotRow]))[0] : null;
     },
 
+    async listLotCostAdjustments(lotId) {
+      const { data, error } = await supabase
+        .from("lot_cost_adjustments")
+        .select("id, lot_id, order_id, old_unit_cost, new_unit_cost, currency_id, reason, created_by, created_at")
+        .eq("lot_id", lotId)
+        .order("created_at", { ascending: false });
+      if (error) stockError("list lot cost adjustments", error);
+      return (data ?? []).map((r) => ({
+        id: r.id,
+        lotId: r.lot_id,
+        orderId: r.order_id,
+        oldUnitCost: r.old_unit_cost === null ? null : Number(r.old_unit_cost),
+        newUnitCost: Number(r.new_unit_cost),
+        currencyId: r.currency_id,
+        reason: r.reason,
+        createdBy: r.created_by,
+        createdAt: r.created_at,
+      }));
+    },
+
     async listLots(productId, locationId, filter) {
       let q = supabase.from("lots").select(LOT_COLS).eq("product_id", productId).eq("location_id", locationId);
       if (filter.onlyAvailable) q = q.gt("remaining", 0);

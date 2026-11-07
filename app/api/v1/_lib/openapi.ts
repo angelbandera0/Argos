@@ -88,6 +88,8 @@ const OPERATIONS: Op[] = [
   ["post", "/api/v1/stock/transfers", "Transfer stock from the warehouse to a store", "stockTransfer", "201"],
   ["post", "/api/v1/stock/write-offs", "Write off stock", "stockWriteOff", "201"],
   ["post", "/api/v1/stock/adjustments", "Adjust a lot (restitution or reduction)", "stockAdjustment", "201"],
+  ["get", "/api/v1/stock/lots/{id}/cost-adjustments", "List a lot's cost adjustments (needs see_costs)"],
+  ["post", "/api/v1/stock/lots/{id}/cost-adjustments", "Correct a lot's unit cost as a value adjustment", "stockCostAdjustment", "201"],
   ["post", "/api/v1/stock/surplus", "Register surplus stock", "stockSurplus", "201"],
   ["get", "/api/v1/stock/write-off-reasons", "List write-off reasons"],
   ["post", "/api/v1/stock/write-off-reasons", "Create a write-off reason", "createWriteOffReason", "201"],

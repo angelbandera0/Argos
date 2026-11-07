@@ -104,6 +104,7 @@ export const schemas = {
   stockTransfer: z.object({ ...movement, fromLocationId: id, toLocationId: id }),
   stockWriteOff: z.object({ ...movement, locationId: id, reasonId: id, reasonText: z.string().optional() }),
   stockAdjustment: z.object({ lotId: id, delta: z.number(), reasonText: z.string() }),
+  stockCostAdjustment: z.object({ newUnitCost: z.number(), reason: z.string() }),
   stockSurplus: z.object({
     productId: id,
     locationId: id,
