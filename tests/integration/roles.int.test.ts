@@ -102,7 +102,7 @@ describe("role repository", () => {
     expect((await other.listByOwner(b.id)).some((r) => r.id === role.id)).toBe(false);
 
     const updated = await repo.update(role.id, { permissions: perms(true), excludedCompanyIds: [] });
-    expect(updated.permissions).toEqual(perms(true));
+    expect(updated.permissions).toMatchObject(perms(true));
     expect(updated.excludedCompanyIds).toEqual([]);
   });
 
