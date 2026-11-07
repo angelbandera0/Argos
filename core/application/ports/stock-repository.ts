@@ -134,6 +134,8 @@ export interface StockRepository {
   getLot(id: string): Promise<LotView | null>;
   /** Oldest first. */
   listLots(productId: string, locationId: string, filter: { onlyAvailable: boolean }): Promise<LotView[]>;
+  /** Every lot with stock in the location. */
+  listLocationLots(locationId: string): Promise<LotView[]>;
   /** Newest first. */
   listMovements(filters: MovementFilters, page: Page): Promise<{ items: MovementView[]; total: number }>;
 }

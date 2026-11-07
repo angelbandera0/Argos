@@ -11,6 +11,7 @@ import { makeDeleteWriteOffReason } from "@/core/application/use-cases/stock/del
 import { makeGetProductStock } from "@/core/application/use-cases/stock/get-product-stock";
 import { makeGetProductStockConfig } from "@/core/application/use-cases/stock/get-product-stock-config";
 import { makeListLocations } from "@/core/application/use-cases/stock/list-locations";
+import { makeListLocationLots } from "@/core/application/use-cases/stock/list-location-lots";
 import { makeListMovements } from "@/core/application/use-cases/stock/list-movements";
 import { makeListStockStatus } from "@/core/application/use-cases/stock/list-stock-status";
 import { makeListWriteOffReasons } from "@/core/application/use-cases/stock/list-write-off-reasons";
@@ -52,6 +53,7 @@ export function makeStock(supabase: SupabaseClient) {
     listStockStatus: makeListStockStatus(deps),
     getProductStock: makeGetProductStock(deps),
     listMovements: makeListMovements(deps),
+    listLocationLots: makeListLocationLots(deps),
     getProductStockConfig: makeGetProductStockConfig(deps),
     saveProductStockConfig: makeSaveProductStockConfig(deps),
     addPresentation: makeAddPresentation(deps),

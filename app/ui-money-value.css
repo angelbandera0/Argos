@@ -1,1 +1,2 @@
 .ui-money-value { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-stock-zero { color: var(--color-red-strong); }

@@ -9,7 +9,7 @@ const item = (id: string, label: string, href: string, icon: NavItem["icon"], ex
 export const NAV = {
   home: item("inicio", "Inicio", "/", "LayoutDashboard"),
   notifications: item("notificaciones", "Notificaciones", "/notificaciones", "Bell"),
-  stock: item("existencias", "Existencias", "/existencias", "Warehouse", { available: false }),
+  stock: item("existencias", "Existencias", "/existencias", "Warehouse"),
   requests: item("solicitudes", "Solicitudes", "/solicitudes", "ClipboardList", { available: false }),
   orders: item("pedidos", "Pedidos", "/pedidos", "ShoppingBag", { available: false }),
   products: item("productos", "Productos", "/catalogo/productos", "Box"),

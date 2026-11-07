@@ -12,9 +12,9 @@ describe("buildNav", () => {
     expect(ids(nav)).toEqual(["inicio", "notificaciones", "existencias", "solicitudes", "pedidos", "productos", "categorias", "divisas", "companias", "roles", "usuarios", "historial"]);
   });
 
-  it("marks the warehouse pages as not yet available", () => {
+  it("marks only the pages not built yet as unavailable", () => {
     const warehouse = buildNav({ kind: "admin" })[1].items;
-    expect(warehouse.every((i) => i.available === false)).toBe(true);
+    expect(warehouse.filter((i) => i.available === false).map((i) => i.id)).toEqual(["solicitudes", "pedidos"]);
   });
 
   it("shows operators only what their permissions allow", () => {

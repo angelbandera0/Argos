@@ -79,9 +79,11 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
   async function costs(table: "lot_costs" | "movement_costs", key: "lot_id" | "movement_id", ids: string[]) {
     const map = new Map<string, CostRow>();
     if (!ids.length) return map;
-    const { data, error } = await supabase.from(table).select(`${key}, unit_cost, currency_id`).in(key, ids);
-    if (error) stockError(`read ${table}`, error);
-    for (const r of data as (CostRow & Record<string, string>)[]) map.set(r[key], r);
+    for (let i = 0; i < ids.length; i += 100) {
+      const { data, error } = await supabase.from(table).select(`${key}, unit_cost, currency_id`).in(key, ids.slice(i, i + 100));
+      if (error) stockError(`read ${table}`, error);
+      for (const r of data as (CostRow & Record<string, string>)[]) map.set(r[key], r);
+    }
     return map;
   }
 
@@ -279,6 +281,12 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
       if (filter.onlyAvailable) q = q.gt("remaining", 0);
       const { data, error } = await q.order("received_at").order("created_at").order("id");
       if (error) stockError("list lots", error);
+      return lotViews(data as LotRow[]);
+    },
+
+    async listLocationLots(locationId) {
+      const { data, error } = await supabase.from("lots").select(LOT_COLS).eq("location_id", locationId).gt("remaining", 0).limit(5000);
+      if (error) stockError("list location lots", error);
       return lotViews(data as LotRow[]);
     },
 

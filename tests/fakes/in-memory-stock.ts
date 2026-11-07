@@ -122,6 +122,9 @@ export class InMemoryStock implements StockRepository {
   async listLots(productId: string, locationId: string, f: { onlyAvailable: boolean }) {
     return this.lots.filter((l) => l.productId === productId && l.locationId === locationId && (!f.onlyAvailable || l.remaining > 0));
   }
+  async listLocationLots(locationId: string) {
+    return this.lots.filter((l) => l.locationId === locationId && l.remaining > 0);
+  }
   async listMovements(f: MovementFilters, page: Page) {
     const rows = this.movements
       .filter((m) => f.locationIds.includes(m.locationId))
