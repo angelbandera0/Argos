@@ -63,6 +63,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Listado de productos (§6.42) | `DataTable selectable bulkVariant="danger"` (barra de acciones en lote `row-selected`), `FilterSelect` + chips con contador (URL), `Switch` pequeño en la fila (`.ui-prod-switch`), `Pager`; lógica pura en `product-list-logic.ts` | `components/catalog/product-list.tsx` |
 | Campana de notificaciones en la barra superior (M5) | `NotificationBell` + `BellSlot` (async bajo `Suspense` en el layout), server actions `listRecentAction`/`countUnreadAction`/`markReadAction`, estilos `app/ui-notification-panel.css` | `components/notifications/notification-bell.tsx` |
 | Fila de denominación (billete/moneda) con etiqueta de valor y acciones a la derecha (M2); contenedor `.ui-denomination-list` | `DenominationRow` | `components/ui/denomination-row.tsx` (galería `/ui`) |
+| Cantidad + unidad con equivalente en base (entradas, traslados) | `QuantityPicker` | `components/ui/quantity-picker.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

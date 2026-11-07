@@ -33,6 +33,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
   if (!location) return <ViewState kind="empty" entity="existencias" text="Aún no hay ubicaciones." canCreate={false} />;
 
   const catalog = makeCatalog(await createServerClient());
+  const products = await catalog.listProducts(actor, { companyId }).catch(() => []);
   const categories = (await catalog.listCategories(actor, { companyId }).catch(() => [])).map((c) => ({ value: c.id, label: c.name }));
   const categoria = categories.some((c) => c.value === first(sp.categoria)) ? first(sp.categoria) : "";
   const estado = parseStatus(sp.estado);
@@ -88,6 +89,8 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       canEntry={can("initial_entry")}
       canTransfer={can("transfer")}
       canWriteOff={can("write_off")}
+      canDirect={can("direct_store_entry")}
+      entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       isWarehouse={location.kind === "warehouse"}
     />
   );

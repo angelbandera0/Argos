@@ -63,3 +63,5 @@ En `tokens-modulo2.css`, importado después de `tokens.css`.
 ## Estados de vista (M8) y checklist (M11)
 - Cinco estados en cada vista (`M2-Estados`): cargando (skeleton, `role="status"`, sin spinner a pantalla completa), vacío (botón solo si puede crear), sin coincidencias, error (con «Reintentar»), sin permiso.
 - Las acciones que cambian stock llevan confirmación con resumen y aparecen en el historial.
+
+- **QuantityPicker (§6.43):** `components/ui/quantity-picker.tsx`; cifra + select de unidad + línea «= X lb» o error. Solo variante escritorio.

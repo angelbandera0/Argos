@@ -5,6 +5,7 @@ import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
 import { formatStockQty, parsePage } from "@/components/stock/stock-list-logic";
 import { Button } from "@/components/ui/button";
+import { EntryButton } from "@/components/stock/entry-button";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { ViewState } from "@/components/ui/view-state";
@@ -80,7 +81,9 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
   const name = products.find((p) => p.id === productId)?.name ?? "Producto";
   const unit = detail.config.baseUnit;
   const isWarehouse = location.kind === "warehouse";
-  const gated = isWarehouse ? [can("transfer") && "Trasladar a tienda", can("write_off") && "Dar de baja", can("initial_entry") && "Entrada inicial"].filter(Boolean) : [];
+  const gated = isWarehouse ? [can("transfer") && "Trasladar a tienda", can("write_off") && "Dar de baja"].filter(Boolean) : [];
+  const entryKind = isWarehouse ? "initial" : "direct";
+  const canEnter = can(isWarehouse ? "initial_entry" : "direct_store_entry");
 
   return (
     <>
@@ -88,9 +91,14 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         title={name}
         breadcrumbs={[{ label: "Existencias", href: `/existencias?ubicacion=${location.id}` }, { label: name }]}
         description={`${location.name} · Existencia ${formatStockQty(detail.quantity, unit)}`}
-        actions={gated.map((label) => (
-          <Button key={String(label)} variant="secondary" disabled title="Próximamente">{label}</Button>
-        ))}
+        actions={[
+          ...gated.map((label) => (
+            <Button key={String(label)} variant="secondary" disabled title="Próximamente">{label}</Button>
+          )),
+          canEnter && (
+            <EntryButton key="entry" kind={entryKind} locationId={location.id} products={[]} productId={productId} costs={costs} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
+          ),
+        ]}
       />
       <div className="row">
         <StatusBadge family="stock" status={detail.status} />

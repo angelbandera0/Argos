@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
+import { EntryButton } from "./entry-button";
+import type { EntryCurrency, EntryProduct } from "./entry-dialog";
 import { type Column, DataTable } from "@/components/ui/data-table";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { ListToolbar } from "@/components/ui/list-toolbar";
@@ -57,7 +59,9 @@ export function StockList({
   canEntry,
   canTransfer,
   canWriteOff,
+  canDirect,
   isWarehouse,
+  entry,
 }: {
   rows: StockRow[];
   total: number;
@@ -73,8 +77,13 @@ export function StockList({
   canEntry: boolean;
   canTransfer: boolean;
   canWriteOff: boolean;
+  canDirect: boolean;
   isWarehouse: boolean;
+  entry: { locationId: string; products: EntryProduct[]; currencies: EntryCurrency[] };
 }) {
+  const entryKind = isWarehouse ? "initial" : "direct";
+  const canEnter = isWarehouse ? canEntry : canDirect;
+  const entryButton = canEnter ? <EntryButton kind={entryKind} {...entry} costs={costs} /> : undefined;
   const router = useRouter();
   const pathname = usePathname();
   const go = (patch: Partial<StockFilters>) => router.replace(`${pathname}${stockListQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });
@@ -88,9 +97,9 @@ export function StockList({
       <ViewState
         kind="empty"
         entity="existencias"
-        text={canEntry ? "Registra la entrada inicial para empezar." : "Cuando se registren, aparecerán aquí."}
-        canCreate={canEntry}
-        action={<Button disabled title="Próximamente">Entrada inicial</Button>}
+        text={canEnter ? "Registra la entrada inicial para empezar." : "Cuando se registren, aparecerán aquí."}
+        canCreate={canEnter}
+        action={entryButton}
       />
     );
   }
@@ -170,9 +179,9 @@ export function StockList({
             <>
               {canTransfer && <Button variant="secondary" disabled title="Próximamente">Trasladar a tienda</Button>}
               {canWriteOff && <Button variant="secondary" disabled title="Próximamente">Dar de baja</Button>}
-              {canEntry && <Button disabled title="Próximamente">Entrada inicial</Button>}
+              {entryButton}
             </>
-          ) : undefined
+          ) : entryButton
         }
         extra={
           <>
