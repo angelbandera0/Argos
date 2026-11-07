@@ -11,7 +11,7 @@ export const NAV = {
   notifications: item("notificaciones", "Notificaciones", "/notificaciones", "Bell"),
   stock: item("existencias", "Existencias", "/existencias", "Warehouse"),
   requests: item("solicitudes", "Solicitudes", "/solicitudes", "ClipboardList"),
-  orders: item("pedidos", "Pedidos", "/pedidos", "ShoppingBag", { available: false }),
+  orders: item("pedidos", "Pedidos", "/pedidos", "ShoppingBag"),
   products: item("productos", "Productos", "/catalogo/productos", "Box"),
   categories: item("categorias", "Categorías", "/catalogo/categorias", "Tags"),
   reasons: item("motivos", "Motivos de baja", "/existencias/motivos", "ClipboardList"),

@@ -43,7 +43,7 @@ export function validateOrderLine(l: LineInput): void {
   if (qty(l.content) <= 0) throw new RuleViolation("INVALID_CONTENT");
   if (!l.unit.trim()) throw new RuleViolation("INVALID_UNIT");
   if ((l.dest === "store") !== !!l.storeId) throw new RuleViolation("INVALID_INPUT");
-  if (l.dest === "direct") {
+  if (l.dest === "direct" && l.plan?.length) {
     const total = (l.plan ?? []).reduce((s, p) => add(s, qty(p.qty)), qty(0));
     if (toNumber(total) !== toNumber(qty(l.qty))) throw new RuleViolation("PLAN_MISMATCH");
   }

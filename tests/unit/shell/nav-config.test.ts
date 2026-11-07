@@ -14,7 +14,7 @@ describe("buildNav", () => {
 
   it("marks only the pages not built yet as unavailable", () => {
     const warehouse = buildNav({ kind: "admin" })[1].items;
-    expect(warehouse.filter((i) => i.available === false).map((i) => i.id)).toEqual(["pedidos"]);
+    expect(warehouse.filter((i) => i.available === false).map((i) => i.id)).toEqual([]);
   });
 
   it("shows operators only what their permissions allow", () => {
