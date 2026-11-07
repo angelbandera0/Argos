@@ -82,7 +82,7 @@ select throws_ok($$update lots set product_id = '00000000-0000-0000-0000-0000000
 select lives_ok($$update lots set remaining = 120 where id = (select v from ctx where k = 'lotA')$$, 'remaining can decrease');
 select throws_ok($$update lots set remaining = 130 where id = (select v from ctx where k = 'lotA')$$, '23514', null, 'remaining cannot exceed the initial quantity');
 select is(app.product_has_stock('00000000-0000-0000-0000-0000000000e1'), true, 'a product with available lots has stock');
-select throws_ok($$update product_stock_settings set base_unit = 'kg' where product_id = '00000000-0000-0000-0000-0000000000e1'$$, 'P0001', 'BASE_UNIT_IN_USE', 'the base unit is locked once there is stock');
+select throws_ok($$update product_stock_settings set base_unit = 'kg' where product_id = '00000000-0000-0000-0000-0000000000e1'$$, 'P0001', 'BASE_UNIT_LOCKED', 'the base unit is locked once there is stock');
 select is(app.currency_in_use('00000000-0000-0000-0000-0000000000a7'), true, 'a currency with costs is in use');
 select throws_ok($$update currencies set deleted_at = now() where id = '00000000-0000-0000-0000-0000000000a7'$$, 'P0001', 'CURRENCY_IN_USE', 'an in-use currency cannot be deleted');
 select tests.authenticate_as((select v from ctx where k = 'ana'));

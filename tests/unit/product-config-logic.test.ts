@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { configErrorMessage, contentLabel, hasMinimum, minimumSchema, movementUnitSchema, presentationSchema } from "@/components/stock/product-config-logic";
+import { baseUnitOptions, configErrorMessage, contentLabel, hasMinimum, minimumSchema, movementUnitSchema, presentationSchema } from "@/components/stock/product-config-logic";
 
 describe("product-config-logic", () => {
   it("validates presentations and movement units", () => {
@@ -31,5 +31,15 @@ describe("configuration tab param", () => {
   it("round-trips", () => {
     expect(parseTab("configuracion")).toBe("configuracion");
     expect(detailQuery({ pestana: "configuracion" })).toBe("?pestana=configuracion");
+  });
+});
+
+describe("base unit", () => {
+  it("offers only units of the same family", () => {
+    expect(baseUnitOptions("kg").map((o) => o.value).sort()).toEqual(["g", "kg", "lb", "oz"]);
+    expect(baseUnitOptions("u").map((o) => o.value)).toEqual(["u"]);
+  });
+  it("explains the lock without jargon", () => {
+    expect(configErrorMessage("BASE_UNIT_LOCKED")).toMatch(/ya tiene movimientos/);
   });
 });

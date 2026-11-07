@@ -29,7 +29,7 @@ export class InMemoryStock implements StockRepository {
 
   addProduct(productId: string, companyId: string, categoryId: string | null = null) {
     this.products.set(productId, { companyId, categoryId });
-    this.configs.set(productId, { productId, storable: true, baseUnit: "lb", magnitude: "weight", presentations: [], movementUnits: [] });
+    this.configs.set(productId, { productId, storable: true, baseUnit: "lb", magnitude: "weight", baseUnitLocked: false, presentations: [], movementUnits: [] });
   }
 
   private config(productId: string) {
@@ -68,11 +68,12 @@ export class InMemoryStock implements StockRepository {
   }
 
   async getProductConfig(productId: string) {
-    return this.configs.get(productId) ?? null;
+    const c = this.configs.get(productId);
+    return c ? { ...c, baseUnitLocked: this.baseUnitLocked.has(productId) } : null;
   }
   async saveProductConfig(productId: string, v: { storable: boolean; baseUnit: Unit }) {
     const c = this.config(productId);
-    if (v.baseUnit !== c.baseUnit && this.baseUnitLocked.has(productId)) throw new RuleViolation("BASE_UNIT_IN_USE");
+    if (v.baseUnit !== c.baseUnit && this.baseUnitLocked.has(productId)) throw new RuleViolation("BASE_UNIT_LOCKED");
     Object.assign(c, v, { magnitude: magnitudeOf(v.baseUnit) });
   }
 

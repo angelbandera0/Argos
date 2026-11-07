@@ -119,6 +119,8 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         config={{
           productId,
           baseUnit: cfg.baseUnit,
+          storable: cfg.storable,
+          baseUnitLocked: cfg.baseUnitLocked,
           presentations: cfg.presentations.map((p) => ({ id: p.id, name: p.name, value: p.content, active: p.active })),
           movementUnits: cfg.movementUnits.map((u) => ({ id: u.id, name: u.name, value: u.equivalence, active: u.active })),
           minimums,

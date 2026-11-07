@@ -61,3 +61,7 @@ export async function saveMinimumAction(productId: string, locationId: string, _
     p.data.minimum === 0 ? stock.clearMinimum(actor, { productId, locationId }) : stock.setMinimum(actor, { productId, locationId, minimum: p.data.minimum }),
   );
 }
+
+export async function changeBaseUnitAction(productId: string, storable: boolean, baseUnit: string) {
+  return run(productId, ({ actor, stock }) => stock.saveProductStockConfig(actor, { productId, storable, baseUnit }));
+}

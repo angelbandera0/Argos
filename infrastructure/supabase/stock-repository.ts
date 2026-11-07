@@ -227,10 +227,12 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
       if (error) stockError("get product config", error);
       if (!data && !(await this.getProductCompany(productId))) return null;
       const baseUnit = (data?.base_unit ?? "lb") as Unit;
-      const [pres, units] = await Promise.all([
+      const [pres, units, lots] = await Promise.all([
         supabase.from("product_presentations").select(ITEM_COLS.product_presentations).eq("product_id", productId).is("deleted_at", null).order("name").order("id"),
         supabase.from("product_movement_units").select(ITEM_COLS.product_movement_units).eq("product_id", productId).is("deleted_at", null).order("name").order("id"),
+        supabase.from("lots").select("id", { count: "exact", head: true }).eq("product_id", productId),
       ]);
+      if (lots.error) stockError("count lots", lots.error);
       if (pres.error) stockError("list presentations", pres.error);
       if (units.error) stockError("list movement units", units.error);
       return {
@@ -238,6 +240,7 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
         storable: data?.storable ?? false,
         baseUnit,
         magnitude: magnitudeOf(baseUnit),
+        baseUnitLocked: (lots.count ?? 0) > 0,
         presentations: (pres.data as unknown as PresentationItem[]).map((p) => ({ ...p, content: Number(p.content) })),
         movementUnits: (units.data as unknown as MovementUnitItem[]).map((u) => ({ ...u, equivalence: Number(u.equivalence) })),
       };

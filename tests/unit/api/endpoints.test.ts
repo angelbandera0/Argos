@@ -232,7 +232,7 @@ describe("endpoints", () => {
       });
       return load(r[0]).then((m) => m.POST(new Request("http://x/api/v1/stock/transfers", { method: "POST", headers: { authorization: "Bearer admin" }, body: JSON.stringify(r[3]) }), {}));
     };
-    for (const [code, status] of [["INSUFFICIENT_STOCK", 422], ["LOT_EXCEEDED", 422], ["QUANTITY_MISMATCH", 422], ["CHOOSE_LOT_FORBIDDEN", 403], ["COST_NOT_ALLOWED", 403], ["BASE_UNIT_IN_USE", 409], ["NAME_TAKEN", 409]] as const) {
+    for (const [code, status] of [["INSUFFICIENT_STOCK", 422], ["LOT_EXCEEDED", 422], ["QUANTITY_MISMATCH", 422], ["CHOOSE_LOT_FORBIDDEN", 403], ["COST_NOT_ALLOWED", 403], ["BASE_UNIT_LOCKED", 409], ["NAME_TAKEN", 409]] as const) {
       const res = await failWith(new RuleViolation(code));
       expect([res.status, (await res.json()).code]).toEqual([status, code]);
     }

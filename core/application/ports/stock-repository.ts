@@ -79,6 +79,8 @@ export interface ProductStockConfig {
   storable: boolean;
   baseUnit: Unit;
   magnitude: Magnitude;
+  /** True once the product has lots or movements anywhere: the base unit can no longer change. */
+  baseUnitLocked: boolean;
   presentations: PresentationItem[];
   movementUnits: MovementUnitItem[];
 }
@@ -109,7 +111,7 @@ export interface MovementFilters {
 /**
  * Reads and configuration only. Costs come back only where the database lets the caller read
  * them; use cases strip them again. Deleted presentations/units are invisible. A base unit
- * change with stock surfaces as BASE_UNIT_IN_USE (from the database).
+ * change with stock surfaces as BASE_UNIT_LOCKED (from the database).
  */
 export interface StockRepository {
   listLocations(companyId: string): Promise<Location[]>;

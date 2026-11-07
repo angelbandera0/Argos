@@ -74,7 +74,7 @@ const OPERATIONS: Op[] = [
   ["get", "/api/v1/stock/products/{id}", "Product stock at a location: configuration, lots, status (locationId)"],
   ["get", "/api/v1/stock/movements", "List stock movements (productId, locationId, type, from, to, page, pageSize)"],
   ["get", "/api/v1/stock/products/{id}/config", "Get a product's stock configuration"],
-  ["put", "/api/v1/stock/products/{id}/config", "Save storable and base unit", "stockConfig", "204"],
+  ["put", "/api/v1/stock/products/{id}/config", "Save storable and base unit (409 BASE_UNIT_LOCKED once the product has lots or movements)", "stockConfig", "204"],
   ["post", "/api/v1/stock/products/{id}/presentations", "Add a presentation", "createPresentation", "201"],
   ["patch", "/api/v1/stock/products/{id}/presentations/{presentationId}", "Update a presentation", "updatePresentation", "204"],
   ["delete", "/api/v1/stock/products/{id}/presentations/{presentationId}", "Delete a presentation", undefined, "204"],

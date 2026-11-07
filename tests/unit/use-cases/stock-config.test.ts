@@ -11,7 +11,10 @@ describe("stock configuration", () => {
     expect(await s.getConfig(A, { productId: "p1" })).toMatchObject({ storable: false, baseUnit: "kg" });
     await expect(s.saveConfig(A, { productId: "p1", storable: true, baseUnit: "gal" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
     s.stock.baseUnitLocked.add("p1");
-    await expect(s.saveConfig(A, { productId: "p1", storable: true, baseUnit: "l" })).rejects.toMatchObject({ code: "BASE_UNIT_IN_USE" });
+    await expect(s.saveConfig(A, { productId: "p1", storable: true, baseUnit: "l" })).rejects.toMatchObject({ code: "BASE_UNIT_LOCKED" });
+    expect(await s.getConfig(A, { productId: "p1" })).toMatchObject({ baseUnitLocked: true });
+    await expect(s.saveConfig(A, { productId: "p1", storable: true, baseUnit: "kg" })).resolves.toBeUndefined();
+    await expect(s.saveConfig(operator("u-view"), { productId: "p1", storable: true, baseUnit: "g" })).rejects.toMatchObject({ name: "Forbidden" });
   });
 
   it("permissions: admin or configure_units with warehouse", async () => {

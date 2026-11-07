@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import {
   type ConfigActionState,
+  changeBaseUnitAction,
   deleteItemAction,
   saveMinimumAction,
   saveMovementUnitAction,
@@ -14,12 +15,13 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { Card } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/data-table";
+import { Select } from "@/components/ui/select";
 import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { useToast } from "@/components/ui/toast";
 import { ViewState } from "@/components/ui/view-state";
 import type { Unit } from "@/core/domain/stock";
-import { contentLabel, hasMinimum } from "./product-config-logic";
+import { baseUnitOptions, BASE_UNIT_LOCKED_TEXT, contentLabel, hasMinimum } from "./product-config-logic";
 import { minimumLabel } from "./stock-list-logic";
 
 export type ConfigItem = { id: string; name: string; value: number; active: boolean };
@@ -32,6 +34,8 @@ const nf = (n: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3
 export function ProductConfigTab({
   productId,
   baseUnit,
+  storable,
+  baseUnitLocked,
   presentations,
   movementUnits,
   minimums,
@@ -40,6 +44,8 @@ export function ProductConfigTab({
 }: {
   productId: string;
   baseUnit: Unit;
+  storable: boolean;
+  baseUnitLocked: boolean;
   presentations: ConfigItem[];
   movementUnits: ConfigItem[];
   minimums: MinimumRow[];
@@ -101,7 +107,19 @@ export function ProductConfigTab({
       <Card>
         <div className="stack">
           <h3>Unidad base</h3>
-          <p><strong>{baseUnit === "l" ? "L" : baseUnit}</strong> <span className="hint">Cómo se cuenta la existencia. No se cambia desde aquí.</span></p>
+          <p><strong>{baseUnit === "l" ? "L" : baseUnit}</strong> <span className="hint">Cómo se cuenta la existencia.</span></p>
+          {canUnits && (
+            <Field label="Cambiar unidad base" htmlFor="base-unit" hint={baseUnitLocked ? BASE_UNIT_LOCKED_TEXT : "Solo unidades del mismo tipo. Las presentaciones y mínimos no se convierten."}>
+              <Select
+                id="base-unit"
+                options={baseUnitOptions(baseUnit)}
+                value={baseUnit}
+                disabled={baseUnitLocked || pending}
+                onValueChange={(v) => v && v !== baseUnit && start(async () => report(await changeBaseUnitAction(productId, storable, v), "Unidad base actualizada."))}
+              />
+            </Field>
+          )}
+          {!canUnits && baseUnitLocked && <p className="hint">{BASE_UNIT_LOCKED_TEXT}</p>}
         </div>
       </Card>
       {section("presentation", "Presentaciones de compra", "Añadir presentación", presentations, "Contenido", (i) => contentLabel(i.value, baseUnit))}
