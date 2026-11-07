@@ -14,6 +14,7 @@ import { EntityCardSection, ViewToggleSection } from "./sections/entity-card";
 import { StatTileSection } from "./sections/stat-tile";
 import { EntityPanelSection } from "./sections/entity-panel";
 import { PagerSection } from "./sections/pager";
+import { UrlPagerSection } from "./sections/url-pager";
 import { FormSectionSection } from "./sections/form-section";
 import { SummaryPanelSection } from "./sections/summary-panel";
 import { ChoiceCardSection } from "./sections/choice-card";
@@ -70,6 +71,7 @@ const sections = [
   { id: "stat-tile", title: "StatTile", description: "Indicador con icono rojo en círculo blanco y cifra (§6.37).", content: <StatTileSection /> },
   { id: "entity-panel", title: "EntityPanel", description: "Bloque de filas dentro de una tarjeta de entidad (TIENDAS · n).", content: <EntityPanelSection /> },
   { id: "pager", title: "Pager", description: "Paginación Anterior · páginas · Siguiente con «Mostrando a–b de n».", content: <PagerSection /> },
+  { id: "url-pager", title: "UrlPager", description: "Pager que guarda la página en ?pagina de la URL, conservando los demás filtros.", content: <UrlPagerSection /> },
   { id: "form-section", title: "FormSection", description: "Tarjeta de formulario con número en círculo, título, descripción y slot a la derecha (contador). §6.38.", content: <FormSectionSection /> },
   { id: "summary-panel", title: "SummaryPanel", description: "Panel lateral sticky de un formulario: icono + nombre, tarjeta de resumen, lista de comprobación y acciones. §6.38.", content: <SummaryPanelSection /> },
   { id: "choice-card", title: "ChoiceCard y ChoicePills", description: "Tarjeta seleccionable con checkbox (fila «todas» con estado mixto) y radio en píldoras para 2–6 opciones. §6.38.", content: <ChoiceCardSection /> },
@@ -89,7 +91,7 @@ const sections = [
   { id: "view-state", title: "ViewState", description: "Cinco estados de vista: cargando, vacío, sin coincidencias, error y sin permiso (M8).", content: <ViewStateSection /> },
   { id: "money-value", title: "MoneyValue", description: "Importe con formato de divisa, «Sin costo conocido» y variante sin costos (M3).", content: <MoneyValueSection /> },
   { id: "denomination-row", title: "DenominationRow", description: "Fila de denominación: etiqueta de valor amarilla suave, importe con símbolo, tipo y acciones a la derecha (M2).", content: <DenominationRowSection /> },
-  { id: "quantity-picker", title: "QuantityPicker", description: "TODO", content: <QuantityPickerSection /> },
+  { id: "quantity-picker", title: "QuantityPicker", description: "Cantidad + unidad con equivalente en base (entradas, traslados).", content: <QuantityPickerSection /> },
 ];
 
 export default function UiPage() {
