@@ -145,3 +145,4 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 ## ToggleCard y SalesPreview (§6.43)
 - `ToggleCard` (`components/ui/toggle-card.tsx`): botón `role="switch"` de ancho completo con icono, título, ayuda e interruptor; activo `--color-success-tint`, inactivo blanco con borde.
 - `SalesPreview` (`components/ui/sales-preview.tsx`): chip rojo de categoría + tarjeta de 150 px; pausado: tarjeta al 60 % y chip «Pausado». Formulario de producto: `components/catalog/product-form.tsx`, CSS `app/ui-product-form.css`.
+- Módulo 2 (§6.43–6.47): `QuantityInput` (cifra + presentación + «= 125,000 lb», `stepper` móvil), `LotPicker` (reparto PEPS, costos con `showCosts`), `StatusBadge family/status` (26 px con icono), `StateTimeline` (horizontal/vertical), `SpendSummary` (Entregado · Gastado · Sobrante, `hideAmounts`).

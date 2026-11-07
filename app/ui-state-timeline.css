@@ -1,0 +1,21 @@
+.ui-timeline { display: flex; margin: 0; padding: 0; list-style: none; }
+.ui-timeline-step { position: relative; display: flex; gap: var(--space-2-5); }
+.ui-timeline-dot { display: grid; place-items: center; flex: none; width: var(--size-icon-circle-sm); height: var(--size-icon-circle-sm); border-radius: 50%; }
+.ui-timeline-dot svg { width: var(--space-3-5); height: var(--space-3-5); }
+.ui-timeline-title { font: var(--text-body); font-weight: 600; }
+.ui-timeline-meta { font: var(--text-caption); color: var(--color-muted); }
+.ui-timeline-done { background: var(--color-ink); color: var(--color-surface); }
+.ui-timeline-now { background: var(--state-open-bg); color: var(--state-open-fg); }
+.ui-timeline-returned { background: var(--stock-out-bg); color: var(--stock-out-fg); }
+.ui-timeline-confirmed { background: var(--color-success); color: var(--color-surface); }
+.ui-timeline-upcoming { background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-field) var(--state-review-ring); }
+
+.ui-timeline-horizontal { align-items: flex-start; gap: var(--space-2); flex-wrap: wrap; }
+.ui-timeline-horizontal .ui-timeline-step { flex: 1; align-items: center; min-width: 0; }
+.ui-timeline-horizontal .ui-timeline-step:not(:last-child)::after { content: ""; flex: 1; height: 2px; margin-left: var(--space-2); background: var(--color-ring); }
+
+.ui-timeline-vertical { flex-direction: column; }
+.ui-timeline-vertical .ui-timeline-dot { width: var(--size-badge); height: var(--size-badge); }
+.ui-timeline-vertical .ui-timeline-step { padding-bottom: var(--space-5); }
+.ui-timeline-vertical .ui-timeline-step:not(:last-child)::before { content: ""; position: absolute; left: calc(var(--size-badge) / 2 - 1px); top: var(--size-badge); bottom: 0; width: 2px; background: var(--color-ring); }
+.ui-timeline-note { margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-option); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-hairline) var(--color-line); font: var(--text-caption); }

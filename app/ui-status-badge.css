@@ -1,0 +1,9 @@
+.ui-status-badge { display: inline-flex; align-items: center; gap: var(--space-1-5); height: var(--size-badge); padding: 0 var(--space-3); border-radius: var(--radius-pill); font: var(--text-caption); font-weight: 600; white-space: nowrap; }
+.ui-status-badge svg { width: var(--space-3); height: var(--space-3); flex: none; }
+.ui-status-ok { background: var(--stock-normal-bg); color: var(--stock-normal-fg); }
+.ui-status-warn { background: var(--stock-low-bg); color: var(--stock-low-fg); }
+.ui-status-out { background: var(--stock-out-bg); color: var(--stock-out-fg); font-weight: 700; }
+.ui-status-open { background: var(--state-open-bg); color: var(--state-open-fg); }
+.ui-status-ring { background: var(--color-surface); color: var(--color-ink); box-shadow: inset 0 0 0 var(--border-hairline) var(--state-review-ring); }
+.ui-status-draft { background: var(--color-panel); color: var(--color-ink-2); box-shadow: inset 0 0 0 var(--border-hairline) var(--state-draft-ring); }
+.ui-status-muted { background: var(--color-panel); color: var(--color-muted); }

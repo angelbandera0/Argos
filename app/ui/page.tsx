@@ -20,6 +20,11 @@ import { ChoiceCardSection } from "./sections/choice-card";
 import { PinSlotsSection } from "./sections/pin-slots";
 import { ToggleCardSection } from "./sections/toggle-card";
 import { SalesPreviewSection } from "./sections/sales-preview";
+import { QuantityInputSection } from "./sections/quantity-input";
+import { LotPickerSection } from "./sections/lot-picker";
+import { StatusBadgeSection } from "./sections/status-badge";
+import { StateTimelineSection } from "./sections/state-timeline";
+import { SpendSummarySection } from "./sections/spend-summary";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -62,6 +67,11 @@ const sections = [
   { id: "pin-slots", title: "PinSlots", description: "Seis casillas de PIN: punteadas, con dígitos u ocultas", content: <PinSlotsSection /> },
   { id: "toggle-card", title: "ToggleCard", description: "Tarjeta-interruptor de ancho completo (role=switch): icono, título, ayuda y interruptor; activo en fondo success-tint.", content: <ToggleCardSection /> },
   { id: "sales-preview", title: "SalesPreview", description: "Vista previa de la pantalla de caja: chip de categoría y tarjeta del producto; pausado al 60 % con chip «Pausado».", content: <SalesPreviewSection /> },
+  { id: "quantity-input", title: "QuantityInput", description: "Cantidad + presentación + equivalente en unidad base (§6.43).", content: <QuantityInputSection /> },
+  { id: "lot-picker", title: "LotPicker", description: "Reparto de cantidad entre lotes con sugerido PEPS (§6.44).", content: <LotPickerSection /> },
+  { id: "status-badge", title: "StatusBadge", description: "Insignias de 26 px con icono: existencia, línea, solicitud y pedido (§6.45).", content: <StatusBadgeSection /> },
+  { id: "state-timeline", title: "StateTimeline", description: "Línea de tiempo horizontal y vertical (§6.46).", content: <StateTimelineSection /> },
+  { id: "spend-summary", title: "SpendSummary", description: "Entregado · Gastado · Sobrante con gasto por producto (§6.47).", content: <SpendSummarySection /> },
 ];
 
 export default function UiPage() {

@@ -47,6 +47,11 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Formulario de usuario (§6.40) | `FormShell aside` + `FormSection`, usuario con prefijo fijo y comprobación en vivo (`checkUsernameAction`), `Select` de rol con franja de permisos, tiendas por sede con casilla mixta, `SummaryPanel` «Así entrará» con `PinSlots`; diálogo «Usuario creado» (`Dialog tone="success"`, `dismissible={false}`); lógica pura en `user-form-logic.ts` | `components/users/new-user-form.tsx` |
 | Interruptor destacado de un estado (p. ej. disponibilidad) | `ToggleCard` | `components/ui/toggle-card.tsx` (galería `/ui`) |
 | Vista previa de cómo se verá algo en otra pantalla | `SalesPreview` | `components/ui/sales-preview.tsx` (galería `/ui`) |
+| Cantidad con unidad de presentación y equivalente en base (§6.43); lógica en `quantity-logic.ts` | `QuantityInput` | `components/ui/quantity-input.tsx` (galería `/ui`) |
+| Reparto PEPS entre lotes, costos solo con `showCosts` (§6.44); lógica en `lot-logic.ts` | `LotPicker` | `components/ui/lot-picker.tsx` (galería `/ui`) |
+| Estado de existencia, línea, solicitud o pedido: color + texto + icono (§6.45) | `StatusBadge` | `components/ui/status-badge.tsx` (galería `/ui`) |
+| Pasos de un pedido, horizontal en cabecera o vertical en detalle (§6.46) | `StateTimeline` | `components/ui/state-timeline.tsx` (galería `/ui`) |
+| Entregado · Gastado · Sobrante; `hideAmounts` sin permiso de costos (§6.47); lógica en `spend-logic.ts` | `SpendSummary` | `components/ui/spend-summary.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

@@ -1,0 +1,12 @@
+.ui-qty-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.ui-qty-field { width: var(--size-qty-input); text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui-qty-unit { min-width: calc(var(--space-8) * 6); }
+.ui-qty-stepper { display: inline-flex; align-items: center; gap: var(--space-1); height: calc(var(--size-stepper-btn) + var(--space-2)); padding: 0 var(--space-1); border-radius: var(--radius-pill); background: var(--color-panel); }
+.ui-qty-stepper button { display: grid; place-items: center; width: var(--size-stepper-btn); height: var(--size-stepper-btn); border: 0; border-radius: 50%; background: var(--color-surface); color: var(--color-ink); cursor: pointer; }
+.ui-qty-stepper button:disabled { color: var(--color-disabled-text); cursor: not-allowed; }
+.ui-qty-stepper button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ui-qty-stepper svg { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.ui-qty-stepper output { min-width: var(--space-8); text-align: center; font: var(--text-value); font-variant-numeric: tabular-nums; }
+.ui-qty-stepper output[aria-invalid="true"] { color: var(--color-danger-text); }
+.ui-qty-eq { margin: var(--space-1-5) 0 0; font: var(--text-caption); color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.ui-qty-eq.is-error { color: var(--color-danger-text); font-weight: 600; }

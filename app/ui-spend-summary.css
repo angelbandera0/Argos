@@ -1,0 +1,13 @@
+.ui-spend-cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+.ui-spend-cell { display: grid; gap: var(--space-1); padding: var(--space-4); border-radius: var(--radius-inner); background: var(--color-panel); }
+.ui-spend-label { font: var(--text-overline); text-transform: uppercase; color: var(--color-muted); }
+.ui-spend-value { font: var(--text-value); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-spend-ok { background: var(--color-success-tint); }
+.ui-spend-ok .ui-spend-label, .ui-spend-ok .ui-spend-value { color: var(--color-success); }
+.ui-spend-over { background: var(--color-danger-tint); }
+.ui-spend-over .ui-spend-label, .ui-spend-over .ui-spend-value { color: var(--color-danger-text); }
+.ui-spend-products { display: grid; gap: var(--space-3); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+.ui-spend-product { display: flex; justify-content: space-between; gap: var(--space-3); font: var(--text-body); font-variant-numeric: tabular-nums; }
+.ui-spend-bar { height: var(--space-1-5); margin-top: var(--space-1); border-radius: var(--radius-pill); background: var(--color-line-soft); overflow: hidden; }
+.ui-spend-bar span { display: block; height: 100%; border-radius: var(--radius-pill); background: var(--color-red); }
+@media (max-width: 640px) { .ui-spend-cells { grid-template-columns: 1fr; } }

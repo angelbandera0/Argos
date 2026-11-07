@@ -1,0 +1,14 @@
+.ui-lot-closed { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill); background: var(--color-panel); font: var(--text-body); }
+.ui-lot-closed .btn { color: var(--color-red-hover); }
+.ui-lot-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ui-lot-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-option); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-hairline) var(--color-line); }
+.ui-lot-row.is-used { box-shadow: inset 0 0 0 var(--border-field) var(--color-danger); }
+.ui-lot-code { font-family: ui-monospace, monospace; font-size: var(--size-lot-code); font-weight: 600; }
+.ui-lot-chip { margin-left: var(--space-2); padding: var(--space-1) var(--space-2-5); border-radius: var(--radius-pill); background: var(--lot-suggested-bg); color: var(--lot-suggested-fg); font: var(--text-caption); font-weight: 600; }
+.ui-lot-meta { margin-top: var(--space-1); font: var(--text-caption); color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.ui-lot-qty { width: var(--size-qty-input); text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui-lot-total { margin: var(--space-3) 0 0; font: var(--text-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui-lot-total.is-ok { color: var(--color-success); }
+.ui-lot-total.is-bad { color: var(--color-danger-text); }
+.ui-lot-warn { display: grid; gap: var(--space-2); margin-top: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-option); background: var(--color-warning-tint); color: var(--color-warning-text); font: var(--text-body); }
+.ui-lot-warn .btn { justify-self: start; color: var(--color-red-hover); }
