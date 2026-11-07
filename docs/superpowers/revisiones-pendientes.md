@@ -256,3 +256,10 @@ Se hace al terminar todo el proyecto, no por tarea.
 ## Módulo 2 · visibilidad del almacén general (T10a)
 - `app.can_see_location` (T09) deja ver el almacén general a cualquier usuario con `stock` ver, incluido un administrador de tienda. La spec (S-21/S-22) reserva el almacén general al almacenero y al administrador. Decidir si exige además un permiso especial con «Almacén general» (p. ej. `handle_requests`, `transfer` o `initial_entry`) y ajustar `lots_select`, `stock_movements_select`, los mínimos y `stock_levels`.
 - `created_by` y `actor_id` de lotes y movimientos son nulables porque `app.create_lot` puede llamarse como `postgres` (pruebas); las funciones públicas de T10b/T11/T19 siempre los rellenan.
+
+## Módulo 2 · API de stock (T14b)
+- Un operador con token Bearer recibió 403 en las pruebas de integración de la API REST: el token de prueba probablemente no tiene una sesión de operador activa (`app_sessions`), de la que dependen sus permisos. Validar con el flujo real de inicio de sesión con PIN (y con la app de operadores) que un operador con permisos lee existencias por la API y no recibe `unitCost` sin «Ver costos».
+- `NAME_TAKEN` y `CODE_TAKEN` pasaron de 422 a 409 en TODA la API (categorías, divisas, etc.): cambio de contrato; revisar el documento OpenAPI y a los clientes.
+- `getProductCompany` lee `product_stock_settings` antes que `products` para operadores sin permiso de Productos, por lo que no comprueba `deleted_at` de un producto con configuración de almacén.
+- `clearMinimum` pone el mínimo en 0 (sin delete directo): la UI debe tratar 0 como «sin mínimo».
+- Lección de tamaño: T14b usó 63 llamadas y 124.557 de contexto (≈26 min), más del doble del límite recomendado; partir tareas de API en dos pasos (lectura y escritura).
