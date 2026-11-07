@@ -125,6 +125,7 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | M2-T26 UI compra del comprador | `argos-dev` (Sonnet) | implementación | verify:fast OK; visual pendiente | 43707e9 | contexto 18.940 → 84.540, 29 llamadas; equivalente ponderado ≈ 339.000 |
 | M2-T27 UI revisión, detalle y corrección | `argos-dev` (Sonnet) | implementación | verify:fast OK; visual pendiente | a3ebc5b | contexto 19.031 → 70.660, 18 llamadas; equivalente ponderado ≈ 240.000 |
 | M2-T28 dashboard solicitudes del día | `argos-dev` (Sonnet) | implementación | verify:fast OK; visual pendiente | 18ba47f | contexto 18.779 → 39.885, 22 llamadas; equivalente ponderado ≈ 126.000 |
+| M2-T29 historial | `argos-dev` (Sonnet) | implementación | verify:fast OK | 50c1dbe | contexto 19.015 → 47.324, 18 llamadas; equivalente ponderado ≈ 127.000 |
 
 Nota de medición (2026-10-26): la columna Tokens es el tamaño del contexto al final de la corrida (`subagent_tokens` del arnés), no el gasto facturado. El gasto real es salida + escritura de caché + lectura de caché (que se relee en cada llamada); `pnpm usage <output_file>` lo calcula. En la Tarea 21: 23 llamadas, contexto 32.985 → 122.132, salida 20.146, escritura de caché 103.527, lectura de caché 1.712.301, equivalente ponderado ≈ 401.000.
 

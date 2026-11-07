@@ -267,3 +267,5 @@ Se hace al terminar todo el proyecto, no por tarea.
 - T22: `GET /pedidos/{id}` con token de operador/comprador devuelve 403 por REST aunque el caso de uso directo funciona (mismo síntoma que operador-por-HTTP en T14b); la prueba de costo oculto usa el caso de uso, no REST. Migración `is_eligible_buyer_rpc` sin pgTAP propio. `test:int` completo no se ejecutó.
 
 - T26: migración `order_buyer_costs` (el comprador asignado lee `pedido_costos`/`pedido_linea_costos` de su propio pedido; revisada, acotada) sin pgTAP: añadir caso a la suite 024/026 (comprador ve el suyo, no el de otro, no ve costos de lote).
+
+- T29: el ocultado de costos en el historial es solo por sanitizado en aplicación (sanitize.ts); la RLS de audit_log sigue permitiendo leer el JSON completo por consulta directa. Considerar sanitizado en origen. No se ejecutó test:int.
