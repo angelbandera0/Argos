@@ -27,7 +27,8 @@ export type RuleCode =
   | "QUANTITY_MISMATCH"
   | "LOT_EXCEEDED"
   | "LOT_NOT_FOUND"
-  | "INSUFFICIENT_STOCK";
+  | "INSUFFICIENT_STOCK"
+  | "BASE_UNIT_IN_USE";
 
 export class Forbidden extends Error {
   constructor() {

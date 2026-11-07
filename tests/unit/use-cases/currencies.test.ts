@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Op } from "@/core/domain/permissions";
 import { makeAddDenomination } from "@/core/application/use-cases/currencies/add-denomination";
 import { makeCreateCurrency } from "@/core/application/use-cases/currencies/create-currency";
 import { makeDeleteCurrency } from "@/core/application/use-cases/currencies/delete-currency";
@@ -18,6 +19,7 @@ function build() {
   const deps = { ...base.deps, currencies };
   return {
     currencies,
+    access: base.deps.access,
     create: makeCreateCurrency(deps),
     update: makeUpdateCurrency(deps),
     setActive: makeSetCurrencyActive(deps),
@@ -105,15 +107,29 @@ describe("currencies use cases", () => {
     await expect(s.get(admin("a1"), { id: free.id })).rejects.toMatchObject({ name: "NotFound" });
   });
 
-  it("authorization: operators of the company read only; others are refused", async () => {
+  it("authorization: operators follow the currencies module permissions; others are refused", async () => {
     const s = build();
+    const grant = (user: string, ...ops: Op[]) => {
+      const a = s.access.byUser[user][0];
+      a.permissions = { ...a.permissions, currencies: { view: ops.includes("view"), create: ops.includes("create"), edit: ops.includes("edit"), delete: ops.includes("delete") } };
+    };
+    grant("u-view", "view");
+    grant("u-edit", "view", "edit");
+    grant("u-create", "view", "create");
+    grant("u-delete", "view", "delete");
+    grant("u-other", "view");
     const c = await s.create(admin("a1"), mxn);
     const d = await s.addDen(admin("a1"), { currencyId: c.id, value: 5, kind: "coin" });
-    expect(await s.list(operator("u-none"))).toHaveLength(1);
+    await expect(s.list(operator("u-none"))).rejects.toMatchObject({ name: "Forbidden" });
+    await expect(s.list(operator("u-all"))).rejects.toMatchObject({ name: "Forbidden" });
+    expect(await s.list(operator("u-view"))).toHaveLength(1);
     expect((await s.get(operator("u-view"), { id: c.id })).denominations).toHaveLength(1);
-    await expect(s.create(operator("u-all"), mxn)).rejects.toMatchObject({ name: "Forbidden" });
-    await expect(s.update(operator("u-all"), { id: c.id, name: "X" })).rejects.toMatchObject({ name: "Forbidden" });
-    await expect(s.removeDen(operator("u-all"), { id: d.id })).rejects.toMatchObject({ name: "Forbidden" });
+    await expect(s.create(operator("u-view"), mxn)).rejects.toMatchObject({ name: "Forbidden" });
+    await expect(s.update(operator("u-view"), { id: c.id, name: "X" })).rejects.toMatchObject({ name: "Forbidden" });
+    await s.update(operator("u-edit"), { id: c.id, name: "Peso" });
+    await expect(s.removeDen(operator("u-edit"), { id: d.id })).rejects.toMatchObject({ name: "Forbidden" });
+    await s.create(operator("u-create"), { ...mxn, code: "USD" });
+    await s.removeDen(operator("u-delete"), { id: d.id });
     await expect(s.get(operator("u-other"), { id: c.id })).rejects.toMatchObject({ name: "NotFound" });
     await expect(s.list(admin("a2"), { companyId: "c1" })).rejects.toMatchObject({ name: "Forbidden" });
     await expect(s.update(admin("a2"), { id: c.id, name: "X" })).rejects.toMatchObject({ name: "Forbidden" });

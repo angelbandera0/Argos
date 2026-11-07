@@ -6,6 +6,7 @@ import type { StoreAccessReader } from "@/core/application/ports/store-access-re
 import { requireOperatorStore } from "@/core/application/use-cases/access/assert-session-active";
 import type { Actor } from "@/core/domain/actor";
 import { Forbidden, NotFound } from "@/core/domain/errors";
+import type { Op } from "@/core/domain/permissions";
 
 export interface CurrencyDeps {
   currencies: CurrencyRepository;
@@ -17,10 +18,10 @@ export interface CurrencyDeps {
 
 interface ScopeInput {
   companyId?: string;
-  write: boolean;
+  op: Op;
 }
 
-/** Admins reach the companies they administer; operators read their active store's company. */
+/** Admins reach the companies they administer; operators their active store's company with the currencies module permission. */
 export async function resolveCurrencyScope(
   deps: CurrencyDeps,
   actor: Actor,
@@ -34,15 +35,14 @@ export async function resolveCurrencyScope(
   }
   if (actor.kind !== "operator") throw new Forbidden();
   const { store } = await requireOperatorStore(deps, actor);
-  // T04: permiso del módulo divisas
-  if (input.write) throw new Forbidden();
+  if (!store.permissions.currencies?.[input.op]) throw new Forbidden();
   return { companyId: store.companyId };
 }
 
 export async function loadScoped<T extends { companyId: string }>(
   deps: CurrencyDeps,
   actor: Actor,
-  input: { write: boolean; load: () => Promise<T | null> },
+  input: { op: Op; load: () => Promise<T | null> },
 ): Promise<T> {
   if (actor.kind === "admin") {
     const entity = await input.load();

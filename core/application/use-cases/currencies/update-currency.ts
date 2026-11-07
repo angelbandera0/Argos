@@ -15,7 +15,7 @@ export interface UpdateCurrencyInput {
 
 export function makeUpdateCurrency(deps: CurrencyDeps) {
   return async (actor: Actor, input: UpdateCurrencyInput): Promise<void> => {
-    const currency = await loadScoped(deps, actor, { write: true, load: () => deps.currencies.get(input.id) });
+    const currency = await loadScoped(deps, actor, { op: "edit", load: () => deps.currencies.get(input.id) });
     const changes: CurrencyChanges = {};
     if (input.code !== undefined) changes.code = validateCurrencyCode(input.code);
     if (input.name !== undefined) changes.name = validateName(input.name);

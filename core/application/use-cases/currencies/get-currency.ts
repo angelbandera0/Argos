@@ -4,7 +4,7 @@ import { loadScoped, type CurrencyDeps } from "./shared";
 
 export function makeGetCurrency(deps: CurrencyDeps) {
   return async (actor: Actor, input: { id: string }): Promise<Currency & { denominations: Denomination[] }> => {
-    const currency = await loadScoped(deps, actor, { write: false, load: () => deps.currencies.get(input.id) });
+    const currency = await loadScoped(deps, actor, { op: "view", load: () => deps.currencies.get(input.id) });
     return { ...currency, denominations: await deps.currencies.listDenominations(currency.id) };
   };
 }

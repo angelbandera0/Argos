@@ -11,7 +11,7 @@ export interface ListCurrenciesInput {
 
 export function makeListCurrencies(deps: CurrencyDeps) {
   return async (actor: Actor, input: ListCurrenciesInput = {}): Promise<CurrencyListItem[]> => {
-    const { companyId } = await resolveCurrencyScope(deps, actor, { companyId: input.companyId, write: false });
+    const { companyId } = await resolveCurrencyScope(deps, actor, { companyId: input.companyId, op: "view" });
     const all = await deps.currencies.list(companyId, { active: input.active });
     const term = nameKey(input.search ?? "");
     if (!term) return all;

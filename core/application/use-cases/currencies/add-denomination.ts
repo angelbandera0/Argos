@@ -8,7 +8,7 @@ export function makeAddDenomination(deps: CurrencyDeps) {
     actor: Actor,
     input: { currencyId: string; value: number; kind: string; active?: boolean },
   ): Promise<Denomination> => {
-    const currency = await loadScoped(deps, actor, { write: true, load: () => deps.currencies.get(input.currencyId) });
+    const currency = await loadScoped(deps, actor, { op: "create", load: () => deps.currencies.get(input.currencyId) });
     return deps.currencies.createDenomination({
       companyId: currency.companyId,
       currencyId: currency.id,

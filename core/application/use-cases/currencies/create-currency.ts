@@ -16,7 +16,7 @@ export interface CreateCurrencyInput {
 
 export function makeCreateCurrency(deps: CurrencyDeps) {
   return async (actor: Actor, input: CreateCurrencyInput): Promise<Currency> => {
-    const { companyId } = await resolveCurrencyScope(deps, actor, { companyId: input.companyId, write: true });
+    const { companyId } = await resolveCurrencyScope(deps, actor, { companyId: input.companyId, op: "create" });
     return deps.currencies.create({
       companyId,
       code: validateCurrencyCode(input.code),
