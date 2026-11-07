@@ -36,6 +36,9 @@ export interface UserRepository {
     assignments: { storeId: string; roleId: string }[],
   ): Promise<void>;
   listAssignments(userId: string): Promise<Assignment[]>;
+  listAssignmentsFor(userIds: string[]): Promise<Assignment[]>;
+  /** Most recent successful PIN login per user (administrators of the user's company, RLS). */
+  lastLogins(userIds: string[]): Promise<{ userId: string; at: Date }[]>;
   /** Most recent first; visible to the administrators of the user's company (RLS). */
   listAuthEvents(userId: string, limit: number): Promise<AuthEvent[]>;
 }

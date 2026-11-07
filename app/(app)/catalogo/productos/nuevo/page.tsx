@@ -38,6 +38,7 @@ async function Editor() {
   return (
     <ProductForm
       productId={null}
+      canCreateCategory={actor.kind === "admin"}
       categories={categories.map((c) => ({ id: c.id, name: c.name }))}
       initial={{ name: "", categoryId: "", description: "", active: true }}
     />

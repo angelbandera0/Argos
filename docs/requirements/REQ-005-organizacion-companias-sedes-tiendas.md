@@ -24,6 +24,7 @@ Un administrador estructura su negocio en compañías, sedes y tiendas, controla
 - CA-12: DADO una compañía, sede o tienda desactivada, CUANDO el fundador o el superadmin la reactiva indicando un motivo libre, ENTONCES vuelve a operar y la reactivación queda en el historial. Otro usuario no puede reactivarla.
 - CA-13: DADO una compañía o sede desactivada, CUANDO un usuario intenta entrar a una tienda que cuelga de ella, ENTONCES no puede, aunque la tienda esté activa; y CUANDO se reactiva la compañía o sede, ENTONCES las tiendas que estaban activas vuelven a operar y las que estaban desactivadas siguen desactivadas.
 - CA-14: DADO una compañía, sede o tienda sin datos asociados (sin usuarios, productos, categorías ni operaciones posteriores a su creación), CUANDO el fundador o el superadmin la elimina, ENTONCES se aplica borrado lógico.
+- CA-15 [decisión del usuario]: DADO una compañía, sede o tienda, CUANDO un administrador con acceso (o el superadmin) cambia su nombre, ENTONCES el cambio se aplica y queda en el historial con el nombre anterior y el nuevo. El nombre no puede quedar vacío ni repetirse entre hermanas (compañías del mismo administrador, sedes de una compañía, tiendas de una sede, sin distinguir mayúsculas). El código de la compañía no cambia.
 
 ## Restricciones
 P-01, P-02, P-03, T-03, T-04. Reglas DR-001, DR-003 a DR-007, DR-012, DR-014, DR-015.
@@ -40,4 +41,9 @@ P-01, P-02, P-03, T-03, T-04. Reglas DR-001, DR-003 a DR-007, DR-012, DR-014, DR
 REQ-006, REQ-009.
 
 ## Notas para el manual
-Se completa al implementar (D-04).
+1. Entre a **Compañías** y pulse "Nueva compañía": quedará como su fundador y el sistema le asigna un código de 4 caracteres que no cambia.
+2. Dentro de la compañía cree sedes y, en cada sede, tiendas. Desde el detalle puede cambiar el nombre de cada una (no puede quedar vacío ni repetirse entre hermanas).
+3. En **Administradores** de la compañía dé acceso a otro administrador; quitar el acceso solo lo hace el fundador o el superadmin, y el fundador nunca pierde el suyo.
+4. Para dejar fuera de uso una compañía, sede o tienda, solo el fundador o el superadmin la desactiva e indica un motivo (si elige "otro", escribe el texto). Los datos se conservan; una sede o compañía desactivada bloquea sus tiendas aunque estén activas, y al reactivarla vuelven las que estaban activas.
+5. Solo se puede eliminar lo que no tiene datos (usuarios, productos, categorías u operaciones); en otro caso, desactívelo.
+6. El tope de sesión de la compañía se cambia en sus ajustes y queda en el historial.

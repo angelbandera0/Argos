@@ -1,0 +1,8 @@
+# Formulario de producto (nuevo y editar), §6.43
+
+- `product-form.tsx` rehecho: `FormShell aside`, sección 1 (Nombre único + Categoría en dos columnas, «+ Nueva categoría» en línea con «Crear» que crea con `createCategoryAction` y deja la categoría elegida; Descripción 4 filas con ayuda y contador «n / 500», aviso desde 450) y sección 2 (tarjeta-interruptor). Resumen «Así se verá en ventas» (vista previa, checklist, Guardar producto, Guardar y crear otro, Cancelar). `loading.tsx` de ambas rutas con la misma forma.
+- Componentes nuevos (galería, DESIGN-resumen, PATRONES-UI, test): `ToggleCard`, `SalesPreview`. CSS `ui-toggle-card.css`, `ui-sales-preview.css`, `ui-product-form.css` (importados en `globals.css`). Lógica pura en `product-form-logic.ts` + test.
+- Acciones: `createCategoryAction` devuelve `categoryId`; `saveProductAction` con `again=1` devuelve `{saved}` sin redirigir (el formulario se vacía y avisa con toast); nueva `checkProductNameAction` (unicidad en vivo, debounce 350 ms; el servidor sigue validando NAME_TAKEN). Campos enviados igual (`name`, `categoryId` y `active` ocultos/controlados).
+- `locked` conserva solo lectura (controles deshabilitados, «Volver»); eliminar sigue en la cabecera de la edición. «+ Nueva categoría» solo para administradores.
+- Omitido: «Aparecerá en ventas…» como subtítulo de página no se añadió; el mínimo «al menos 2 letras» del mockup no existe en el dominio (mínimo 1), mensaje «Escribe el nombre del producto.». «Guardar y crear otro» no conserva categoría (formulario vacío según spec).
+- Pruebas: `pnpm verify:fast` OK (58 archivos, 452 casos). Sin navegador: pendiente `/verificar-ui`. Reiniciar `pnpm dev` (CSS y archivos nuevos).

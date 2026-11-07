@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Usuarios</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.row:hover td{background:#fafbfc}
+.mi:hover{background:#f6f8fa}
+.pg:hover{background:#f6f8fa}
+.sel:focus{outline:none;border-color:#d92d25;box-shadow:0 0 0 4px #ffe6e4}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px">
+
+<aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div>
+<button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button>
+<div>
+<p style="margin: 0 0 8px; padding: 0 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MENÚ</p>
+<nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.active}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a>
+</sc-for>
+</nav>
+</div>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #45484d">Jueves, 29 de octubre · 10:24</p>
+<div style="display: flex; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 280px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label>
+<button type="button" aria-label="Notificaciones" style="width: 44px; height: 44px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+<div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">Admin</strong><span style="font-size: 12px; color: #6b6f76">Administrador</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div>
+<h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 44px; letter-spacing: -1.4px; line-height: 1.1">Usuarios</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Personas que entran con su PIN en las tiendas de La Casona.</p>
+</div>
+<button type="button" style="height: 48px; padding: 0 20px 0 16px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nuevo usuario</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<div style="background: #f6f8fa; border-radius: 20px; padding: 16px 18px; display: flex; align-items: center; gap: 14px">
+<span aria-hidden="true" style="{{s.dot}}"></span>
+<div><p style="margin: 0; font-size: 13px; color: #6b6f76">{{s.label}}</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.6px; line-height: 1.15">{{s.value}}</p></div>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar usuario</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar por nombre o usuario" value="{{query}}" onChange="{{onQuery}}" style="width: 280px; height: 40px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 38px; font: inherit; color: #1c1c1e"></label>
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Rol</span><select class="sel" value="{{rol}}" onChange="{{onRol}}" style="{{rolStyle}}"><option value="todos">Rol: Todos</option><option value="Administrador">Administrador</option><option value="Almacenero">Almacenero</option><option value="Cajero">Cajero</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 14px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></label>
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Tienda</span><select class="sel" value="{{tienda}}" onChange="{{onTienda}}" style="{{tiendaStyle}}"><option value="todas">Tienda: Todas</option><option value="Tienda 23 y L">Tienda 23 y L</option><option value="Cafetería G">Cafetería G</option><option value="Tienda 5ta Avenida">Tienda 5ta Avenida</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 14px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></label>
+<span aria-hidden="true" style="width: 1px; height: 24px; background: #e4e6ea; margin: 0 4px"></span>
+<div role="group" aria-label="Filtrar por estado" style="display: flex; gap: 6px">
+<sc-for list="{{estados}}" as="f" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{f.aria}}" onClick="{{f.pick}}" style="{{f.style}}">{{f.label}}<span style="{{f.countStyle}}">{{f.count}}</span></button>
+</sc-for>
+</div>
+<sc-if value="{{hasFilters}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{clear}}" style="height: 40px; padding: 0 12px; border: 0; background: transparent; color: #d92d25; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Limpiar filtros</button></sc-if>
+</div>
+
+<div style="border: 1px solid #eceef1; border-radius: 24px; overflow: visible">
+<table style="width: 100%; border-collapse: separate; border-spacing: 0">
+<caption style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Usuarios de La Casona</caption>
+<thead>
+<tr>
+<th scope="col" style="text-align: left; padding: 14px 12px 14px 22px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; border-radius: 24px 0 0 0">Usuario</th>
+<th scope="col" style="text-align: left; padding: 14px 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa">Nombre de usuario</th>
+<th scope="col" style="text-align: left; padding: 14px 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa">Rol</th>
+<th scope="col" style="text-align: left; padding: 14px 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa">Tiendas</th>
+<th scope="col" style="text-align: left; padding: 14px 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa">Último acceso</th>
+<th scope="col" style="text-align: left; padding: 14px 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa">Estado</th>
+<th scope="col" style="width: 56px; padding: 14px 16px 14px 0; background: #f6f8fa; border-radius: 0 24px 0 0"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Acciones</span></th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<tr class="row">
+<td style="padding: 14px 12px 14px 22px; border-top: 1px solid #eceef1"><div style="display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="{{r.avatar}}">{{r.initials}}</span><a href="#" style="color: #1c1c1e; font-weight: 600; text-decoration: none">{{r.name}}</a></div></td>
+<td style="padding: 14px 12px; border-top: 1px solid #eceef1"><span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 9999px; background: #f6f8fa; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px"><span style="color: #8c9097">qbt6.</span>{{r.user}}</span></td>
+<td style="padding: 14px 12px; border-top: 1px solid #eceef1"><span style="{{r.rolStyle}}">{{r.rol}}</span></td>
+<td style="padding: 14px 12px; border-top: 1px solid #eceef1"><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{r.tiendas}}" as="t" hint-placeholder-count="1"><span style="{{t.style}}">{{t.label}}</span></sc-for></div></td>
+<td style="padding: 14px 12px; border-top: 1px solid #eceef1; color: #45484d; white-space: nowrap">{{r.last}}</td>
+<td style="padding: 14px 12px; border-top: 1px solid #eceef1"><span style="{{r.badge}}"><span aria-hidden="true" style="{{r.badgeDot}}"></span>{{r.estado}}</span></td>
+<td style="padding: 14px 16px 14px 0; border-top: 1px solid #eceef1; text-align: right">
+<div style="position: relative; display: inline-block">
+<button type="button" aria-label="{{r.menuLabel}}" aria-haspopup="menu" aria-expanded="{{r.menuAria}}" onClick="{{r.toggleMenu}}" style="{{r.menuBtn}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg></button>
+<sc-if value="{{r.menuOpen}}" hint-placeholder-val="{{ false }}">
+<div role="menu" style="position: absolute; right: 0; top: calc(100% + 6px); z-index: 10; width: 210px; text-align: left; background: #ffffff; border: 1px solid #eceef1; border-radius: 18px; padding: 6px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 18px 40px rgba(28,28,30,0.14)">
+<button type="button" role="menuitem" class="mi" onClick="{{closeMenu}}" style="width: 100%; min-height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border: 0; border-radius: 12px; background: transparent; color: #1c1c1e; font: inherit; text-align: left; cursor: pointer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>Editar</button>
+<button type="button" role="menuitem" class="mi" onClick="{{closeMenu}}" style="width: 100%; min-height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border: 0; border-radius: 12px; background: transparent; color: #1c1c1e; font: inherit; text-align: left; cursor: pointer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg>Generar nuevo PIN</button>
+<div style="height: 1px; background: #eceef1; margin: 4px 6px"></div>
+<button type="button" role="menuitem" class="mi" onClick="{{r.toggleActive}}" style="{{r.toggleStyle}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5"></path></svg>{{r.toggleLabel}}</button>
+</div>
+</sc-if>
+</div>
+</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 48px 24px; text-align: center; border-top: 1px solid #eceef1"><p style="margin: 0; font-weight: 600; font-size: 15px">Ningún usuario coincide</p><p style="margin: 4px 0 14px; color: #6b6f76">Prueba con otro nombre o quita algún filtro.</p><button type="button" onClick="{{clear}}" style="height: 40px; padding: 0 16px; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Limpiar filtros</button></div>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px 12px 22px; border-top: 1px solid #eceef1">
+<span style="font-size: 13px; color: #6b6f76">{{footer}}</span>
+<nav aria-label="Paginación" style="display: flex; gap: 4px">
+<button type="button" class="pg" aria-label="Página anterior" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: transparent; color: #8c9097; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<button type="button" aria-current="page" style="min-width: 36px; height: 36px; border: 0; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font: inherit; font-weight: 700">1</button>
+<button type="button" class="pg" aria-label="Página siguiente" disabled="" style="width: 36px; height: 36px; border: 0; border-radius: 9999px; background: transparent; color: #8c9097; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { query: '', rol: 'todos', tienda: 'todas', estado: 'todos', menu: null, off: { pedro: true } };
+  }
+  renderVals() {
+    const st = this.state;
+    const I = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const nav = [['inicio', 'Inicio'], ['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios', true], ['categorias', 'Categorías'], ['productos', 'Productos'], ['historial', 'Historial']].map(([k, label, active]) => ({
+      label, active: !!active, current: active ? 'page' : 'false', cls: active ? '' : 'nav-i',
+      d1: I[k][0], d2: I[k][1], d3: I[k][2], iconColor: active ? '#d92d25' : 'currentColor',
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (active ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }));
+    const DATA = [
+      { id: 'raul', name: 'Raul', user: 'raul', rol: 'Almacenero', tiendas: ['Tienda 23 y L', 'Tienda 5ta Avenida'], last: 'Hoy, 08:12' },
+      { id: 'ana', name: 'Ana Rodríguez', user: 'ana', rol: 'Administrador', tiendas: ['Todas'], last: 'Hoy, 09:40' },
+      { id: 'luis', name: 'Luis Martín', user: 'luis', rol: 'Cajero', tiendas: ['Tienda 23 y L'], last: 'Ayer, 18:05' },
+      { id: 'sofia', name: 'Sofía Prieto', user: 'sofia', rol: 'Cajero', tiendas: ['Cafetería G'], last: 'Nunca', pending: true },
+      { id: 'pedro', name: 'Pedro Gil', user: 'pedro', rol: 'Almacenero', tiendas: ['Tienda 5ta Avenida', 'Cafetería G', 'Tienda 23 y L'], last: '12 oct' }
+    ];
+    const statusOf = (u) => st.off[u.id] ? 'inactivo' : (u.pending ? 'pendiente' : 'activo');
+    const q = st.query.trim().toLowerCase();
+    const base = DATA.filter((u) => (!q || u.name.toLowerCase().includes(q) || ('qbt6.' + u.user).includes(q)) && (st.rol === 'todos' || u.rol === st.rol) && (st.tienda === 'todas' || u.tiendas.includes(st.tienda) || u.tiendas[0] === 'Todas'));
+    const list = base.filter((u) => st.estado === 'todos' || (st.estado === 'activos' ? statusOf(u) !== 'inactivo' : statusOf(u) === 'inactivo'));
+    const chip = 'display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; ';
+    const avBg = { Administrador: ['#ffc93c', '#1c1c1e'], Almacenero: ['#ffe6e4', '#b3221b'], Cajero: ['#f6f8fa', '#1c1c1e'] };
+    const badges = {
+      activo: ['Activo', 'background: #e6f4ec; color: #1e7a50', '#1e7a50'],
+      pendiente: ['Aún no ha entrado', 'background: #fff4cf; color: #7a5200', '#e0a800'],
+      inactivo: ['Inactivo', 'background: #f6f8fa; color: #45484d', '#8c9097']
+    };
+    const rows = list.map((u) => {
+      const s = statusOf(u);
+      const menuOpen = st.menu === u.id;
+      const initials = u.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+      const shown = u.tiendas.slice(0, 1);
+      const tiendas = shown.map((t) => ({ label: t === 'Todas' ? 'Todas las tiendas' : t, style: chip + (t === 'Todas' ? 'background: #f6f8fa; color: #1c1c1e' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #e4e6ea') }));
+      if (u.tiendas.length > 1) tiendas.push({ label: '+' + (u.tiendas.length - 1), style: chip + 'background: #f6f8fa; color: #45484d' });
+      return {
+        name: u.name, user: u.user, rol: u.rol, last: u.last, initials, tiendas,
+        avatar: 'width: 38px; height: 38px; flex: none; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: ' + avBg[u.rol][0] + '; color: ' + avBg[u.rol][1] + (s === 'inactivo' ? '; opacity: 0.55' : ''),
+        rolStyle: chip + (u.rol === 'Administrador' ? 'background: #fff4cf; color: #7a5200' : 'background: #ffe6e4; color: #b3221b'),
+        estado: badges[s][0], badge: chip + badges[s][1], badgeDot: 'width: 6px; height: 6px; border-radius: 9999px; background: ' + badges[s][2],
+        menuLabel: 'Opciones de ' + u.name, menuOpen, menuAria: menuOpen ? 'true' : 'false',
+        menuBtn: 'width: 36px; height: 36px; border: 0; border-radius: 9999px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #1c1c1e; background: ' + (menuOpen ? '#eceef1' : 'transparent'),
+        toggleMenu: () => this.setState({ menu: menuOpen ? null : u.id }),
+        toggleLabel: s === 'inactivo' ? 'Activar usuario' : 'Desactivar usuario',
+        toggleStyle: 'width: 100%; min-height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border: 0; border-radius: 12px; background: transparent; font: inherit; font-weight: 600; text-align: left; cursor: pointer; color: ' + (s === 'inactivo' ? '#1e7a50' : '#d92d25'),
+        toggleActive: () => this.setState({ menu: null, off: Object.assign({}, st.off, { [u.id]: !st.off[u.id] }) })
+      };
+    });
+    const all = DATA.length;
+    const inact = DATA.filter((u) => statusOf(u) === 'inactivo').length;
+    const pend = DATA.filter((u) => statusOf(u) === 'pendiente').length;
+    const estados = [['todos', 'Todos', base.length], ['activos', 'Activos', base.filter((u) => statusOf(u) !== 'inactivo').length], ['inactivos', 'Inactivos', base.filter((u) => statusOf(u) === 'inactivo').length]].map(([id, label, count]) => {
+      const on = st.estado === id;
+      return {
+        label, count, aria: on ? 'true' : 'false', pick: () => this.setState({ estado: id }),
+        style: 'height: 40px; padding: 0 8px 0 14px; display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffe6e4; color: #b3221b; border: 1.5px solid #ffe6e4' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de'),
+        countStyle: 'min-width: 22px; height: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 9999px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; ' + (on ? 'background: #ffffff; color: #b3221b' : 'background: #f6f8fa; color: #45484d')
+      };
+    });
+    const selStyle = (on) => 'appearance: none; -webkit-appearance: none; height: 40px; padding: 0 36px 0 14px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffe6e4; color: #b3221b; border: 1.5px solid #ffe6e4' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de');
+    const hasFilters = !!q || st.rol !== 'todos' || st.tienda !== 'todas' || st.estado !== 'todos';
+    return {
+      nav, rows, estados, query: st.query, rol: st.rol, tienda: st.tienda, hasFilters, empty: rows.length === 0,
+      rolStyle: selStyle(st.rol !== 'todos'), tiendaStyle: selStyle(st.tienda !== 'todas'),
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      onRol: (e) => this.setState({ rol: e.target.value }),
+      onTienda: (e) => this.setState({ tienda: e.target.value }),
+      clear: () => this.setState({ query: '', rol: 'todos', tienda: 'todas', estado: 'todos' }),
+      closeMenu: () => this.setState({ menu: null }),
+      stats: [
+        ['Usuarios', all, '#1c1c1e'], ['Activos', all - inact - pend, '#1e7a50'], ['Aún no han entrado', pend, '#e0a800'], ['Inactivos', inact, '#8c9097']
+      ].map(([label, value, c]) => ({ label, value, dot: 'width: 10px; height: 10px; flex: none; border-radius: 9999px; background: ' + c })),
+      footer: rows.length === 0 ? 'Sin resultados' : 'Mostrando 1–' + rows.length + ' de ' + rows.length + (rows.length === 1 ? ' usuario' : ' usuarios')
+    };
+  }
+}
+</script>
+</body>
+</html>

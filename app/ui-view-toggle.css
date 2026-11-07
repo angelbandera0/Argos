@@ -1,0 +1,5 @@
+.ui-view-toggle { display: inline-flex; gap: var(--space-1); padding: var(--space-1); border-radius: var(--radius-pill); background: var(--color-hover); }
+.ui-view-toggle button { display: grid; place-items: center; width: var(--size-control-sm); height: var(--size-control-sm); padding: 0; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--color-muted); cursor: pointer; }
+.ui-view-toggle button svg { width: var(--size-icon-sm); height: var(--size-icon-sm); }
+.ui-view-toggle button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-red-strong); box-shadow: var(--shadow-raised); }
+.ui-view-toggle button:focus-visible { outline: none; box-shadow: var(--focus-ring); }

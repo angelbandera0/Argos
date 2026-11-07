@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Categorías</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crow:hover{background:#fafbfc}
+.ib:hover{background:#eceef1}
+.ib-d:hover{background:#fff4f3}
+.fld:focus{outline:none;border-color:#d92d25 !important;border-width:2px !important;box-shadow:0 0 0 4px #ffe6e4}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px">
+
+<aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div>
+<button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button>
+<div>
+<p style="margin: 0 0 8px; padding: 0 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MENÚ</p>
+<nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.active}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a>
+</sc-for>
+</nav>
+</div>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #45484d">Jueves, 29 de octubre · 10:38</p>
+<div style="display: flex; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 280px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label>
+<button type="button" aria-label="Notificaciones" style="width: 44px; height: 44px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+<div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">Admin</strong><span style="font-size: 12px; color: #6b6f76">Administrador</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div>
+<h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 44px; letter-spacing: -1.4px; line-height: 1.1">Categorías</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Agrupan los productos en ventas y en el catálogo.</p>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 1 1 560px; min-width: 0; max-width: 820px; display: flex; flex-direction: column; gap: 14px">
+
+<form onSubmit="{{add}}" aria-label="Nueva categoría" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; padding: 16px; border-radius: 24px; background: #f6f8fa">
+<div style="flex: 1 1 280px; display: flex; flex-direction: column">
+<label for="c-new" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Nombre de la nueva categoría</label>
+<input id="c-new" class="fld" type="text" placeholder="Nueva categoría, ej. Frutas" value="{{newName}}" onChange="{{onNew}}" aria-invalid="{{newInvalid}}" aria-describedby="c-new-help" style="{{newStyle}}">
+<sc-if value="{{newErr}}" hint-placeholder-val="{{ false }}"><p id="c-new-help" role="alert" style="margin: 6px 0 0 18px; font-size: 13px; font-weight: 600; color: #b3221b">{{newErrText}}</p></sc-if>
+</div>
+<button type="submit" disabled="{{addDisabled}}" style="{{addStyle}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Agregar</button>
+</form>
+
+<div style="border: 1px solid #eceef1; border-radius: 24px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 12px 12px 20px; border-bottom: 1px solid #eceef1">
+<p style="margin: 0; flex: 1; font-weight: 600">{{countLabel}}</p>
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar categoría</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar categoría" value="{{query}}" onChange="{{onQuery}}" style="width: 240px; height: 40px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 38px; font: inherit; color: #1c1c1e"></label>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+<li style="{{c.rowStyle}}">
+<sc-if value="{{c.view}}" hint-placeholder-val="{{ true }}">
+<div class="crow" style="display: flex; align-items: center; gap: 14px; padding: 12px 12px 12px 20px">
+<span aria-hidden="true" style="{{c.icon}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"></path><path d="M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"></path></svg></span>
+<div style="flex: 1; min-width: 0"><p style="margin: 0; font-weight: 600; font-size: 15px">{{c.name}}</p><a href="#" style="{{c.countStyle}}">{{c.countLabel}}</a></div>
+<button type="button" class="ib" aria-label="{{c.renameLabel}}" onClick="{{c.startEdit}}" style="height: 38px; padding: 0 14px 0 12px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>Renombrar</button>
+<button type="button" class="{{c.delCls}}" aria-label="{{c.delLabel}}" aria-describedby="{{c.delDesc}}" disabled="{{c.locked}}" onClick="{{c.askDelete}}" title="{{c.delTitle}}" style="{{c.delStyle}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</div>
+</sc-if>
+<sc-if value="{{c.editing}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{c.save}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 12px 12px 20px">
+<span aria-hidden="true" style="{{c.icon}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"></path><path d="M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"></path></svg></span>
+<label style="flex: 1 1 220px; display: flex; flex-direction: column"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{c.renameLabel}}</span><input type="text" value="{{draft}}" onChange="{{onDraft}}" style="height: 44px; box-sizing: border-box; border: 2px solid #d92d25; border-radius: 9999px; background: #ffffff; padding: 0 16px; font: inherit; font-size: 15px; font-weight: 600; color: #1c1c1e; box-shadow: 0 0 0 4px #ffe6e4; outline: none"></label>
+<button type="button" onClick="{{cancelEdit}}" style="height: 40px; padding: 0 16px; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="submit" disabled="{{saveDisabled}}" style="{{saveStyle}}">Guardar</button>
+<p style="flex-basis: 100%; margin: 0 0 0 54px; font-size: 12px; color: #6b6f76">{{c.editHint}}</p>
+</form>
+</sc-if>
+<sc-if value="{{c.confirming}}" hint-placeholder-val="{{ false }}">
+<div role="alertdialog" aria-label="{{c.confirmLabel}}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 12px 14px 20px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #ffe6e4; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></span>
+<div style="flex: 1 1 220px"><p style="margin: 0; font-weight: 600">{{c.confirmLabel}}</p><p style="margin: 0; font-size: 13px; color: #6b6f76">No tiene productos. Quedará registrado en el historial.</p></div>
+<button type="button" onClick="{{cancelDelete}}" style="height: 40px; padding: 0 16px; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Cancelar</button>
+<button type="button" onClick="{{c.doDelete}}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Eliminar</button>
+</div>
+</sc-if>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}"><div style="padding: 40px 24px; text-align: center"><p style="margin: 0; font-weight: 600">Ninguna categoría coincide</p><p style="margin: 4px 0 0; color: #6b6f76">Prueba con otro nombre o créala arriba.</p></div></sc-if>
+</div>
+</div>
+
+<aside aria-label="Cómo funcionan" style="flex: 0 0 340px; max-width: 100%; display: flex; flex-direction: column; gap: 12px">
+<div style="background: #f6f8fa; border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+<p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">CÓMO FUNCIONAN</p>
+<div style="display: flex; gap: 12px"><span aria-hidden="true" style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></span><div><p style="margin: 0; font-weight: 600">Renombrar</p><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">El cambio se aplica a todos sus productos al instante.</p></div></div>
+<div style="display: flex; gap: 12px"><span aria-hidden="true" style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></span><div><p id="del-rule" style="margin: 0; font-weight: 600">Eliminar</p><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Solo se puede eliminar una categoría vacía. Mueve antes sus productos a otra.</p></div></div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+<div style="background: #f6f8fa; border-radius: 20px; padding: 16px 18px"><p style="margin: 0; font-size: 13px; color: #6b6f76">Categorías</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.6px">{{total}}</p></div>
+<div style="background: #f6f8fa; border-radius: 20px; padding: 16px 18px"><p style="margin: 0; font-size: 13px; color: #6b6f76">Productos</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.6px">{{products}}</p></div>
+</div>
+</aside>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cats: [
+        { id: 'viandas', name: 'Viandas', n: 3 },
+        { id: 'bebidas', name: 'Bebidas', n: 1 },
+        { id: 'lacteos', name: 'Lácteos', n: 1 },
+        { id: 'panaderia', name: 'Panadería', n: 1 },
+        { id: 'congelados', name: 'Congelados', n: 0 }
+      ],
+      editing: 'lacteos', draft: 'Lácteos y huevos', confirm: null, newName: '', newTouched: false, query: ''
+    };
+  }
+  renderVals() {
+    const st = this.state;
+    const I = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const nav = [['inicio', 'Inicio'], ['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['categorias', 'Categorías', true], ['productos', 'Productos'], ['historial', 'Historial']].map(([k, label, active]) => ({
+      label, active: !!active, current: active ? 'page' : 'false', cls: active ? '' : 'nav-i',
+      d1: I[k][0], d2: I[k][1], d3: I[k][2], iconColor: active ? '#d92d25' : 'currentColor',
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (active ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }));
+    const norm = (s) => s.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const exists = (name, exceptId) => st.cats.some((c) => c.id !== exceptId && norm(c.name) === norm(name));
+    const q = norm(st.query);
+    const list = st.cats.filter((c) => !q || norm(c.name).includes(q));
+    const cats = list.map((c, i) => {
+      const editing = st.editing === c.id, confirming = st.confirm === c.id;
+      const locked = c.n > 0;
+      return {
+        name: c.name, view: !editing && !confirming, editing, confirming, locked,
+        rowStyle: (i ? 'border-top: 1px solid #eceef1; ' : '') + (editing || confirming ? 'background: #fff4f3' : ''),
+        icon: 'width: 40px; height: 40px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (locked ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #6b6f76'),
+        countLabel: c.n === 0 ? 'Sin productos' : c.n + (c.n === 1 ? ' producto' : ' productos'),
+        countStyle: 'font-size: 13px; text-decoration: none; ' + (c.n ? 'color: #45484d' : 'color: #8c9097; pointer-events: none'),
+        renameLabel: 'Renombrar ' + c.name,
+        delLabel: 'Eliminar ' + c.name, delDesc: locked ? 'del-rule' : '',
+        delTitle: locked ? 'Tiene productos: muévelos a otra categoría primero' : '',
+        delCls: locked ? '' : 'ib-d',
+        delStyle: 'width: 38px; height: 38px; border: 0; border-radius: 9999px; background: transparent; display: flex; align-items: center; justify-content: center; ' + (locked ? 'color: #c9cdd3; cursor: not-allowed' : 'color: #d92d25; cursor: pointer'),
+        editHint: c.n ? 'Se actualizará en ' + c.n + (c.n === 1 ? ' producto.' : ' productos.') : 'Esta categoría aún no tiene productos.',
+        confirmLabel: '¿Eliminar «' + c.name + '»?',
+        startEdit: () => this.setState({ editing: c.id, draft: c.name, confirm: null }),
+        askDelete: () => { if (!locked) this.setState({ confirm: c.id, editing: null }); },
+        doDelete: () => this.setState({ cats: st.cats.filter((x) => x.id !== c.id), confirm: null }),
+        save: (e) => {
+          if (e && e.preventDefault) e.preventDefault();
+          const d = st.draft.trim();
+          if (!d || exists(d, c.id)) return;
+          this.setState({ cats: st.cats.map((x) => x.id === c.id ? Object.assign({}, x, { name: d }) : x), editing: null });
+        }
+      };
+    });
+    const draftOk = !!st.draft.trim() && !exists(st.draft, st.editing);
+    const nn = st.newName.trim();
+    const dup = !!nn && exists(nn);
+    const newErr = dup;
+    const total = st.cats.length;
+    return {
+      nav, cats, empty: cats.length === 0, query: st.query, draft: st.draft, newName: st.newName,
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      onDraft: (e) => this.setState({ draft: e.target.value }),
+      onNew: (e) => this.setState({ newName: e.target.value }),
+      cancelEdit: () => this.setState({ editing: null }),
+      cancelDelete: () => this.setState({ confirm: null }),
+      saveDisabled: !draftOk,
+      saveStyle: 'height: 40px; padding: 0 18px; border: 0; border-radius: 9999px; font: inherit; font-weight: 600; ' + (draftOk ? 'background: #d92d25; color: #ffffff; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      newErr, newErrText: 'Ya existe una categoría con ese nombre.', newInvalid: newErr ? 'true' : 'false',
+      newStyle: 'height: 48px; box-sizing: border-box; border-radius: 9999px; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; ' + (newErr ? 'border: 2px solid #d92d25; background: #fff7f6' : 'border: 1.5px solid #e4e6ea; background: #ffffff'),
+      addDisabled: !nn || dup,
+      addStyle: 'height: 48px; padding: 0 20px 0 16px; border: 0; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; ' + (nn && !dup ? 'background: #d92d25; color: #ffffff; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      add: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (!nn || dup) return;
+        this.setState({ cats: [{ id: 'n' + Date.now(), name: nn, n: 0 }].concat(st.cats), newName: '' });
+      },
+      countLabel: cats.length === total ? total + (total === 1 ? ' categoría' : ' categorías') : cats.length + ' de ' + total,
+      total, products: st.cats.reduce((a, c) => a + c.n, 0)
+    };
+  }
+}
+</script>
+</body>
+</html>

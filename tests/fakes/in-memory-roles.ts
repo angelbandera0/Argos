@@ -1,4 +1,4 @@
-import type { Role, RoleRepository } from "@/core/application/ports/role-repository";
+import type { Role, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
 
 export class InMemoryRoles implements RoleRepository {
   readonly roles = new Map<string, Role>();
@@ -39,5 +39,9 @@ export class InMemoryRoles implements RoleRepository {
 
   async hasAssignments(roleId: string): Promise<boolean> {
     return this.assigned.has(roleId);
+  }
+
+  async listUsers(): Promise<RoleUser[]> {
+    return [];
   }
 }

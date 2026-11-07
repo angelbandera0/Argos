@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { normalizeName, validateName } from "@/core/domain/name";
+import { formatUsername } from "@/core/domain/username";
 import { requireUserAdmin } from "./guard";
 
 export interface NewUserState {
@@ -54,6 +55,17 @@ export async function createUserAction(_: NewUserState, formData: FormData): Pro
     return { ...echo, userId: r.userId, pin: r.pin };
   } catch (e) {
     return { ...echo, error: fail(e) };
+  }
+}
+
+/** Live availability of a username inside the active company (usernames are never reused). */
+export async function checkUsernameAction(name: string): Promise<{ available: boolean }> {
+  const { users, company } = await requireUserAdmin();
+  if (!company) return { available: false };
+  try {
+    return { available: !(await users.users.findByUsername(formatUsername(company.code, name))) };
+  } catch {
+    return { available: false };
   }
 }
 

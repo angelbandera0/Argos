@@ -1,0 +1,12 @@
+.ui-choice-card { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-3-5); background: var(--color-surface); border: var(--border-field) solid var(--color-line); border-radius: var(--radius-inner); cursor: pointer; min-width: 0; }
+.ui-choice-card-text { display: flex; flex-direction: column; flex: 1; min-width: 0; font: var(--text-body); }
+.ui-choice-card-text .hint { font-family: var(--font-mono); }
+.ui-choice-card-on { background: var(--color-row-selected); border-color: var(--color-danger-border); }
+.ui-choice-card-row { background: var(--color-panel); border-color: transparent; font-weight: 600; }
+.ui-choice-card:focus-within { box-shadow: var(--focus-ring); }
+.ui-pills-legend { font: var(--text-body); font-weight: 600; }
+.ui-pills { display: flex; flex-wrap: wrap; gap: var(--space-2-5); }
+.ui-pill { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--size-option); padding: 0 var(--space-3-5); border: var(--border-field) solid var(--color-line); border-radius: var(--radius-pill); background: var(--color-surface); font: var(--text-body); font-weight: 600; cursor: pointer; }
+.ui-pill[data-on] { border-color: var(--color-red-strong); background: var(--color-row-selected); }
+.ui-pill:focus-within { box-shadow: var(--focus-ring); }
+.ui-pill-badge { padding: 2px var(--space-2); border-radius: var(--radius-pill); background: var(--color-success-tint); color: var(--color-success); font: var(--text-overline); font-weight: 700; text-transform: none; letter-spacing: 0; }

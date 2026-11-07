@@ -52,6 +52,10 @@ export class InMemoryOrganization {
     revokeAccess: async (companyId, adminId) => {
       this.admins.get(companyId)?.delete(adminId);
     },
+    rename: async (id, name) => {
+      const c = this.companies.get(id);
+      if (c) c.name = name;
+    },
     setSessionCap: async (companyId, seconds) => {
       const c = this.companies.get(companyId);
       if (c) c.sessionCapSeconds = seconds;
@@ -65,6 +69,10 @@ export class InMemoryOrganization {
       return site;
     },
     getById: async (id) => this.sites.get(id) ?? null,
+    rename: async (id, name) => {
+      const s = this.sites.get(id);
+      if (s) s.name = name;
+    },
     listByParent: async (companyId) =>
       [...this.sites.values()].filter((s) => s.companyId === companyId),
   };
@@ -76,6 +84,10 @@ export class InMemoryOrganization {
       return store;
     },
     getById: async (id) => this.stores.get(id) ?? null,
+    rename: async (id, name) => {
+      const s = this.stores.get(id);
+      if (s) s.name = name;
+    },
     listByParent: async (siteId) =>
       [...this.stores.values()].filter((s) => s.siteId === siteId),
   };

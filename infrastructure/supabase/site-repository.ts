@@ -37,6 +37,11 @@ export function makeSiteRepository(client: SupabaseClient): SiteRepository {
       return data ? toSite(data as Row) : null;
     },
 
+    async rename(id, name) {
+      const { error } = await client.from("sites").update({ name }).eq("id", id);
+      if (error) orgError("SiteRepository.rename", error);
+    },
+
     async listByParent(companyId) {
       const { data, error } = await client
         .from("sites")

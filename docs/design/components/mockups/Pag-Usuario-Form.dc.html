@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nuevo usuario</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e}
+.fld:focus{outline:none;border-color:#d92d25 !important;border-width:2px !important;box-shadow:0 0 0 4px #ffe6e4}
+.pfx:focus-within{border-color:#d92d25 !important;border-width:2px !important;box-shadow:0 0 0 4px #ffe6e4}
+.pfx input:focus{outline:none}
+.sug:hover{background:#ffe6e4}
+.cp:hover{background:#eceef1}
+.sec:hover{background:#f6f8fa}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px">
+
+<aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div>
+<button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button>
+<div>
+<p style="margin: 0 0 8px; padding: 0 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MENÚ</p>
+<nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="7">
+<a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.active}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a>
+</sc-for>
+</nav>
+</div>
+</aside>
+
+<div aria-hidden="{{pageHidden}}" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+<p style="margin: 0; font-size: 14px; color: #45484d">Jueves, 29 de octubre · 11:45</p>
+<div style="display: flex; align-items: center; gap: 8px">
+<label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" style="position: absolute; left: 14px"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 280px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label>
+<button type="button" aria-label="Notificaciones" style="width: 44px; height: 44px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+<div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 9999px; background: #ffc93c; display: flex; align-items: center; justify-content: center; font-weight: 700">A</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">Admin</strong><span style="font-size: 12px; color: #6b6f76">Administrador</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div>
+</div>
+</div>
+
+<div>
+<nav aria-label="Migas de pan"><ol style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px; font-size: 14px"><li><a href="#" class="crumb" style="color: #45484d; text-decoration: none">Usuarios</a></li><li aria-hidden="true" style="color: #c9cdd3; display: flex"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></li><li aria-current="page" style="font-weight: 600">Nuevo usuario</li></ol></nav>
+<h1 style="margin: 12px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.2px; line-height: 1.1">Nuevo usuario</h1>
+<p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Dale un nombre de acceso, un rol y las tiendas donde podrá trabajar. El PIN se genera al crearlo.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<form onSubmit="{{submit}}" style="flex: 1 1 560px; min-width: 0; max-width: 820px; display: flex; flex-direction: column; gap: 18px">
+
+<section aria-labelledby="s1" style="border: 1px solid #eceef1; border-radius: 24px; padding: 24px">
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span>
+<div><h2 id="s1" style="margin: 0; font-size: 18px; font-weight: 600">Datos de acceso</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Quién es, con qué nombre entrará y qué podrá hacer.</p></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px">
+<div style="display: flex; flex-direction: column">
+<label for="u-name" style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Nombre</label>
+<input id="u-name" class="fld" type="text" placeholder="Ej. Marta López" value="{{name}}" onChange="{{onName}}" aria-describedby="u-name-help" style="{{nameStyle}}">
+<p id="u-name-help" style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Así se verá en ventas e historial.</p>
+</div>
+<div style="display: flex; flex-direction: column">
+<label for="u-user" style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Nombre de usuario</label>
+<div class="pfx" style="{{userWrap}}">
+<span aria-hidden="true" style="align-self: stretch; display: flex; align-items: center; padding: 0 4px 0 18px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; color: #6b6f76">qbt6.</span>
+<input id="u-user" type="text" autocomplete="off" spellcheck="false" placeholder="marta" value="{{user}}" onChange="{{onUser}}" aria-invalid="{{userInvalid}}" aria-describedby="u-user-help" style="flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; padding: 0 8px 0 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; color: #1c1c1e">
+<sc-if value="{{userOk}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="width: 22px; height: 22px; margin-right: 14px; flex: none; border-radius: 9999px; background: #1e7a50; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span></sc-if>
+</div>
+<p id="u-user-help" role="status" style="{{userHelpStyle}}">{{userHelp}}</p>
+<sc-if value="{{showSuggest}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 13px; color: #45484d">Sugerencia: <button type="button" class="sug" onClick="{{useSuggest}}" style="height: 28px; padding: 0 10px; border: 0; border-radius: 9999px; background: #fff4f3; color: #b3221b; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12.5px; font-weight: 500; cursor: pointer">qbt6.{{suggest}}</button></div></sc-if>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; margin-top: 18px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px"><label for="u-rol" style="font-size: 14px; font-weight: 600">Rol</label><a href="#" style="font-size: 13px; font-weight: 600; text-decoration: none">Ver roles</a></div>
+<div style="position: relative; display: flex; align-items: center">
+<select id="u-rol" class="fld" value="{{rol}}" onChange="{{onRol}}" aria-describedby="u-rol-help" style="{{rolStyle}}"><option value="">Elige un rol</option><sc-for list="{{roleOptions}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for></select>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+<sc-if value="{{hasRol}}" hint-placeholder-val="{{ true }}">
+<div id="u-rol-help" style="margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #f6f8fa">
+<span aria-hidden="true" style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5"></path><path d="M16.5 7.5v.01"></path></svg></span>
+<span style="flex: 1 1 200px; font-size: 13px; color: #45484d">{{rolDesc}}</span>
+<span style="display: flex; flex-wrap: wrap; gap: 4px"><sc-for list="{{rolPerms}}" as="p" hint-placeholder-count="3"><span style="height: 24px; padding: 0 9px; display: inline-flex; align-items: center; gap: 4px; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 11px; font-weight: 600"><svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{p}}</span></sc-for></span>
+</div>
+</sc-if>
+<sc-if value="{{noRol}}" hint-placeholder-val="{{ false }}"><p id="u-rol-help" style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Decide qué podrá hacer. Puedes cambiarlo después.</p></sc-if>
+</div>
+
+<p style="margin: 18px 0 0; display: flex; gap: 10px; padding: 10px 14px; border-radius: 14px; background: #f6f8fa; font-size: 13px; color: #45484d"><span aria-hidden="true" style="width: 8px; height: 8px; flex: none; margin-top: 6px; border-radius: 9999px; background: #45484d"></span>El prefijo <strong style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500">qbt6.</strong> es fijo e identifica a La Casona. Solo minúsculas, números y punto.</p>
+</section>
+
+<section aria-labelledby="s2" style="border: 1px solid #eceef1; border-radius: 24px; padding: 24px">
+<div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px">
+<span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">2</span>
+<div style="flex: 1"><h2 id="s2" style="margin: 0; font-size: 18px; font-weight: 600">Tiendas</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Solo podrá iniciar sesión en las tiendas que marques.</p></div>
+<span style="{{countChip}}">{{countLabel}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{sedes}}" as="s" hint-placeholder-count="2">
+<div style="border: 1px solid #eceef1; border-radius: 18px; overflow: hidden">
+<button type="button" role="checkbox" aria-checked="{{s.aria}}" onClick="{{s.toggle}}" style="width: 100%; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border: 0; background: #f6f8fa; color: #1c1c1e; font: inherit; text-align: left; cursor: pointer">
+<span aria-hidden="true" style="{{s.box}}"><sc-if value="{{s.on}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if><sc-if value="{{s.mixed}}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"><path d="M6 12h12"></path></svg></sc-if></span>
+<span style="flex: 1; display: flex; flex-direction: column; line-height: 1.3"><span style="font-weight: 600">{{s.name}}</span><span style="font-size: 12px; color: #6b6f76">{{s.addr}}</span></span>
+<span style="font-size: 12px; font-weight: 600; color: #45484d">{{s.count}}</span>
+</button>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; padding: 10px">
+<sc-for list="{{s.stores}}" as="t" hint-placeholder-count="2">
+<button type="button" role="checkbox" aria-checked="{{t.aria}}" onClick="{{t.toggle}}" style="{{t.style}}">
+<span aria-hidden="true" style="{{t.box}}"><sc-if value="{{t.on}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span>
+<span style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; line-height: 1.3"><span style="font-weight: 600">{{t.name}}</span><span style="font-size: 12px; color: #6b6f76">{{t.meta}}</span></span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{noStore}}" hint-placeholder-val="{{ false }}"><p style="margin: 10px 0 0; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #b3221b"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5v5M12 16.5v.01"></path></svg>Marca al menos una tienda.</p></sc-if>
+</section>
+</form>
+
+<aside aria-labelledby="sum-h" style="flex: 0 0 340px; max-width: 100%; position: sticky; top: 16px; background: #f6f8fa; border-radius: 24px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+<p id="sum-h" style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">ASÍ ENTRARÁ</p>
+<div style="background: #ffffff; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)">
+<span aria-hidden="true" style="{{sumAvatar}}">{{initials}}</span>
+<p style="{{sumNameStyle}}">{{sumName}}</p>
+<span style="display: inline-flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 9999px; background: #f6f8fa; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px"><span style="color: #8c9097">qbt6.</span>{{sumUser}}</span>
+<div aria-hidden="true" style="display: flex; gap: 6px; margin-top: 4px"><sc-for list="{{pinDots}}" as="d" hint-placeholder-count="6"><span style="width: 26px; height: 32px; box-sizing: border-box; border-radius: 9px; border: 1.5px dashed #d6d9de; background: #ffffff; display: flex; align-items: center; justify-content: center"><span style="width: 6px; height: 6px; border-radius: 9999px; background: #e4e6ea"></span></span></sc-for></div>
+<p style="margin: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b6f76"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>PIN de 6 dígitos: se genera al crear</p>
+</div>
+<div style="background: #ffffff; border-radius: 16px; padding: 4px 14px">
+<div style="padding: 10px 0; border-bottom: 1px solid #f1f2f4; display: flex; justify-content: space-between; align-items: center; gap: 10px"><span style="font-size: 12px; color: #6b6f76">Rol</span><span style="{{sumRolStyle}}">{{sumRol}}</span></div>
+<div style="padding: 10px 0"><p style="margin: 0 0 6px; font-size: 12px; color: #6b6f76">Tiendas</p><div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{sumStores}}" as="c" hint-placeholder-count="2"><span style="height: 24px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; background: #f6f8fa; font-size: 12px; font-weight: 600">{{c}}</span></sc-for><sc-if value="{{noStore}}" hint-placeholder-val="{{ false }}"><span style="font-size: 13px; color: #b3221b; font-weight: 600">Ninguna</span></sc-if></div></div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="4">
+<li style="display: flex; align-items: center; gap: 10px; font-size: 13px"><span aria-hidden="true" style="{{k.icon}}"><sc-if value="{{k.ok}}" hint-placeholder-val="{{ true }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span><span style="{{k.textStyle}}">{{k.text}}</span></li>
+</sc-for>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 8px; padding-top: 4px">
+<button type="button" onClick="{{submit}}" disabled="{{saveDisabled}}" style="{{saveStyle}}">Crear usuario y generar PIN</button>
+<a href="#" style="height: 44px; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">Cancelar</a>
+</div>
+</aside>
+</div>
+</div>
+
+<sc-if value="{{created}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; z-index: 20; background: rgba(28,28,30,0.32); display: flex; align-items: flex-start; justify-content: center; padding: 120px 16px 16px; box-sizing: border-box">
+<div role="dialog" aria-modal="true" aria-labelledby="dlg-h" aria-describedby="dlg-d" style="width: 460px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 28px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.22); display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: flex-start; gap: 14px">
+<span aria-hidden="true" style="width: 48px; height: 48px; flex: none; border-radius: 9999px; background: #e6f4ec; color: #1e7a50; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<div style="flex: 1"><h2 id="dlg-h" style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.4px">Usuario creado</h2><p id="dlg-d" style="margin: 2px 0 0; color: #45484d">{{dlgText}}</p></div>
+</div>
+
+<div style="background: #f6f8fa; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<div><p style="margin: 0; font-size: 12px; color: #6b6f76">Usuario</p><p style="margin: 2px 0 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 15px"><span style="color: #8c9097">qbt6.</span>{{user}}</p></div>
+<button type="button" class="cp" onClick="{{copyUser}}" style="height: 36px; padding: 0 12px; border: 0; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>{{copyUserLabel}}</button>
+</div>
+<div style="height: 1px; background: #e4e6ea"></div>
+<div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px"><p style="margin: 0; font-size: 12px; color: #6b6f76">PIN generado</p><button type="button" class="cp" onClick="{{toggleShow}}" aria-pressed="{{showAria}}" style="height: 30px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #45484d; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>{{showLabel}}</button></div>
+<div role="group" aria-label="{{pinAria}}" style="display: flex; gap: 8px">
+<sc-for list="{{pinDigits}}" as="g" hint-placeholder-count="6"><span aria-hidden="true" style="flex: 1; height: 58px; border-radius: 14px; background: #ffffff; border: 1.5px solid #e4e6ea; display: flex; align-items: center; justify-content: center; font-family: 'Inter Tight', Arial, sans-serif; font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums">{{g}}</span></sc-for>
+</div>
+<button type="button" onClick="{{copyPin}}" style="{{copyPinStyle}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>{{copyPinLabel}}</button>
+</div>
+</div>
+
+<div role="note" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #fff4cf; color: #7a5200; font-size: 13px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 1px"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17.5v.01"></path></svg><span><strong>Solo se muestra esta vez.</strong> Entrégaselo en persona. Si lo pierde, usa «Generar nuevo PIN» en su ficha.</span></div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<button type="button" class="sec" onClick="{{again}}" style="height: 48px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-weight: 600; cursor: pointer">Crear otro</button>
+<button type="button" onClick="{{done}}" style="height: 48px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; cursor: pointer">Listo</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"created":false,"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'Marta López', user: 'marta.l', rol: 'alm', stores: { s23: true }, created: !!props.created, show: true, copied: null };
+  }
+  renderVals() {
+    const st = this.state;
+    const I = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const nav = [['inicio', 'Inicio'], ['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios', true], ['categorias', 'Categorías'], ['productos', 'Productos'], ['historial', 'Historial']].map(([k, label, active]) => ({
+      label, active: !!active, current: active ? 'page' : 'false', cls: active ? '' : 'nav-i',
+      d1: I[k][0], d2: I[k][1], d3: I[k][2], iconColor: active ? '#d92d25' : 'currentColor',
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (active ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }));
+    const strip = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const name = st.name.trim();
+    const nameOk = name.length >= 2;
+    const parts = strip(name).split(/\s+/).filter(Boolean);
+    const suggest = parts.length ? parts[0].replace(/[^a-z0-9]/g, '') + (parts[1] ? '.' + parts[1][0] : '') : '';
+    const user = st.user;
+    const TAKEN = ['raul', 'ana', 'luis', 'sofia', 'pedro'];
+    const fmtOk = /^[a-z0-9]+(\.[a-z0-9]+)*$/.test(user);
+    const taken = TAKEN.includes(user);
+    const userOk = user.length >= 3 && fmtOk && !taken;
+    let userHelp = 'Con este nombre entrará con su PIN.';
+    let tone = 'muted';
+    if (user && !fmtOk) { userHelp = 'Usa solo minúsculas, números y punto (sin espacios ni tildes).'; tone = 'err'; }
+    else if (taken) { userHelp = 'qbt6.' + user + ' ya existe. Prueba con otro.'; tone = 'err'; }
+    else if (user && user.length < 3) { userHelp = 'Escribe al menos 3 caracteres.'; tone = 'err'; }
+    else if (userOk) { userHelp = 'qbt6.' + user + ' está disponible.'; tone = 'ok'; }
+    const userErr = tone === 'err';
+    const ROLES = [
+      { id: 'alm', name: 'Almacenero', desc: 'Recibe mercancía y mantiene el catálogo.', perms: ['Ver', 'Crear', 'Editar'] },
+      { id: 'caj', name: 'Cajero', desc: 'Consulta productos para vender.', perms: ['Ver'] },
+      { id: 'sup', name: 'Supervisor', desc: 'Gestiona el catálogo de su tienda.', perms: ['Ver', 'Crear', 'Editar', 'Eliminar'] }
+    ];
+    const rol = ROLES.find((r) => r.id === st.rol);
+    const SEDES = [
+      { id: 'vedado', name: 'Sede Vedado', addr: 'Calle 23 esq. L, Vedado', stores: [['s23', 'Tienda 23 y L', 'Física · Caja 1 y 2'], ['sg', 'Cafetería G', 'Física · Caja 1']] },
+      { id: 'miramar', name: 'Sede Miramar', addr: '5ta Avenida #4207, Miramar', stores: [['s5', 'Tienda 5ta Avenida', 'Física · Caja 1']] }
+    ];
+    const box = (on, mixed) => 'width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 7px; display: flex; align-items: center; justify-content: center; ' + (on || mixed ? 'background: #d92d25; border: 0' : 'background: #ffffff; border: 1.5px solid #c9cdd3');
+    const ALL = SEDES.reduce((a, s) => a.concat(s.stores), []);
+    const onStores = ALL.filter((t) => st.stores[t[0]]);
+    const nOn = onStores.length;
+    const sedes = SEDES.map((s) => {
+      const k = s.stores.filter((t) => st.stores[t[0]]).length;
+      const on = k === s.stores.length, mixed = k > 0 && !on;
+      return {
+        name: s.name, addr: s.addr, on, mixed, aria: on ? 'true' : mixed ? 'mixed' : 'false', box: box(on, mixed),
+        count: k + ' de ' + s.stores.length,
+        toggle: () => { const ns = Object.assign({}, st.stores); s.stores.forEach((t) => { ns[t[0]] = !on; }); this.setState({ stores: ns }); },
+        stores: s.stores.map(([id, nm, meta]) => {
+          const o = !!st.stores[id];
+          return {
+            name: nm, meta, on: o, aria: o ? 'true' : 'false', box: box(o),
+            style: 'width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; font: inherit; color: #1c1c1e; text-align: left; cursor: pointer; ' + (o ? 'background: #fff4f3; border: 1.5px solid #f8c9c5' : 'background: #ffffff; border: 1.5px solid #e4e6ea'),
+            toggle: () => this.setState({ stores: Object.assign({}, st.stores, { [id]: !o }) })
+          };
+        })
+      };
+    });
+    const valid = nameOk && userOk && !!rol && nOn > 0;
+    const ck = (ok) => 'width: 20px; height: 20px; flex: none; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: ' + (ok ? '#1e7a50' : '#eceef1');
+    const checks = [
+      ['Nombre de la persona', nameOk], ['Nombre de usuario disponible', userOk], ['Rol elegido', !!rol], ['Al menos una tienda', nOn > 0]
+    ].map(([text, ok]) => ({ text, ok, icon: ck(ok), textStyle: ok ? 'color: #1c1c1e' : 'color: #6b6f76' }));
+    const initials = name ? name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() : '?';
+    const PIN = '482915';
+    const first = name.split(/\s+/)[0] || 'El usuario';
+    const storesText = nOn === 1 ? onStores[0][1] : nOn + ' tiendas';
+    return {
+      nav, name: st.name, user, suggest, initials,
+      onName: (e) => this.setState({ name: e.target.value }),
+      onUser: (e) => this.setState({ user: e.target.value.toLowerCase().replace(/\s/g, '') }),
+      useSuggest: () => this.setState({ user: suggest }),
+      showSuggest: !user && !!suggest && !TAKEN.includes(suggest),
+      nameStyle: 'height: 48px; box-sizing: border-box; border-radius: 9999px; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; background: #ffffff; border: 1.5px solid ' + (st.name ? '#c9cdd3' : '#e4e6ea'),
+      userWrap: 'height: 48px; box-sizing: border-box; display: flex; align-items: center; border-radius: 9999px; overflow: hidden; ' + (userErr ? 'border: 2px solid #d92d25; background: #fff7f6' : 'border: 1.5px solid ' + (user ? '#c9cdd3' : '#e4e6ea') + '; background: #ffffff'),
+      userOk, userInvalid: userErr ? 'true' : 'false', userHelp,
+      userHelpStyle: 'margin: 6px 0 0; font-size: 13px; ' + (tone === 'err' ? 'color: #b3221b; font-weight: 600' : tone === 'ok' ? 'color: #1e7a50; font-weight: 600' : 'color: #6b6f76'),
+      rol: st.rol, roleOptions: ROLES.map((r) => ({ id: r.id, name: r.name })),
+      onRol: (e) => this.setState({ rol: e.target.value }),
+      rolStyle: 'width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border-radius: 9999px; padding: 0 44px 0 18px; font: inherit; font-size: 15px; cursor: pointer; background: #ffffff; ' + (rol ? 'color: #1c1c1e; border: 1.5px solid #c9cdd3; font-weight: 600' : 'color: #8c9097; border: 1.5px solid #e4e6ea'),
+      hasRol: !!rol, noRol: !rol, rolDesc: rol ? rol.desc : '', rolPerms: rol ? rol.perms : [],
+      sedes, noStore: nOn === 0,
+      countLabel: nOn + ' de ' + ALL.length,
+      countChip: 'flex: none; height: 26px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 12px; font-weight: 700; ' + (nOn ? 'background: #f6f8fa; color: #1c1c1e' : 'background: #ffe6e4; color: #b3221b'),
+      sumAvatar: 'width: 56px; height: 56px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; background: ' + (name ? '#ffe6e4; color: #b3221b' : '#eceef1; color: #8c9097'),
+      sumName: name || 'Sin nombre',
+      sumNameStyle: 'margin: 0; font-family: \'Inter Tight\', Arial, sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; color: ' + (name ? '#1c1c1e' : '#8c9097'),
+      sumUser: user || '…',
+      pinDots: [1, 2, 3, 4, 5, 6],
+      sumRol: rol ? rol.name : 'Sin elegir',
+      sumRolStyle: 'height: 24px; padding: 0 10px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 12px; font-weight: 600; ' + (rol ? 'background: #ffe6e4; color: #b3221b' : 'background: transparent; color: #8c9097; border: 1.5px dashed #d6d9de'),
+      sumStores: onStores.map((t) => t[1]),
+      checks, saveDisabled: !valid,
+      saveStyle: 'height: 48px; border: 0; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; ' + (valid ? 'background: #d92d25; color: #ffffff; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      submit: (e) => { if (e && e.preventDefault) e.preventDefault(); if (valid) this.setState({ created: true, show: true, copied: null }); },
+      created: st.created, pageHidden: st.created ? 'true' : 'false',
+      dlgText: first + ' ya puede entrar en ' + storesText + ' como ' + (rol ? rol.name : '—') + '.',
+      pinDigits: PIN.split('').map((d) => st.show ? d : '•'),
+      pinAria: st.show ? 'PIN: ' + PIN.split('').join(' ') : 'PIN oculto',
+      showLabel: st.show ? 'Ocultar' : 'Mostrar', showAria: st.show ? 'false' : 'true',
+      toggleShow: () => this.setState({ show: !st.show }),
+      copyUser: () => this.setState({ copied: 'user' }), copyUserLabel: st.copied === 'user' ? 'Copiado' : 'Copiar',
+      copyPin: () => this.setState({ copied: 'pin' }), copyPinLabel: st.copied === 'pin' ? 'PIN copiado' : 'Copiar usuario y PIN',
+      copyPinStyle: 'width: 100%; margin-top: 12px; height: 44px; border-radius: 9999px; font: inherit; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; ' + (st.copied === 'pin' ? 'background: #e6f4ec; color: #1e7a50; border: 1.5px solid #e6f4ec' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de'),
+      done: () => this.setState({ created: false }),
+      again: () => this.setState({ created: false, name: '', user: '', rol: '', stores: {} })
+    };
+  }
+}
+</script>
+</body>
+</html>

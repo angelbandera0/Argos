@@ -89,6 +89,8 @@ export function DataTable<T>({
   selected: selectedProp = NO_SELECTION,
   onSelectedChange,
   bulkActions,
+  bulkLabel,
+  bulkVariant = "warning",
   rowActions,
   rowActionsLabel = (id) => `Acciones de la fila ${id}`,
   page: pageProp = 1,
@@ -112,6 +114,8 @@ export function DataTable<T>({
   selected?: ReadonlySet<string>;
   onSelectedChange?: (selected: ReadonlySet<string>) => void;
   bulkActions?: React.ReactNode;
+  bulkLabel?: (count: number) => string;
+  bulkVariant?: "warning" | "danger";
   rowActions?: (row: T) => RowAction[];
   rowActionsLabel?: (id: string) => string;
   page?: number;
@@ -143,13 +147,20 @@ export function DataTable<T>({
   return (
     <div className={`dt dt-${density}${stickyHeader ? " dt-sticky" : ""}`} aria-busy={loading || undefined}>
       {selected.size > 0 && (
-        <div className="dt-bulk" role="region" aria-label="Acciones en lote">
-          <strong>{selected.size === 1 ? "1 seleccionado" : `${selected.size} seleccionados`}</strong>
-          <button type="button" className="dt-bulk-clear" onClick={() => setSelected(NO_SELECTION)}>
-            Quitar selección
-          </button>
+        <div className={`dt-bulk${bulkVariant === "danger" ? " dt-bulk-danger" : ""}`} role="region" aria-label="Acciones en lote">
+          <strong>{bulkLabel ? bulkLabel(selected.size) : selected.size === 1 ? "1 seleccionado" : `${selected.size} seleccionados`}</strong>
+          {bulkVariant === "warning" && (
+            <button type="button" className="dt-bulk-clear" onClick={() => setSelected(NO_SELECTION)}>
+              Quitar selección
+            </button>
+          )}
           <span className="dt-spacer" />
           {bulkActions}
+          {bulkVariant === "danger" && (
+            <button type="button" className={buttonClass("icon", "sm")} aria-label="Quitar selección" onClick={() => setSelected(NO_SELECTION)}>
+              <NAV_ICONS.X aria-hidden="true" />
+            </button>
+          )}
         </div>
       )}
       <div className="dt-scroll" role="region" aria-label={label} tabIndex={0}>

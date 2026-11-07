@@ -3,11 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Forbidden, NotFound, RuleViolation, SessionExpired } from "@/core/domain/errors";
+import { wantsAnother } from "@/components/catalog/product-form-logic";
+import { nameKey } from "@/core/domain/name";
 import { requireCatalogUser, requireCategoryAdmin } from "./guard";
 
 export interface CatalogActionState {
   error?: string;
   nameError?: string;
+  categoryId?: string;
+  saved?: number;
 }
 
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
@@ -30,12 +34,12 @@ export async function createCategoryAction(_: CatalogActionState, formData: Form
   if (!companyId) return { error: "Elige una compañía arriba." };
   const name = text(formData, "name");
   try {
-    await catalog.createCategory(actor, { companyId, name });
+    const created = await catalog.createCategory(actor, { companyId, name });
+    revalidatePath("/catalogo", "layout");
+    return { categoryId: created.id };
   } catch (e) {
     return fail(e, name);
   }
-  revalidatePath("/catalogo", "layout");
-  return {};
 }
 
 export async function renameCategoryAction(
@@ -89,7 +93,16 @@ export async function saveProductAction(
     return fail(e, name);
   }
   revalidatePath("/catalogo", "layout");
+  if (wantsAnother(formData.get("again"))) return { saved: Date.now() };
   redirect("/catalogo/productos");
+}
+
+export async function checkProductNameAction(name: string, productId: string | null): Promise<{ available: boolean }> {
+  const { actor, catalog, companyId } = await requireCatalogUser();
+  if (!companyId) return { available: true };
+  const key = nameKey(name);
+  const products = await catalog.listProducts(actor, { companyId });
+  return { available: !products.some((p) => p.id !== productId && nameKey(p.name) === key) };
 }
 
 export async function deleteProductAction(id: string): Promise<CatalogActionState> {
@@ -101,4 +114,37 @@ export async function deleteProductAction(id: string): Promise<CatalogActionStat
   }
   revalidatePath("/catalogo", "layout");
   redirect("/catalogo/productos");
+}
+
+export async function setProductActiveAction(id: string, active: boolean): Promise<CatalogActionState> {
+  const { actor, catalog } = await requireCatalogUser();
+  try {
+    await catalog.setProductActive(actor, { id, active });
+  } catch (e) {
+    return fail(e, "");
+  }
+  revalidatePath("/catalogo", "layout");
+  return {};
+}
+
+export async function bulkProductsAction(
+  ids: string[],
+  op: "activate" | "deactivate" | "category",
+  categoryId?: string,
+): Promise<CatalogActionState & { done: number; failed: number }> {
+  const { actor, catalog } = await requireCatalogUser();
+  if (op === "category" && !categoryId) return { error: "Elige una categoría.", done: 0, failed: ids.length };
+  let done = 0;
+  let error: string | undefined;
+  for (const id of ids) {
+    try {
+      if (op === "category") await catalog.updateProduct(actor, { id, categoryId });
+      else await catalog.setProductActive(actor, { id, active: op === "activate" });
+      done++;
+    } catch (e) {
+      error ??= fail(e, "").error;
+    }
+  }
+  revalidatePath("/catalogo", "layout");
+  return { error, done, failed: ids.length - done };
 }

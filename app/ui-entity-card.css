@@ -1,0 +1,70 @@
+.ui-entity-card-grid { display: grid; width: 100%; grid-template-columns: repeat(auto-fill, minmax(var(--ui-card-min, 320px), 1fr)); gap: var(--space-4-5); }
+.ui-entity-card { display: flex; flex-direction: column; background: var(--color-surface); border: var(--border-hairline) solid var(--color-line-soft); border-radius: var(--radius-card); overflow: hidden; transition: box-shadow 0.15s; }
+.ui-entity-card:hover { box-shadow: var(--shadow-floating); }
+.ui-entity-card-head { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-5) var(--space-5) var(--space-4); }
+.ui-entity-card-avatar { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: var(--radius-inner); font: var(--text-h2); background: var(--co-bg, var(--color-hover)); color: var(--co-fg, var(--color-ink-2)); }
+.ui-entity-card[data-inactive] .ui-entity-card-avatar { --co-bg: var(--color-hover); --co-fg: var(--color-muted); }
+.ui-entity-card-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1-5); }
+.ui-entity-card-title { margin: 0; font: var(--text-h2); overflow-wrap: anywhere; }
+.ui-entity-card-title a { color: var(--color-ink); text-decoration: none; }
+.ui-entity-card-title a:hover { text-decoration: underline; }
+.ui-entity-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.ui-entity-card-code { font: var(--text-caption); font-family: var(--font-mono, ui-monospace, monospace); padding: 0 var(--space-2); border-radius: var(--radius-pill); box-shadow: inset 0 0 0 var(--border-hairline) var(--color-ring); }
+.ui-entity-card-subtitle { font: var(--text-caption); color: var(--color-muted); }
+.ui-entity-card-data { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: 0; padding: var(--space-4) var(--space-5); border-top: var(--border-hairline) solid var(--color-line-soft); }
+.ui-entity-card-data dt { font: var(--text-caption); color: var(--color-muted); }
+.ui-entity-card-data dd { margin: 0; font: var(--text-body); font-weight: 600; }
+.ui-entity-card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-top: auto; padding: var(--space-3-5) var(--space-5) var(--space-4-5); border-top: var(--border-hairline) solid var(--color-line-soft); background: var(--color-panel); }
+.ui-entity-card-actions > * { width: 100%; justify-content: center; }
+.ui-entity-card-edit { color: var(--color-red-strong); box-shadow: inset 0 0 0 var(--border-field) var(--color-danger-border); }
+.ui-entity-card-edit:hover, .ui-entity-card-edit:focus-visible { background: var(--color-row-selected); color: var(--color-red-strong); }
+.ui-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--space-4); }
+.ui-stat-tile { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4) var(--space-5); background: var(--color-panel); border-radius: var(--radius-popover); }
+.ui-stat-tile-icon { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--color-surface); color: var(--color-red-strong); }
+.ui-stat-tile-label { font: var(--text-caption); color: var(--color-muted); }
+.ui-stat-tile-value { font: var(--text-stat); letter-spacing: var(--tracking-stat); }
+.ui-entity-panel { display: flex; flex-direction: column; gap: var(--space-2); margin: 0 var(--space-5) var(--space-4); padding: var(--space-3-5) var(--space-4); background: var(--color-panel); border-radius: var(--radius-inner); }
+.ui-entity-panel-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.ui-entity-panel-title { font: var(--text-overline); color: var(--color-muted); text-transform: uppercase; }
+.ui-entity-panel-list { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.ui-entity-panel-row { display: flex; align-items: center; gap: var(--space-3); min-height: 52px; }
+.ui-entity-panel-icon { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--color-surface); color: var(--color-red-strong); }
+.ui-entity-panel-name { flex: 1; min-width: 0; display: flex; flex-direction: column; font: var(--text-body); overflow-wrap: anywhere; }
+.ui-entity-panel-name span { font: var(--text-caption); color: var(--color-muted); }
+.ui-entity-panel-empty { margin: 0; font: var(--text-caption); color: var(--color-muted); }
+.ui-danger-zone { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; padding: var(--space-5); background: var(--color-surface); border: 1.5px solid var(--color-danger-border); border-radius: var(--radius-card); }
+.ui-danger-zone-icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--color-danger-tint); color: var(--color-danger-text); }
+.ui-danger-zone-text { flex: 1; min-width: 240px; }
+.ui-danger-zone-text h2 { margin: 0; font: var(--text-h2); }
+.ui-danger-zone-text p { margin: var(--space-1) 0 0; }
+.ui-company-head { display: flex; align-items: center; gap: var(--space-4); }
+.ui-company-head .ui-entity-card-avatar { width: 64px; height: 64px; }
+.ui-companies-bar { flex-wrap: nowrap; }
+.ui-companies-bar .list-toolbar-search { flex: 0 1 360px; }
+.ui-companies-bar .input-outline { background-color: var(--color-panel); box-shadow: none; }
+.ui-toolbar-sep { flex: none; align-self: stretch; width: var(--border-hairline); margin: var(--space-2) var(--space-1); background: var(--color-line); }
+.ui-toolbar-chips { display: flex; flex: none; gap: var(--space-2); }
+.ui-toolbar-end { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+@media (max-width: 1100px) { .ui-companies-bar { flex-wrap: wrap; } .ui-companies-bar .list-toolbar-search { flex: 1 1 100%; } }
+.ui-company-head { align-items: center; }
+.ui-company-id { display: flex; flex-direction: column; gap: var(--space-1-5); min-width: 0; }
+.ui-company-meta { gap: var(--space-2); }
+.ui-company-meta .caption { color: var(--color-muted); }
+.ui-sites-head { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-3); }
+.ui-sites-head h2 .caption { margin-left: var(--space-1-5); color: var(--color-muted); font: var(--text-caption); }
+.ui-sites-head .search { margin-left: auto; flex: 0 1 240px; }
+.ui-sites-head .input-outline { background-color: var(--color-panel); box-shadow: none; }
+.ui-entity-card-actions > :only-child { grid-column: 1 / -1; }
+.ui-role-data { display: flex; flex-direction: column; gap: var(--space-4); margin: 0; padding: var(--space-4) var(--space-5); border-top: var(--border-hairline) solid var(--color-line-soft); }
+.ui-role-data dt { font: var(--text-caption); color: var(--color-muted); margin-bottom: var(--space-1-5); }
+.ui-role-data dd { margin: 0; font: var(--text-body); font-weight: 600; }
+.ui-role-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ui-role-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.ui-role-users { display: flex; align-items: center; gap: var(--space-2); }
+.ui-avatar-stack { display: inline-flex; }
+.ui-avatar-stack .ui-avatar + .ui-avatar { margin-left: calc(-1 * var(--space-1-5)); box-shadow: 0 0 0 2px var(--color-surface); }
+.chip.ui-role-denied { background: transparent; border: var(--border-hairline) dashed var(--color-ring); color: var(--color-placeholder); font-weight: 500; }
+.ui-role-new { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); min-height: 240px; padding: var(--space-5); text-align: center; color: var(--color-ink); text-decoration: none; border: 1.5px dashed var(--color-ring); border-radius: var(--radius-card); }
+.ui-role-new:hover, .ui-role-new:focus-visible { background: var(--color-row-selected); }
+.ui-role-new-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--color-red-tint); color: var(--color-red-strong); }
+.ui-role-new .caption { color: var(--color-muted); }

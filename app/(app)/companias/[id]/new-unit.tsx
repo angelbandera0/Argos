@@ -64,7 +64,7 @@ export function NewUnit({ companyId }: { companyId: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen(true)}>
+      <Button variant="primary" onClick={() => setOpen(true)}>
         <Plus aria-hidden="true" />
         Nueva sede
       </Button>

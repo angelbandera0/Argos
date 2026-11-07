@@ -39,4 +39,8 @@ P-01, P-02, P-03, T-03, T-04. Reglas DR-014, DR-016.
 REQ-005, REQ-007, REQ-009.
 
 ## Notas para el manual
-Se completa al implementar (D-04).
+1. En **Catálogo > Categorías** el administrador crea, renombra y elimina categorías de la compañía; una categoría con productos no se elimina hasta moverlos a otra.
+2. En **Catálogo > Productos > Nuevo** quien tenga permiso de crear indica nombre, una sola categoría de su compañía, descripción opcional y estado activo o inactivo.
+3. Editar y eliminar dependen del rol; todo cambio queda en el historial con valor anterior y nuevo. Eliminar es borrado lógico: el producto sale del listado y su nombre queda libre.
+4. Los nombres no se repiten en la compañía (sin distinguir mayúsculas ni espacios). Un producto inactivo sigue visible para quien puede verlo, pero no figura como disponible.
+5. Sin permiso de ver, el catálogo aparece vacío; nunca se ve el catálogo de otra compañía.

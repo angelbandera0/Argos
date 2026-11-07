@@ -14,7 +14,7 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { PinRevealDialog } from "./pin-reveal-dialog";
 
-type Kind = "unlock" | "reset" | "deactivate";
+export type Kind = "unlock" | "reset" | "deactivate";
 
 const COPY: Record<Kind, { title: (n: string) => string; text: string; confirm: string; busy: string }> = {
   unlock: {
@@ -37,15 +37,23 @@ const COPY: Record<Kind, { title: (n: string) => string; text: string; confirm: 
   },
 };
 
-export function UserActions({ userId, name, status }: { userId: string; name: string; status: "active" | "locked" | "deactivated" }) {
+/** Confirmation + one-time PIN for a user action; mounted by the user page and by the list. */
+export function UserActionDialogs({
+  userId,
+  name,
+  kind,
+  onClose,
+}: {
+  userId: string;
+  name: string;
+  kind: Kind | null;
+  onClose: () => void;
+}) {
   const router = useRouter();
-  const [kind, setKind] = useState<Kind | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
   const [pin, setPin] = useState<string>();
   const first = name.split(/\s+/)[0] ?? name;
-
-  if (status === "deactivated") return null;
 
   async function confirm() {
     if (!kind) return;
@@ -58,35 +66,21 @@ export function UserActions({ userId, name, status }: { userId: string; name: st
     const r = await run[kind](userId);
     setBusy(false);
     if (r?.error) return setError(r.error);
-    setKind(null);
+    onClose();
     if (r?.pin) setPin(r.pin);
+    else router.refresh();
   }
 
-  const ask = (k: Kind) => {
-    setError(undefined);
-    setKind(k);
-  };
   const copy = kind ? COPY[kind] : null;
-
   return (
     <>
-      {status === "locked" && (
-        <Button onClick={() => ask("unlock")}>
-          <LockOpen aria-hidden="true" />
-          Desbloquear
-        </Button>
-      )}
-      <Button variant="secondary" onClick={() => ask("reset")}>
-        <Lock aria-hidden="true" />
-        Cambiar PIN
-      </Button>
-      <Button variant="ghost" onClick={() => ask("deactivate")}>
-        Desactivar usuario
-      </Button>
       {copy && (
         <AlertDialog
           open
-          onClose={() => setKind(null)}
+          onClose={() => {
+            setError(undefined);
+            onClose();
+          }}
           onConfirm={confirm}
           confirmLabel={busy ? copy.busy : copy.confirm}
           loading={busy}
@@ -108,6 +102,29 @@ export function UserActions({ userId, name, status }: { userId: string; name: st
           }}
         />
       )}
+    </>
+  );
+}
+
+export function UserActions({ userId, name, status }: { userId: string; name: string; status: "active" | "locked" | "deactivated" }) {
+  const [kind, setKind] = useState<Kind | null>(null);
+  if (status === "deactivated") return null;
+  return (
+    <>
+      {status === "locked" && (
+        <Button onClick={() => setKind("unlock")}>
+          <LockOpen aria-hidden="true" />
+          Desbloquear
+        </Button>
+      )}
+      <Button variant="secondary" onClick={() => setKind("reset")}>
+        <Lock aria-hidden="true" />
+        Cambiar PIN
+      </Button>
+      <Button variant="ghost" onClick={() => setKind("deactivate")}>
+        Desactivar usuario
+      </Button>
+      <UserActionDialogs userId={userId} name={name} kind={kind} onClose={() => setKind(null)} />
     </>
   );
 }

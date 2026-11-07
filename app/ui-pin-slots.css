@@ -1,0 +1,5 @@
+.ui-pin-slots { display: flex; justify-content: center; gap: var(--space-2); }
+.ui-pin-slot { display: grid; place-items: center; width: 26px; height: 32px; border: var(--border-field) dashed var(--color-line-strong); border-radius: var(--radius-inner); font: var(--text-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+[data-empty] > .ui-pin-slot::after { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--color-line-strong); }
+.ui-pin-slots-lg .ui-pin-slot { width: 100%; max-width: 58px; height: 58px; border-style: solid; border-color: var(--color-line); background: var(--color-surface); font: var(--text-stat); font-weight: 600; }
+.ui-pin-slots-lg { gap: var(--space-2-5); }

@@ -69,9 +69,9 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
   - Estados: vacía `1.5px solid var(--color-line)`; activa `2px` red-strong, `box-shadow: 0 0 0 4px var(--color-red-tint)` y cursor rojo 2×26; llena `1.5px` line-strong con punto ink 12 (o dígito Inter Tight 26–28 si "Mostrar" está activo); error todas con `2px` red-strong y fondo `--color-red-wash`, mensaje `role="alert"` en red-hover con icono. El error se quita al volver a escribir.
   - Mensaje de error genérico, sin intentos restantes (`screens/MODULO-1-PANTALLAS.md`, A-05).
       - "Entrar": desactivado (fondo line, texto muted) hasta tener usuario y 6 dígitos; activo red-strong con texto blanco, alto 56, pill. Enlace "¿Olvidaste tu PIN?".
-- Diálogo, estado vacío y resto de componentes ampliados: ver «Componentes ampliados» (§6.17-6.36).
+- Diálogo, estado vacío y resto de componentes ampliados: ver «Componentes ampliados» (§6.17-6.43).
 
-## Componentes ampliados (§6.17-6.36)
+## Componentes ampliados (§6.17-6.43)
 Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+variantes), `--color-placeholder`, `--color-disabled-*`, `--color-field-error-bg`, `--color-row-selected`, `--color-hover`, `--color-overlay`, `--focus-ring`, `--focus-ring-field`, radios y sombras de overlays, `--z-*`.
 - Campos (§6.17): etiqueta siempre visible encima, nunca placeholder como etiqueta; pill, borde `1.5px --color-line`; con valor `--color-line-strong`; foco borde 2px red-strong + `--focus-ring-field`; error borde 2px `--color-danger`, fondo `--color-field-error-bg`, mensaje `--color-danger-text` 600 con icono, `aria-invalid` + `aria-describedby`; desactivado `--color-panel` + `--color-disabled-text`; solo lectura panel sin borde. Área de texto: `--radius-textarea`. Valida en blur y al enviar.
 - Casillas, radio, switch (§6.18): checkbox 22 radio 7 (marcado red-strong con check blanco; indeterminado con guion), radio 22 con punto 10, switch 48×28 `<button role="switch" aria-checked>`. Fila clicable, mín. 44. Hasta 7 opciones excluyentes: radio; más: select.
@@ -93,12 +93,24 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 - Barra de filtros (§6.35): una fila sobre la tabla: buscador · separador · filtros · "Limpiar filtros" (solo con filtros). Píldora sin valor (borde ring); con valor red-tint + ✕ (`Quitar filtro X`); abierta borde red-strong con halo. Al instante; la URL guarda los filtros. Secciones como tabs con contador.
 - Tabla de historial (§6.36): como Datatable, agrupada por día ("HOY · LUNES 26 DE OCTUBRE · n operaciones"); Hora, Quién (avatar; "Sistema" con engranaje), Acción (insignia), Módulo (solo en "Todos"), Entidad (tipo, nombre, ID mono), Canal. "Ver cambios" despliega Campo · Antes (tachado) → Después. Más reciente primero; pie Anterior/Siguiente.
 
+- Tarjeta de entidad (§6.37): grilla `auto-fill minmax(320px,1fr)` (sedes 420) con conmutador grilla/lista; tarjeta blanca borde line-soft radio 24 en tres franjas: cabecera (avatar cuadrado 48 radio 14 o icono, nombre enlace, código mono, "En uso", insignia de estado), datos 2×2 (etiqueta muted + valor 600) y acciones (fondo `#FCFCFD`, "Ver" Contorno + "Editar" Contorno rojo). Sede: bloque panel con "TIENDAS · n" y filas de 52. Rol: icono llave; del sistema con candado amarillo, "No se puede editar"; permisos como chips (concedido red-tint con check, no concedido punteado); tarjeta punteada "Crear un rol nuevo". Detalle: migas, avatar 64, chips, 4 indicadores, zona de peligro con borde danger.
+- Formularios de creación/edición (§6.38): formulario (máx. 820) + resumen sticky 340 (panel radio 24); secciones numeradas (círculo 28 red-tint, título, descripción, contador); radio en píldoras 44 con "Recomendado"; compañías como tarjetas seleccionables 2 columnas con "Todas" mixto; matriz de permisos (Ver · Crear · Editar · Eliminar · Todo) con Ver bloqueado y plantillas como chips; resumen con lista de comprobación y "Guardar" deshabilitado hasta completar lo obligatorio.
+
+- Listado de usuarios (§6.39): 4 indicadores (Usuarios · Activos · Aún no han entrado · Inactivos), filtros §6.35 (buscador, Rol, Tienda, chips de estado), columnas Usuario (avatar por rol) · Nombre de usuario (mono, prefijo atenuado) · Rol (chip) · Tiendas (primera + «+N») · Último acceso · Estado (Activo / Aún no ha entrado / Inactivo) · «⋯» (Editar, Generar nuevo PIN, Desactivar/Activar). No se eliminan usuarios.
+- Formulario de usuario (§6.40): sigue §6.38; el PIN se genera al crear (no se pide). Usuario con prefijo fijo y comprobación en vivo + sugerencia; Rol en select con franja de permisos; tiendas agrupadas por sede con checkbox mixto; resumen «ASÍ ENTRARÁ» y diálogo «Usuario creado» (PIN en 6 casillas, Copiar, «Solo se muestra esta vez»).
+- Categorías (§6.41): alta rápida arriba, lista con renombrar en línea y confirmación de eliminar en la misma fila; papelera desactivada si hay productos; lateral «Cómo funcionan» + 2 indicadores.
+- Listado de productos (§6.42): filtros §6.35, columnas con icono, categoría en chip, estado como interruptor al instante, «⋯»; selección múltiple con barra de acciones `#FFF4F3`.
+- Formulario de producto (§6.43): sigue §6.38 con 2 secciones (Datos con «+ Nueva categoría» en línea y Descripción con contador; Disponibilidad como tarjeta-interruptor); resumen «ASÍ SE VERÁ EN VENTAS» + «Guardar y crear otro».
+
 ## Librería Argos UI (§13)
 - Todo en `components/ui/` (sin paquete aparte); galería en `/ui` solo en desarrollo. Primitivas complejas de `@base-ui/react` con nuestros tokens; envoltorios Client Components. Escala tipográfica reducida. Sin Chakra ni CSS-in-JS.
 - OBLIGATORIO usar estos componentes en vez de marcado propio; cada componente nuevo se añade a la galería (`app/ui/sections/`) y a esta lista. Patrones con ejemplo en `PATRONES-UI.md`.
 - Estructura de página: `PageHeader` (título, migas, acciones), `ListToolbar` (buscador, filtros, acción), `DataTable` (lista; cliente), `EmptyState` (sin datos), `Card`, `Skeleton`/`Spinner`/`RouteProgress` (carga).
 - Formularios: `FormShell` (action, error general, guardando), `Field` (etiqueta, hint, error), `Input`, `Textarea`, `Datepicker` (fecha o rango ISO), `Select` (lista corta), `Multiselect`, `Checkbox`, `RadioGroup` (hasta 7), `Switch` (ajuste inmediato), `CodeField`, `Button` (variantes, `loading`).
 - Avisos: `Alert` (en página), `Banner` (franja global), `Toast` (`useToast`, resultado de una acción), `Dialog` (modal), `FormDialog` (formulario corto en diálogo), `AlertDialog` (confirmación destructiva), `Tooltip`.
+- Formularios con resumen (§6.38): `FormShell aside={<SummaryPanel/>}` (columna 820 + panel sticky 340, `--size-form-wide`/`--size-summary`; <1024 px el panel va debajo), `FormSection` (n.º, título, descripción, contador), `ChoiceCard` (tarjeta seleccionable; `row` = fila «todas» mixta), `ChoicePills` (radio en píldoras), `SummaryPanel`/`SummaryCard`/`Checklist` (ok / aviso / pendiente), `FormSubmit`, `CheckboxBox` (casilla sin etiqueta).
+- Listados en tarjetas: `EntityCard` (cabecera, datos 2×2, acciones; §6.37) `ViewToggle` (grilla/lista, `aria-pressed`) y `Pager` (Anterior · páginas · Siguiente + «Mostrando a–b de n [unit]»). `StatTile` admite `dot` (punto de color) en vez de icono; `Avatar toneKey` fija el tono por otra clave (p. ej. el rol).
+- Detalle de entidad: `StatTile` (indicador icono+cifra) y `EntityPanel` (bloque de filas «TIENDAS · n» dentro de `EntityCard`); zona de peligro `.ui-danger-zone` (borde danger, consecuencia, botón Peligro).
 - Estado: `Badge` (estado/contador), `Chip` (filtro o quitable), `Avatar` (iniciales, tono por nombre).
 - Historial: `FilterBar` con `FilterPill`/`FilterSelect` (single o `multiple`) y `DateRangePicker pill`; `AuditTable` (grupos por día, filas expandibles, `loading`, `empty`, `footer`).
 - Navegación y agrupación: `Tabs` (underline: secciones; segmented: vistas), `Breadcrumbs`, `Steps`, `Accordion` (list, cards, rich), `SidebarSection`/`SidebarItem`/`SidebarSubmenu`, `CompanySelector` (`components/org/`, panel lateral) [decisión del usuario].
@@ -125,3 +137,11 @@ Tokens nuevos (tokens.css): estados `--color-success|warning|danger|info` (+vari
 ## Checklist antes de entregar (§12)
 - Solo tokens; funciona en web, tablet y móvil; primarios red-strong con texto blanco; amarillo con ink.
 - Gráficos con leyenda, `aria-label` por marca y solo valores destacados; controles ≥ 44 px con etiqueta; números en español.
+
+## PinSlots y formulario de usuario (§6.40)
+- `PinSlots` (`components/ui/pin-slots.tsx`): 6 casillas; `sm` punteadas vacías (resumen «Así entrará»), `lg` 58 px con dígitos (`tabular-nums`) u ocultas «•». `Dialog tone="success"`: icono de éxito.
+- Formulario de usuario: usuario = píldora con prefijo fijo mono + comprobación en vivo; tiendas por sede con casilla mixta (`.ui-store-group`); franja de permisos del rol (`.ui-role-strip`). CSS en `app/ui-user-form.css`.
+
+## ToggleCard y SalesPreview (§6.43)
+- `ToggleCard` (`components/ui/toggle-card.tsx`): botón `role="switch"` de ancho completo con icono, título, ayuda e interruptor; activo `--color-success-tint`, inactivo blanco con borde.
+- `SalesPreview` (`components/ui/sales-preview.tsx`): chip rojo de categoría + tarjeta de 150 px; pausado: tarjeta al 60 % y chip «Pausado». Formulario de producto: `components/catalog/product-form.tsx`, CSS `app/ui-product-form.css`.

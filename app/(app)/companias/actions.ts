@@ -114,6 +114,26 @@ export async function reactivateUnitAction(level: Level, id: string, reasonText:
   return {};
 }
 
+const TAKEN: Record<Level, string> = {
+  company: "Ya tienes una compañía con ese nombre.",
+  site: "Ya hay una sede con ese nombre en esta compañía.",
+  store: "Ya hay una tienda con ese nombre en esta sede.",
+};
+
+export async function renameUnitAction(level: Level, id: string, formData: FormData): Promise<ActionState> {
+  const { actor, org } = await requireOrgUser();
+  if (!LEVELS.includes(level)) return { error: "No se pudo completar la acción." };
+  const n = cleanName(text(formData, "name"));
+  if ("error" in n) return n;
+  try {
+    await org.renameUnit(actor, { level, id, name: n.name });
+  } catch (e) {
+    return { error: fail(e, TAKEN[level]) };
+  }
+  revalidatePath("/companias", "layout");
+  return {};
+}
+
 export async function setActiveCompanyAction(companyId: string): Promise<void> {
   const { actor, org } = await requireOrgUser();
   if (!(await org.listCompanies(actor)).some((c) => c.id === companyId)) return;

@@ -7,17 +7,20 @@ export function Avatar({
   name,
   size = "sm",
   system,
+  toneKey,
   className,
 }: {
   name: string;
   size?: "sm" | "md";
   system?: boolean;
+  /** Seed of the tone when it must not depend on the name (e.g. a role). */
+  toneKey?: string;
   className?: string;
 }) {
   const Gear = NAV_ICONS.Settings;
   return (
     <span
-      className={`ui-avatar ui-avatar-${size} ${system ? "co-tone-none" : `co-tone-${avatarTone(name)}`}${className ? ` ${className}` : ""}`}
+      className={`ui-avatar ui-avatar-${size} ${system ? "co-tone-none" : `co-tone-${avatarTone(toneKey ?? name)}`}${className ? ` ${className}` : ""}`}
       aria-hidden="true"
     >
       {system ? <Gear /> : initials(name).slice(0, 2) || "?"}

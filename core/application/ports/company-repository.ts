@@ -18,5 +18,6 @@ export interface CompanyRepository {
   listAdmins(companyId: string): Promise<string[]>;
   grantAccess(companyId: string, adminId: string, grantedBy: string): Promise<void>;
   revokeAccess(companyId: string, adminId: string): Promise<void>;
+  rename(companyId: string, name: string): Promise<void>;
   setSessionCap(companyId: string, seconds: number): Promise<void>;
 }

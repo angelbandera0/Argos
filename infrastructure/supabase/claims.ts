@@ -15,7 +15,10 @@ const KINDS: readonly string[] = ["superadmin", "admin", "operator"];
 
 export async function readClaims(client: SupabaseClient): Promise<SessionClaims | null> {
   const { data } = await client.auth.getClaims();
-  const claims = data?.claims as Record<string, unknown> | undefined;
+  return parseClaims(data?.claims as Record<string, unknown> | undefined);
+}
+
+export function parseClaims(claims: Record<string, unknown> | undefined): SessionClaims | null {
   if (!claims) return null;
   const meta = (claims.app_metadata ?? {}) as Record<string, unknown>;
   const kind = claims.user_kind ?? meta.user_kind;
