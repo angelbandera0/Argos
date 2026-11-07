@@ -19,7 +19,15 @@ export type RuleCode =
   | "INVALID_USERNAME"
   | "INVALID_SESSION_SECONDS"
   | "INVALID_NAME"
-  | "INVALID_INPUT";
+  | "INVALID_INPUT"
+  | "INVALID_QUANTITY"
+  | "NEGATIVE_QUANTITY"
+  | "UNIT_MAGNITUDE_MISMATCH"
+  | "INVALID_CONTENT"
+  | "QUANTITY_MISMATCH"
+  | "LOT_EXCEEDED"
+  | "LOT_NOT_FOUND"
+  | "INSUFFICIENT_STOCK";
 
 export class Forbidden extends Error {
   constructor() {
