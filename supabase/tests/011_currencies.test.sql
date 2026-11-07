@@ -1,4 +1,4 @@
-select plan(19);
+select plan(20);
 
 create temp table ctx (k text primary key, v uuid);
 grant all on ctx to public;
