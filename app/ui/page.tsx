@@ -32,6 +32,7 @@ import { ThreeQtyTableSection } from "./sections/three-qty-table";
 import { SegmentedControlSection } from "./sections/segmented-control";
 import { ViewStateSection } from "./sections/view-state";
 import { MoneyValueSection } from "./sections/money-value";
+import { DenominationRowSection } from "./sections/denomination-row";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -86,6 +87,7 @@ const sections = [
   { id: "segmented-control", title: "SegmentedControl", description: "Segmentado de una sola opción (radiogroup), p. ej. decimales.", content: <SegmentedControlSection /> },
   { id: "view-state", title: "ViewState", description: "Cinco estados de vista: cargando, vacío, sin coincidencias, error y sin permiso (M8).", content: <ViewStateSection /> },
   { id: "money-value", title: "MoneyValue", description: "Importe con formato de divisa, «Sin costo conocido» y variante sin costos (M3).", content: <MoneyValueSection /> },
+  { id: "denomination-row", title: "DenominationRow", description: "Fila de denominación: etiqueta de valor amarilla suave, importe con símbolo, tipo y acciones a la derecha (M2).", content: <DenominationRowSection /> },
 ];
 
 export default function UiPage() {

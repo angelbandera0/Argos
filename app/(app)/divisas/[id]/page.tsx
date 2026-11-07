@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CurrencyForm } from "@/components/currencies/currency-form";
-import { DenominationManager } from "@/components/currencies/denomination-manager";
 import { Alert } from "@/components/ui/alert";
 import { PageHeader } from "@/components/ui/page-header";
 import { NotFound } from "@/core/domain/errors";
@@ -34,8 +33,7 @@ async function Editor({ params }: { params: PageProps<"/divisas/[id]">["params"]
         description="Cambia cómo se escriben los montos y qué billetes y monedas existen."
         breadcrumbs={[{ label: "Divisas", href: "/divisas" }, { label: currency.code }]}
       />
-      <CurrencyForm currencyId={currency.id} initial={initial} />
-      <DenominationManager currencyId={currency.id} items={denominations} />
+      <CurrencyForm currencyId={currency.id} initial={initial} denominations={denominations} />
     </div>
   );
 }

@@ -16,7 +16,7 @@ export function ToggleCard({
 }: Omit<React.ComponentProps<"button">, "onChange" | "title"> & {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: React.ReactNode;
   description?: React.ReactNode;
   tone?: "good" | "delicate";
@@ -33,9 +33,11 @@ export function ToggleCard({
       onClick={() => onCheckedChange(!checked)}
       {...props}
     >
-      <span className="ui-toggle-card-icon" aria-hidden="true">
-        {icon}
-      </span>
+      {icon && (
+        <span className="ui-toggle-card-icon" aria-hidden="true">
+          {icon}
+        </span>
+      )}
       <span className="ui-toggle-card-text">
         <strong>{title}</strong>
         {description && <span className="hint">{description}</span>}

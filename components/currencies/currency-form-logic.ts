@@ -62,3 +62,50 @@ export const hasValue = (items: Denomination[], value: number, exceptId?: string
   items.some((d) => d.id !== exceptId && d.value === value);
 
 export const DUPLICATE_VALUE_MESSAGE = "Ya existe una denominación con ese valor.";
+
+export const INVALID_VALUE_MESSAGE = "Escribe un valor mayor que 0.";
+
+export const decimalOptions = (current: number) =>
+  [...new Set([0, 2, 3, current])].sort((a, b) => a - b).map((n) => ({ value: String(n), label: String(n) }));
+
+export const activeSummary = (items: Denomination[]) => `${items.filter((d) => d.active).length} activas de ${items.length}`;
+
+export function applyDefault(next: boolean, active: boolean) {
+  return { isDefault: next, active: next ? true : active };
+}
+
+export function addLocalDenomination(
+  items: Denomination[],
+  raw: string,
+  kind: string,
+  id: string,
+): { items: Denomination[] } | { error: string } {
+  const value = parseDenominationValue(raw);
+  if (value === null) return { error: INVALID_VALUE_MESSAGE };
+  if (hasValue(items, value)) return { error: DUPLICATE_VALUE_MESSAGE };
+  return { items: [...items, { id, companyId: "", currencyId: "", value, kind: kind as Denomination["kind"], active: true }] };
+}
+
+export function updateLocalDenomination(items: Denomination[], id: string, value: number, kind: string): Denomination[] {
+  return items.map((d) => (d.id === id ? { ...d, value, kind: kind as Denomination["kind"] } : d));
+}
+
+export const toggleLocalDenomination = (items: Denomination[], id: string, active: boolean) =>
+  items.map((d) => (d.id === id ? { ...d, active } : d));
+
+export const removeLocalDenomination = (items: Denomination[], id: string) => items.filter((d) => d.id !== id);
+
+export const serializeDenominations = (items: Denomination[]) =>
+  JSON.stringify(sortDenominations(items).map(({ value, kind, active }) => ({ value, kind, active })));
+
+export function parseDenominationsJson(raw: string): { value: number; kind: string; active: boolean }[] {
+  try {
+    const list: unknown = JSON.parse(raw || "[]");
+    if (!Array.isArray(list)) return [];
+    return list.flatMap((x) =>
+      typeof x?.value === "number" && typeof x?.kind === "string" ? [{ value: x.value, kind: x.kind, active: x.active !== false }] : [],
+    );
+  } catch {
+    return [];
+  }
+}

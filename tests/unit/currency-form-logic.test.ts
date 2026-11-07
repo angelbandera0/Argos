@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  activeSummary,
+  addLocalDenomination,
+  applyDefault,
+  decimalOptions,
+  parseDenominationsJson,
+  removeLocalDenomination,
+  serializeDenominations,
+  toggleLocalDenomination,
   currencyErrors,
   hasValue,
   parseDenominationValue,
@@ -54,5 +62,35 @@ describe("money examples", () => {
   });
   it("sorts denominations from highest to lowest", () => {
     expect(sortDenominations([den("a", 1), den("b", 20), den("c", 5)]).map((d) => d.id)).toEqual(["b", "c", "a"]);
+  });
+});
+
+describe("currency form: accumulated denominations and rules", () => {
+  it("accumulates drafts, rejects invalid and repeated values", () => {
+    const a = addLocalDenomination([], "0,5", "coin", "a");
+    expect("items" in a && a.items[0]).toMatchObject({ value: 0.5, kind: "coin", active: true });
+    const items = "items" in a ? a.items : [];
+    expect(addLocalDenomination(items, "0.5", "bill", "b")).toEqual({ error: "Ya existe una denominación con ese valor." });
+    expect(addLocalDenomination(items, "0", "bill", "b")).toEqual({ error: "Escribe un valor mayor que 0." });
+  });
+
+  it("counts active of total and serializes from highest to lowest", () => {
+    const items = [den("1", 5), den("2", 100), { ...den("3", 20), active: false }];
+    expect(activeSummary(items)).toBe("2 activas de 3");
+    expect(JSON.parse(serializeDenominations(items)).map((d: { value: number }) => d.value)).toEqual([100, 20, 5]);
+    expect(toggleLocalDenomination(items, "1", false)[0].active).toBe(false);
+    expect(removeLocalDenomination(items, "1")).toHaveLength(2);
+  });
+
+  it("parses the JSON sent to the server action defensively", () => {
+    expect(parseDenominationsJson('[{"value":5,"kind":"bill"},{"x":1}]')).toEqual([{ value: 5, kind: "bill", active: true }]);
+    expect(parseDenominationsJson("nope")).toEqual([]);
+  });
+
+  it("making a currency default activates it; decimals offer 0/2/3 plus the stored value", () => {
+    expect(applyDefault(true, false)).toEqual({ isDefault: true, active: true });
+    expect(applyDefault(false, false)).toEqual({ isDefault: false, active: false });
+    expect(decimalOptions(2).map((o) => o.value)).toEqual(["0", "2", "3"]);
+    expect(decimalOptions(4).map((o) => o.value)).toEqual(["0", "2", "3", "4"]);
   });
 });

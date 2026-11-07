@@ -1,0 +1,13 @@
+.ui-denomination-row { display: flex; align-items: center; gap: var(--space-3); min-height: 64px; padding: var(--space-2) var(--space-4); }
+.ui-denomination-row + .ui-denomination-row { border-top: var(--border-hairline) solid var(--color-line-soft); }
+.ui-denomination-tag { display: grid; place-items: center; flex: none; min-width: 58px; height: 34px; padding: 0 var(--space-3); border-radius: var(--radius-inner); background: var(--color-yellow-tint); color: var(--color-warning-text); font: var(--text-caption); font-weight: 700; }
+.ui-denomination-row[data-inactive] .ui-denomination-tag { background: var(--color-panel); color: var(--color-muted); }
+.ui-denomination-text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.ui-denomination-text strong { font: var(--text-body); font-weight: 700; }
+.ui-denomination-list { background: var(--color-surface); border-radius: var(--radius-inner); overflow: hidden; }
+.ui-denomination-add { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-3); }
+.ui-denomination-value { position: relative; flex: 1 1 140px; max-width: 220px; }
+.ui-denomination-value .input { width: 100%; padding-right: var(--space-10, 48px); }
+.ui-denomination-value > span { position: absolute; right: var(--space-4); top: 0; bottom: 0; display: grid; place-items: center; color: var(--color-ink-2); pointer-events: none; }
+.ui-denomination-edit { display: flex; flex: 1; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.ui-denomination-edit .ui-denomination-value { max-width: 160px; }

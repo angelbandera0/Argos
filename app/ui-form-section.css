@@ -6,3 +6,5 @@
 .ui-form-section-title p { margin: var(--space-1) 0 0; }
 .ui-form-section-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
 @media (max-width: 639px) { .ui-form-section-cols { grid-template-columns: 1fr; } }
+.ui-form-section-note { display: flex; align-items: center; gap: var(--space-2); margin: 0; }
+.ui-form-section-note svg { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { parseDenominationsJson } from "@/components/currencies/currency-form-logic";
 import { currencyErrorMessage } from "@/components/currencies/currency-list-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { activeCompanyId, requireCurrencyUser } from "./guard";
@@ -10,6 +11,8 @@ export interface CurrencyActionState {
   codeError?: string;
   /** Set on a successful save so the client can toast and navigate. */
   savedId?: string;
+  /** The currency was saved but some denominations were not. */
+  warning?: string;
 }
 
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
@@ -61,8 +64,19 @@ export async function createCurrencyAction(_: CurrencyActionState, formData: For
   if (!companyId) return { error: "Aún no administras ninguna compañía." };
   try {
     const c = await ctx.currencies.createCurrency(ctx.actor, { companyId, ...parseCurrency(formData) });
+    const failed: string[] = [];
+    for (const d of parseDenominationsJson(text(formData, "denominations"))) {
+      try {
+        await ctx.currencies.addDenomination(ctx.actor, { currencyId: c.id, ...d });
+      } catch (e) {
+        failed.push(`${d.value}: ${fail(e).error ?? currencyErrorMessage(undefined)}`);
+      }
+    }
     revalidatePath("/divisas", "layout");
-    return { savedId: c.id };
+    return {
+      savedId: c.id,
+      warning: failed.length ? `La divisa se creó, pero no se pudieron añadir estas denominaciones: ${failed.join("; ")}` : undefined,
+    };
   } catch (e) {
     return fail(e);
   }
