@@ -34,3 +34,10 @@ describe("assertValidPermissions", () => {
     ).not.toThrow();
   });
 });
+
+describe("module rules", () => {
+  it("limits notifications to view", () => {
+    expect(() => assertValidPermissions({ view: true, create: false, edit: false, delete: true }, "notifications")).toThrow();
+    expect(() => assertValidPermissions({ view: true, create: false, edit: false, delete: false }, "notifications")).not.toThrow();
+  });
+});

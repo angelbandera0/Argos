@@ -14,6 +14,17 @@ insert into company_admins (company_id, admin_id, granted_by) values
   ('00000000-0000-0000-0000-0000000000a1', (select v from ctx where k = 'ana'), (select v from ctx where k = 'ana')),
   ('00000000-0000-0000-0000-0000000000b2', (select v from ctx where k = 'dan'), (select v from ctx where k = 'dan'));
 insert into ctx values ('op1', tests.create_user('operator', 'viewer@test.dev', '00000000-0000-0000-0000-0000000000a1'));
+insert into sites (id, company_id, name) values
+  ('00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'Norte');
+insert into stores (id, company_id, site_id, name) values
+  ('00000000-0000-0000-0000-0000000000f1', '00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000c1', 'Caja 1');
+insert into roles (id, owner_id, name) values
+  ('00000000-0000-0000-0000-0000000000d1', (select v from ctx where k = 'ana'), 'Viewer');
+insert into role_permissions (role_id, module, can_view) values ('00000000-0000-0000-0000-0000000000d1', 'currencies', true);
+insert into user_stores (user_id, store_id, company_id, role_id) values
+  ((select v from ctx where k = 'op1'), '00000000-0000-0000-0000-0000000000f1', '00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000d1');
+insert into app_sessions (session_id, user_id, active_store_id) values
+  ('00000000-0000-0000-0000-0000000005a1', (select v from ctx where k = 'op1'), '00000000-0000-0000-0000-0000000000f1');
 
 insert into currencies (id, company_id, code, name, symbol) values
   ('00000000-0000-0000-0000-000000000c01', '00000000-0000-0000-0000-0000000000a1', 'MXN', 'Peso', '$');
@@ -61,7 +72,7 @@ select is((select count(*)::int from currencies where company_id = '00000000-000
 select throws_ok($$insert into currencies (company_id, code, name, symbol) values ('00000000-0000-0000-0000-0000000000a1', 'EUR', 'Euro', '€')$$,
   '42501', null, 'an admin cannot write in another company');
 
-select tests.authenticate_as((select v from ctx where k = 'op1'), 'aal1');
+select tests.authenticate_as((select v from ctx where k = 'op1'), 'aal1', '00000000-0000-0000-0000-0000000005a1');
 select is((select count(*)::int from currencies), 1, 'an operator reads the live currencies of their company');
 select throws_ok($$insert into currencies (company_id, code, name, symbol) values ('00000000-0000-0000-0000-0000000000a1', 'EUR', 'Euro', '€')$$,
   '42501', null, 'an operator cannot write currencies');

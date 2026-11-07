@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { type RoleActionState, saveRoleAction } from "@/app/(app)/roles/actions";
-import type { Role } from "@/core/application/ports/role-repository";
+import type { RoleInput } from "@/core/application/ports/role-repository";
+import type { PermissionSet } from "@/core/domain/permissions";
 import { avatarTone, companyInitials } from "@/components/org/company-avatar";
 import { buttonClass } from "@/components/ui/button-class";
 import { ChoiceCard, ChoicePills } from "@/components/ui/choice-card";
@@ -21,7 +22,7 @@ export function RoleForm({
   companies,
 }: {
   roleId: string | null;
-  initial: Omit<Role, "id" | "ownerId">;
+  initial: Omit<RoleInput, "ownerId" | "permissions" | "specialPermissions"> & { permissions: { products: PermissionSet } };
   companies: { id: string; name: string; code: string }[];
 }) {
   const [state, action, pending] = useActionState<RoleActionState, FormData>(saveRoleAction.bind(null, roleId), {});

@@ -1,5 +1,5 @@
 import type { CompanyRepository } from "@/core/application/ports/company-repository";
-import type { Role, RoleRepository } from "@/core/application/ports/role-repository";
+import type { Role, RoleInput, RoleRepository } from "@/core/application/ports/role-repository";
 import type { Actor } from "@/core/domain/actor";
 import {
   assertAdmin,
@@ -7,6 +7,7 @@ import {
   assertNameFree,
   assertPermissions,
   assertSessionSeconds,
+  assertSpecialPermissions,
   normalizeName,
 } from "./shared";
 
@@ -19,7 +20,8 @@ export interface CreateRoleInput {
   name: string;
   sessionSeconds?: number | null;
   excludedCompanyIds?: string[];
-  permissions: Role["permissions"];
+  permissions: RoleInput["permissions"];
+  specialPermissions?: Role["specialPermissions"];
 }
 
 export function makeCreateRole(deps: CreateRoleDeps) {
@@ -29,6 +31,8 @@ export function makeCreateRole(deps: CreateRoleDeps) {
     const sessionSeconds = input.sessionSeconds ?? null;
     assertSessionSeconds(sessionSeconds);
     assertPermissions(input.permissions);
+    const specialPermissions = input.specialPermissions ?? [];
+    assertSpecialPermissions(specialPermissions);
     const excludedCompanyIds = input.excludedCompanyIds ?? [];
     await assertCompaniesAccessible(deps.companies, actor, excludedCompanyIds);
     await assertNameFree(deps.roles, actor.userId, name);
@@ -38,6 +42,7 @@ export function makeCreateRole(deps: CreateRoleDeps) {
       sessionSeconds,
       excludedCompanyIds,
       permissions: input.permissions,
+      specialPermissions,
     });
   };
 }

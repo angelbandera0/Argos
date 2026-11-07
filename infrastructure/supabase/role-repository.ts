@@ -1,11 +1,11 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Role, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
+import type { Role, RoleInput, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
 import { Forbidden, RuleViolation } from "@/core/domain/errors";
-import type { Module, PermissionSet } from "@/core/domain/permissions";
+import { MODULES, type Module, type PermissionSet, type SpecialPermission } from "@/core/domain/permissions";
 
 const SELECT =
-  "id, owner_id, name, session_seconds, role_permissions(module, can_view, can_create, can_edit, can_delete), role_company_exclusions(company_id)";
+  "id, owner_id, name, session_seconds, role_permissions(module, can_view, can_create, can_edit, can_delete), role_special_permissions(permission, warehouse), role_company_exclusions(company_id)";
 
 type Row = {
   id: string;
@@ -13,6 +13,7 @@ type Row = {
   name: string;
   session_seconds: number | null;
   role_permissions: { module: Module; can_view: boolean; can_create: boolean; can_edit: boolean; can_delete: boolean }[];
+  role_special_permissions: { permission: SpecialPermission; warehouse: boolean }[];
   role_company_exclusions: { company_id: string }[];
 };
 
@@ -24,8 +25,9 @@ const toRole = (r: Row): Role => ({
   name: r.name,
   sessionSeconds: r.session_seconds,
   excludedCompanyIds: r.role_company_exclusions.map((e) => e.company_id),
+  specialPermissions: r.role_special_permissions.map((p) => ({ permission: p.permission, warehouse: p.warehouse })),
   permissions: {
-    products: { ...none },
+    ...Object.fromEntries(MODULES.map((m) => [m, { ...none }])),
     ...Object.fromEntries(
       r.role_permissions.map((p) => [
         p.module,
@@ -45,7 +47,7 @@ function roleError(op: string, error: { code?: string; message?: string }): neve
 }
 
 export function makeRoleRepository(client: SupabaseClient): RoleRepository {
-  async function writePermissions(roleId: string, permissions: Role["permissions"]) {
+  async function writePermissions(roleId: string, permissions: RoleInput["permissions"]) {
     const rows = Object.entries(permissions).map(([module, p]) => ({
       role_id: roleId,
       module,
@@ -54,8 +56,21 @@ export function makeRoleRepository(client: SupabaseClient): RoleRepository {
       can_edit: p.edit,
       can_delete: p.delete,
     }));
+    if (rows.length === 0) return;
     const { error } = await client.from("role_permissions").upsert(rows);
     if (error) roleError("RoleRepository.permissions", error);
+  }
+
+  async function writeSpecial(roleId: string, grants: Role["specialPermissions"]) {
+    const keep = grants.map((g) => g.permission);
+    const del = client.from("role_special_permissions").delete().eq("role_id", roleId);
+    const { error: delError } = await (keep.length ? del.not("permission", "in", `(${keep.join(",")})`) : del);
+    if (delError) roleError("RoleRepository.special", delError);
+    if (keep.length === 0) return;
+    const { error } = await client
+      .from("role_special_permissions")
+      .upsert(grants.map((g) => ({ role_id: roleId, permission: g.permission, warehouse: g.warehouse })));
+    if (error) roleError("RoleRepository.special", error);
   }
 
   async function writeExclusions(roleId: string, companyIds: string[]) {
@@ -92,6 +107,7 @@ export function makeRoleRepository(client: SupabaseClient): RoleRepository {
       const id = (data as { id: string }).id;
       try {
         await writePermissions(id, role.permissions);
+        await writeSpecial(id, role.specialPermissions ?? []);
         await writeExclusions(id, role.excludedCompanyIds);
       } catch (e) {
         await client.from("roles").update({ deleted_at: new Date().toISOString() }).eq("id", id);
@@ -109,6 +125,7 @@ export function makeRoleRepository(client: SupabaseClient): RoleRepository {
         if (error) roleError("RoleRepository.update", error);
       }
       if (patch.permissions) await writePermissions(id, patch.permissions);
+      if (patch.specialPermissions) await writeSpecial(id, patch.specialPermissions);
       if (patch.excludedCompanyIds) await writeExclusions(id, patch.excludedCompanyIds);
       return load(id);
     },

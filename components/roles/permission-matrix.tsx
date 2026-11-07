@@ -1,6 +1,6 @@
 "use client";
 
-import type { Module, PermissionSet } from "@/core/domain/permissions";
+import type { PermissionSet } from "@/core/domain/permissions";
 import { Lock, NAV_ICONS } from "@/components/icons";
 import { Chip } from "@/components/ui/chip";
 import { CheckboxBox } from "@/components/ui/checkbox";
@@ -15,9 +15,9 @@ import {
   toggleAll,
 } from "./role-form-logic";
 
-type Value = Record<Module, PermissionSet>;
+type Value = { products: PermissionSet };
 
-export const MODULES: { key: Module; label: string; description: string; hint: string }[] = [
+export const MODULES: { key: keyof Value; label: string; description: string; hint: string }[] = [
   {
     key: "products",
     label: "Productos",

@@ -1,8 +1,13 @@
 import { z } from "zod";
 import { REASON_CODES } from "@/core/domain/deactivation";
+import { SPECIAL_PERMISSIONS } from "@/core/domain/permissions";
 
 const id = z.string().min(1);
-const op = z.object({ view: z.boolean(), create: z.boolean(), edit: z.boolean(), delete: z.boolean() });
+const modules = ["products", "currencies", "stock", "requests", "orders", "notifications"] as const;
+const permissionMap = z.partialRecord(z.enum(modules), z.object({ view: z.boolean(), create: z.boolean(), edit: z.boolean(), delete: z.boolean() }));
+const special = z.array(
+  z.object({ permission: z.enum(SPECIAL_PERMISSIONS), warehouse: z.boolean() }),
+);
 
 export const schemas = {
   createAdmin: z.object({ email: z.email(), displayName: z.string() }),
@@ -26,12 +31,14 @@ export const schemas = {
     name: z.string(),
     sessionSeconds: z.number().nullable().optional(),
     excludedCompanyIds: z.array(id).optional(),
-    permissions: z.object({ products: op }),
+    permissions: permissionMap,
+    specialPermissions: special.optional(),
   }),
   updateRole: z.object({
     name: z.string().optional(),
     sessionSeconds: z.number().nullable().optional(),
-    permissions: z.object({ products: op }).optional(),
+    permissions: permissionMap.optional(),
+    specialPermissions: special.optional(),
   }),
   exclusions: z.object({ companyIds: z.array(id) }),
   createCategory: z.object({ companyId: id.optional(), name: z.string() }),

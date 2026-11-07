@@ -1,4 +1,12 @@
-import type { Role, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
+import { MODULES } from "@/core/domain/permissions";
+import type { Role, RoleInput, RoleRepository, RoleUser } from "@/core/application/ports/role-repository";
+
+const none = { view: false, create: false, edit: false, delete: false };
+const fill = (r: RoleInput): Omit<Role, "id"> => ({
+  ...r,
+  specialPermissions: r.specialPermissions ?? [],
+  permissions: Object.fromEntries(MODULES.map((m) => [m, r.permissions[m] ?? none])) as Role["permissions"],
+});
 
 export class InMemoryRoles implements RoleRepository {
   readonly roles = new Map<string, Role>();
@@ -10,17 +18,17 @@ export class InMemoryRoles implements RoleRepository {
     this.assigned.add(roleId);
   }
 
-  async create(role: Omit<Role, "id">): Promise<Role> {
+  async create(role: RoleInput): Promise<Role> {
     this.seq += 1;
-    const created: Role = { ...role, id: `r${this.seq}` };
+    const created = { ...fill(role), id: `r${this.seq}` };
     this.roles.set(created.id, created);
     return created;
   }
 
-  async update(id: string, patch: Partial<Omit<Role, "id" | "ownerId">>): Promise<Role> {
+  async update(id: string, patch: Partial<Omit<RoleInput, "ownerId">>): Promise<Role> {
     const current = this.roles.get(id);
     if (!current || this.deleted.has(id)) throw new Error(`role ${id} not found`);
-    const updated: Role = { ...current, ...patch };
+    const updated: Role = { ...current, ...patch, permissions: { ...current.permissions, ...patch.permissions }, specialPermissions: patch.specialPermissions ?? current.specialPermissions };
     this.roles.set(id, updated);
     return updated;
   }

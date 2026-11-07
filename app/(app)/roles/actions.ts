@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { Role } from "@/core/application/ports/role-repository";
+import type { RoleInput } from "@/core/application/ports/role-repository";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireRoleUser } from "./guard";
 
@@ -14,14 +14,14 @@ export interface RoleActionState {
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
 const OPS = ["view", "create", "edit", "delete"] as const;
 
-function parse(f: FormData): { name: string; sessionSeconds: number | null; checked: string[]; permissions: Role["permissions"] } | string {
+function parse(f: FormData): { name: string; sessionSeconds: number | null; checked: string[]; permissions: RoleInput["permissions"] } | string {
   const hours = text(f, "hours");
   const sessionSeconds = hours === "" ? null : Math.round(Number(hours) * 3600);
   if (sessionSeconds !== null && (!Number.isFinite(sessionSeconds) || sessionSeconds <= 0 || sessionSeconds > 86400)) {
     return "Escribe un tiempo de sesión entre media hora y 24 horas.";
   }
   const permissions = {
-    products: Object.fromEntries(OPS.map((o) => [o, f.has(`products.${o}`)])) as Role["permissions"]["products"],
+    products: Object.fromEntries(OPS.map((o) => [o, f.has(`products.${o}`)])) as NonNullable<RoleInput["permissions"]["products"]>,
   };
   return { name: text(f, "name"), sessionSeconds, checked: f.getAll("company").map(String), permissions };
 }

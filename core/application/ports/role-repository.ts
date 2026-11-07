@@ -1,4 +1,4 @@
-import type { Module, PermissionSet } from "@/core/domain/permissions";
+import type { Module, PermissionMap, PermissionSet, SpecialGrant } from "@/core/domain/permissions";
 
 export interface Role {
   id: string;
@@ -7,7 +7,13 @@ export interface Role {
   sessionSeconds: number | null;
   excludedCompanyIds: string[];
   permissions: Record<Module, PermissionSet>;
+  specialPermissions: SpecialGrant[];
 }
+
+export type RoleInput = Omit<Role, "id" | "permissions" | "specialPermissions"> & {
+  permissions: PermissionMap;
+  specialPermissions?: SpecialGrant[];
+};
 
 export interface RoleUser {
   roleId: string;
@@ -16,8 +22,8 @@ export interface RoleUser {
 }
 
 export interface RoleRepository {
-  create(role: Omit<Role, "id">): Promise<Role>;
-  update(id: string, patch: Partial<Omit<Role, "id" | "ownerId">>): Promise<Role>;
+  create(role: RoleInput): Promise<Role>;
+  update(id: string, patch: Partial<Omit<RoleInput, "ownerId">>): Promise<Role>;
   getById(id: string): Promise<Role | null>;
   listByOwner(ownerId: string): Promise<Role[]>;
   softDelete(id: string): Promise<void>;

@@ -49,7 +49,8 @@ describe("makeCreateRole", () => {
       name: "Cajero",
       sessionSeconds: null,
       excludedCompanyIds: [],
-      permissions: { products: full },
+      specialPermissions: [],
+      permissions: expect.objectContaining({ products: full }),
     });
     expect(await roles.getById("r1")).toEqual(role);
   });
@@ -152,7 +153,7 @@ describe("makeUpdateRole", () => {
     const { create, update } = setup();
     const r = await create(admin, base);
     const updated = await update(admin, r.id, { sessionSeconds: 3600, permissions: { products: full } });
-    expect(updated).toEqual({ ...r, sessionSeconds: 3600, permissions: { products: full } });
+    expect(updated).toEqual({ ...r, sessionSeconds: 3600, permissions: { ...r.permissions, products: full } });
   });
 
   it("renaming to its own name (different case) is allowed; to another's is NAME_TAKEN", async () => {
@@ -278,5 +279,46 @@ describe("makeListRoles", () => {
     const { list } = setup();
     await expect(list(operator)).rejects.toBeInstanceOf(Forbidden);
     await expect(list(superadmin)).rejects.toBeInstanceOf(Forbidden);
+  });
+});
+
+describe("special permissions", () => {
+  it("stores special permissions and fills the new modules", async () => {
+    const s = setup();
+    const role = await s.create(admin, {
+      ...base,
+      permissions: { products: viewOnly, stock: full },
+      specialPermissions: [{ permission: "transfer", warehouse: true }],
+    });
+    expect(role.specialPermissions).toEqual([{ permission: "transfer", warehouse: true }]);
+    expect(role.permissions.stock).toEqual(full);
+    expect(role.permissions.orders).toEqual(none);
+  });
+
+  it("rejects notifications with more than view", async () => {
+    const s = setup();
+    await expect(
+      s.create(admin, { ...base, permissions: { notifications: { ...viewOnly, edit: true } } }),
+    ).rejects.toMatchObject({ code: "NOTIFICATIONS_VIEW_ONLY" });
+  });
+
+  it("rejects repeated and unknown special permissions", async () => {
+    const s = setup();
+    const dup = [{ permission: "transfer", warehouse: false }, { permission: "transfer", warehouse: true }] as const;
+    await expect(s.create(admin, { ...base, specialPermissions: [...dup] })).rejects.toMatchObject({ code: "DUPLICATE_SPECIAL_PERMISSION" });
+    await expect(
+      s.create(admin, { ...base, specialPermissions: [{ permission: "fly" as "transfer", warehouse: false }] }),
+    ).rejects.toMatchObject({ code: "UNKNOWN_SPECIAL_PERMISSION" });
+  });
+
+  it("replaces special permissions on update and keeps them when omitted", async () => {
+    const s = setup();
+    const role = await s.create(admin, { ...base, specialPermissions: [{ permission: "see_costs", warehouse: false }] });
+    expect((await s.update(admin, role.id, { name: "Otro" })).specialPermissions).toHaveLength(1);
+    const next = await s.update(admin, role.id, { specialPermissions: [] });
+    expect(next.specialPermissions).toEqual([]);
+    await expect(
+      s.update(admin, role.id, { specialPermissions: [{ permission: "x" as "transfer", warehouse: false }] }),
+    ).rejects.toBeInstanceOf(RuleViolation);
   });
 });

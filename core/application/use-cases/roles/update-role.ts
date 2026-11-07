@@ -1,11 +1,12 @@
 import type { CompanyRepository } from "@/core/application/ports/company-repository";
-import type { Role, RoleRepository } from "@/core/application/ports/role-repository";
+import type { Role, RoleInput, RoleRepository } from "@/core/application/ports/role-repository";
 import type { Actor } from "@/core/domain/actor";
 import {
   assertAdmin,
   assertNameFree,
   assertPermissions,
   assertSessionSeconds,
+  assertSpecialPermissions,
   loadOwnedRole,
   mergeExclusions,
   normalizeName,
@@ -16,7 +17,7 @@ export interface UpdateRoleDeps {
   companies: CompanyRepository;
 }
 
-export type UpdateRolePatch = Partial<Omit<Role, "id" | "ownerId">>;
+export type UpdateRolePatch = Partial<Omit<RoleInput, "ownerId">>;
 
 export function makeUpdateRole(deps: UpdateRoleDeps) {
   return async (actor: Actor, roleId: string, patch: UpdateRolePatch): Promise<Role> => {
@@ -29,6 +30,7 @@ export function makeUpdateRole(deps: UpdateRoleDeps) {
     }
     if (patch.sessionSeconds !== undefined) assertSessionSeconds(patch.sessionSeconds);
     if (patch.permissions !== undefined) assertPermissions(patch.permissions);
+    if (patch.specialPermissions !== undefined) assertSpecialPermissions(patch.specialPermissions);
     if (patch.excludedCompanyIds !== undefined) {
       clean.excludedCompanyIds = await mergeExclusions(deps.companies, actor, role.excludedCompanyIds, patch.excludedCompanyIds);
     }

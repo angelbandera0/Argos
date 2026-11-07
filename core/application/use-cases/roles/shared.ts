@@ -1,8 +1,8 @@
 import type { CompanyRepository } from "@/core/application/ports/company-repository";
-import type { Role, RoleRepository } from "@/core/application/ports/role-repository";
+import type { Role, RoleInput, RoleRepository } from "@/core/application/ports/role-repository";
 import type { Actor } from "@/core/domain/actor";
 import { Forbidden, RuleViolation } from "@/core/domain/errors";
-import { assertValidPermissions } from "@/core/domain/permissions";
+import { assertValidPermissions, assertValidSpecialPermissions, type Module, type SpecialGrant } from "@/core/domain/permissions";
 
 export const MAX_SESSION_SECONDS = 86400;
 const MAX_NAME_LENGTH = 80;
@@ -23,8 +23,12 @@ export function assertSessionSeconds(s: number | null): void {
   if (s > MAX_SESSION_SECONDS) throw new RuleViolation("SESSION_TOO_LONG");
 }
 
-export function assertPermissions(permissions: Role["permissions"]): void {
-  for (const set of Object.values(permissions)) assertValidPermissions(set);
+export function assertPermissions(permissions: RoleInput["permissions"]): void {
+  for (const [module, set] of Object.entries(permissions)) assertValidPermissions(set!, module as Module);
+}
+
+export function assertSpecialPermissions(grants: SpecialGrant[]): void {
+  assertValidSpecialPermissions(grants);
 }
 
 export async function assertNameFree(

@@ -1,4 +1,4 @@
-import type { Module, PermissionSet } from "@/core/domain/permissions";
+import type { PermissionMap, PermissionSet } from "@/core/domain/permissions";
 
 export interface StoreAccess {
   storeId: string;
@@ -11,7 +11,7 @@ export interface StoreAccess {
   companyCapSeconds: number;
   operational: boolean;
   /** The operator's role permissions at this store. */
-  permissions: Record<Module, PermissionSet>;
+  permissions: PermissionMap & { products: PermissionSet };
 }
 
 /** `available === operational`; login lists every assignment, chooseStore rejects unavailable ones. */
