@@ -252,3 +252,7 @@ Se hace al terminar todo el proyecto, no por tarea.
 ## Módulo 2 · permisos de tabla (T05)
 - Las tablas nuevas deben llevar `revoke all … from anon, authenticated` y solo los `grant` necesarios (Supabase concede todo por defecto, incluido `TRUNCATE`, que no pasa por la RLS). Corregido en `notifications` y `role_special_permissions`.
 - `role_permissions` (Módulo 1) y otras tablas del Módulo 1 conservan los permisos por defecto de `anon` y `authenticated` (solo las frena la RLS). Revisar y cerrar con una migración.
+
+## Módulo 2 · visibilidad del almacén general (T10a)
+- `app.can_see_location` (T09) deja ver el almacén general a cualquier usuario con `stock` ver, incluido un administrador de tienda. La spec (S-21/S-22) reserva el almacén general al almacenero y al administrador. Decidir si exige además un permiso especial con «Almacén general» (p. ej. `handle_requests`, `transfer` o `initial_entry`) y ajustar `lots_select`, `stock_movements_select`, los mínimos y `stock_levels`.
+- `created_by` y `actor_id` de lotes y movimientos son nulables porque `app.create_lot` puede llamarse como `postgres` (pruebas); las funciones públicas de T10b/T11/T19 siempre los rellenan.
