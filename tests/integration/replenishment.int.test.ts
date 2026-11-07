@@ -17,6 +17,8 @@ import { makeUsers } from "@/infrastructure/supabase/users-factory";
 import { makeRequests } from "@/infrastructure/supabase/request-factory";
 import { makeOrders } from "@/infrastructure/supabase/order-factory";
 import { GET as orderRoute } from "@/app/api/v1/pedidos/[id]/route";
+import { GET as requestsRoute } from "@/app/api/v1/solicitudes/route";
+import { GET as productStockRoute } from "@/app/api/v1/stock/products/[id]/route";
 import { GET as bagRoute } from "@/app/api/v1/solicitudes/bag/route";
 
 const admin = createAdminClient();
@@ -183,14 +185,25 @@ describe("replenishment repositories and API", { timeout: 180_000 }, () => {
     expect(await buyerOrders.submitReview(buyer.actor, { orderId })).toEqual({ given: 20, spent: 15, leftover: 5 });
     await expect(buyerOrders.saveReview(buyer.actor, { orderId, lines: [{ lineId: orderLine.id, qtyReceived: 4 }] })).rejects.toMatchObject({ code: "BUYER_CANNOT_REVIEW" });
 
+    const makeApiLotCosts = (c: SupabaseClient) => c.from("lot_costs").select("lot_id");
     const token = async (c: SupabaseClient) => (await c.auth.getSession()).data.session!.access_token;
     const rest = async (c: SupabaseClient, path: string, handler: (r: Request, c: unknown) => Promise<Response>, ctx: object = {}) => {
       const res = await handler(new Request(`http://x/api/v1${path}`, { headers: { authorization: `Bearer ${await token(c)}` } }), { params: Promise.resolve(ctx) });
       return { status: res.status, json: await res.json() };
     };
     const asBuyer = await buyerOrders.getOrder(buyer.actor, { orderId });
-    expect(asBuyer.lines[0]).not.toHaveProperty("unitCost");
-    expect(asBuyer).not.toHaveProperty("spent");
+    expect(asBuyer.lines[0].unitCost).toBe(3);
+    expect(asBuyer.shortageValue).toBeUndefined();
+    const asBuyerRest = await rest(buyer.client, `/pedidos/${orderId}`, orderRoute, { id: orderId });
+    expect(asBuyerRest.status).toBe(200);
+    expect(asBuyerRest.json.lines[0].unitCost).toBe(3);
+    expect(asBuyerRest.json).not.toHaveProperty("shortageValue");
+    expect((await rest(storeOp.client, `/pedidos/${orderId}`, orderRoute, { id: orderId })).status).toBe(404);
+    expect((await rest(storeOp.client, `/solicitudes`, requestsRoute)).json.total).toBe(1);
+    const lotCosts = await rest(buyer.client, `/stock/products/${productId}?locationId=${warehouse}`, productStockRoute, { id: productId });
+    expect(lotCosts.status).toBe(200);
+    expect(JSON.stringify(lotCosts.json)).not.toContain("unitCost");
+    expect((await makeApiLotCosts(buyer.client)).data).toEqual([]);
     const asAdmin = await rest(a.client, `/pedidos/${orderId}?companyId=${companyA}`, orderRoute, { id: orderId });
     expect(asAdmin.json.lines[0].unitCost).toBe(3);
     expect(asAdmin.json).toMatchObject({ status: "in_review", amountGiven: 20, spent: 15, leftover: 5 });

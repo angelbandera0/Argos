@@ -20,6 +20,9 @@ export function makeApiServices(token: string) {
     auth: { autoRefreshToken: false, persistSession: false },
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
+  // No session lives in this client: without a default token `auth.getClaims()` (used by the store-access reader) finds no caller.
+  const getClaims = supabase.auth.getClaims.bind(supabase.auth);
+  supabase.auth.getClaims = (jwt, options) => getClaims(jwt ?? token, options);
   const org = makeOrg(supabase);
   return {
     org,
