@@ -51,3 +51,12 @@ Excepciones: entrada directa a tienda (p. ej. pan) por pedido con destino tienda
 - **M2-Q06** Tras el redondeo a 3 decimales de conversiones (p. ej. 1 lb = 3 porciones), ¿se acepta o la porción pasa a ser la base de ese producto?
 - **M2-Q07** Retención de notificaciones leídas y alcance de «ver todas».
 - **M2-Q08** ¿Qué líneas de un pedido no compradas vuelven a la bolsa? Por defecto: todas, como pendientes.
+
+## Decisiones técnicas tomadas tras la revisión externa [P]
+- **M2-D10** Un lote siempre pertenece a una ubicación. En entrega «general» el pedido no se puede confirmar hasta repartir el total entre tiendas (04·R-16).
+- **M2-D11** Un traslado crea en la tienda un lote por cada lote de origen usado, conservando su costo y fecha; no se promedia.
+- **M2-D12** Una línea de solicitud puede tener varias asignaciones (surtida, por comprar, pendiente, rechazada) que suman la cantidad pedida; el estado de la línea se deriva de ellas.
+- **M2-D13** Las ubicaciones son un solo concepto: el almacén general y las tiendas son filas de la misma entidad, con tipo. El producto de catálogo se marca como almacenable (M2-Q01).
+- **M2-D14** Los permisos con alcance de ubicación se definen en el rol (¿almacén general? sí/no) y se combinan con las tiendas asignadas al usuario para las tiendas.
+- **M2-D15** Los costos viven separados de las cantidades (tabla o vista propia) con acceso condicionado a «ver costos» en la base de datos, no solo en la aplicación; UI, API y MCP leen por esa vía.
+- **M2-D16** Todo movimiento de stock se escribe con funciones atómicas en la base de datos con bloqueo de filas; el stock nunca es negativo y un conflicto se informa para reintentar.
