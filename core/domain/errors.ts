@@ -45,7 +45,20 @@ export type RuleCode =
   | "EMPTY_REQUEST"
   | "DUPLICATE_PRODUCT"
   | "ASSIGNMENT_EXCEEDS_LINE"
-  | "INVALID_KIND";
+  | "INVALID_KIND"
+  | "EMPTY_ORDER"
+  | "PLAN_MISMATCH"
+  | "BUYER_NOT_ELIGIBLE"
+  | "BUYER_CANNOT_REVIEW"
+  | "INVALID_STATUS"
+  | "PURCHASE_INCOMPLETE"
+  | "MISSING_COST"
+  | "REPARTO_REQUIRED"
+  | "REPARTO_MISMATCH"
+  | "NOTE_REQUIRED"
+  | "INVALID_LINES"
+  | "ASSIGNMENT_ALREADY_ORDERED"
+  | "INVALID_LOCATION";
 
 export class Forbidden extends Error {
   constructor() {
@@ -105,5 +118,17 @@ const REQUEST_CODES: RuleCode[] = ["EMPTY_REQUEST", "DUPLICATE_PRODUCT", "ASSIGN
 export function translateRequestError(code: string): Error {
   if (/\b(STORE_NOT_FOUND|LINE_NOT_FOUND)\b/.test(code)) return new NotFound();
   const found = REQUEST_CODES.find((c) => new RegExp(`\\b${c}\\b`).test(code));
+  return found ? new RuleViolation(found) : translateStockError(code);
+}
+
+const ORDER_CODES: RuleCode[] = [
+  "PLAN_MISMATCH", "BUYER_NOT_ELIGIBLE", "BUYER_CANNOT_REVIEW", "INVALID_STATUS", "PURCHASE_INCOMPLETE", "MISSING_COST",
+  "REPARTO_REQUIRED", "REPARTO_MISMATCH", "NOTE_REQUIRED", "INVALID_LINES", "ASSIGNMENT_ALREADY_ORDERED", "INVALID_LOCATION",
+];
+
+/** Same as translateStockError, plus the order codes (confirming and adjusting also touch stock). */
+export function translateOrderError(code: string): Error {
+  if (/\b(ORDER_NOT_FOUND|LINE_NOT_IN_ORDER|LOT_NOT_IN_ORDER)\b/.test(code)) return new NotFound();
+  const found = ORDER_CODES.find((c) => new RegExp(`\\b${c}\\b`).test(code));
   return found ? new RuleViolation(found) : translateStockError(code);
 }

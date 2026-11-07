@@ -1,0 +1,5 @@
+# T21b · Casos de uso de pedidos
+
+SQL (`*_order_review_save.sql`): RPC `save_pedido_review(order, [{line_id, qty_received}])` (admin o `review_orders`, nunca el comprador, estado in_review, no confirma); helper definer `app.ordered_assignment_ids()` y `bolsa_por_comprar` ya excluye asignaciones incluidas en un pedido. pgTAP 027 (9/9); `test:db` completo en verde.
+TS: dominio `core/domain/orders` (comparativa given/spent/leftover, `shortageValue` null si costo desconocido, `validateReparto`, `validateOrderLine`), puerto `order-repository.ts`, casos de uso en `core/application/use-cases/orders/` (create, assignBuyer, registerPurchase, submitReview, saveReview, confirm, return, adjust, list, get), `translateOrderError`, fake `tests/fakes/in-memory-orders.ts`, tests `tests/unit/use-cases/orders.test.ts` (CA-03 a CA-08). Costos: undefined = oculto sin see_costs, null = sin costo conocido.
+Pendiente T22: adaptador Supabase (usar `translateOrderError`, `isEligibleBuyer` sobre `app.is_eligible_buyer`) y API. `verify:fast` OK (738 casos).
