@@ -6,9 +6,17 @@ import type { ListNotificationsInput } from "@/core/application/use-cases/notifi
 export const PAGE_SIZE = 20;
 
 export const OPERATIONS: Record<string, string> = {
-  create: "Creación",
-  status_change: "Cambio de estado",
-  stock_alert: "Alerta de existencia",
+  created: "Creada",
+  handled: "Atendida",
+  rejected: "Rechazada",
+  assigned: "Asignada",
+  submitted_for_review: "Enviada a revisión",
+  returned: "Devuelta",
+  fulfilled: "Cumplida",
+  shortage_detected: "Faltante detectado",
+  initial_entry: "Entrada inicial",
+  low_stock: "Existencia baja",
+  out_of_stock: "Agotado",
 };
 
 export type NotificationFilters = {
