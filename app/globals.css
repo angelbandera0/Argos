@@ -360,3 +360,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .dash-grid > .card, .dash-grid > :first-child, .dash-grid > :last-child, .dash-analytics { grid-column: auto; }
 }
 @import "./ui-product-form.css";
+
+@media (min-width: 1280px) {
+  .side { padding: var(--space-5) var(--space-4); gap: var(--space-2); }
+  .sb-section + .sb-section > .nav-label { margin-top: var(--space-5); }
+  .nav-label { padding-top: var(--space-2); }
+}
