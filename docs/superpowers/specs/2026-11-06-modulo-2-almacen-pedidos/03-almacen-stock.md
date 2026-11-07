@@ -32,6 +32,7 @@ Cada compañía sabe cuánto hay de cada producto básico en el almacén general
 - **S-15 [P]** Tipos: entrada_inicial, entrada_compra, entrada_directa, traslado (salida y entrada), baja, ajuste, consumo (**reservado**, no se construye). Cada movimiento: tipo, lote(s), cantidad base, cantidad capturada y unidad, costo, divisa, motivo, autor, fecha y documento origen (pedido, solicitud).
 - **S-15b [U]** **Sobrante de conteo (2026-11-07):** un ajuste positivo solo restituye a un lote hasta lo recibido. Lo que supere eso se registra como un **lote nuevo de origen «ajuste»** (fecha de hoy, motivo obligatorio, permiso `adjust_stock`); si lo hace quien no es administrador se avisa a los administradores. **Su costo es «sin costo conocido»** salvo que quien lo registra tenga «Ver costos» y lo indique; no se inventa un costo.
 - Inmutable (M2-D07). La baja y el ajuste tienen sus propias reglas abajo.
+- **S-15c [U]** **Corrección de costo (L8, ADR-018):** corregir el costo de un lote ya confirmado es un **ajuste de valor**, nunca una edición. Se registra un ajuste con costo anterior, costo nuevo (≥ 0, 6 decimales), motivo obligatorio, autor y fecha; si el lote viene de un pedido se enlaza al pedido y queda en su línea de tiempo. Cambia solo el costo unitario **vigente** del lote: lo ya consumido o trasladado conserva el costo con que salió (la diferencia es un ajuste de valor del periodo de la corrección). Lo hace el administrador de la compañía o quien tenga «Ver costos» y «Corregir pedidos»; el costo anterior es visible en el historial solo con «Ver costos». No se inventa un costo: nunca se corrige a «sin dato» ni a 0 por omisión.
 
 ## Bajas
 - **S-16 [U]** Se pueden dar de baja productos del almacén con motivo obligatorio: un **catálogo estándar** (merma, caducado, dañado, derrame, consumo interno, pérdida) y la opción **«otro»** con texto libre. **[P]** El administrador puede ampliar el catálogo.
@@ -59,3 +60,5 @@ Ver existencias, entrada inicial, entrada directa, trasladar, bajas, ajustar, el
 - CA-07: DADO un producto que llega a su mínimo o a cero, ENTONCES cambia a bajo o agotado y se notifica.
 - CA-08: DADO una entrada inicial hecha por un almacenero, ENTONCES se notifica a los administradores.
 - CA-09: DADO un movimiento registrado, ENTONCES no puede editarse ni borrarse; solo corregirse con un ajuste.
+- CA-10: DADO un lote con costo 12, cuando un administrador lo corrige a 15 con motivo, ENTONCES el costo vigente del lote es 15, existe un ajuste «de 12 a 15» con motivo y autor, y los movimientos previos conservan su costo 12.
+- CA-11: DADO un usuario sin («Ver costos» y «Corregir pedidos»), ENTONCES no puede corregir costos ni ver los ajustes; sin motivo o con costo negativo la corrección se rechaza.

@@ -247,3 +247,14 @@
 - **Decisión:** Un pedido en revisión no cambia el stock. Solo su confirmación (`cumplido`) crea lotes con lo recibido. Las demás operaciones (entrada inicial o directa, traslado, baja, ajuste) cambian el stock al registrarse, con su movimiento.
 - **Alternativas descartadas:** *sumar al enviar a revisión* (stock fantasma si el pedido se devuelve); *reservar stock en revisión* (complejidad sin requisito).
 - **Consecuencias:** el stock de tienda puede ir por detrás de lo comprado; la lista de pedidos debe mostrar el estado en revisión.
+
+---
+
+### ADR-018 — Corregir el costo de un lote es un ajuste de valor, nunca una edición
+- **Fecha:** 2026-11-07
+- **Estado:** Aceptada
+- **Contexto:** El costo de un lote confirmado puede ser erróneo (R-16b lo toma del comprador). Editarlo en silencio rompería el libro inmutable (ADR-013) y las estadísticas de costo.
+- **Decisión:** La corrección crea un registro inmutable `lot_cost_adjustments` (costo anterior, nuevo, motivo, autor, fecha; enlazado al pedido si lo hay) y actualiza solo el costo unitario vigente del lote. Lo ya consumido o trasladado no se reescribe: la diferencia queda como ajuste de valor en el periodo de la corrección. Permiso: administrador de la compañía, o «Ver costos» + «Corregir pedidos». El costo anterior se ve en el historial solo con «Ver costos» (ADR-014).
+- **Alternativas descartadas:** *editar el costo y reescribir movimientos* (pierde trazabilidad); *no permitir corregir* (obliga a anular lotes).
+- **Consecuencias:** las estadísticas distinguen el costo original del corregido; el costo del lote deja de ser inmutable pero solo por la función `adjust_lot_cost`.
+
