@@ -1,0 +1,7 @@
+# T26 · UI de compra del comprador
+
+- `/pedidos/[id]` (`app/(app)/pedidos/[id]/page.tsx`): Suspense + ViewState; cabecera con Nº y `StatusBadge`; lista `sections` renderizada con `Tabs`. Hoy solo la pestaña «Compra» (comprador asignado o admin, estado open/returned). **T27** añade ahí sus pestañas (revisión, detalle, corrección) sin reescribir; para otros usuarios/estados hoy sale un estado vacío.
+- `components/orders/purchase-panel.tsx` (cliente): Sí/No por línea, cantidad comprada y costo unitario (por presentación, divisa del pedido), comparativa `SpendSummary` Entregado · Gastado · Sobrante en vivo, «Guardar» y «Enviar a revisión» (AlertDialog). Si el monto entregado no es legible solo muestra Gastado.
+- Lógica pura `purchase-logic.ts` (+ test) reutiliza `comparison` del dominio; `actions.ts` con zod: `registerPurchase` y, si procede, `submitReview`; errores por `RuleViolation`/mensajes propios.
+- Privacidad: migración `20261107211443_order_buyer_costs.sql` (APLICADA en cloud): el comprador asignado lee `pedido_costos`/`pedido_linea_costos` de SU pedido (antes solo admin/see_costs, no podía releer lo que guardó ni el monto entregado); `makeGetOrder` le devuelve costos de compra sin `shortageValue`. Costos de lotes siguen ocultos. Sin pgTAP nuevo (pendiente: caso buyer-ve-su-pedido y no-ve-otros en 027/nuevo).
+- Pendiente: selección de unidad de presentación, verificación visual, devolución con nota (`-Devuelto`) solo como Alert. `verify:fast` OK (773 casos).

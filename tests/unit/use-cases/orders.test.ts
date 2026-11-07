@@ -171,6 +171,15 @@ describe("queries", () => {
     expect(seen.spent).toBe(480);
     expect(seen.lines[1].unitCost).toBeNull();
   });
+  it("the buyer sees their own purchase costs but not the shortage value", async () => {
+    const s = orderSetup();
+    const { id } = await inReview(s);
+    const own = await s.get(buyer, { orderId: id });
+    expect(own.spent).toBe(480);
+    expect(own.lines[0].unitCost).toBe(50);
+    expect(own).toHaveProperty("shortageValue", undefined);
+    expect(own.lines[0]).not.toHaveProperty("shortageValue");
+  });
   it("a buyer sees only their orders; strangers get nothing", async () => {
     const s = orderSetup();
     await inReview(s);

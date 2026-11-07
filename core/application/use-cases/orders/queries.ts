@@ -14,7 +14,7 @@ export function makeListOrders(deps: OrderDeps) {
   };
 }
 
-/** Costs are visible only with see_costs (or admin); null stays "no known cost". */
+/** Costs are visible only with see_costs (or admin) and, for the order's own buyer, the purchase costs without the shortage value; null stays "no known cost". */
 export function makeGetOrder(deps: OrderDeps) {
   return async (actor: Actor, input: { companyId?: string; orderId: string }): Promise<OrderDetail> => {
     const scope = await resolveOrderScope(deps, actor, input);
@@ -22,6 +22,7 @@ export function makeGetOrder(deps: OrderDeps) {
     const isBuyer = order.buyerId === actor.userId;
     if (!isBuyer && !hasOrderSpecial(scope, "build_orders") && !hasOrderSpecial(scope, "review_orders")) throw new NotFound();
     if (canSeeCosts(actor, scope.access)) return order;
+    if (isBuyer) return { ...order, shortageValue: undefined, lines: order.lines.map(({ shortageValue: _v, ...line }) => line) };
     const { amountGiven: _g, spent: _s, leftover: _l, shortageValue: _sv, ...rest } = order;
     return { ...rest, lines: order.lines.map(({ unitCost: _c, shortageValue: _v, ...line }) => line) };
   };
