@@ -30,6 +30,7 @@ Cada compañía sabe cuánto hay de cada producto básico en el almacén general
 
 ## Libro de movimientos
 - **S-15 [P]** Tipos: entrada_inicial, entrada_compra, entrada_directa, traslado (salida y entrada), baja, ajuste, consumo (**reservado**, no se construye). Cada movimiento: tipo, lote(s), cantidad base, cantidad capturada y unidad, costo, divisa, motivo, autor, fecha y documento origen (pedido, solicitud).
+- **S-15b [U]** **Sobrante de conteo (2026-11-07):** un ajuste positivo solo restituye a un lote hasta lo recibido. Lo que supere eso se registra como un **lote nuevo de origen «ajuste»** (fecha de hoy, motivo obligatorio, permiso `adjust_stock`); si lo hace quien no es administrador se avisa a los administradores. **Su costo es «sin costo conocido»** salvo que quien lo registra tenga «Ver costos» y lo indique; no se inventa un costo.
 - Inmutable (M2-D07). La baja y el ajuste tienen sus propias reglas abajo.
 
 ## Bajas
