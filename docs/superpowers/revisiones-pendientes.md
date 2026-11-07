@@ -263,3 +263,5 @@ Se hace al terminar todo el proyecto, no por tarea.
 - `getProductCompany` lee `product_stock_settings` antes que `products` para operadores sin permiso de Productos, por lo que no comprueba `deleted_at` de un producto con configuración de almacén.
 - `clearMinimum` pone el mínimo en 0 (sin delete directo): la UI debe tratar 0 como «sin mínimo».
 - Lección de tamaño: T14b usó 63 llamadas y 124.557 de contexto (≈26 min), más del doble del límite recomendado; partir tareas de API en dos pasos (lectura y escritura).
+
+- T22: `GET /pedidos/{id}` con token de operador/comprador devuelve 403 por REST aunque el caso de uso directo funciona (mismo síntoma que operador-por-HTTP en T14b); la prueba de costo oculto usa el caso de uso, no REST. Migración `is_eligible_buyer_rpc` sin pgTAP propio. `test:int` completo no se ejecutó.
