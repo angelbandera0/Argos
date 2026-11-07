@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { StockList, type StockRow } from "@/components/stock/stock-list";
+import { StoreStockList } from "@/components/stock/store-stock-list";
 import { PAGE_SIZE, averageCost, groupLotsByProduct, lotsValue, parsePage, parseStatus } from "@/components/stock/stock-list-logic";
 import { PageHeader } from "@/components/ui/page-header";
 import { ViewState } from "@/components/ui/view-state";
@@ -28,8 +29,9 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
   }
   const sp = await searchParams;
   const wanted = first(sp.ubicacion);
+  const mine = storeId ? locations.filter((l) => l.storeId === storeId) : locations;
   const location =
-    locations.find((l) => l.id === wanted) ?? locations.find((l) => l.kind === "warehouse") ?? locations.find((l) => l.storeId === storeId) ?? locations[0];
+    mine.find((l) => l.id === wanted) ?? mine.find((l) => l.kind === "warehouse") ?? locations.find((l) => l.storeId === storeId) ?? locations[0];
   if (!location) return <ViewState kind="empty" entity="existencias" text="Aún no hay ubicaciones." canCreate={false} />;
 
   const catalog = makeCatalog(await createServerClient());
@@ -71,6 +73,22 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       unknownCost: value.unknownQty > 0 || (l.quantity > 0 && value.byCurrency.length === 0),
     };
   });
+  if (storeId && location.storeId === storeId) {
+    return (
+      <StoreStockList
+        rows={rows}
+        total={list.total}
+        counts={list.counts}
+        pageSize={PAGE_SIZE}
+        filters={{ ubicacion: location.id, q, categoria: "", estado, pagina }}
+        location={location.name}
+        costs={costs}
+        canMinimums={can("configure_minimums")}
+        canDirect={can("direct_store_entry")}
+        entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
+      />
+    );
+  }
   const productValues = [...byProduct.values()].map(lotsValue);
 
   return (

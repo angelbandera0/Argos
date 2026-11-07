@@ -73,3 +73,11 @@ export function sumByCurrency(values: { currencyId: string; value: number }[]) {
   for (const v of values) by.set(v.currencyId, (by.get(v.currencyId) ?? 0) + v.value);
   return [...by].map(([currencyId, amount]) => ({ currencyId, amount }));
 }
+
+/** Quantity missing to reach the minimum; null when there is no minimum or it is covered. */
+export const shortfall = (quantity: number, minimum: number | null) => (minimum && minimum > 0 && quantity < minimum ? minimum - quantity : null);
+
+export const shortfallLabel = (quantity: number, minimum: number | null, unit: Unit) => {
+  const s = shortfall(quantity, minimum);
+  return s === null ? null : `Faltan ${formatStockQty(s, unit)} para el mínimo`;
+};

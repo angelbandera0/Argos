@@ -29,3 +29,15 @@ describe("stock list logic", () => {
     expect(unknownCostLabel(1)).toBe("1 producto sin costo conocido");
   });
 });
+
+describe("shortfall", () => {
+  it("is null without minimum or when covered", async () => {
+    const { shortfall, shortfallLabel } = await import("@/components/stock/stock-list-logic");
+    expect(shortfall(5, null)).toBeNull();
+    expect(shortfall(5, 0)).toBeNull();
+    expect(shortfall(10, 10)).toBeNull();
+    expect(shortfall(4, 10)).toBe(6);
+    expect(shortfallLabel(0, 500, "g")).toBe("Faltan 500 g para el mínimo");
+    expect(shortfallLabel(9, 10, "u")).toBe("Faltan 1 u para el mínimo");
+  });
+});
