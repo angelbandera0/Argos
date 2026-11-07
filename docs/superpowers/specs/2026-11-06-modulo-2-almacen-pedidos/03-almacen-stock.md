@@ -12,7 +12,7 @@ Cada compañía sabe cuánto hay de cada producto básico en el almacén general
 - **S-03 [P]** **Presentaciones de compra** (saco, paca, caja): nombre y contenido en base. Se usan al comprar y recibir.
 - **S-04 [U]** **Unidades de movimiento** (porción, libra…): nombre y equivalencia en base. Se usan al trasladar. Ej.: arroz, 1 lb = 5 porciones; caja de picadillo = N lb y 1 porción = M lb.
 - **S-05 [U]** El contenido habitual es fijo; en cada entrada se puede **corregir el contenido real** (un saco de 24,6 lb). El contenido usado se congela en el lote. Alternativa para productos que varían: capturar el total pesado/medido.
-- **S-06 [P]** Todo se guarda en base; se conserva la cantidad capturada y su unidad junto a la convertida. Redondeo a 3 decimales (M2-Q06).
+- **S-06 [P]** Todo se guarda en base; se conserva la cantidad capturada y su unidad junto a la convertida. Redondeo a 3 decimales, aceptado por el usuario (M2-Q06, 2026-11-07).
 - **S-07 [P]** Se configuran en el producto (pantalla de configuración de almacén del producto).
 
 ## Lotes y costo

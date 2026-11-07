@@ -48,7 +48,7 @@ Excepciones: entrada directa a tienda (p. ej. pan) por pedido con destino tienda
 - **M2-Q03** Notificaciones: tiempo real o al entrar/recargar el panel. Por defecto: al cargar; se debate después.
 - **M2-Q04** ¿El encargado de tienda confirma la recepción de un traslado desde el almacén? Por defecto: no, entra directo con trazabilidad.
 - **M2-Q05** Unidad base de volumen por defecto (litro propuesto) y de conteo (unidad).
-- **M2-Q06** Tras el redondeo a 3 decimales de conversiones (p. ej. 1 lb = 3 porciones), ¿se acepta o la porción pasa a ser la base de ese producto?
+- **M2-Q06 [resuelta, 2026-11-07, usuario]** Se acepta el redondeo a 3 decimales (p. ej. 1 lb = 3 porciones suma 0,999 lb); la porción no pasa a ser la base.
 - **M2-Q07** Retención de notificaciones leídas y alcance de «ver todas».
 - **M2-Q08** ¿Qué líneas de un pedido no compradas vuelven a la bolsa? Por defecto: todas, como pendientes.
 
