@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { makeListAdmins } from "@/core/application/use-cases/access/list-admins";
 import { getEnv } from "@/infrastructure/env";
 import { makeCatalog } from "./catalog-factory";
+import { makeCurrencies } from "./currencies-factory";
 import { makeHistory } from "./history-factory";
 import { makeOrg } from "./org-factory";
 import { makeRoles } from "./roles-factory";
@@ -21,6 +22,7 @@ export function makeApiServices(token: string) {
     roles: makeRoles(supabase),
     users: makeUsers(supabase),
     catalog: makeCatalog(supabase),
+    currencies: makeCurrencies(supabase),
     history: makeHistory(supabase),
     listAdmins: makeListAdmins({ users: org.users }),
   };

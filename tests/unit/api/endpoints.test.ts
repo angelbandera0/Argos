@@ -80,6 +80,17 @@ const rows: Row[] = [
   ["products/[ref]", "POST", "/products/p1:activate", undefined, { ref: "p1:activate" }, "catalog.setProductActive", "admin", 204],
   ["products/[ref]", "POST", "/products/p1:deactivate", undefined, { ref: "p1:deactivate" }, "catalog.setProductActive", "admin", 204],
   ["products/[ref]", "DELETE", "/products/p1", undefined, { ref: "p1" }, "catalog.deleteProduct", "admin", 204],
+  ["currencies", "GET", "/currencies?companyId=c1&active=true&q=m", undefined, {}, "currencies.listCurrencies", "admin", 200],
+  ["currencies", "POST", "/currencies", { companyId: "c1", code: "MXN", name: "Peso", symbol: "$", decimals: 2 }, {}, "currencies.createCurrency", "admin", 201],
+  ["currencies/[id]", "GET", "/currencies/m1", undefined, { id: "m1" }, "currencies.getCurrency", "admin", 200],
+  ["currencies/[id]", "PATCH", "/currencies/m1", { name: "Peso 2" }, { id: "m1" }, "currencies.updateCurrency", "admin", 204],
+  ["currencies/[id]", "PATCH", "/currencies/m1", { active: false }, { id: "m1" }, "currencies.setCurrencyActive", "admin", 204],
+  ["currencies/[id]", "DELETE", "/currencies/m1", undefined, { id: "m1" }, "currencies.deleteCurrency", "admin", 204],
+  ["currencies/[id]/denominations", "GET", "/currencies/m1/denominations", undefined, { id: "m1" }, "currencies.listDenominations", "admin", 200],
+  ["currencies/[id]/denominations", "POST", "/currencies/m1/denominations", { value: 5, kind: "coin" }, { id: "m1" }, "currencies.addDenomination", "admin", 201],
+  ["currencies/[id]/denominations/[denominationId]", "PATCH", "/currencies/m1/denominations/d1", { value: 10 }, { id: "m1", denominationId: "d1" }, "currencies.updateDenomination", "admin", 204],
+  ["currencies/[id]/denominations/[denominationId]", "PATCH", "/currencies/m1/denominations/d1", { active: false }, { id: "m1", denominationId: "d1" }, "currencies.setDenominationActive", "admin", 204],
+  ["currencies/[id]/denominations/[denominationId]", "DELETE", "/currencies/m1/denominations/d1", undefined, { id: "m1", denominationId: "d1" }, "currencies.deleteDenomination", "admin", 204],
   ["history/[module]", "GET", "/history/products?companyId=c1&actions=create,update", undefined, { module: "products" }, "history.listHistory", "admin", 200],
   ["auth-events", "GET", "/auth-events?companyId=c1&events=login_ok", undefined, {}, "history.listAuthEvents", "admin", 200],
 ];
@@ -161,7 +172,7 @@ describe("endpoints", () => {
     const res = await (await call(["companies", "GET", "/companies?limit=2", undefined, {}, "org.listCompanies", "admin", 200], "admin")).json();
     expect(res.items).toHaveLength(2);
     expect(res.nextCursor).toBe("2");
-    await call(rows[38], "admin");
+    await call(rows.find((r) => r[0] === "history/[module]")!, "admin");
     expect(calls.at(-1)?.args[1]).toMatchObject({ module: "products", actions: ["create", "update"], companyId: "c1" });
   });
 
