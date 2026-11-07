@@ -197,3 +197,53 @@
   - **API REST:** cubre las mismas operaciones, más la gestión de estructura y usuarios para los administradores.
 - **Alternativas descartadas:** *exponer la gestión de accesos por MCP* (un agente comprometido podría escalar permisos).
 - **Consecuencias:** la configuración de qué herramientas están habilitadas se hace en REQ-001.
+
+---
+
+### ADR-013 — Libro de movimientos inmutable; correcciones por ajuste
+- **Fecha:** 2026-11-06
+- **Estado:** Propuesta
+- **Contexto:** El stock debe ser trazable y auditable (DR-017, M2-D06). Un movimiento editado o borrado impediría explicar el saldo.
+- **Decisión:** Cada cambio de existencias es un movimiento del libro. Los movimientos no se editan ni se borran (RLS y trigger). Un error se corrige con un movimiento contrario o con un ajuste enlazado a su origen, con motivo y autor. Las escrituras de stock son funciones SQL atómicas con bloqueo de filas; el stock nunca es negativo y un conflicto se informa para reintentar (M2-D07, M2-D16).
+- **Alternativas descartadas:** *editar o borrar movimientos con un historial aparte* (dos fuentes de verdad); *saldo como campo editable sin libro* (no auditable).
+- **Consecuencias:** las correcciones generan renglones nuevos y exigen permiso de ajustar. Las funciones atómicas son el único camino de escritura de stock. Revisión de seguridad pendiente (RLS e inmutabilidad).
+
+---
+
+### ADR-014 — Costos en tablas aparte protegidos por «ver costos» con RLS
+- **Fecha:** 2026-11-06
+- **Estado:** Propuesta
+- **Contexto:** Las tiendas ven existencias pero no costos (M2-D04). Ocultar columnas solo en la aplicación no protege la API, el MCP ni las consultas directas.
+- **Decisión:** Los costos viven en tablas (o una vista) separadas de las cantidades. Su RLS permite leer solo a quien tenga el permiso «ver costos» en la compañía (M2-D15). UI, API y MCP leen costos por esa vía; notificaciones e historial omiten montos sin el permiso.
+- **Alternativas descartadas:** *ocultar columnas en la aplicación* (se filtra por API y MCP); *cifrar los costos* (complejidad sin ganancia frente a RLS).
+- **Consecuencias:** las consultas de stock que muestran costo hacen join condicionado. Las pruebas pgTAP deben cubrir la lectura sin permiso. Revisión de seguridad pendiente.
+
+---
+
+### ADR-015 — PEPS sugerido con lote elegible
+- **Fecha:** 2026-11-06
+- **Estado:** Propuesta
+- **Contexto:** Las salidas deben tomar por defecto el lote más antiguo, pero a veces hay que sacar de otro lote (p. ej. uno dañado o con otro costo).
+- **Decisión:** Las salidas (traslado, baja, ajuste negativo) sugieren el lote más antiguo. Se puede elegir otro lote o repartir entre varios, sin sacar más de lo que queda en cada uno. Elegir un lote distinto al sugerido requiere permiso del rol y queda registrado con motivo opcional; sin permiso se usa el orden sugerido (03·S-11).
+- **Alternativas descartadas:** *PEPS obligatorio* (impide corregir); *promedio ponderado* (el costo se guarda por lote, M2-D03).
+- **Consecuencias:** cada renglón de salida guarda lote, cantidad y costo con que salió. La lógica de sugerencia y reparto es dominio puro (T08).
+
+---
+
+### ADR-016 — Costo del lote = costo unitario reportado; faltante valorado aparte
+- **Fecha:** 2026-11-06
+- **Estado:** Aceptada
+- **Contexto:** El comprador reporta cantidad y costo por línea y el revisor puede recibir menos. Si el costo fuera pagado ÷ recibido, el faltante se absorbería y el costo dejaría de reflejar la compra.
+- **Decisión:** Al confirmar, el lote entra con el costo unitario reportado por el comprador, no con pagado ÷ recibido (04·R-16b). El faltante no se absorbe: se registra como faltante valorado (lo pagado y no recibido), visible a quien ve costos (04·R-17).
+- **Alternativas descartadas:** *costo = pagado ÷ recibido* (absorbe faltantes y distorsiona el costo del producto).
+- **Consecuencias:** las estadísticas de costo reflejan la compra real. El faltante necesita registro propio al confirmar el pedido.
+
+---
+
+### ADR-017 — El stock solo cambia al confirmar la revisión
+- **Fecha:** 2026-11-06
+- **Estado:** Aceptada
+- **Contexto:** Un pedido comprado pero no revisado puede traer cantidades o costos erróneos (M2-D02).
+- **Decisión:** Un pedido en revisión no cambia el stock. Solo su confirmación (`cumplido`) crea lotes con lo recibido. Las demás operaciones (entrada inicial o directa, traslado, baja, ajuste) cambian el stock al registrarse, con su movimiento.
+- **Alternativas descartadas:** *sumar al enviar a revisión* (stock fantasma si el pedido se devuelve); *reservar stock en revisión* (complejidad sin requisito).
+- **Consecuencias:** el stock de tienda puede ir por detrás de lo comprado; la lista de pedidos debe mostrar el estado en revisión.

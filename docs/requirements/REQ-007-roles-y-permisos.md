@@ -10,7 +10,7 @@ Un administrador define qué puede hacer cada tipo de usuario en cada módulo, s
 
 ## Criterios de aceptación
 
-- CA-01: DADO un administrador, CUANDO crea un rol, ENTONCES define para cada módulo disponible cuáles de las operaciones ver, crear, editar y eliminar permite.
+- CA-01: DADO un administrador, CUANDO crea un rol, ENTONCES define para cada módulo disponible cuáles de las operaciones ver, crear, editar y eliminar permite, y cuáles permisos especiales tiene (p. ej. ver costos, trasladar, dar bajas, revisar pedidos). Los módulos nuevos del Módulo 2 (Divisas, Existencias, Solicitudes de reposición, Pedidos de compra, Notificaciones —solo ver las propias—) y sus permisos especiales se listan en `superpowers/specs/2026-11-06-modulo-2-almacen-pedidos/05-roles-historial.md`.
 - CA-02: DADO un rol nuevo, CUANDO se crea, ENTONCES vale por defecto para todas las compañías del administrador y puede desmarcar alguna.
 - CA-03: DADO un rol excluido de una compañía, CUANDO se intenta asignar a un usuario en una tienda de esa compañía, ENTONCES se rechaza.
 - CA-04: DADO el permiso eliminar de un rol, CUANDO un usuario con ese rol elimina un registro, ENTONCES se aplica borrado lógico.
@@ -26,7 +26,7 @@ Un administrador define qué puede hacer cada tipo de usuario en cada módulo, s
 P-01, P-02, P-03, T-03, T-04. Reglas DR-007, DR-008, DR-014.
 
 ## Fuera de alcance
-- Permisos sobre módulos que aún no existen (inventario, ventas, turnos).
+- Permisos sobre módulos que aún no existen (ventas, turnos).
 - Permisos a nivel de registro individual.
 
 ## Exposición

@@ -5,7 +5,7 @@
 Estado de cada pregunta: `Abierta` | `Respondida` | `Descartada`
 Impacto: `Alto` (bloquea arquitectura) | `Medio` (afecta un módulo) | `Bajo`
 
-Las preguntas se formulan módulo a módulo. Las que siguen provienen del módulo 1 (REQ-005 a REQ-009).
+Las preguntas se formulan módulo a módulo. Las Q-xxx provienen del módulo 1 (REQ-005 a REQ-009); las M2-Qxx, del módulo 2 (`superpowers/specs/2026-11-06-modulo-2-almacen-pedidos/00-vision.md`).
 
 | ID | Pregunta | Por qué importa | Impacto | Estado |
 |---|---|---|---|---|
@@ -30,3 +30,11 @@ Las preguntas se formulan módulo a módulo. Las que siguen provienen del módul
 | Q-014 | ¿Cuál es el plan de Supabase y permite limitar la duración de la sesión? ¿El Password Verification Hook soporta el volumen esperado de intentos? | Condiciona cómo se implementa el tope de sesión de ADR-009 | Medio | Respondida (suponiendo plan Free; ver Q-020) → el *time-box* e *inactivity timeout* de Supabase son solo Pro y globales: el tope por rol lo aplica la aplicación (diseño §5). El Password Verification Hook no existe en Free: el bloqueo a 5 intentos va en la acción de login (ADR-007 punto 4, diseño §4). El Custom Access Token Hook sí está en Free. |
 | Q-020 | ¿El plan de la organización es Free? (no verificable desde el MCP; confirmar en el panel) | Si fuera Pro o superior cambian el time-box de sesión y el hook de contraseña | Medio | Abierta |
 | Q-021 | ¿`email_validation_extended` está activo en `argos`? Se prueba en la Tarea 16 con `auth.admin.createUser` | Si lo está, el dominio `.invalid` del correo sintético se rechaza | Medio | Abierta |
+| M2-Q01 | ¿Los «productos básicos» son productos del catálogo (DR-016) marcados como almacenables, o una entidad aparte? Por defecto: mismo producto del catálogo con configuración de almacén. | Define el modelo de producto y de existencias | Alto | Abierta |
+| M2-Q02 | ¿Un almacén general por compañía o por sede? Por defecto: por compañía. | Define cuántas ubicaciones generales hay (DR-019) | Medio | Abierta |
+| M2-Q03 | Notificaciones: ¿tiempo real o al entrar/recargar el panel? Por defecto: al cargar; se debate después. | Afecta cómo llegan las notificaciones (02·N-08) | Medio | Abierta |
+| M2-Q04 | ¿El encargado de tienda confirma la recepción de un traslado desde el almacén? Por defecto: no, entra directo con trazabilidad. | Define si un traslado necesita confirmación en destino | Medio | Abierta |
+| M2-Q05 | Unidad base de volumen por defecto (litro propuesto) y de conteo (unidad). | Sin ellas no se configuran productos de volumen o conteo | Bajo | Abierta |
+| M2-Q06 | Tras el redondeo a 3 decimales de conversiones (p. ej. 1 lb = 3 porciones), ¿se acepta o la porción pasa a ser la base de ese producto? | Puede cambiar la unidad base de un producto (03·S-06) | Medio | Abierta |
+| M2-Q07 | Retención de notificaciones leídas y alcance de «ver todas». | Define el volumen y la consulta de notificaciones | Bajo | Abierta |
+| M2-Q08 | ¿Qué líneas de un pedido no compradas vuelven a la bolsa? Por defecto: todas, como pendientes. | Define el estado de líneas no compradas (04) | Medio | Abierta |
