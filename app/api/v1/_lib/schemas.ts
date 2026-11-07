@@ -9,6 +9,20 @@ const special = z.array(
   z.object({ permission: z.enum(SPECIAL_PERMISSIONS), warehouse: z.boolean() }),
 );
 
+const picks = z.array(z.object({ lotId: id, qty: z.number() })).optional();
+const movement = { productId: id, qty: z.number(), unit: z.string(), picks, deviationReason: z.string().optional() };
+const entry = {
+  productId: id,
+  locationId: id,
+  qty: z.number(),
+  unit: z.string(),
+  content: z.number().optional(),
+  unitCost: z.number().optional(),
+  pricePerPresentation: z.number().optional(),
+  currencyId: id.optional(),
+  receivedAt: z.string().optional(),
+};
+
 export const schemas = {
   createAdmin: z.object({ email: z.email(), displayName: z.string() }),
   name: z.object({ name: z.string() }),
@@ -78,4 +92,25 @@ export const schemas = {
     categoryId: id.optional(),
     description: z.string().nullable().optional(),
   }),
+  stockConfig: z.object({ storable: z.boolean(), baseUnit: z.string() }),
+  createPresentation: z.object({ name: z.string(), content: z.number() }),
+  updatePresentation: z.object({ name: z.string().optional(), content: z.number().optional(), active: z.boolean().optional() }),
+  createMovementUnit: z.object({ name: z.string(), equivalence: z.number() }),
+  updateMovementUnit: z.object({ name: z.string().optional(), equivalence: z.number().optional(), active: z.boolean().optional() }),
+  setMinimum: z.object({ productId: id, locationId: id, minimum: z.number().nullable() }),
+  stockEntry: z.object(entry),
+  stockPreview: z.object({ ...movement, locationId: id }),
+  stockTransfer: z.object({ ...movement, fromLocationId: id, toLocationId: id }),
+  stockWriteOff: z.object({ ...movement, locationId: id, reasonId: id, reasonText: z.string().optional() }),
+  stockAdjustment: z.object({ lotId: id, delta: z.number(), reasonText: z.string() }),
+  stockSurplus: z.object({
+    productId: id,
+    locationId: id,
+    qty: z.number(),
+    reasonText: z.string(),
+    unitCost: z.number().optional(),
+    currencyId: id.optional(),
+  }),
+  createWriteOffReason: z.object({ companyId: id, code: z.string(), name: z.string() }),
+  updateWriteOffReason: z.object({ name: z.string().optional(), active: z.boolean().optional() }),
 };

@@ -4,6 +4,11 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Actor } from "@/core/domain/actor";
 import { createAdminClient } from "@/infrastructure/supabase/admin-client";
 import { makeAuthGateway, makeMfaGateway } from "@/infrastructure/supabase/auth-gateway";
+import { GET as listStockRoute } from "@/app/api/v1/stock/route";
+import { GET as productStockRoute } from "@/app/api/v1/stock/products/[id]/route";
+import { GET as movementsRoute } from "@/app/api/v1/stock/movements/route";
+import { POST as initialEntryRoute } from "@/app/api/v1/stock/entries/initial/route";
+import { POST as transferRoute } from "@/app/api/v1/stock/transfers/route";
 import { makeCatalogRepository } from "@/infrastructure/supabase/catalog-repository";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeCompanyRepository } from "@/infrastructure/supabase/company-repository";
@@ -230,5 +235,72 @@ describe("stock repositories (REQ-020..)", { timeout: 120_000 }, () => {
     expect(await makeStockRepository(b.client).listLots(productId, warehouse, { onlyAvailable: false })).toEqual([]);
     expect(await makeStockRepository(b.client).getProductCompany(productId)).toBeNull();
     await expect(other.getProductStock(b.actor, { productId, locationId: warehouse })).rejects.toMatchObject({ name: "NotFound" });
+  });
+
+  describe("operator with only stock view (no products view, no see_costs)", () => {
+    let client: SupabaseClient;
+    let actor: Actor;
+
+    beforeAll(async () => {
+      const role = await makeRoleRepository(a.client).create({
+        ownerId: a.id,
+        name: `itest-t14-${run} stock-only`,
+        sessionSeconds: null,
+        excludedCompanyIds: [],
+        permissions: { stock: { view: true, create: false, edit: false, delete: false } },
+      });
+      const op = await makeUsers(a.client).createOperator(a.actor, {
+        companyId: companyA,
+        name: `itest${run}so`,
+        displayName: "itest t14 stock only",
+        roleId: role.id,
+        storeIds: [storeA],
+      });
+      operatorIds.push(op.userId);
+      client = fresh();
+      expect(await enterWithPinFlow(client, { username: op.username, pin: op.pin })).not.toBeNull();
+      const claims = (await readClaims(client))!;
+      actor = { userId: claims.userId, kind: "operator", channel: "ui", sessionId: claims.sessionId! };
+      await makeUsers(client).chooseStore(actor, { storeId: storeA });
+    });
+
+    it("lists the store's stock with product names", async () => {
+      const list = await makeStock(client).listStockStatus(actor, { locationId: store });
+      expect(list.items.length).toBeGreaterThan(0);
+      expect(list.items[0]).toMatchObject({ productId, productName: "Arroz", categoryName: "Granos" });
+    });
+
+    it("serves stock over the REST handlers; costs are shown to the admin and absent for the operator", async () => {
+      await admin.auth.admin.updateUserById(a.id, { app_metadata: { must_change_password: false } });
+      expect((await a.client.auth.refreshSession()).error).toBeNull();
+      const token = async (c: SupabaseClient) => (await c.auth.getSession()).data.session!.access_token;
+      const call = async (handler: (r: Request, c: unknown) => Promise<Response>, c: SupabaseClient, path: string, json?: unknown, ctx: object = {}) => {
+        const res = await handler(
+          new Request(`http://x/api/v1${path}`, {
+            method: json === undefined ? "GET" : "POST",
+            headers: { authorization: `Bearer ${await token(c)}`, "content-type": "application/json" },
+            ...(json !== undefined && { body: JSON.stringify(json) }),
+          }),
+          { params: Promise.resolve(ctx) },
+        );
+        return { status: res.status, json: await res.json().catch(() => null) };
+      };
+      const entry = await call(initialEntryRoute, a.client, "/stock/entries/initial", { productId, locationId: warehouse, qty: 4, unit: "base", unitCost: 7, currencyId });
+      expect(entry.status).toBe(201);
+      const moved = await call(transferRoute, a.client, "/stock/transfers", { productId, fromLocationId: warehouse, toLocationId: store, qty: 1, unit: "base" });
+      expect(moved.status).toBe(201);
+
+      const adminList = await call(listStockRoute, a.client, `/stock?companyId=${companyA}&locationId=${store}&q=arr`);
+      expect(adminList.status).toBe(200);
+      expect(adminList.json.items[0]).toMatchObject({ productName: "Arroz", quantity: 1 });
+      const adminDetail = await call(productStockRoute, a.client, `/stock/products/${productId}?locationId=${warehouse}`, undefined, { id: productId });
+      expect(adminDetail.json.lots.some((l: Record<string, unknown>) => "unitCost" in l)).toBe(true);
+      const adminMoves = await call(movementsRoute, a.client, `/stock/movements?companyId=${companyA}&productId=${productId}`);
+      expect(adminMoves.json.items.some((m: Record<string, unknown>) => "unitCost" in m)).toBe(true);
+      const opSvc = makeStock(client);
+      const opDetail = await opSvc.getProductStock(actor, { productId, locationId: store, onlyAvailable: false });
+      expect(opDetail.lots.every((l) => !("unitCost" in l))).toBe(true);
+      expect((await opSvc.listMovements(actor, { productId })).items.every((m) => !("unitCost" in m))).toBe(true);
+    });
   });
 });

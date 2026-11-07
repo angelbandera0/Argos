@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildOpenApiDocument } from "@/app/api/v1/_lib/openapi";
-import { Forbidden } from "@/core/domain/errors";
+import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { setContainerForTests } from "@/infrastructure/container";
 
 vi.mock("@/infrastructure/env", () => ({
@@ -95,6 +95,34 @@ const rows: Row[] = [
   ["notifications/unread-count", "GET", "/notifications/unread-count", undefined, {}, "notifications.countUnreadNotifications", "admin", 200],
   ["notifications/read", "POST", "/notifications/read", { ids: ["3f1e2d4c-5b6a-4789-8abc-0123456789ab"] }, {}, "notifications.markNotificationsRead", "operator", 200],
   ["notifications/read", "POST", "/notifications/read", undefined, {}, "notifications.markNotificationsRead", "admin", 200],
+  ["stock/locations", "GET", "/stock/locations?companyId=c1", undefined, {}, "stock.listLocations", "admin", 200],
+  ["stock", "GET", "/stock?companyId=c1&locationId=l1&status=low&q=a&categoryId=k1&page=2&pageSize=10", undefined, {}, "stock.listStockStatus", "admin", 200],
+  ["stock/products/[id]", "GET", "/stock/products/p1?locationId=l1", undefined, { id: "p1" }, "stock.getProductStock", "admin", 200],
+  ["stock/movements", "GET", "/stock/movements?companyId=c1&productId=p1&type=transfer_in&from=2026-01-01", undefined, {}, "stock.listMovements", "admin", 200],
+  ["stock/products/[id]/config", "GET", "/stock/products/p1/config", undefined, { id: "p1" }, "stock.getProductStockConfig", "admin", 200],
+  ["stock/products/[id]/config", "PUT", "/stock/products/p1/config", { storable: true, baseUnit: "lb" }, { id: "p1" }, "stock.saveProductStockConfig", "admin", 204],
+  ["stock/products/[id]/presentations", "POST", "/stock/products/p1/presentations", { name: "saco", content: 25 }, { id: "p1" }, "stock.addPresentation", "admin", 201],
+  ["stock/products/[id]/presentations/[presentationId]", "PATCH", "/stock/products/p1/presentations/s1", { name: "bulto" }, { id: "p1", presentationId: "s1" }, "stock.updatePresentation", "admin", 204],
+  ["stock/products/[id]/presentations/[presentationId]", "PATCH", "/stock/products/p1/presentations/s1", { active: false }, { id: "p1", presentationId: "s1" }, "stock.setPresentationActive", "admin", 204],
+  ["stock/products/[id]/presentations/[presentationId]", "DELETE", "/stock/products/p1/presentations/s1", undefined, { id: "p1", presentationId: "s1" }, "stock.deletePresentation", "admin", 204],
+  ["stock/products/[id]/movement-units", "POST", "/stock/products/p1/movement-units", { name: "porción", equivalence: 0.2 }, { id: "p1" }, "stock.addMovementUnit", "admin", 201],
+  ["stock/products/[id]/movement-units/[unitId]", "PATCH", "/stock/products/p1/movement-units/u1", { equivalence: 0.3 }, { id: "p1", unitId: "u1" }, "stock.updateMovementUnit", "admin", 204],
+  ["stock/products/[id]/movement-units/[unitId]", "PATCH", "/stock/products/p1/movement-units/u1", { active: true }, { id: "p1", unitId: "u1" }, "stock.setMovementUnitActive", "admin", 204],
+  ["stock/products/[id]/movement-units/[unitId]", "DELETE", "/stock/products/p1/movement-units/u1", undefined, { id: "p1", unitId: "u1" }, "stock.deleteMovementUnit", "admin", 204],
+  ["stock/minimums", "PUT", "/stock/minimums", { productId: "p1", locationId: "l1", minimum: 5 }, {}, "stock.setMinimum", "admin", 204],
+  ["stock/minimums", "PUT", "/stock/minimums", { productId: "p1", locationId: "l1", minimum: null }, {}, "stock.clearMinimum", "admin", 204],
+  ["stock/entries/initial", "POST", "/stock/entries/initial", { productId: "p1", locationId: "w1", qty: 5, unit: "saco", unitCost: 12 }, {}, "stock.registerInitialEntry", "admin", 201],
+  ["stock/entries/direct", "POST", "/stock/entries/direct", { productId: "p1", locationId: "l1", qty: 5, unit: "base" }, {}, "stock.registerDirectEntry", "operator", 201],
+  ["stock/preview", "POST", "/stock/preview", { productId: "p1", locationId: "l1", qty: 2, unit: "base", picks: [{ lotId: "x", qty: 2 }] }, {}, "stock.previewConsumption", "operator", 200],
+  ["stock/transfers", "POST", "/stock/transfers", { productId: "p1", fromLocationId: "w1", toLocationId: "l1", qty: 2, unit: "base" }, {}, "stock.transferStock", "admin", 201],
+  ["stock/write-offs", "POST", "/stock/write-offs", { productId: "p1", locationId: "l1", qty: 1, unit: "base", reasonId: "r1" }, {}, "stock.writeOffStock", "operator", 201],
+  ["stock/adjustments", "POST", "/stock/adjustments", { lotId: "x1", delta: 1, reasonText: "conteo" }, {}, "stock.adjustLot", "admin", 201],
+  ["stock/surplus", "POST", "/stock/surplus", { productId: "p1", locationId: "l1", qty: 1, reasonText: "conteo" }, {}, "stock.registerSurplus", "admin", 201],
+  ["stock/write-off-reasons", "GET", "/stock/write-off-reasons?companyId=c1", undefined, {}, "stock.listWriteOffReasons", "admin", 200],
+  ["stock/write-off-reasons", "POST", "/stock/write-off-reasons", { companyId: "c1", code: "moho", name: "Moho" }, {}, "stock.createWriteOffReason", "admin", 201],
+  ["stock/write-off-reasons/[id]", "PATCH", "/stock/write-off-reasons/r1", { name: "Moho 2" }, { id: "r1" }, "stock.renameWriteOffReason", "admin", 204],
+  ["stock/write-off-reasons/[id]", "PATCH", "/stock/write-off-reasons/r1", { active: false }, { id: "r1" }, "stock.setWriteOffReasonActive", "admin", 204],
+  ["stock/write-off-reasons/[id]", "DELETE", "/stock/write-off-reasons/r1", undefined, { id: "r1" }, "stock.deleteWriteOffReason", "admin", 204],
   ["history/[module]", "GET", "/history/products?companyId=c1&actions=create,update", undefined, { module: "products" }, "history.listHistory", "admin", 200],
   ["auth-events", "GET", "/auth-events?companyId=c1&events=login_ok", undefined, {}, "history.listAuthEvents", "admin", 200],
 ];
@@ -178,6 +206,23 @@ describe("endpoints", () => {
     expect(res.nextCursor).toBe("2");
     await call(rows.find((r) => r[0] === "history/[module]")!, "admin");
     expect(calls.at(-1)?.args[1]).toMatchObject({ module: "products", actions: ["create", "update"], companyId: "c1" });
+  });
+
+  it("maps stock domain errors to problem+json and never leaks 500 details", async () => {
+    const r = rows.find((x) => x[5] === "stock.transferStock")!;
+    const failWith = (e: Error) => {
+      setContainerForTests({
+        api: () => ({ stock: { transferStock: async () => { throw e; } } }) as never,
+        createAdmin: (async () => ({})) as never,
+      });
+      return load(r[0]).then((m) => m.POST(new Request("http://x/api/v1/stock/transfers", { method: "POST", headers: { authorization: "Bearer admin" }, body: JSON.stringify(r[3]) }), {}));
+    };
+    for (const [code, status] of [["INSUFFICIENT_STOCK", 422], ["LOT_EXCEEDED", 422], ["QUANTITY_MISMATCH", 422], ["CHOOSE_LOT_FORBIDDEN", 403], ["COST_NOT_ALLOWED", 403], ["BASE_UNIT_IN_USE", 409], ["NAME_TAKEN", 409]] as const) {
+      const res = await failWith(new RuleViolation(code));
+      expect([res.status, (await res.json()).code]).toEqual([status, code]);
+    }
+    expect((await failWith(new NotFound())).status).toBe(404);
+    expect((await call(r, "admin", { productId: "p1" })).status).toBe(422);
   });
 
   it("refuses admins without aal2 and users who must change their password", async () => {

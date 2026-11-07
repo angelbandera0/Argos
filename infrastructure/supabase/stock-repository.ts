@@ -15,7 +15,16 @@ import { magnitudeOf, type StockStatus, type Unit } from "@/core/domain/stock";
 import { stockError } from "./stock-errors";
 
 type LocationRow = { id: string; company_id: string; kind: "warehouse" | "store"; store_id: string | null; name: string; active: boolean };
-type StatusRow = { product_id: string; location_id: string; quantity: number | string; minimum: number | string | null; status: StockStatus };
+type StatusRow = {
+  product_id: string;
+  location_id: string;
+  quantity: number | string;
+  minimum: number | string | null;
+  status: StockStatus;
+  product_name: string | null;
+  category_name: string | null;
+};
+const STATUS_COLS = "product_id, location_id, quantity, minimum, status, product_name, category_name";
 type LotRow = {
   id: string;
   product_id: string;
@@ -100,21 +109,13 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
 
   async function lines(rows: StatusRow[]): Promise<StockLine[]> {
     if (!rows.length) return [];
-    const ids = rows.map((r) => r.product_id);
-    const [products, settings] = await Promise.all([
-      supabase.from("products").select("id, name, categories(name)").in("id", ids),
-      supabase.from("product_stock_settings").select("product_id, base_unit").in("product_id", ids),
-    ]);
-    if (products.error) stockError("read products", products.error);
-    if (settings.error) stockError("read settings", settings.error);
-    const names = new Map(
-      (products.data as unknown as { id: string; name: string; categories: { name: string } | null }[]).map((p) => [p.id, p]),
-    );
-    const units = new Map((settings.data as { product_id: string; base_unit: Unit }[]).map((s) => [s.product_id, s.base_unit]));
+    const { data, error } = await supabase.from("product_stock_settings").select("product_id, base_unit").in("product_id", rows.map((r) => r.product_id));
+    if (error) stockError("read settings", error);
+    const units = new Map((data as { product_id: string; base_unit: Unit }[]).map((s) => [s.product_id, s.base_unit]));
     return rows.map((r) => ({
       productId: r.product_id,
-      productName: names.get(r.product_id)?.name ?? "",
-      categoryName: names.get(r.product_id)?.categories?.name ?? null,
+      productName: r.product_name ?? "",
+      categoryName: r.category_name,
       locationId: r.location_id,
       quantity: Number(r.quantity),
       minimum: r.minimum === null ? null : Number(r.minimum),
@@ -179,28 +180,22 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
     },
 
     async getProductCompany(productId) {
+      const own = await supabase.from("product_stock_settings").select("company_id").eq("product_id", productId).maybeSingle();
+      if (own.error) stockError("read settings", own.error);
+      if (own.data) return own.data.company_id as string;
       const { data, error } = await supabase.from("products").select("company_id").eq("id", productId).is("deleted_at", null).maybeSingle();
       if (error) stockError("read product", error);
       return (data?.company_id as string | undefined) ?? null;
     },
 
     async listStatus(f, page) {
-      let ids: string[] | null = null;
-      if (f.q || f.categoryId) {
-        let pq = supabase.from("products").select("id").eq("company_id", f.companyId).is("deleted_at", null);
-        if (f.q) pq = pq.ilike("name", `%${f.q.replace(/[\\%_]/g, "\\$&")}%`);
-        if (f.categoryId) pq = pq.eq("category_id", f.categoryId);
-        const { data, error } = await pq;
-        if (error) stockError("search products", error);
-        ids = (data as { id: string }[]).map((p) => p.id);
-        if (!ids.length) return { items: [], total: 0 };
-      }
-      let q = supabase.from("stock_status").select("product_id, location_id, quantity, minimum, status", { count: "exact" }).eq("company_id", f.companyId).eq("location_id", f.locationId);
+      let q = supabase.from("stock_status").select(STATUS_COLS, { count: "exact" }).eq("company_id", f.companyId).eq("location_id", f.locationId);
       if (f.status) q = q.eq("status", f.status);
-      if (ids) q = q.in("product_id", ids);
-      const { data, error, count } = await q.order("product_id").range(page.offset, page.offset + page.limit - 1);
+      if (f.q) q = q.ilike("product_name", `%${f.q.replace(/[\\%_]/g, "\\$&")}%`);
+      if (f.categoryId) q = q.eq("category_id", f.categoryId);
+      const { data, error, count } = await q.order("product_name").order("product_id").range(page.offset, page.offset + page.limit - 1);
       if (error) stockError("list stock status", error);
-      return { items: await lines(data as StatusRow[]), total: count ?? 0 };
+      return { items: await lines(data as unknown as StatusRow[]), total: count ?? 0 };
     },
 
     async countByStatus(companyId, locationId) {
@@ -220,9 +215,9 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
     },
 
     async getStockLine(productId, locationId) {
-      const { data, error } = await supabase.from("stock_status").select("product_id, location_id, quantity, minimum, status").eq("product_id", productId).eq("location_id", locationId).maybeSingle();
+      const { data, error } = await supabase.from("stock_status").select(STATUS_COLS).eq("product_id", productId).eq("location_id", locationId).maybeSingle();
       if (error) stockError("get stock line", error);
-      return data ? (await lines([data as StatusRow]))[0] : null;
+      return data ? (await lines([data as unknown as StatusRow]))[0] : null;
     },
 
     async getProductConfig(productId) {
