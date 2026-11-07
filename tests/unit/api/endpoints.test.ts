@@ -45,9 +45,9 @@ const rows: Row[] = [
   ["admins", "GET", "/admins", undefined, {}, "listAdmins", "superadmin", 200],
   ["companies", "GET", "/companies", undefined, {}, "org.listCompanies", "admin", 200],
   ["companies", "POST", "/companies", { name: "A" }, {}, "org.createCompany", "admin", 201],
-  ["companies/[ref]", "PATCH", "/companies/c1", { name: "B" }, { ref: "c1" }, "org.renameUnit", "admin", 204],
-  ["companies/[ref]", "POST", "/companies/c1:deactivate", del, { ref: "c1:deactivate" }, "org.deactivateUnit", "admin", 204],
-  ["companies/[ref]", "POST", "/companies/c1:reactivate", { text: "t" }, { ref: "c1:reactivate" }, "org.reactivateUnit", "admin", 204],
+  ["companies/[id]", "PATCH", "/companies/c1", { name: "B" }, { id: "c1" }, "org.renameUnit", "admin", 204],
+  ["companies/[id]", "POST", "/companies/c1:deactivate", del, { id: "c1:deactivate" }, "org.deactivateUnit", "admin", 204],
+  ["companies/[id]", "POST", "/companies/c1:reactivate", { text: "t" }, { id: "c1:reactivate" }, "org.reactivateUnit", "admin", 204],
   ["companies/[id]/admins", "POST", "/companies/c1/admins", { adminId: "a2" }, { id: "c1" }, "org.grantAccess", "admin", 204],
   ["companies/[id]/admins/[adminId]", "DELETE", "/companies/c1/admins/a2", undefined, { id: "c1", adminId: "a2" }, "org.revokeAccess", "admin", 204],
   ["companies/[id]/settings", "PATCH", "/companies/c1/settings", { sessionCapSeconds: 60 }, { id: "c1" }, "org.updateSettings", "admin", 204],
@@ -60,9 +60,9 @@ const rows: Row[] = [
   ["stores/[ref]", "POST", "/stores/t1:deactivate", del, { ref: "t1:deactivate" }, "org.deactivateUnit", "admin", 204],
   ["stores/[ref]", "POST", "/stores/t1:reactivate", { text: "t" }, { ref: "t1:reactivate" }, "org.reactivateUnit", "admin", 204],
   ["users", "POST", "/users", { companyId: "c1", name: "n", displayName: "N", roleId: "r1", storeIds: ["t1"] }, {}, "users.createOperator", "admin", 201],
-  ["users/[ref]", "POST", "/users/u1:reset-pin", undefined, { ref: "u1:reset-pin" }, "users.resetPin", "admin", 200],
-  ["users/[ref]", "POST", "/users/u1:unlock", undefined, { ref: "u1:unlock" }, "users.unlockUser", "admin", 200],
-  ["users/[ref]", "POST", "/users/u1:deactivate", undefined, { ref: "u1:deactivate" }, "users.deactivateUser", "admin", 204],
+  ["users/[id]", "POST", "/users/u1:reset-pin", undefined, { id: "u1:reset-pin" }, "users.resetPin", "admin", 200],
+  ["users/[id]", "POST", "/users/u1:unlock", undefined, { id: "u1:unlock" }, "users.unlockUser", "admin", 200],
+  ["users/[id]", "POST", "/users/u1:deactivate", undefined, { id: "u1:deactivate" }, "users.deactivateUser", "admin", 204],
   ["users/[id]/stores", "PUT", "/users/u1/stores", { assignments: [{ storeId: "t1", roleId: "r1" }] }, { id: "u1" }, "users.assignStores", "admin", 204],
   ["users/[id]/role", "PATCH", "/users/u1/role", { storeId: null, roleId: "r1" }, { id: "u1" }, "users.changeOperatorRole", "admin", 204],
   ["roles", "GET", "/roles", undefined, {}, "roles.listRoles", "admin", 200],
@@ -162,7 +162,7 @@ describe("endpoints", () => {
   it("422 on invalid input and 404 on an unknown action", async () => {
     allowed = "admin";
     expect((await call(rows[2], "admin", { name: 5 })).status).toBe(422);
-    const bad: Row = ["users/[ref]", "POST", "/users/u1:explode", undefined, { ref: "u1:explode" }, "", "admin", 404];
+    const bad: Row = ["users/[id]", "POST", "/users/u1:explode", undefined, { id: "u1:explode" }, "", "admin", 404];
     expect((await call(bad, "admin")).status).toBe(404);
   });
 
