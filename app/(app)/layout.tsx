@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import type { CompanySelectorProps } from "@/components/org/company-selector";
 import { TimeZoneSync } from "@/components/shell/time-zone-sync";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
+import { BellFallback, BellSlot } from "@/components/notifications/bell-slot";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell, type NavItem } from "@/components/shell/app-shell";
 import { CATEGORIES, HISTORY, PRODUCTS, operatorHistoryNav, operatorNav } from "@/components/shell/catalog-nav";
@@ -26,6 +27,12 @@ const ADMINS: NavItem = {
   icon: "ShieldCheck",
 };
 
+const bell = (
+  <Suspense fallback={<BellFallback />}>
+    <BellSlot />
+  </Suspense>
+);
+
 async function OperatorShell({
   userId,
   sessionId,
@@ -44,6 +51,7 @@ async function OperatorShell({
   if (!active) redirect("/tienda");
   return (
     <AppShell
+      bell={bell}
       top={
         <div className="op-bar">
           <StoreSwitcher
@@ -78,6 +86,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   }
   return (
     <AppShell
+      bell={bell}
       company={company}
       nav={superadmin ? [HOME, ADMINS, COMPANIES, HISTORY] : [HOME, COMPANIES, ROLES, USERS, CURRENCIES, CATEGORIES, PRODUCTS, HISTORY]}
       user={{

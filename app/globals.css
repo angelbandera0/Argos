@@ -33,6 +33,7 @@
 @import "./ui-view-state.css";
 @import "./ui-money-value.css";
 @import "./ui-view-toggle.css";
+@import "./ui-notification-panel.css";
 
 @theme inline {
   --color-background: var(--color-surface);

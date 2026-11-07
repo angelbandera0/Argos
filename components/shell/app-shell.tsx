@@ -1,12 +1,11 @@
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
 import { CompanySelector, type CompanySelectorProps } from "@/components/org/company-selector";
-import { Button } from "@/components/ui/button";
 import { SidebarSection } from "@/components/ui/sidebar-section";
 import { NavLink } from "./nav-link";
 import { ProfileMenu } from "./profile-menu";
 import { TopClock } from "./top-clock";
 
-const { Bell, Search } = NAV_ICONS;
+const { Search } = NAV_ICONS;
 
 export type NavItem = { id: string; label: string; href: string; icon: NavIconName };
 
@@ -16,6 +15,7 @@ export function AppShell({
   top,
   company,
   action,
+  bell,
   children,
 }: {
   nav: NavItem[];
@@ -23,6 +23,7 @@ export function AppShell({
   top?: React.ReactNode;
   company?: CompanySelectorProps;
   action?: React.ReactNode;
+  bell?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -50,9 +51,7 @@ export function AppShell({
               <span>Buscar</span>
             </button>
             {action}
-            <Button variant="icon" aria-disabled="true" aria-label="Notificaciones" title="Próximamente">
-              <Bell aria-hidden="true" />
-            </Button>
+            {bell}
             <ProfileMenu name={user.name} role={user.role} handle={user.handle ?? null} />
           </div>
           {top && <div className="appbar-context">{top}</div>}

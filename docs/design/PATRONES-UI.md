@@ -76,3 +76,4 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 - Pantalla nueva sin verificar a mano: anótalo en el informe y pide `/verificar-ui N`.
 - Menús de Base UI: las etiquetas de grupo (`Menu.GroupLabel`) van dentro de `Menu.Group` o `Menu.RadioGroup`; fuera lanzan «MenuGroupContext is missing». Ejemplo: `components/org/company-selector.tsx`.
 | Listado de productos (§6.42) | `DataTable selectable bulkVariant="danger"` (barra de acciones en lote `row-selected`), `FilterSelect` + chips con contador (URL), `Switch` pequeño en la fila (`.ui-prod-switch`), `Pager`; lógica pura en `product-list-logic.ts` | `components/catalog/product-list.tsx` |
+| Campana de notificaciones en la barra superior (M5) | `NotificationBell` + `BellSlot` (async bajo `Suspense` en el layout), server actions `listRecentAction`/`countUnreadAction`/`markReadAction`, estilos `app/ui-notification-panel.css` | `components/notifications/notification-bell.tsx` |
