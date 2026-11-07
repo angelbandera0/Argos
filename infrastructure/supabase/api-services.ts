@@ -8,6 +8,7 @@ import { makeHistory } from "./history-factory";
 import { makeNotifications } from "./notifications-factory";
 import { makeOrg } from "./org-factory";
 import { makeRoles } from "./roles-factory";
+import { makeStock } from "./stock-factory";
 import { makeUsers } from "./users-factory";
 
 /** Use cases bound to the API caller's own JWT (RLS applies). */
@@ -26,6 +27,7 @@ export function makeApiServices(token: string) {
     currencies: makeCurrencies(supabase),
     history: makeHistory(supabase),
     notifications: makeNotifications(supabase),
+    stock: makeStock(supabase),
     listAdmins: makeListAdmins({ users: org.users }),
   };
 }
