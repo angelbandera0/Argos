@@ -71,3 +71,9 @@ export async function actorNames(users: Awaited<ReturnType<typeof requireHistory
 export async function userTimeZone() {
   return resolveTimeZone((await cookies()).get("tz")?.value);
 }
+
+/** The company's configured IANA zone (UTC when unreadable). Defines "today" and date ranges. */
+export async function companyTimeZone(companyId: string): Promise<string> {
+  const { data } = await (await createServerClient()).from("companies").select("timezone").eq("id", companyId).maybeSingle();
+  return data?.timezone ?? "UTC";
+}

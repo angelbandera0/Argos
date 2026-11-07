@@ -11,7 +11,7 @@ export interface UpdateCompanySettingsDeps {
 export function makeUpdateCompanySettings(deps: UpdateCompanySettingsDeps) {
   return async (
     actor: Actor,
-    i: { companyId: string; sessionCapSeconds: number },
+    i: { companyId: string; sessionCapSeconds: number; timezone?: string },
   ): Promise<void> => {
     if (actor.kind !== "admin") throw new Forbidden();
     if (!(await deps.companies.getById(i.companyId))) throw new NotFound();
@@ -21,5 +21,13 @@ export function makeUpdateCompanySettings(deps: UpdateCompanySettingsDeps) {
     if (!Number.isInteger(s) || s <= 0) throw new RuleViolation("INVALID_SESSION_SECONDS");
     if (s > MAX_SESSION_SECONDS) throw new RuleViolation("SESSION_TOO_LONG");
     await deps.companies.setSessionCap(i.companyId, s);
+    if (i.timezone !== undefined) {
+      try {
+        new Intl.DateTimeFormat("en-US", { timeZone: i.timezone });
+      } catch {
+        throw new RuleViolation("INVALID_TIMEZONE");
+      }
+      await deps.companies.setTimezone(i.companyId, i.timezone);
+    }
   };
 }

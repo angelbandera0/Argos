@@ -1,10 +1,10 @@
+import { dayBoundsInTimeZone, dayKey } from "@/components/history/time-zone";
 import type { RequestStatus } from "@/core/domain/requests";
 
-/** [from, to) ISO range of the server's local calendar day (the company has no timezone setting yet). */
-export function dayRange(now: Date): { createdFrom: string; createdTo: string } {
-  const from = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const to = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-  return { createdFrom: from.toISOString(), createdTo: to.toISOString() };
+/** [from, to) ISO range of the current calendar day in the company time zone. */
+export function dayRange(now: Date, tz: string): { createdFrom: string; createdTo: string } {
+  const { start, end } = dayBoundsInTimeZone(dayKey(now, tz), tz);
+  return { createdFrom: start.toISOString(), createdTo: end.toISOString() };
 }
 
 export const STATUS_ORDER: { status: RequestStatus; label: string }[] = [

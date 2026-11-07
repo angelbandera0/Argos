@@ -12,7 +12,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { ViewState } from "@/components/ui/view-state";
 import { Forbidden } from "@/core/domain/errors";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
-import { userTimeZone } from "../historial/guard";
+import { companyTimeZone } from "../historial/guard";
 import { requireOrderUser } from "./guard";
 import Loading from "./loading";
 
@@ -32,7 +32,7 @@ async function OrdersContent({ searchParams }: { searchParams: PageProps<"/pedid
   const profiles = canBuild ? await makeUserRepository(supabase).listForCompany(companyId).catch(() => []) : [];
   const names = new Map(profiles.map((p) => [p.id, p.displayName]));
   const buyer = canBuild && names.has(first(sp.comprador)) ? first(sp.comprador) : "";
-  const tz = await userTimeZone();
+  const tz = await companyTimeZone(companyId);
   const page = parsePage(sp.pagina);
   let list;
   try {
@@ -40,8 +40,8 @@ async function OrdersContent({ searchParams }: { searchParams: PageProps<"/pedid
       companyId,
       status,
       buyerId: buyer || undefined,
-      createdFrom: range.from ? dayBoundsInTimeZone(range.from, tz.tz).start.toISOString() : undefined,
-      createdTo: range.to ? dayBoundsInTimeZone(range.to, tz.tz).end.toISOString() : undefined,
+      createdFrom: range.from ? dayBoundsInTimeZone(range.from, tz).start.toISOString() : undefined,
+      createdTo: range.to ? dayBoundsInTimeZone(range.to, tz).end.toISOString() : undefined,
       page,
       pageSize: PAGE_SIZE,
     });

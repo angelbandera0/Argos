@@ -142,6 +142,7 @@ async function CompanyDetail({ params }: { params: PageProps<"/companias/[id]">[
                 companyId={id}
                 name={company.name}
                 hours={company.sessionCapSeconds / 3600}
+                timezone={company.timezone}
                 label="Ajustes"
                 variant="outline"
                 size="sm"

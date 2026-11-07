@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { companyTimeZone } from "@/app/(app)/historial/guard";
 import { requireRequestUser } from "@/app/(app)/solicitudes/guard";
 import { requestBadge } from "@/components/requests/request-logic";
 import { Card } from "@/components/ui/card";
@@ -12,7 +13,7 @@ import { STATUS_ORDER, dayRange } from "./today-requests-logic";
 export async function TodayRequests() {
   const { actor, requests, companyId, canHandle } = await requireRequestUser();
   if (!companyId) return null;
-  const day = { companyId, ...dayRange(new Date()) };
+  const day = { companyId, ...dayRange(new Date(), await companyTimeZone(companyId)) };
   const [list, perStatus] = await Promise.all([
     requests.listRequests(actor, { ...day, pageSize: 5 }).catch(() => undefined),
     Promise.all(STATUS_ORDER.map((s) => requests.listRequests(actor, { ...day, status: s.status, pageSize: 1 }).then((r) => ({ ...s, count: r.total })).catch(() => ({ ...s, count: 0 })))),

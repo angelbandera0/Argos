@@ -17,7 +17,7 @@ import { CompanyTable } from "./company-table";
 import { PAGE_SIZE, type SortKey, type StatusFilter } from "./company-filters";
 import type { CompanySummary } from "./company-summary";
 
-export type CompanyCardRow = { id: string; name: string; code: string; status: "active" | "inactive"; hours: number; summary?: CompanySummary };
+export type CompanyCardRow = { id: string; name: string; code: string; status: "active" | "inactive"; hours: number; timezone: string; summary?: CompanySummary };
 
 const FILTERS: { value: StatusFilter; label: string }[] = [
   { value: "todas", label: "Todas" },
@@ -139,6 +139,7 @@ export function CompanyList({
                       companyId={c.id}
                       name={c.name}
                       hours={c.hours}
+                      timezone={c.timezone}
                       label="Editar"
                       variant="outline"
                       className="ui-entity-card-edit"

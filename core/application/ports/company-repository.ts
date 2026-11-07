@@ -9,6 +9,7 @@ export interface Company {
   founderId: string;
   status: "active" | "inactive";
   sessionCapSeconds: number;
+  timezone: string;
 }
 
 export interface CompanyRepository {
@@ -20,4 +21,5 @@ export interface CompanyRepository {
   revokeAccess(companyId: string, adminId: string): Promise<void>;
   rename(companyId: string, name: string): Promise<void>;
   setSessionCap(companyId: string, seconds: number): Promise<void>;
+  setTimezone(companyId: string, timezone: string): Promise<void>;
 }

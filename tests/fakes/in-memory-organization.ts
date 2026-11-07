@@ -35,6 +35,7 @@ export class InMemoryOrganization {
         founderId,
         status: "active",
         sessionCapSeconds: 28800,
+        timezone: "UTC",
       };
       this.companies.set(company.id, company);
       this.admins.set(company.id, new Set([founderId]));
@@ -55,6 +56,10 @@ export class InMemoryOrganization {
     rename: async (id, name) => {
       const c = this.companies.get(id);
       if (c) c.name = name;
+    },
+    setTimezone: async (companyId, timezone) => {
+      const c = this.companies.get(companyId);
+      if (c) c.timezone = timezone;
     },
     setSessionCap: async (companyId, seconds) => {
       const c = this.companies.get(companyId);
@@ -117,6 +122,7 @@ export class InMemoryOrganization {
       founderId,
       status: "active",
       sessionCapSeconds: 28800,
+      timezone: "UTC",
     };
     this.companies.set(id, company);
     this.admins.set(id, new Set([founderId, ...extraAdmins]));

@@ -5,11 +5,13 @@ import { type ActionState, renameUnitAction, updateSettingsAction } from "@/app/
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
+import { Select } from "@/components/ui/select";
 
 export function CompanySettingsButton({
   companyId,
   name,
   hours,
+  timezone,
   label = "Ajustes",
   variant = "secondary",
   className,
@@ -19,6 +21,7 @@ export function CompanySettingsButton({
   companyId: string;
   name: string;
   hours: number;
+  timezone: string;
   label?: string;
   variant?: "secondary" | "outline";
   className?: string;
@@ -26,6 +29,8 @@ export function CompanySettingsButton({
   icon?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [tz, setTz] = useState(timezone);
+  const zones = Array.from(new Set(["UTC", timezone, ...Intl.supportedValuesOf("timeZone")])).map((z) => ({ value: z, label: z }));
   return (
     <>
       <Button variant={variant} size={size} className={className} onClick={() => setOpen(true)}>
@@ -62,6 +67,9 @@ export function CompanySettingsButton({
                 aria-describedby="hours-hint"
                 aria-invalid={state.error ? true : undefined}
               />
+            </Field>
+            <Field label="Zona horaria" htmlFor="timezone" hint="Define «hoy» y los rangos de fechas de la compañía.">
+              <Select id="timezone" name="timezone" options={zones} value={tz} onValueChange={(v) => setTz(v ?? timezone)} />
             </Field>
             </>
           )}

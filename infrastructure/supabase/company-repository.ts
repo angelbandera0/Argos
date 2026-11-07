@@ -4,7 +4,7 @@ import type { Company, CompanyRepository } from "@/core/application/ports/compan
 import { RuleViolation } from "@/core/domain/errors";
 import { orgError } from "@/infrastructure/supabase/org-errors";
 
-const COLUMNS = "id, code, name, founder_id, status, session_cap_seconds";
+const COLUMNS = "id, code, name, founder_id, status, session_cap_seconds, timezone";
 
 type Row = {
   id: string;
@@ -13,6 +13,7 @@ type Row = {
   founder_id: string;
   status: Company["status"];
   session_cap_seconds: number;
+  timezone: string;
 };
 
 const toCompany = (r: Row): Company => ({
@@ -22,6 +23,7 @@ const toCompany = (r: Row): Company => ({
   founderId: r.founder_id,
   status: r.status,
   sessionCapSeconds: r.session_cap_seconds,
+  timezone: r.timezone,
 });
 
 export function makeCompanyRepository(client: SupabaseClient): CompanyRepository {
@@ -94,6 +96,10 @@ export function makeCompanyRepository(client: SupabaseClient): CompanyRepository
         .update({ session_cap_seconds: seconds })
         .eq("id", companyId);
       if (error) orgError("CompanyRepository.setSessionCap", error);
+    },
+    async setTimezone(companyId, timezone) {
+      const { error } = await client.from("companies").update({ timezone }).eq("id", companyId);
+      if (error) orgError("CompanyRepository.setTimezone", error);
     },
   };
 }

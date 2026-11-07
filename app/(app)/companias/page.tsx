@@ -60,6 +60,7 @@ async function CompaniesContent({ searchParams }: { searchParams: PageProps<"/co
           code: c.code,
           status: c.status,
           hours: c.sessionCapSeconds / 3600,
+          timezone: c.timezone,
           summary: summaries[i],
         }))}
         q={text}

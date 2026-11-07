@@ -21,6 +21,7 @@ function fail(e: unknown, taken: string): string {
   if (e instanceof NotFound) return "No encontramos lo que buscas. Recarga la página.";
   if (e instanceof RuleViolation) {
     if (e.code === "NAME_TAKEN") return taken;
+    if (e.code === "INVALID_TIMEZONE") return "Elige una zona horaria válida.";
     if (e.code === "REASON_REQUIRED") return "Escribe el motivo para continuar.";
     if (e.code === "FOUNDER_PROTECTED") return "El fundador no puede perder el acceso.";
     if (e.code === "SESSION_TOO_LONG" || e.code === "INVALID_SESSION_SECONDS")
@@ -177,7 +178,7 @@ export async function updateSettingsAction(companyId: string, formData: FormData
     return { error: "Escribe un tope entre media hora y 24 horas." };
   }
   try {
-    await org.updateSettings(actor, { companyId, sessionCapSeconds: seconds });
+    await org.updateSettings(actor, { companyId, sessionCapSeconds: seconds, timezone: text(formData, "timezone") || undefined });
   } catch (e) {
     return { error: fail(e, "") };
   }
