@@ -182,7 +182,7 @@ export function StockList({
           isWarehouse && (canEntry || canTransfer || canWriteOff) ? (
             <>
               {canTransfer && <TransferButton {...transfer} />}
-              {canWriteOff && <WriteOffButton locationId={transfer.fromLocationId} products={transfer.products} />}
+              {canWriteOff && <WriteOffButton locationId={transfer.fromLocationId} products={transfer.products} canChooseLot={transfer.canChooseLot} currencies={transfer.currencies} />}
               {entryButton}
             </>
           ) : entryButton

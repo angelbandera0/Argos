@@ -6,28 +6,81 @@ import {
   type TransferConfig,
   type TransferPreview,
   loadTransferConfigAction,
-  previewTransferAction,
   transferStockAction,
 } from "@/app/(app)/existencias/transfer-actions";
-import { Alert } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Chip } from "@/components/ui/chip";
-import { Field, Input } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
-import { LocalDateTime } from "@/components/ui/local-date-time";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import type { Unit } from "@/core/domain/stock";
 import { baseLabel } from "./entry-logic";
-import { formatStockQty } from "./stock-list-logic";
-import { type PreviewLot, pendingBase, picksFrom, suggestedValues } from "./transfer-logic";
+import { type LotChoice, type LotCurrency, LotPicker, lotMoney } from "./lot-picker";
+import { allocationValue } from "./transfer-logic";
 
 export type TransferOption = { value: string; label: string };
-export type TransferCurrency = { id: string; code: string };
+export type TransferCurrency = LotCurrency;
 
-const money = (c: PreviewLot["unitCost"], currencies: TransferCurrency[]) =>
-  c === undefined ? null : c === null ? "Sin costo conocido" : `${new Intl.NumberFormat("es", { maximumFractionDigits: 4 }).format(c.amount)} ${currencies.find((x) => x.id === c.currencyId)?.code ?? ""}`;
+type Line = { key: number; product: string; config: TransferConfig | null | undefined; unit: string; amount: string; choice: LotChoice; preview: TransferPreview | null };
+
+const newLine = (product: string, key: number): Line => ({ key, product, config: undefined, unit: "base", amount: "", choice: { picks: [], reason: "" }, preview: null });
+
+function LineFields({ line, index, fixed, products, fromLocationId, canChooseLot, currencies, onPatch, onRemove }: {
+  line: Line;
+  index: number;
+  fixed: boolean;
+  products: TransferOption[];
+  fromLocationId: string;
+  canChooseLot: boolean;
+  currencies: LotCurrency[];
+  onPatch: (p: Partial<Line>) => void;
+  onRemove?: () => void;
+}) {
+  const { product, config } = line;
+  useEffect(() => {
+    if (!product) return;
+    let live = true;
+    loadTransferConfigAction(product).then((c) => live && onPatch({ config: c }));
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
+
+  const base = config?.baseUnit ?? "u";
+  const units = [{ value: "base", label: baseLabel(base) }, ...(config?.units ?? []).map((u) => ({ value: u, label: u }))];
+  const id = `transfer-${line.key}`;
+  return (
+    <div className="stack">
+      {!fixed && (
+        <Field label={`Producto ${index + 1}`} htmlFor={`${id}-product`}>
+          <Select id={`${id}-product`} options={products} value={product} onValueChange={(v) => onPatch({ product: v ?? "", config: undefined, preview: null, unit: "base", choice: { picks: [], reason: "" } })} placeholder="Elige un producto" />
+        </Field>
+      )}
+      {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
+      {config && (
+        <>
+          <Field label="Cantidad" htmlFor={`${id}-qty`} hint="La cantidad va en la unidad de movimiento de la tienda.">
+            <QuantityPicker id={`${id}-qty`} name={`qty-${line.key}`} unitName={`unit-${line.key}`} value={line.amount} unit={line.unit} units={units} onValueChange={(amount) => onPatch({ amount })} onUnitChange={(unit) => onPatch({ unit })} />
+          </Field>
+          <LotPicker
+            key={product}
+            id={id}
+            productId={product}
+            locationId={fromLocationId}
+            amount={line.amount}
+            unit={line.unit}
+            baseUnit={base}
+            canChooseLot={canChooseLot}
+            currencies={currencies}
+            onChange={(choice) => onPatch({ choice })}
+            onPreview={(preview) => onPatch({ preview })}
+          />
+        </>
+      )}
+      {onRemove && <Button variant="secondary" size="sm" onClick={onRemove}>Quitar producto</Button>}
+    </div>
+  );
+}
 
 export function TransferDialog({
   fromLocationId,
@@ -41,56 +94,36 @@ export function TransferDialog({
   fromLocationId: string;
   stores: TransferOption[];
   products: TransferOption[];
-  /** Fixed product (detail page); otherwise the user picks one. */
+  /** Fixed product (detail page); otherwise the user adds as many products as needed. */
   productId?: string;
   canChooseLot: boolean;
   currencies: TransferCurrency[];
   onClose: () => void;
 }) {
-  const [product, setProduct] = useState(productId ?? "");
-  const [config, setConfig] = useState<TransferConfig | null | undefined>(undefined);
   const [store, setStore] = useState(stores.length === 1 ? stores[0].value : "");
-  const [unit, setUnit] = useState("base");
-  const [amount, setAmount] = useState("");
-  const [choose, setChoose] = useState(false);
-  const [values, setValues] = useState<Record<string, string>>({});
-  const [preview, setPreview] = useState<TransferPreview | null>(null);
-  const [reason, setReason] = useState("");
+  const [lines, setLines] = useState<Line[]>([newLine(productId ?? "", 0)]);
+  const patch = (key: number, p: Partial<Line>) => setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...p } : l)));
 
-  useEffect(() => {
-    if (!product) return;
-    let live = true;
-    loadTransferConfigAction(product).then((c) => {
-      if (!live) return;
-      setConfig(c);
-      setUnit("base");
-      setValues({});
-      setChoose(false);
-    });
-    return () => {
-      live = false;
-    };
-  }, [product]);
+  const payload = JSON.stringify(
+    lines.map((l) => ({
+      productId: l.product,
+      qty: Number(l.amount.replace(",", ".")),
+      unit: l.unit,
+      picks: l.choice.picks.length ? l.choice.picks : undefined,
+      reason: l.choice.reason || undefined,
+    })),
+  );
 
-  const picks = choose ? picksFrom(values) : [];
-  const picksKey = JSON.stringify(picks);
-  useEffect(() => {
-    const n = Number(amount.replace(",", "."));
-    if (!product || !config || !(n > 0)) return;
-    let live = true;
-    previewTransferAction({ productId: product, fromLocationId, qty: n, unit, picks: picksKey === "[]" ? undefined : JSON.parse(picksKey) }).then((p) => live && setPreview(p));
-    return () => {
-      live = false;
-    };
-  }, [product, config, fromLocationId, amount, unit, picksKey]);
-
-  const base = config?.baseUnit ?? "u";
-  const units = [{ value: "base", label: baseLabel(base) }, ...(config?.units ?? []).map((u) => ({ value: u, label: u }))];
-  const valid = Number(amount.replace(",", ".")) > 0;
-  const shown = valid ? preview : null;
-  const pending = shown && choose ? pendingBase(picks, shown.baseQty) : 0;
-  const suggested = new Set(shown?.suggested.map((s) => s.lotId));
-  const fmt = (n: number) => formatStockQty(n, base as Unit);
+  const totals = new Map<string, number>();
+  let valued = false;
+  let unknown = false;
+  for (const l of lines) {
+    const v = l.preview && !l.preview.error && Number(l.amount.replace(",", ".")) > 0 ? allocationValue(l.preview.lots, l.preview.allocation) : null;
+    if (!v) continue;
+    valued = true;
+    unknown ||= v.unknown;
+    for (const c of v.byCurrency) totals.set(c.currencyId, (totals.get(c.currencyId) ?? 0) + c.amount);
+  }
 
   return (
     <FormDialog<TransferActionState>
@@ -106,67 +139,28 @@ export function TransferDialog({
           <Field label="Tienda destino" htmlFor="transfer-store">
             <Select id="transfer-store" name="toLocationId" options={stores} value={store} onValueChange={(v) => setStore(v ?? "")} placeholder="Elige una tienda" />
           </Field>
-          {productId ? (
-            <input type="hidden" name="productId" value={productId} />
-          ) : (
-            <Field label="Producto" htmlFor="transfer-product">
-              <Select id="transfer-product" name="productId" options={products} value={product} onValueChange={(v) => { setConfig(undefined); setPreview(null); setProduct(v ?? ""); }} placeholder="Elige un producto" />
-            </Field>
+          {lines.map((l, i) => (
+            <LineFields
+              key={l.key}
+              line={l}
+              index={i}
+              fixed={!!productId}
+              products={products}
+              fromLocationId={fromLocationId}
+              canChooseLot={canChooseLot}
+              currencies={currencies}
+              onPatch={(p) => patch(l.key, p)}
+              onRemove={!productId && lines.length > 1 ? () => setLines((ls) => ls.filter((x) => x.key !== l.key)) : undefined}
+            />
+          ))}
+          {!productId && <Button variant="secondary" size="sm" onClick={() => setLines((ls) => [...ls, newLine("", Math.max(...ls.map((x) => x.key)) + 1)])}>Añadir producto</Button>}
+          {valued && (
+            <p className="hint">
+              Valor trasladado: {totals.size === 0 ? "Sin costo conocido" : [...totals].map(([c, a]) => lotMoney({ amount: a, currencyId: c }, currencies)).join(" + ")}
+              {unknown && totals.size > 0 ? " (sin contar lotes sin costo conocido)" : ""}
+            </p>
           )}
-          {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
-          {config && (
-            <>
-              <Field label="Cantidad" htmlFor="transfer-qty" hint="La cantidad va en la unidad de movimiento de la tienda.">
-                <QuantityPicker id="transfer-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} onValueChange={setAmount} onUnitChange={setUnit} />
-              </Field>
-              {shown?.error && <Alert variant="danger" compact>{shown.error}</Alert>}
-              {shown && !shown.error && (
-                <>
-                  <p className="hint">Equivale a {fmt(shown.baseQty)}. {choose ? "Lotes elegidos" : "Sale de los lotes más antiguos primero (FIFO)"}:</p>
-                  <ul className="stack">
-                    {shown.lots.map((l) => {
-                      const used = shown.allocation.find((a) => a.lotId === l.id)?.qty ?? 0;
-                      const cost = money(l.unitCost, currencies);
-                      return (
-                        <li key={l.id} className="row">
-                          <span className="mono">{l.id.slice(0, 8)}</span>
-                          <LocalDateTime value={l.receivedAt} />
-                          <span>Disponible {fmt(l.remaining)}</span>
-                          {cost && <span>Costo {cost}</span>}
-                          {suggested.has(l.id) && <Chip>Sugerido</Chip>}
-                          {choose ? (
-                            <Input aria-label={`Cantidad del lote ${l.id.slice(0, 8)}`} type="number" inputMode="decimal" min={0} step="any" value={values[l.id] ?? ""} onChange={(e) => setValues({ ...values, [l.id]: e.target.value })} />
-                          ) : (
-                            used > 0 && <strong>{fmt(used)}</strong>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  {choose && pending !== 0 && <p className="hint">{pending > 0 ? `Faltan ${fmt(pending)} por asignar.` : `Te pasas por ${fmt(-pending)}.`}</p>}
-                  {shown.isDeviation && (
-                    <>
-                      <Alert variant="warning" compact>No sale del lote más antiguo.</Alert>
-                      <Field label="Motivo" htmlFor="transfer-reason" optional>
-                        <Textarea id="transfer-reason" name="reason" value={reason} onChange={(e) => setReason(e.target.value)} />
-                      </Field>
-                    </>
-                  )}
-                  {canChooseLot ? (
-                    <Checkbox
-                      label="Elegir lotes"
-                      description="Por defecto sale el lote más antiguo."
-                      checked={choose}
-                      onCheckedChange={(c) => { setChoose(c); setValues(c ? suggestedValues(shown.suggested) : {}); }}
-                    />
-                  ) : (
-                    <p className="hint">Solo puedes trasladar siguiendo el lote más antiguo.</p>
-                  )}
-                </>
-              )}
-              <input type="hidden" name="picks" value={choose ? picksKey : ""} />
-            </>
-          )}
+          <input type="hidden" name="lines" value={payload} />
         </>
       )}
     </FormDialog>

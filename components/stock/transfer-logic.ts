@@ -4,13 +4,28 @@ import { add, qty, type Qty } from "@/core/domain/stock";
 const num = (v: unknown) => (typeof v === "string" ? (v.trim() === "" ? undefined : Number(v.replace(",", "."))) : v);
 const pickSchema = z.object({ lotId: z.string().min(1), qty: z.number().finite().positive() });
 
+export const picksField = z.preprocess((v) => (typeof v === "string" && v ? safeJson(v) : undefined), z.array(pickSchema).optional());
+
 export const transferSchema = z.object({
   productId: z.string().min(1),
   toLocationId: z.string().min(1),
   qty: z.preprocess(num, z.number().finite().positive()),
   unit: z.string().min(1),
-  picks: z.preprocess((v) => (typeof v === "string" && v ? safeJson(v) : undefined), z.array(pickSchema).optional()),
+  picks: picksField,
   reason: z.string().trim().max(300).optional(),
+});
+
+export const transferLineSchema = z.object({
+  productId: z.string().min(1),
+  qty: z.number().finite().positive(),
+  unit: z.string().min(1),
+  picks: z.array(pickSchema).optional(),
+  reason: z.string().trim().max(300).optional(),
+});
+
+export const transferLinesSchema = z.object({
+  toLocationId: z.string().min(1),
+  lines: z.preprocess((v) => (typeof v === "string" && v ? safeJson(v) : null), z.array(transferLineSchema).min(1).max(50)),
 });
 
 function safeJson(v: string): unknown {
@@ -39,6 +54,22 @@ export function pendingBase(picks: LotPick[], baseQty: number): number {
 }
 
 export type PreviewLot = { id: string; receivedAt: string; remaining: number; unitCost?: { amount: number; currencyId: string } | null };
+
+/** Value moved by an allocation per currency; null when costs are hidden, `unknown` when some lot has no known cost. */
+export function allocationValue(lots: PreviewLot[], allocation: LotPick[]): { byCurrency: { currencyId: string; amount: number }[]; unknown: boolean } | null {
+  if (lots.some((l) => l.unitCost === undefined)) return null;
+  const totals = new Map<string, number>();
+  let unknown = false;
+  for (const a of allocation) {
+    const cost = lots.find((l) => l.id === a.lotId)?.unitCost;
+    if (!cost) {
+      unknown = true;
+      continue;
+    }
+    totals.set(cost.currencyId, (totals.get(cost.currencyId) ?? 0) + a.qty * cost.amount);
+  }
+  return { byCurrency: [...totals].map(([currencyId, amount]) => ({ currencyId, amount })), unknown };
+}
 
 export const suggestedValues = (suggested: LotPick[]): Record<string, string> => Object.fromEntries(suggested.map((p) => [p.lotId, String(p.qty)]));
 

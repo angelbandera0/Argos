@@ -51,10 +51,10 @@ export async function loadReasonsAction(includeInactive = false): Promise<Reason
 }
 
 export async function writeOffAction(locationId: string, _prev: OpActionState, f: FormData): Promise<OpActionState> {
-  const p = writeOffSchema.safeParse({ productId: text(f, "productId"), qty: text(f, "qty"), unit: text(f, "unit"), reasonId: text(f, "reasonId"), requiresText: text(f, "requiresText"), text: text(f, "text") });
+  const p = writeOffSchema.safeParse({ productId: text(f, "productId"), qty: text(f, "qty"), unit: text(f, "unit"), reasonId: text(f, "reasonId"), requiresText: text(f, "requiresText"), text: text(f, "text"), picks: text(f, "picks"), deviation: text(f, "deviation") });
   if (!p.success) return p.error.issues.some((i) => i.message === "REASON_TEXT_REQUIRED") ? { error: stockOpErrorMessage("REASON_TEXT_REQUIRED") } : INVALID;
   const d = p.data;
-  return run(({ actor, stock }) => stock.writeOffStock(actor, { productId: d.productId, locationId, qty: d.qty, unit: d.unit, reasonId: d.reasonId, reasonText: d.text || undefined }));
+  return run(({ actor, stock }) => stock.writeOffStock(actor, { productId: d.productId, locationId, qty: d.qty, unit: d.unit, reasonId: d.reasonId, reasonText: d.text || undefined, picks: d.picks, deviationReason: d.deviation || undefined }));
 }
 
 export async function adjustLotAction(_prev: OpActionState, f: FormData): Promise<OpActionState> {

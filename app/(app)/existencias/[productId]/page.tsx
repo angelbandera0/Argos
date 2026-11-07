@@ -25,7 +25,7 @@ const first = (v: string | string[] | undefined) => (typeof v === "string" ? v :
 async function ProductContent({ params, searchParams }: { params: PageProps<"/existencias/[productId]">["params"]; searchParams: PageProps<"/existencias/[productId]">["searchParams"] }) {
   const { productId } = await params;
   const sp = await searchParams;
-  const { actor, stock, currencies, companyId, storeId, can, costs } = await requireStockUser();
+  const { actor, stock, currencies, companyId, storeId, can, canWh, costs } = await requireStockUser();
   if (!companyId) return <ViewState kind="empty" entity="existencias" title="Elige una compañía arriba para ver sus existencias." canCreate={false} />;
   let locations;
   try {
@@ -94,10 +94,10 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         breadcrumbs={[{ label: "Existencias", href: `/existencias?ubicacion=${location.id}` }, { label: name }]}
         description={`${location.name} · Existencia ${formatStockQty(detail.quantity, unit)}`}
         actions={[
-          isWarehouse && can("write_off") && <WriteOffButton key="writeoff" locationId={location.id} products={[]} productId={productId} />,
+          isWarehouse && canWh("write_off") && <WriteOffButton key="writeoff" locationId={location.id} products={[]} productId={productId} canChooseLot={canWh("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />,
           can("adjust_stock") && <SurplusButton key="surplus" locationId={location.id} products={[]} productId={productId} costs={costs} currencies={curs} />,
-          isWarehouse && can("transfer") && (
-            <TransferButton key="transfer" fromLocationId={location.id} stores={stores} products={[]} productId={productId} canChooseLot={can("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
+          isWarehouse && canWh("transfer") && (
+            <TransferButton key="transfer" fromLocationId={location.id} stores={stores} products={[]} productId={productId} canChooseLot={canWh("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
           ),
           canEnter && (
             <EntryButton key="entry" kind={entryKind} locationId={location.id} products={[]} productId={productId} costs={costs} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />

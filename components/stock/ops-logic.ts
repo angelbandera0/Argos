@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { picksField } from "./transfer-logic";
 
 const num = (v: unknown) => (typeof v === "string" ? (v.trim() === "" ? undefined : Number(v.replace(",", "."))) : v);
 const positive = z.preprocess(num, z.number().finite().positive());
@@ -12,6 +13,8 @@ export const writeOffSchema = z
     reasonId: z.string().min(1),
     requiresText: z.preprocess((v) => v === "true", z.boolean()),
     text: z.string().trim().max(300).optional(),
+    picks: picksField,
+    deviation: z.string().trim().max(300).optional(),
   })
   .refine((d) => !d.requiresText || !!d.text, { path: ["text"], message: "REASON_TEXT_REQUIRED" });
 
@@ -57,6 +60,9 @@ const ERRORS: Record<string, string> = {
   INSUFFICIENT_STOCK: "No hay existencias suficientes.",
   LOT_EXCEEDED: "Un lote no tiene tanta cantidad disponible.",
   LOT_NOT_FOUND: "No encontramos el lote. Actualiza la lista.",
+  DUPLICATE_LOT: "Un mismo lote está repetido.",
+  QUANTITY_MISMATCH: "Los lotes elegidos deben sumar la cantidad a dar de baja.",
+  CHOOSE_LOT_FORBIDDEN: "No tienes permiso para elegir lotes distintos al más antiguo.",
   INVALID_REASON: "Ese motivo no está disponible.",
   REASON_TEXT_REQUIRED: "Este motivo exige una descripción.",
   PRODUCT_NOT_STORABLE: "Este producto no maneja existencias.",

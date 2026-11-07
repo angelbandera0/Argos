@@ -27,7 +27,7 @@ export async function requireStockUser() {
     const companies = await makeOrg(supabase).listCompanies(actor);
     const id = (await cookies()).get(ACTIVE_COMPANY_COOKIE)?.value;
     const companyId = companies.find((c) => c.id === id)?.id;
-    return { actor, stock, currencies, companyId, storeId: undefined, can: (_: SpecialPermission) => true, costs: true };
+    return { actor, stock, currencies, companyId, storeId: undefined, can: (_: SpecialPermission) => true, canWh: (_: SpecialPermission) => true, costs: true };
   }
   if (!claims.sessionId) redirect("/tienda");
   const actor: Actor = { userId: claims.userId, kind: "operator", channel: "ui", sessionId: claims.sessionId };
@@ -37,7 +37,7 @@ export async function requireStockUser() {
       actor,
     );
     const can = (p: SpecialPermission) => hasSpecial(store, p);
-    return { actor, stock, currencies, companyId: store.companyId, storeId: store.storeId, can, costs: can("see_costs") };
+    return { actor, stock, currencies, companyId: store.companyId, storeId: store.storeId, can, canWh: (p: SpecialPermission) => hasSpecial(store, p, { warehouse: true }), costs: can("see_costs") };
   } catch (e) {
     if (e instanceof Forbidden || e instanceof SessionExpired || e instanceof RuleViolation) redirect("/tienda");
     throw e;

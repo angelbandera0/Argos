@@ -32,10 +32,10 @@ export async function createRequestAction(_: RequestActionState, f: FormData): P
 
 export async function attendLineAction(_: RequestActionState, f: FormData): Promise<RequestActionState> {
   const { actor, requests, companyId } = await requireRequestUser();
-  const p = attendSchema.safeParse({ lineId: text(f, "lineId"), kind: text(f, "kind"), qty: text(f, "qty"), reason: text(f, "reason") });
+  const p = attendSchema.safeParse({ lineId: text(f, "lineId"), kind: text(f, "kind"), qty: text(f, "qty"), reason: text(f, "reason"), picks: text(f, "picks"), deviation: text(f, "deviation") });
   if (!p.success) return { error: attendErrorMessage("INVALID_INPUT") };
   try {
-    await requests.attendRequestLine(actor, { companyId, lineId: p.data.lineId, kind: p.data.kind, qtyBase: p.data.qty, reason: p.data.reason || undefined });
+    await requests.attendRequestLine(actor, { companyId, lineId: p.data.lineId, kind: p.data.kind, qtyBase: p.data.qty, reason: p.data.reason || undefined, picks: p.data.picks, deviationReason: p.data.deviation || undefined });
   } catch (e) {
     if (e instanceof Forbidden) return { error: "No tienes permiso para atender solicitudes." };
     if (e instanceof NotFound) return { error: "No encontramos la línea. Recarga la página." };

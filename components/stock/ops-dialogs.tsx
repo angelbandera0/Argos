@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
+import { type LotChoice, type LotCurrency, LotPicker } from "./lot-picker";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Unit } from "@/core/domain/stock";
@@ -41,13 +42,14 @@ function ProductField({ id, productId, products, value, onChange }: { id: string
   );
 }
 
-export function WriteOffDialog({ locationId, products, productId, onClose }: { locationId: string; products: Option[]; productId?: string; onClose: () => void }) {
+export function WriteOffDialog({ locationId, products, productId, canChooseLot, currencies, onClose }: { locationId: string; products: Option[]; productId?: string; canChooseLot: boolean; currencies: LotCurrency[]; onClose: () => void }) {
   const [product, setProduct] = useState(productId ?? "");
   const [config, setConfig] = useProductConfig(product);
   const [reasons, setReasons] = useState<ReasonOption[] | undefined>(undefined);
   const [reasonId, setReasonId] = useState("");
   const [unit, setUnit] = useState("base");
   const [amount, setAmount] = useState("");
+  const [choice, setChoice] = useState<LotChoice>({ picks: [], reason: "" });
   useEffect(() => {
     let live = true;
     loadReasonsAction().then((r) => live && setReasons(r));
@@ -61,7 +63,7 @@ export function WriteOffDialog({ locationId, products, productId, onClose }: { l
   return (
     <FormDialog<OpActionState>
       title="Dar de baja"
-      description="Descuenta existencia por pérdida, daño u otro motivo; sale de los lotes más antiguos primero."
+      description="Descuenta existencia por pérdida, daño u otro motivo; por defecto sale de los lotes más antiguos primero."
       successMessage="Baja registrada."
       size="md"
       action={(prev, f) => writeOffAction(locationId, prev, f)}
@@ -69,12 +71,17 @@ export function WriteOffDialog({ locationId, products, productId, onClose }: { l
     >
       {(state) => (
         <>
-          <ProductField id="wo-product" productId={productId} products={products} value={product} onChange={(v) => { setConfig(undefined); setProduct(v); }} />
+          <ProductField id="wo-product" productId={productId} products={products} value={product} onChange={(v) => { setConfig(undefined); setProduct(v); setChoice({ picks: [], reason: "" }); }} />
           {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
           {config && (
-            <Field label="Cantidad" htmlFor="wo-qty">
-              <QuantityPicker id="wo-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} onValueChange={setAmount} onUnitChange={setUnit} />
-            </Field>
+            <>
+              <Field label="Cantidad" htmlFor="wo-qty">
+                <QuantityPicker id="wo-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} onValueChange={setAmount} onUnitChange={setUnit} />
+              </Field>
+              <LotPicker key={product} id="wo" productId={product} locationId={locationId} amount={amount} unit={unit} baseUnit={config.baseUnit} canChooseLot={canChooseLot} currencies={currencies} onChange={setChoice} />
+              <input type="hidden" name="picks" value={choice.picks.length ? JSON.stringify(choice.picks) : ""} />
+              <input type="hidden" name="deviation" value={choice.reason} />
+            </>
           )}
           <Field label="Motivo" htmlFor="wo-reason">
             <Select id="wo-reason" name="reasonId" options={(reasons ?? []).map((r) => ({ value: r.id, label: r.name }))} value={reasonId} onValueChange={(v) => setReasonId(v ?? "")} placeholder="Elige un motivo" />

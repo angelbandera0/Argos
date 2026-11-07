@@ -22,7 +22,7 @@ export const metadata: Metadata = { title: "Bandeja de solicitudes · Argos" };
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : "");
 
 async function InboxContent({ searchParams }: { searchParams: PageProps<"/solicitudes/bandeja">["searchParams"] }) {
-  const { actor, requests, stock, companyId } = await requireRequestUser();
+  const { actor, requests, stock, companyId, canWh, costs, currencies } = await requireRequestUser();
   if (!companyId) return <ViewState kind="empty" entity="solicitudes" title="Elige una compañía arriba para ver sus solicitudes." canCreate={false} />;
   const sp = await searchParams;
   const status = parseInboxStatus(sp.estado);
@@ -38,6 +38,7 @@ async function InboxContent({ searchParams }: { searchParams: PageProps<"/solici
   }
   const storeOptions = locations.filter((l) => l.kind === "store" && l.storeId).map((l) => ({ value: l.storeId as string, label: l.name }));
   const warehouse =locations.find((l) => l.kind === "warehouse");
+  const currencyList = costs ? (await currencies.listCurrencies(actor, { companyId }).catch(() => [])).map((c) => ({ id: c.id, code: c.code })) : [];
   const details = await Promise.all(list.items.map((r) => requests.getRequest(actor, { companyId, requestId: r.id })));
   const productIds = [...new Set(details.flatMap((d) => d.lines.map((l) => l.productId)))];
   const stocks = new Map(
@@ -72,7 +73,7 @@ async function InboxContent({ searchParams }: { searchParams: PageProps<"/solici
                   { label: "En almacén", value: s ? fmt(s.quantity) : "—" },
                 ]}
               >
-                {remaining > 0 && unit && <AttendButton lineId={l.id} productName={l.productName} remaining={remaining} warehouse={s?.quantity ?? 0} unit={unit} />}
+                {remaining > 0 && unit && <AttendButton productId={l.productId} warehouseId={warehouse?.id ?? ""} canChooseLot={canWh("choose_lot")} currencies={currencyList} lineId={l.id} productName={l.productName} remaining={remaining} warehouse={s?.quantity ?? 0} unit={unit} />}
               </EntityCard>
             );
           })}

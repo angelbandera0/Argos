@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { transferErrorMessage, transferSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
+import { transferErrorMessage, transferLinesSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -53,32 +53,38 @@ export async function previewTransferAction(input: { productId: string; fromLoca
   }
 }
 
+/** Validates every line first (nothing moves if one is wrong), then transfers line by line; a failure mid-way leaves earlier lines done and says so. */
 export async function transferStockAction(fromLocationId: string, _prev: TransferActionState, f: FormData): Promise<TransferActionState> {
   const { actor, stock } = await requireStockUser();
-  const p = transferSchema.safeParse({
-    productId: text(f, "productId"),
-    toLocationId: text(f, "toLocationId"),
-    qty: text(f, "qty"),
-    unit: text(f, "unit"),
-    picks: text(f, "picks"),
-    reason: text(f, "reason"),
-  });
+  const p = transferLinesSchema.safeParse({ toLocationId: text(f, "toLocationId"), lines: text(f, "lines") });
   if (!p.success) return { error: transferErrorMessage("INVALID_INPUT") };
-  const d = p.data;
-  try {
-    await stock.transferStock(actor, {
-      productId: d.productId,
-      fromLocationId,
-      toLocationId: d.toLocationId,
-      qty: d.qty,
-      unit: d.unit,
-      picks: d.picks,
-      deviationReason: d.reason || undefined,
-    });
-  } catch (e) {
+  const { toLocationId, lines } = p.data;
+  const tag = (i: number, msg: string) => (lines.length > 1 ? `Producto ${i + 1}: ${msg}` : msg);
+  const fail = (e: unknown, i: number): TransferActionState => {
     if (e instanceof Forbidden) return { error: "No tienes permiso para hacer esto." };
-    if (e instanceof NotFound) return { error: "No encontramos el elemento. Recarga la página." };
-    return { error: transferErrorMessage(e instanceof RuleViolation ? e.code : undefined) };
+    if (e instanceof NotFound) return { error: tag(i, "No encontramos el elemento. Recarga la página.") };
+    return { error: tag(i, transferErrorMessage(e instanceof RuleViolation ? e.code : undefined)) };
+  };
+  if (lines.length > 1) {
+    for (const [i, l] of lines.entries()) {
+      try {
+        const r = await stock.previewConsumption(actor, { productId: l.productId, locationId: fromLocationId, qty: l.qty, unit: l.unit, picks: l.picks });
+        if (r.errors?.[0]) return { error: tag(i, transferErrorMessage(r.errors[0])) };
+      } catch (e) {
+        return fail(e, i);
+      }
+    }
+  }
+  let done = 0;
+  for (const [i, l] of lines.entries()) {
+    try {
+      await stock.transferStock(actor, { productId: l.productId, fromLocationId, toLocationId, qty: l.qty, unit: l.unit, picks: l.picks, deviationReason: l.reason || undefined });
+      done++;
+    } catch (e) {
+      if (done > 0) revalidatePath("/existencias", "layout");
+      const r = fail(e, i);
+      return done > 0 ? { error: `${r.error} Ya se trasladaron ${done} de ${lines.length} productos; revisa antes de repetir.` } : r;
+    }
   }
   revalidatePath("/existencias", "layout");
   return {};

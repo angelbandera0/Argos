@@ -18,7 +18,7 @@ export const metadata: Metadata = { title: "Existencias · Argos" };
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : "");
 
 async function StockContent({ searchParams }: { searchParams: PageProps<"/existencias">["searchParams"] }) {
-  const { actor, stock, currencies, companyId, storeId, can, costs } = await requireStockUser();
+  const { actor, stock, currencies, companyId, storeId, can, canWh, costs } = await requireStockUser();
   if (!companyId) return <ViewState kind="empty" entity="existencias" title="Elige una compañía arriba para ver sus existencias." canCreate={false} />;
   let locations;
   try {
@@ -106,10 +106,10 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       currencies={Object.fromEntries(currencyList.map((c) => [c.id, { code: c.code, decimals: c.decimals }]))}
       inventory={costs ? { values: productValues.flatMap((p) => p.byCurrency), unknownProducts: productValues.filter((p) => p.unknownQty > 0).length } : undefined}
       canEntry={can("initial_entry")}
-      canTransfer={can("transfer")}
-      canWriteOff={can("write_off")}
+      canTransfer={canWh("transfer")}
+      canWriteOff={canWh("write_off")}
       canDirect={can("direct_store_entry")}
-      transfer={{ fromLocationId: location.id, stores: locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name })), products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), canChooseLot: can("choose_lot"), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
+      transfer={{ fromLocationId: location.id, stores: locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name })), products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), canChooseLot: canWh("choose_lot"), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       isWarehouse={location.kind === "warehouse"}
     />

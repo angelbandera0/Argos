@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { picksField } from "@/components/stock/transfer-logic";
 import { ASSIGNMENT_KINDS, type AssignmentKind, type RequestStatus } from "@/core/domain/requests";
 
 export const STATUS_OPTIONS: { value: RequestStatus; label: string }[] = [
@@ -28,6 +29,8 @@ export const attendSchema = z.object({
   kind: z.enum(ASSIGNMENT_KINDS as [AssignmentKind, ...AssignmentKind[]]),
   qty: amount,
   reason: z.string().max(500),
+  picks: picksField,
+  deviation: z.string().trim().max(300).optional(),
 });
 
 /** Most that can be moved to a store now: the undecided part, capped by what the warehouse has. */
@@ -38,6 +41,9 @@ const ERRORS: Record<string, string> = {
   INVALID_QUANTITY: "La cantidad debe ser mayor que cero.",
   ASSIGNMENT_EXCEEDS_LINE: "La cantidad supera lo que falta por decidir en esta línea.",
   REASON_REQUIRED: "Escribe el motivo del rechazo.",
+  LOT_EXCEEDED: "Un lote no tiene tanta cantidad disponible.",
+  QUANTITY_MISMATCH: "Los lotes elegidos deben sumar la cantidad a trasladar.",
+  CHOOSE_LOT_FORBIDDEN: "No tienes permiso para elegir lotes distintos al más antiguo.",
   INSUFFICIENT_STOCK: "El almacén no tiene suficiente existencia para trasladar eso.",
 };
 

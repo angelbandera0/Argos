@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pendingBase, picksFrom, picksTotal, suggestedValues, transferErrorMessage, transferSchema } from "@/components/stock/transfer-logic";
+import { allocationValue, transferLinesSchema, pendingBase, picksFrom, picksTotal, suggestedValues, transferErrorMessage, transferSchema } from "@/components/stock/transfer-logic";
 
 describe("transfer-logic", () => {
   it("convierte lo tecleado en picks", () => {
@@ -23,5 +23,20 @@ describe("transfer-logic", () => {
   it("traduce errores", () => {
     expect(transferErrorMessage("CHOOSE_LOT_FORBIDDEN")).toContain("permiso");
     expect(transferErrorMessage("X")).toContain("No se pudo");
+  });
+  it("valor trasladado por divisa; null sin costos", () => {
+    const lots = [
+      { id: "a", receivedAt: "", remaining: 5, unitCost: { amount: 2, currencyId: "usd" } },
+      { id: "b", receivedAt: "", remaining: 5, unitCost: null },
+    ];
+    expect(allocationValue(lots, [{ lotId: "a", qty: 3 }, { lotId: "b", qty: 1 }])).toEqual({ byCurrency: [{ currencyId: "usd", amount: 6 }], unknown: true });
+    expect(allocationValue([{ id: "a", receivedAt: "", remaining: 1 }], [{ lotId: "a", qty: 1 }])).toBeNull();
+  });
+  it("valida un traslado de varias líneas", () => {
+    const line = { productId: "p", qty: 2, unit: "base" };
+    const ok = transferLinesSchema.safeParse({ toLocationId: "t", lines: JSON.stringify([line, { ...line, productId: "q", picks: [{ lotId: "a", qty: 2 }] }]) });
+    expect(ok.success && ok.data.lines).toHaveLength(2);
+    expect(transferLinesSchema.safeParse({ toLocationId: "t", lines: "[]" }).success).toBe(false);
+    expect(transferLinesSchema.safeParse({ toLocationId: "t", lines: JSON.stringify([{ ...line, qty: 0 }]) }).success).toBe(false);
   });
 });
