@@ -67,8 +67,11 @@ select throws_ok($$insert into locations (company_id, kind, store_id, name) valu
   '23505', null, 'only one location per store');
 select throws_ok($$insert into locations (company_id, kind, name) values ('00000000-0000-0000-0000-0000000000b2', 'store', 'Sin tienda')$$,
   '23514', null, 'a store location needs a store');
+delete from locations where store_id = '00000000-0000-0000-0000-0000000000f1';
 select throws_ok($$insert into locations (company_id, kind, store_id, name) values ('00000000-0000-0000-0000-0000000000b2', 'store', '00000000-0000-0000-0000-0000000000f1', 'Cruzada')$$,
   '23503', null, 'the store must belong to the company');
+insert into locations (id, company_id, kind, store_id, name)
+select (select v from ctx where k = 'l1'), company_id, 'store', id, name from stores where id = '00000000-0000-0000-0000-0000000000f1';
 select throws_ok($$update locations set kind = 'store' where company_id = '00000000-0000-0000-0000-0000000000a1' and kind = 'warehouse'$$,
   '42501', null, 'location kind is immutable');
 select throws_ok($$update locations set company_id = '00000000-0000-0000-0000-0000000000b2' where store_id = '00000000-0000-0000-0000-0000000000f1'$$,
