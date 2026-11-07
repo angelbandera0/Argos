@@ -46,3 +46,4 @@ next-env.d.ts
 
 # design component zips (datos de diseño, solo se versionan los .dc.html extraídos)
 docs/design/components/*.zip
+docs/design/modulo2/*.zip
