@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Armar pedido</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e}
+.row:hover td{background:#fafbfc}
+.ib:hover{background:#eceef1}
+.mi:hover{background:#f6f8fa}
+.gh:hover{background:#f6f8fa}
+.bt:hover{background:#fff4f3}
+.np:hover{background:#f6f8fa}
+.fld:focus,.sel:focus{outline:none;border-color:#d92d25 !important;box-shadow:0 0 0 4px #ffe6e4}
+input[type=number]::-webkit-inner-spin-button{opacity:0.4}
+@keyframes sk{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.sk{background:linear-gradient(90deg,#eceef1 0,#f6f8fa 50%,#eceef1 100%);background-size:400px 100%;animation:sk 1.4s linear infinite;border-radius:9999px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px"><aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px"><div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div><button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button><nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 14px"><sc-for list="{{navSecs}}" as="s" hint-placeholder-count="4"><div><p style="margin: 0 0 6px; padding: 0 14px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">{{s.t}}</p><div style="display: flex; flex-direction: column; gap: 2px"><sc-for list="{{s.items}}" as="n" hint-placeholder-count="3"><a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{ false }}"><span style="{{n.badgeStyle}}">{{n.badge}}<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap"> sin atender</span></span></sc-if><sc-if value="{{n.dot}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a></sc-for></div></div></sc-for></nav></aside><div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px"><div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px"><p style="margin: 0; font-size: 14px; color: #45484d">Viernes, 6 de noviembre · 10:24</p><div style="display: flex; align-items: center; gap: 8px"><label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 260px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label><div style="position: relative"><button type="button" aria-label="{{bellLabel}}" aria-haspopup="dialog" aria-expanded="{{bellAria}}" onClick="{{toggleBell}}" style="{{bellBtn}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="position: absolute; top: 4px; right: 3px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9999px; background: #d92d25; color: #ffffff; border: 2px solid #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{unread}}</span></sc-if></button><sc-if value="{{bellOpen}}" hint-placeholder-val="{{ false }}"><div role="dialog" aria-label="Notificaciones" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: 400px; max-width: calc(100vw - 32px); background: #ffffff; border-radius: 24px; padding: 8px; box-sizing: border-box; box-shadow: 0 1px 2px rgba(28,28,30,0.06), 0 22px 50px rgba(28,28,30,0.16)"><div style="display: flex; align-items: center; gap: 8px; padding: 10px 10px 8px 12px"><p style="margin: 0; flex: 1; font-weight: 600; font-size: 16px">Notificaciones</p><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><button type="button" class="bt" onClick="{{markAll}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #d92d25; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer">Marcar todas como leídas</button></sc-if></div><sc-if value="{{allRead}}" hint-placeholder-val="{{ false }}"><div style="margin: 0 4px 6px; padding: 12px 14px; border-radius: 16px; background: #e6f4ec; color: #1e7a50; display: flex; align-items: center; gap: 10px; font-weight: 600"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Estás al día</div></sc-if><ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px"><sc-for list="{{notifs}}" as="m" hint-placeholder-count="4"><li><a href="#" class="np" style="display: flex; gap: 12px; padding: 10px 12px; border-radius: 16px; text-decoration: none; color: #1c1c1e"><span aria-hidden="true" style="{{m.iconBox}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{m.d1}}"></path><path d="{{m.d2}}"></path><path d="{{m.d3}}"></path></svg></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px"><span style="display: flex; align-items: center; gap: 6px"><span style="{{m.titleStyle}}">{{m.title}}</span></span><span style="font-size: 13px; color: #45484d">{{m.text}}</span><span style="display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 12px; color: #6b6f76"><span style="{{m.prStyle}}">{{m.pr}}</span>{{m.meta}}</span></span><sc-if value="{{m.unread}}" hint-placeholder-val="{{ true }}"><span style="width: 9px; height: 9px; flex: none; margin-top: 6px; border-radius: 9999px; background: #d92d25"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Sin leer</span></span></sc-if></a></li></sc-for></ul><a href="#" class="gh" style="margin-top: 6px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #1c1c1e; text-decoration: none; background: #f6f8fa">Ver todas</a></div></sc-if></div><div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="{{meAvatar}}">{{meInitial}}</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">{{meName}}</strong><span style="font-size: 12px; color: #6b6f76">{{meRole}}</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div></div></div><div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px"><div style="min-width: 0"><nav aria-label="Migas de pan"><ol style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px; font-size: 14px"><li><a href="#" class="crumb" style="color: #45484d; text-decoration: none">Pedidos</a></li><li aria-hidden="true" style="color: #c9cdd3; display: flex"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></li><li aria-current="page" style="font-weight: 600">Nuevo pedido</li></ol></nav><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px"><h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.3px; line-height: 1.1">Armar pedido</h1></div><p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Reúne lo que hay que comprar y asígnalo a un comprador.</p></div><div style="display: flex; flex-wrap: wrap; gap: 8px"></div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 1 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<section aria-labelledby="a1" style="background: #f6f8fa; border-radius: 24px; padding: 24px"><div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px"><span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffffff; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span><div style="flex: 1; min-width: 0"><h2 style="margin: 0; font-size: 18px; font-weight: 600"><span id="a1">Datos del pedido</span></h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Quién compra, con qué dinero y para cuándo.</p></div></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Comprador</span><span style="position: relative; display: flex; align-items: center"><select class="sel" value="{{buyer}}" onChange="{{onBuyer}}" style="{{buyerStyle}}"><option value="">Elige quién compra</option><option value="luis">Luis Martín</option><option value="pedro">Pedro Gil</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span><span style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Solo usuarios con permiso «Realizar compras».</span></label>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Divisa</span><span style="position: relative; display: flex; align-items: center"><select class="sel" value="{{cur}}" onChange="{{onCur}}" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option value="CUP">CUP · Peso cubano</option><option value="USD">USD · Dólar estadounidense</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Monto entregado</span><span style="position: relative; display: flex; align-items: center"><input type="number" min="0" class="fld" value="{{monto}}" onChange="{{onMonto}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; width: 100%; padding-right: 56px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap"><span aria-hidden="true" style="position: absolute; right: 18px; color: #6b6f76">{{cur}}</span></span><span style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Dinero que se le da al comprador.</span></label></sc-if>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Fecha de compra</span><button type="button" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v15H4z"></path><path d="M4 10h16"></path><path d="M9 3v4M15 3v4"></path></svg>Hoy, 6 nov 2026</button></label>
+</div></section>
+
+<section aria-labelledby="a2" style="background: #f6f8fa; border-radius: 24px; padding: 24px"><div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px"><span aria-hidden="true" style="width: 28px; height: 28px; flex: none; border-radius: 9999px; background: #ffffff; color: #b3221b; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">2</span><div style="flex: 1; min-width: 0"><h2 style="margin: 0; font-size: 18px; font-weight: 600"><span id="a2">Productos</span></h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Cantidades en presentación de compra. Debajo verás el equivalente en unidad base.</p></div><div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="gh" style="height: 40px; padding: 0 14px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 13H6z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Añadir desde la bolsa <span style="padding: 1px 7px; border-radius: 9999px; background: #ffe6e4; color: #b3221b; font-size: 11px">2</span></button><button type="button" class="gh" style="height: 40px; padding: 0 14px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>Entrega directa</button></div></div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+<div style="background: #ffffff; border-radius: 20px; padding: 14px 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+<div style="flex: 1 1 200px; min-width: 0"><p style="margin: 0; font-weight: 600; font-size: 15px">{{l.prod}}</p><p style="margin: 2px 0 0; font-size: 12px; color: #6b6f76">{{l.origin}}</p></div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; gap: 6px"><label><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">{{l.qtyLabel}}</span><input type="number" min="1" class="fld" value="{{l.qty}}" onChange="{{l.onQty}}" style="width: 72px; height: 44px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; text-align: center; font: inherit; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap"></label>
+<span style="height: 44px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; background: #f6f8fa; font-weight: 600">{{l.presName}}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+<span style="font-size: 12px; color: #6b6f76; padding-left: 6px; font-variant-numeric: tabular-nums; white-space: nowrap">= {{l.base}}</span></div>
+<span style="{{l.destStyle}}"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"></path><path d="M14 10h4l3 3v3h-7"></path><path d="M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path><path d="M17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg>{{l.dest}}</span>
+<button type="button" class="ib" aria-label="{{l.rmLabel}}" onClick="{{l.rm}}" style="width: 40px; height: 40px; border: 0; border-radius: 9999px; background: transparent; color: #45484d; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button>
+</div>
+<sc-if value="{{l.direct}}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: #f6f8fa; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px"><span id="mode-l" style="font-size: 13px; font-weight: 600">Entrega</span>
+<div role="radiogroup" aria-labelledby="mode-l" style="display: inline-flex; gap: 4px; padding: 4px; border-radius: 9999px; background: #ffffff"><button type="button" role="radio" aria-checked="{{l.genAria}}" onClick="{{l.setGen}}" style="{{l.genStyle}}">General</button><button type="button" role="radio" aria-checked="{{l.byAria}}" onClick="{{l.setBy}}" style="{{l.byStyle}}">Por tienda</button></div>
+<span style="font-size: 12px; color: #6b6f76">{{l.modeHelp}}</span></div>
+<sc-if value="{{l.byStore}}" hint-placeholder-val="{{ true }}"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+<sc-for list="{{split}}" as="s" hint-placeholder-count="3"><label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px">{{s.name}}<input type="number" min="0" class="fld" value="{{s.val}}" onChange="{{s.on}}" style="{{s.style}}"></label></sc-for>
+<span style="{{splitChip}}">{{splitText}}</span></div></sc-if>
+</div></sc-if>
+</div>
+</sc-for>
+</div></section>
+</div>
+
+<aside aria-labelledby="sum-a" style="flex: 0 0 340px; max-width: 100%; position: sticky; top: 16px; background: #f6f8fa; border-radius: 24px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<p id="sum-a" style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">RESUMEN DEL PEDIDO</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<div style="background: #ffffff; border-radius: 16px; padding: 12px 14px"><p style="margin: 0; font-size: 12px; color: #6b6f76">Productos</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500">{{nLines}}</p></div>
+<div style="background: #ffffff; border-radius: 16px; padding: 12px 14px"><p style="margin: 0; font-size: 12px; color: #6b6f76">Presentaciones</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500">{{nUnits}}</p></div>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><div style="grid-column: 1 / -1; background: #ffffff; border-radius: 16px; padding: 12px 14px"><p style="margin: 0; font-size: 12px; color: #6b6f76">Monto entregado</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap">{{montoFmt}}</p></div></sc-if>
+</div>
+<p style="margin: 0; font-size: 13px; color: #45484d">{{buyerSum}}</p>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="4"><li style="display: flex; align-items: center; gap: 10px; font-size: 13px"><span aria-hidden="true" style="{{k.icon}}"><sc-if value="{{k.ok}}" hint-placeholder-val="{{ true }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span><span style="{{k.ts}}">{{k.text}}</span></li></sc-for></ul>
+<button type="button" disabled="{{asgDisabled}}" style="{{asgStyle}}">Asignar a {{buyerFirst}}</button>
+<button type="button" class="gh" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Guardar borrador</button>
+</aside></div>
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1120}, "costs": false}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({ bell: false, nRead: false }, { buyer: 'luis', cur: 'CUP', monto: 25000, split: { t23: 1, t5: 1, tg: 0 }, lines: [
+      { id: 'aceite', prod: 'Aceite de soya', origin: 'De la bolsa · Tienda 23 y L (6 L), Tienda 5ta Avenida (4 L)', pres: 'caja', cont: 12, unit: 'L', qty: 1 },
+      { id: 'frijol', prod: 'Frijoles negros', origin: 'De la bolsa · Tienda 23 y L (10 lb) · existencia baja', pres: 'saco', cont: 50, unit: 'lb', qty: 2 },
+      { id: 'leche', prod: 'Leche en polvo', origin: 'De la bolsa · Cafetería G (4 kg)', pres: 'bolsa', cont: 1, unit: 'kg', qty: 4 },
+      { id: 'pollo', prod: 'Pollo (muslos)', origin: 'Entrega directa a tiendas', pres: 'caja', cont: 40, unit: 'lb', qty: 3, direct: true, mode: 'tienda' }
+    ] });
+  }
+  renderVals() {
+    const st = this.state;
+    const P = this.props;
+    const ACTIVE = 'pedidos';
+    const ME = ['Raul', 'Almacenero', 'R', 'background: #ffe6e4; color: #b3221b'];
+
+    const C = this.props.costs !== false;
+    const fq = (n, d) => { const neg = n < 0; const s = Math.abs(n).toFixed(d).split('.'); s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); return (neg ? '−' : '') + s[0] + (d ? ',' + s[1] : ''); };
+    const fm = (n, cur) => fq(n, 2) + ' ' + (cur || 'CUP');
+    const chip = 'display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; ';
+    const ST = { normal: ['Normal', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], bajo: ['Bajo', 'background: #fff4cf; color: #7a5200', 'M12 6v8M12 18v.01'], agotado: ['Agotado', 'background: #ffe6e4; color: #b3221b; font-weight: 700', 'M6 6l12 12M18 6L6 18'] };
+    const sb = (k) => ({ bl: ST[k][0], bs: chip + ST[k][1], bi: ST[k][2] });
+    const PS = { borrador: ['Borrador', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M4 20h4L19 9l-4-4L4 16z'], abierto: ['Abierto · en curso', 'background: #ffc93c; color: #1c1c1e', 'M12 7.5V12l3 2'], revision: ['En revisión', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-3.5-3.5'], cumplido: ['Cumplido', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], devuelto: ['Devuelto', 'background: #ffe6e4; color: #b3221b', 'M15 5l-7 7 7 7'], cancelado: ['Cancelado', 'background: #f6f8fa; color: #6b6f76', 'M6 6l12 12M18 6L6 18'] };
+    const pb = (k) => ({ bl: PS[k][0], bs: chip + PS[k][1], bi: PS[k][2] });
+    const LS = { pendiente: ['Pendiente', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M12 7.5V12l3 2'], surtida: ['Surtida', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], parcial: ['Surtida en parte', 'background: #fff4cf; color: #7a5200', 'M6 12h12'], comprar: ['Por comprar', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2'], rechazada: ['Rechazada', 'background: #ffe6e4; color: #b3221b', 'M6 6l12 12M18 6L6 18'] };
+    const lb = (k) => ({ bl: LS[k][0], bs: chip + LS[k][1], bi: LS[k][2] });
+    const NI = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      notificaciones: ['M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z', 'M10 21h4', ''],
+      existencias: ['M3 21V9l9-6 9 6v12', 'M7 21v-8h10v8', 'M7 17h10'],
+      solicitudes: ['M9 3.5h6v3H9z', 'M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2', 'M9 12h6M9 16h4'],
+      pedidos: ['M5 8h14l-1 13H6z', 'M9 8V6a3 3 0 0 1 6 0v2', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      divisas: ['M3 6h18v12H3z', 'M12 9.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z', 'M6.5 9v.01M17.5 15v.01'],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const NAVS = [['GENERAL', [['inicio', 'Inicio'], ['notificaciones', 'Notificaciones']]], ['ALMACÉN', [['existencias', 'Existencias'], ['solicitudes', 'Solicitudes', 6], ['pedidos', 'Pedidos']]], ['CATÁLOGO', [['productos', 'Productos'], ['categorias', 'Categorías'], ['divisas', 'Divisas']]], ['ADMINISTRACIÓN', [['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['historial', 'Historial']]]];
+    const navSecs = NAVS.map(([t, items]) => ({ t, items: items.map(([k, label, badge]) => { const a = k === ACTIVE; return {
+      label, badge: badge ? String(badge) : '', hasBadge: !!badge, dot: a && !badge, current: a ? 'page' : 'false', cls: a ? '' : 'nav-i',
+      d1: NI[k][0], d2: NI[k][1], d3: NI[k][2], iconColor: a ? '#d92d25' : 'currentColor',
+      badgeStyle: 'min-width: 22px; height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (a ? 'background: #d92d25; color: #ffffff' : 'background: #ffffff; color: #1c1c1e'),
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (a ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }; }) }));
+    const PR = { info: ['Info', 'background: #f6f8fa; color: #45484d'], aviso: ['Aviso', 'background: #fff4cf; color: #7a5200'], urgente: ['Urgente', 'background: #ffe6e4; color: #b3221b'] };
+    const NOTIF = [
+      { mod: 'pedidos', pr: 'urgente', title: 'Pedido P-0139 listo para revisar', text: C ? 'Luis Martín terminó la compra. Gastado 18.450,00 CUP.' : 'Luis Martín terminó la compra: 5 líneas.', meta: 'hace 5 min', u: true },
+      { mod: 'existencias', pr: 'aviso', title: 'Aceite de soya agotado', text: 'El almacén general llegó a 0 L.', meta: 'hace 20 min · Almacén general', u: true },
+      { mod: 'solicitudes', pr: 'info', title: 'Nueva solicitud de reposición', text: 'Tienda 5ta Avenida pide 4 productos.', meta: 'hace 1 h · Tienda 5ta Avenida', u: true },
+      { mod: 'existencias', pr: 'info', title: 'Entrada inicial registrada', text: 'Raul registró 5 sacos de arroz (125,000 lb).', meta: 'hace 3 h · Almacén general', u: false }
+    ];
+    const allReadNow = !!st.nRead;
+    const notifs = NOTIF.map((m) => { const u = m.u && !allReadNow; return {
+      title: m.title, text: m.text, meta: m.meta, unread: u, pr: PR[m.pr][0], prStyle: 'height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 11px; font-weight: 700; ' + PR[m.pr][1],
+      titleStyle: 'font-size: 14px; ' + (u ? 'font-weight: 600' : 'font-weight: 500; color: #45484d'),
+      d1: NI[m.mod][0], d2: NI[m.mod][1], d3: NI[m.mod][2],
+      iconBox: 'width: 36px; height: 36px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (m.pr === 'urgente' ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #45484d')
+    }; });
+    const unread = notifs.filter((m) => m.unread).length;
+    const COMMON = {
+      navSecs, notifs, unread: String(unread), hasUnread: unread > 0, allRead: unread === 0,
+      bellOpen: !!st.bell, bellAria: st.bell ? 'true' : 'false', bellLabel: 'Notificaciones' + (unread ? ', ' + unread + ' sin leer' : ''),
+      bellBtn: 'position: relative; width: 44px; height: 44px; border: 0; border-radius: 9999px; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: ' + (st.bell ? '#ffe6e4' : '#f6f8fa'),
+      toggleBell: () => this.setState({ bell: !st.bell }), markAll: () => this.setState({ nRead: true }),
+      meName: ME[0], meRole: ME[1], meInitial: ME[2], meAvatar: 'width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 700; ' + ME[3],
+      C, noC: !C
+    };
+
+
+    const BTNP = 'height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; width: 100%';
+    const SEL = 'width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer';
+
+    const NUMS = 'font-variant-numeric: tabular-nums; white-space: nowrap; ';
+
+    const segB = (on) => 'height: 36px; padding: 0 14px; border: 0; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #1c1c1e; color: #ffffff' : 'background: transparent; color: #45484d');
+    const numIn = (bad) => 'width: 72px; height: 40px; box-sizing: border-box; border-radius: 9999px; padding: 0 10px; text-align: center; font: inherit; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; background: #ffffff; ' + (bad ? 'border: 2px solid #d92d25; background: #fff7f6' : 'border: 1.5px solid #c9cdd3');
+
+    const BUY = { luis: 'Luis Martín', pedro: 'Pedro Gil' };
+    const buyerName = BUY[st.buyer] || '';
+    const PLR = { caja: 'cajas', saco: 'sacos', bolsa: 'bolsas' };
+    const upd = (id, patch) => this.setState({ lines: st.lines.map((x) => x.id === id ? Object.assign({}, x, patch) : x) });
+    const SN = [['t23', 'Tienda 23 y L'], ['t5', 'Tienda 5ta Avenida'], ['tg', 'Cafetería G']];
+    const dl = st.lines.find((l) => l.direct);
+    const splitSum = SN.reduce((a, [k]) => a + (st.split[k] || 0), 0);
+    const needSplit = dl && dl.mode === 'tienda';
+    const splitOk = !needSplit || splitSum === dl.qty;
+    const lines = st.lines.map((l) => ({
+      prod: l.prod, origin: l.origin, qty: String(l.qty), qtyLabel: 'Cantidad de ' + l.prod, presName: (l.qty === 1 ? l.pres : PLR[l.pres]) + ' de ' + l.cont + ' ' + l.unit,
+      base: fq(l.qty * l.cont, 3) + ' ' + l.unit, onQty: (e) => upd(l.id, { qty: Math.max(1, parseInt(e.target.value, 10) || 1) }),
+      dest: l.direct ? 'Entrega directa' : 'Almacén general', destStyle: chip + (l.direct ? 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3' : 'background: #f6f8fa; color: #1c1c1e'),
+      rmLabel: 'Quitar ' + l.prod, rm: () => this.setState({ lines: st.lines.filter((x) => x.id !== l.id) }),
+      direct: !!l.direct, byStore: l.mode === 'tienda', genAria: l.mode === 'general' ? 'true' : 'false', byAria: l.mode === 'tienda' ? 'true' : 'false',
+      genStyle: segB(l.mode === 'general'), byStyle: segB(l.mode === 'tienda'),
+      setGen: () => upd(l.id, { mode: 'general' }), setBy: () => upd(l.id, { mode: 'tienda' }),
+      modeHelp: l.mode === 'general' ? 'Se reparte entre tiendas al revisar el pedido.' : 'Indica cuánto va a cada tienda.'
+    }));
+    const split = SN.map(([k, name]) => ({ name, val: String(st.split[k] || 0), on: (e) => this.setState({ split: Object.assign({}, st.split, { [k]: Math.max(0, parseInt(e.target.value, 10) || 0) }) }), style: numIn(!splitOk) }));
+    const monto = Number(st.monto) || 0;
+    const ck = (ok, text) => ({ ok, text, icon: 'width: 20px; height: 20px; flex: none; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: ' + (ok ? '#1e7a50' : '#eceef1'), ts: ok ? '' : 'color: #6b6f76' });
+    const checks = [ck(!!buyerName, 'Comprador elegido'), ck(!C || monto > 0, 'Monto entregado'), ck(st.lines.length > 0, 'Al menos un producto'), ck(splitOk, needSplit ? (splitOk ? 'Reparto por tienda cuadra' : 'Reparto: ' + splitSum + ' de ' + dl.qty + ' cajas') : 'Reparto por tienda')];
+    const ok = checks.every((k) => k.ok);
+    const V = {
+      lines, split, buyer: st.buyer, cur: st.cur, monto: String(st.monto), montoFmt: fm(monto, st.cur),
+      buyerStyle: SEL + (st.buyer ? '' : '; color: #8c9097; border-color: #e4e6ea'),
+      onBuyer: (e) => this.setState({ buyer: e.target.value }), onCur: (e) => this.setState({ cur: e.target.value }), onMonto: (e) => this.setState({ monto: e.target.value }),
+      splitText: splitOk ? 'Cuadra: ' + splitSum + ' de ' + (dl ? dl.qty : 0) : 'Faltan ' + ((dl ? dl.qty : 0) - splitSum) + ' por repartir', splitChip: chip + (splitOk ? 'background: #e6f4ec; color: #1e7a50' : 'background: #ffe6e4; color: #b3221b'),
+      nLines: String(st.lines.length), nUnits: String(st.lines.reduce((a, l) => a + l.qty, 0)),
+      buyerSum: buyerName ? buyerName + ' recibirá una notificación y verá el pedido en su móvil.' : 'Elige un comprador para poder asignarlo.',
+      buyerFirst: buyerName ? buyerName.split(' ')[0] : 'comprador', checks,
+      asgDisabled: !ok, asgStyle: BTNP + (ok ? '' : '; background: #eceef1; color: #8c9097; cursor: not-allowed')
+    };
+
+    return Object.assign(COMMON, V);
+  }
+}
+</script>
+</body>
+</html>

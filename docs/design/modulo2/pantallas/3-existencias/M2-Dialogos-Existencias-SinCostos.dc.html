@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Dar de baja, entrada directa y motivos de baja</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e}
+.row:hover td{background:#fafbfc}
+.ib:hover{background:#eceef1}
+.mi:hover{background:#f6f8fa}
+.gh:hover{background:#f6f8fa}
+.bt:hover{background:#fff4f3}
+.np:hover{background:#f6f8fa}
+.fld:focus,.sel:focus{outline:none;border-color:#d92d25 !important;box-shadow:0 0 0 4px #ffe6e4}
+input[type=number]::-webkit-inner-spin-button{opacity:0.4}
+@keyframes sk{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.sk{background:linear-gradient(90deg,#eceef1 0,#f6f8fa 50%,#eceef1 100%);background-size:400px 100%;animation:sk 1.4s linear infinite;border-radius:9999px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45"><div style="min-height: 100vh; box-sizing: border-box; padding: 40px; background: #d9dbdf; display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; justify-content: center">
+<div role="dialog" aria-labelledby="bj-h" style="width: 440px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 26px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.18); display: flex; flex-direction: column; gap: 16px">
+<div><p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">ALMACÉN GENERAL</p><h2 id="bj-h" style="margin: 4px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600">Dar de baja</h2><p style="margin: 4px 0 0; color: #45484d">Sale de las existencias y no vuelve. Queda en el historial.</p></div>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Producto</span><span style="position: relative; display: flex; align-items: center"><select class="sel" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option>Arroz · hay 125,000 lb</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Cantidad</span><input type="number" min="0" class="fld" value="{{bq}}" onChange="{{onBq}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; font-weight: 600"></label>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Unidad</span><span style="position: relative; display: flex; align-items: center"><select class="sel" value="{{bu}}" onChange="{{onBu}}" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option value="1">lb</option><option value="5">bolsas (5 lb)</option><option value="25">sacos (25 lb)</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label></div>
+<p style="margin: -8px 0 0 6px; font-size: 12px; color: #6b6f76; font-variant-numeric: tabular-nums; white-space: nowrap">= {{bBase}}</p>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Lote</span><span style="position: relative; display: flex; align-items: center"><select class="sel" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option>L-0017 · quedan 25,000 lb · sugerido</option><option>L-0021 · quedan 100,000 lb</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label>
+<fieldset style="border: 0; margin: 0; padding: 0"><legend style="font-size: 14px; font-weight: 600; margin-bottom: 8px; padding: 0">Motivo</legend><div role="radiogroup" style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{reasons}}" as="r" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{r.aria}}" onClick="{{r.pick}}" style="{{r.style}}">{{r.label}}</button></sc-for></div></fieldset>
+<sc-if value="{{other}}" hint-placeholder-val="{{ false }}"><label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Describe el motivo <span style="color: #b3221b">*</span></span><textarea class="fld" rows="2" value="{{otherTxt}}" onChange="{{onOther}}" style="box-sizing: border-box; border: 2px solid #d92d25; border-radius: 18px; padding: 12px 14px; font: inherit; resize: vertical"></textarea><span style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Obligatorio cuando el motivo es «Otro».</span></label></sc-if>
+<div style="background: #f6f8fa; border-radius: 18px; padding: 4px 14px"><div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eceef1"><span style="color: #45484d">Existencia</span><span style="font-variant-numeric: tabular-nums; white-space: nowrap">125,000 → <strong>{{bAfter}}</strong></span></div>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><div style="display: flex; justify-content: space-between; padding: 10px 0"><span style="color: #45484d">Valor perdido</span><strong style="color: #b3221b; font-variant-numeric: tabular-nums; white-space: nowrap">{{bLoss}}</strong></div></sc-if></div>
+<div style="display: flex; justify-content: flex-end; gap: 10px"><button type="button" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Cancelar</button><button type="button" disabled="{{bDisabled}}" style="{{bBtn}}">Dar de baja</button></div></div>
+
+<div role="dialog" aria-labelledby="ed-h" style="width: 440px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 26px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.18); display: flex; flex-direction: column; gap: 16px">
+<div><p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">CON PERMISO «ENTRADA DIRECTA»</p><h2 id="ed-h" style="margin: 4px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600">Entrada directa a tienda</h2><p style="margin: 4px 0 0; color: #45484d">Para lo que llega directo a la tienda sin pasar por el almacén, como el pan.</p></div>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Tienda</span><span style="position: relative; display: flex; align-items: center"><select class="sel" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option>Tienda 23 y L</option><option>Cafetería G</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Producto</span><span style="position: relative; display: flex; align-items: center"><select class="sel" style="width: 100%; appearance: none; -webkit-appearance: none; height: 48px; box-sizing: border-box; border: 1.5px solid #c9cdd3; border-radius: 9999px; background: #ffffff; padding: 0 44px 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; cursor: pointer"><option>Pan de flauta · unidad</option></select><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 18px; pointer-events: none"><path d="M6 9l6 6 6-6"></path></svg></span></label>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Cantidad</span><span style="position: relative; display: flex; align-items: center"><input type="number" class="fld" value="{{eq}}" onChange="{{onEq}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; width: 100%; font-weight: 600; padding-right: 90px"><span aria-hidden="true" style="position: absolute; right: 16px; color: #6b6f76">unidades</span></span></label>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Costo por unidad</span><span style="position: relative; display: flex; align-items: center"><input type="number" class="fld" value="{{ec}}" onChange="{{onEc}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; width: 100%; font-weight: 600; padding-right: 56px"><span aria-hidden="true" style="position: absolute; right: 16px; color: #6b6f76">CUP</span></span></label></sc-if></div>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Fecha</span><button type="button" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; display: flex; align-items: center; gap: 10px; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v15H4z"></path><path d="M4 10h16"></path><path d="M9 3v4M15 3v4"></path></svg>Hoy, 6 nov 2026 · 07:30</button></label>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><p style="margin: 0; display: flex; justify-content: space-between; padding: 12px 14px; border-radius: 16px; background: #f6f8fa"><span style="color: #45484d">Total</span><strong style="font-variant-numeric: tabular-nums; white-space: nowrap">{{eTotal}}</strong></p></sc-if>
+<div style="display: flex; justify-content: flex-end; gap: 10px"><button type="button" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Cancelar</button><button type="button" style="height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Registrar</button></div></div>
+
+<section aria-labelledby="mb-h" style="width: 440px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 26px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.18); display: flex; flex-direction: column; gap: 16px; width: 460px">
+<div><p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">ADMINISTRADOR · CONFIGURACIÓN</p><h2 id="mb-h" style="margin: 4px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600">Motivos de baja</h2><p style="margin: 4px 0 0; color: #45484d">Los estándar no se pueden borrar. Los tuyos sí, si no se han usado.</p></div>
+<form onSubmit="{{addReason}}" style="display: flex; gap: 8px"><label style="flex: 1"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Nuevo motivo</span><input type="text" class="fld" placeholder="Nuevo motivo, ej. Robo" value="{{newR}}" onChange="{{onNewR}}" style="height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 18px; font: inherit; font-size: 15px; color: #1c1c1e; width: 100%"></label><button type="submit" style="height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Añadir</button></form>
+<ul style="list-style: none; margin: 0; padding: 0; background: #f6f8fa; border-radius: 18px; overflow: hidden"><sc-for list="{{catalog}}" as="m" hint-placeholder-count="6"><li style="display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 16px; border-top: 1px solid #eceef1">
+<span style="flex: 1; font-weight: 600">{{m.name}}</span><sc-if value="{{m.std}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 9999px; background: #ffffff; color: #45484d; font-size: 11px; font-weight: 700"><svg aria-hidden="true" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v10H5z"></path><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Estándar</span></sc-if>
+<span style="font-size: 12px; color: #6b6f76">{{m.uses}}</span>
+<sc-if value="{{m.own}}" hint-placeholder-val="{{ false }}"><button type="button" class="ib" aria-label="{{m.rmLabel}}" onClick="{{m.rm}}" disabled="{{m.used}}" style="{{m.rmStyle}}"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg></button></sc-if></li></sc-for></ul></section>
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1000}, "costs": false}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({ bell: false, nRead: false }, { bq: 2, bu: '1', reason: 'otro', otherTxt: '', eq: 40, ec: 25, newR: '', own: [['Robo', 1], ['Muestra para cliente', 0]] });
+  }
+  renderVals() {
+    const st = this.state;
+    const P = this.props;
+    const ACTIVE = 'existencias';
+    const ME = ['Admin', 'Administrador', 'A', 'background: #ffc93c; color: #1c1c1e'];
+
+    const C = this.props.costs !== false;
+    const fq = (n, d) => { const neg = n < 0; const s = Math.abs(n).toFixed(d).split('.'); s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); return (neg ? '−' : '') + s[0] + (d ? ',' + s[1] : ''); };
+    const fm = (n, cur) => fq(n, 2) + ' ' + (cur || 'CUP');
+    const chip = 'display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; ';
+    const ST = { normal: ['Normal', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], bajo: ['Bajo', 'background: #fff4cf; color: #7a5200', 'M12 6v8M12 18v.01'], agotado: ['Agotado', 'background: #ffe6e4; color: #b3221b; font-weight: 700', 'M6 6l12 12M18 6L6 18'] };
+    const sb = (k) => ({ bl: ST[k][0], bs: chip + ST[k][1], bi: ST[k][2] });
+    const PS = { borrador: ['Borrador', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M4 20h4L19 9l-4-4L4 16z'], abierto: ['Abierto · en curso', 'background: #ffc93c; color: #1c1c1e', 'M12 7.5V12l3 2'], revision: ['En revisión', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-3.5-3.5'], cumplido: ['Cumplido', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], devuelto: ['Devuelto', 'background: #ffe6e4; color: #b3221b', 'M15 5l-7 7 7 7'], cancelado: ['Cancelado', 'background: #f6f8fa; color: #6b6f76', 'M6 6l12 12M18 6L6 18'] };
+    const pb = (k) => ({ bl: PS[k][0], bs: chip + PS[k][1], bi: PS[k][2] });
+    const LS = { pendiente: ['Pendiente', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M12 7.5V12l3 2'], surtida: ['Surtida', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], parcial: ['Surtida en parte', 'background: #fff4cf; color: #7a5200', 'M6 12h12'], comprar: ['Por comprar', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2'], rechazada: ['Rechazada', 'background: #ffe6e4; color: #b3221b', 'M6 6l12 12M18 6L6 18'] };
+    const lb = (k) => ({ bl: LS[k][0], bs: chip + LS[k][1], bi: LS[k][2] });
+    const NI = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      notificaciones: ['M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z', 'M10 21h4', ''],
+      existencias: ['M3 21V9l9-6 9 6v12', 'M7 21v-8h10v8', 'M7 17h10'],
+      solicitudes: ['M9 3.5h6v3H9z', 'M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2', 'M9 12h6M9 16h4'],
+      pedidos: ['M5 8h14l-1 13H6z', 'M9 8V6a3 3 0 0 1 6 0v2', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      divisas: ['M3 6h18v12H3z', 'M12 9.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z', 'M6.5 9v.01M17.5 15v.01'],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const NAVS = [['GENERAL', [['inicio', 'Inicio'], ['notificaciones', 'Notificaciones']]], ['ALMACÉN', [['existencias', 'Existencias'], ['solicitudes', 'Solicitudes', 6], ['pedidos', 'Pedidos']]], ['CATÁLOGO', [['productos', 'Productos'], ['categorias', 'Categorías'], ['divisas', 'Divisas']]], ['ADMINISTRACIÓN', [['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['historial', 'Historial']]]];
+    const navSecs = NAVS.map(([t, items]) => ({ t, items: items.map(([k, label, badge]) => { const a = k === ACTIVE; return {
+      label, badge: badge ? String(badge) : '', hasBadge: !!badge, dot: a && !badge, current: a ? 'page' : 'false', cls: a ? '' : 'nav-i',
+      d1: NI[k][0], d2: NI[k][1], d3: NI[k][2], iconColor: a ? '#d92d25' : 'currentColor',
+      badgeStyle: 'min-width: 22px; height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (a ? 'background: #d92d25; color: #ffffff' : 'background: #ffffff; color: #1c1c1e'),
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (a ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }; }) }));
+    const PR = { info: ['Info', 'background: #f6f8fa; color: #45484d'], aviso: ['Aviso', 'background: #fff4cf; color: #7a5200'], urgente: ['Urgente', 'background: #ffe6e4; color: #b3221b'] };
+    const NOTIF = [
+      { mod: 'pedidos', pr: 'urgente', title: 'Pedido P-0139 listo para revisar', text: C ? 'Luis Martín terminó la compra. Gastado 18.450,00 CUP.' : 'Luis Martín terminó la compra: 5 líneas.', meta: 'hace 5 min', u: true },
+      { mod: 'existencias', pr: 'aviso', title: 'Aceite de soya agotado', text: 'El almacén general llegó a 0 L.', meta: 'hace 20 min · Almacén general', u: true },
+      { mod: 'solicitudes', pr: 'info', title: 'Nueva solicitud de reposición', text: 'Tienda 5ta Avenida pide 4 productos.', meta: 'hace 1 h · Tienda 5ta Avenida', u: true },
+      { mod: 'existencias', pr: 'info', title: 'Entrada inicial registrada', text: 'Raul registró 5 sacos de arroz (125,000 lb).', meta: 'hace 3 h · Almacén general', u: false }
+    ];
+    const allReadNow = !!st.nRead;
+    const notifs = NOTIF.map((m) => { const u = m.u && !allReadNow; return {
+      title: m.title, text: m.text, meta: m.meta, unread: u, pr: PR[m.pr][0], prStyle: 'height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 11px; font-weight: 700; ' + PR[m.pr][1],
+      titleStyle: 'font-size: 14px; ' + (u ? 'font-weight: 600' : 'font-weight: 500; color: #45484d'),
+      d1: NI[m.mod][0], d2: NI[m.mod][1], d3: NI[m.mod][2],
+      iconBox: 'width: 36px; height: 36px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (m.pr === 'urgente' ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #45484d')
+    }; });
+    const unread = notifs.filter((m) => m.unread).length;
+    const COMMON = {
+      navSecs, notifs, unread: String(unread), hasUnread: unread > 0, allRead: unread === 0,
+      bellOpen: !!st.bell, bellAria: st.bell ? 'true' : 'false', bellLabel: 'Notificaciones' + (unread ? ', ' + unread + ' sin leer' : ''),
+      bellBtn: 'position: relative; width: 44px; height: 44px; border: 0; border-radius: 9999px; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: ' + (st.bell ? '#ffe6e4' : '#f6f8fa'),
+      toggleBell: () => this.setState({ bell: !st.bell }), markAll: () => this.setState({ nRead: true }),
+      meName: ME[0], meRole: ME[1], meInitial: ME[2], meAvatar: 'width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 700; ' + ME[3],
+      C, noC: !C
+    };
+
+
+    const R = [['vencido', 'Vencido'], ['humedad', 'Dañado por humedad'], ['envase', 'Envase roto'], ['merma', 'Merma natural'], ['otro', 'Otro']];
+    const q = Number(st.bq) || 0, u = Number(st.bu) || 1;
+    const lbs = q * u;
+    const okB = lbs > 0 && (st.reason !== 'otro' || st.otherTxt.trim().length >= 4);
+    const eq = Number(st.eq) || 0, ec = Number(st.ec) || 0;
+    const V = { bq: String(st.bq), bu: String(st.bu), onBq: (e) => this.setState({ bq: e.target.value }), onBu: (e) => this.setState({ bu: e.target.value }),
+      bBase: fq(lbs, 3) + ' lb', bAfter: fq(125 - lbs, 3) + ' lb', bLoss: fm(lbs * 32),
+      reasons: R.map(([id, label]) => { const on = st.reason === id; return { label, aria: on ? 'true' : 'false', pick: () => this.setState({ reason: id }),
+        style: 'height: 40px; padding: 0 14px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #fff4f3; color: #1c1c1e; border: 1.5px solid #d92d25' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #e4e6ea') }; }),
+      other: st.reason === 'otro', otherTxt: st.otherTxt, onOther: (e) => this.setState({ otherTxt: e.target.value }),
+      bDisabled: !okB, bBtn: 'height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; ' + (okB ? 'background: #ffffff; color: #d92d25; box-shadow: inset 0 0 0 1.5px #d92d25; cursor: pointer' : 'background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      eq: String(st.eq), ec: String(st.ec), onEq: (e) => this.setState({ eq: e.target.value }), onEc: (e) => this.setState({ ec: e.target.value }), eTotal: fm(eq * ec),
+      newR: st.newR, onNewR: (e) => this.setState({ newR: e.target.value }),
+      addReason: (e) => { if (e && e.preventDefault) e.preventDefault(); const t = st.newR.trim(); if (t) this.setState({ own: st.own.concat([[t, 0]]), newR: '' }); },
+      catalog: R.slice(0, 4).map(([id, name], i) => ({ name, std: true, own: false, uses: [12, 7, 3, 21][i] + ' usos', used: true, rmLabel: '', rmStyle: '', rm: () => {} }))
+        .concat(st.own.map(([name, n], i) => ({ name, std: false, own: true, uses: n ? n + ' usos' : 'Sin usar', used: n > 0, rmLabel: 'Eliminar ' + name,
+          rmStyle: 'width: 34px; height: 34px; border: 0; border-radius: 9999px; background: transparent; display: flex; align-items: center; justify-content: center; ' + (n > 0 ? 'color: #c9cdd3; cursor: not-allowed' : 'color: #d92d25; cursor: pointer'),
+          rm: () => { if (!n) this.setState({ own: st.own.filter((x, j) => j !== i) }); } })))
+    };
+
+    return Object.assign(COMMON, V);
+  }
+}
+</script>
+</body>
+</html>

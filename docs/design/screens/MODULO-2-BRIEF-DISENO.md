@@ -1,5 +1,7 @@
 # Módulo 2 · Almacén y pedidos — Brief de diseño de interfaces
 
+> El diseño resultante está en `docs/design/modulo2/` (las maquetas mandan sobre este brief).
+
 Documento autocontenido para Claude Design. Pantallas por módulo. Navega con el índice; no hace falta leer todo para diseñar una parte.
 
 ## Índice

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Revisión del pedido</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e}
+.row:hover td{background:#fafbfc}
+.ib:hover{background:#eceef1}
+.mi:hover{background:#f6f8fa}
+.gh:hover{background:#f6f8fa}
+.bt:hover{background:#fff4f3}
+.np:hover{background:#f6f8fa}
+.fld:focus,.sel:focus{outline:none;border-color:#d92d25 !important;box-shadow:0 0 0 4px #ffe6e4}
+input[type=number]::-webkit-inner-spin-button{opacity:0.4}
+@keyframes sk{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.sk{background:linear-gradient(90deg,#eceef1 0,#f6f8fa 50%,#eceef1 100%);background-size:400px 100%;animation:sk 1.4s linear infinite;border-radius:9999px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45; display: flex; flex-wrap: wrap; gap: 24px; padding: 16px"><aside style="flex: 1 1 236px; max-width: 100%; background: #f6f8fa; border-radius: 28px; padding: 24px 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px"><div style="display: flex; align-items: center; gap: 10px; padding: 0 10px"><span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 9999px; background: #ff443b"></span><span style="font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: -0.5px">Argos</span></div><button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Compañía activa: La Casona. Cambiar" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 0; border-radius: 18px; background: #ffffff; font: inherit; text-align: left; cursor: pointer; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)"><span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 11px; background: #ffe6e4; color: #b3221b; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700">LC</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 10px; font-weight: 600; letter-spacing: 0.8px; color: #6b6f76">COMPAÑÍA ACTIVA</span><span style="font-size: 15px; font-weight: 600">La Casona</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"></path></svg></button><nav aria-label="Principal" style="display: flex; flex-direction: column; gap: 14px"><sc-for list="{{navSecs}}" as="s" hint-placeholder-count="4"><div><p style="margin: 0 0 6px; padding: 0 14px; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">{{s.t}}</p><div style="display: flex; flex-direction: column; gap: 2px"><sc-for list="{{s.items}}" as="n" hint-placeholder-count="3"><a href="#" aria-current="{{n.current}}" class="{{n.cls}}" style="{{n.style}}"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.d1}}"></path><path d="{{n.d2}}"></path><path d="{{n.d3}}"></path></svg><span style="flex: 1">{{n.label}}</span><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{ false }}"><span style="{{n.badgeStyle}}">{{n.badge}}<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap"> sin atender</span></span></sc-if><sc-if value="{{n.dot}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 9999px; background: #ff443b"></span></sc-if></a></sc-for></div></div></sc-for></nav></aside><div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 10px 8px 24px"><div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px"><p style="margin: 0; font-size: 14px; color: #45484d">Viernes, 6 de noviembre · 16:05</p><div style="display: flex; align-items: center; gap: 8px"><label style="position: relative; display: flex; align-items: center"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Buscar</span><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45484d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 14px"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"></path><path d="M20 20l-3.5-3.5"></path></svg><input type="search" placeholder="Buscar" style="width: 260px; height: 44px; box-sizing: border-box; border: 0; border-radius: 9999px; background: #f6f8fa; padding: 0 14px 0 42px; font: inherit; color: #1c1c1e"></label><div style="position: relative"><button type="button" aria-label="{{bellLabel}}" aria-haspopup="dialog" aria-expanded="{{bellAria}}" onClick="{{toggleBell}}" style="{{bellBtn}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="position: absolute; top: 4px; right: 3px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9999px; background: #d92d25; color: #ffffff; border: 2px solid #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{unread}}</span></sc-if></button><sc-if value="{{bellOpen}}" hint-placeholder-val="{{ false }}"><div role="dialog" aria-label="Notificaciones" style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: 400px; max-width: calc(100vw - 32px); background: #ffffff; border-radius: 24px; padding: 8px; box-sizing: border-box; box-shadow: 0 1px 2px rgba(28,28,30,0.06), 0 22px 50px rgba(28,28,30,0.16)"><div style="display: flex; align-items: center; gap: 8px; padding: 10px 10px 8px 12px"><p style="margin: 0; flex: 1; font-weight: 600; font-size: 16px">Notificaciones</p><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ true }}"><button type="button" class="bt" onClick="{{markAll}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 9999px; background: transparent; color: #d92d25; font: inherit; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; cursor: pointer">Marcar todas como leídas</button></sc-if></div><sc-if value="{{allRead}}" hint-placeholder-val="{{ false }}"><div style="margin: 0 4px 6px; padding: 12px 14px; border-radius: 16px; background: #e6f4ec; color: #1e7a50; display: flex; align-items: center; gap: 10px; font-weight: 600"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Estás al día</div></sc-if><ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px"><sc-for list="{{notifs}}" as="m" hint-placeholder-count="4"><li><a href="#" class="np" style="display: flex; gap: 12px; padding: 10px 12px; border-radius: 16px; text-decoration: none; color: #1c1c1e"><span aria-hidden="true" style="{{m.iconBox}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{m.d1}}"></path><path d="{{m.d2}}"></path><path d="{{m.d3}}"></path></svg></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px"><span style="display: flex; align-items: center; gap: 6px"><span style="{{m.titleStyle}}">{{m.title}}</span></span><span style="font-size: 13px; color: #45484d">{{m.text}}</span><span style="display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 12px; color: #6b6f76"><span style="{{m.prStyle}}">{{m.pr}}</span>{{m.meta}}</span></span><sc-if value="{{m.unread}}" hint-placeholder-val="{{ true }}"><span style="width: 9px; height: 9px; flex: none; margin-top: 6px; border-radius: 9999px; background: #d92d25"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">Sin leer</span></span></sc-if></a></li></sc-for></ul><a href="#" class="gh" style="margin-top: 6px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #1c1c1e; text-decoration: none; background: #f6f8fa">Ver todas</a></div></sc-if></div><div style="margin-left: 4px; padding-left: 12px; border-left: 1px solid #e4e6ea"><button type="button" aria-haspopup="menu" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 14px 4px 4px; border: 0; border-radius: 9999px; background: transparent; color: #1c1c1e; font: inherit; cursor: pointer"><span aria-hidden="true" style="{{meAvatar}}">{{meInitial}}</span><span style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25"><strong style="font-weight: 600">{{meName}}</strong><span style="font-size: 12px; color: #6b6f76">{{meRole}}</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button></div></div></div>
+<sc-if value="{{blocked}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 20px; background: #ffe6e4">
+<span aria-hidden="true" style="width: 36px; height: 36px; flex: none; border-radius: 9999px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v10H5z"></path><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+<div><p style="margin: 0; font-weight: 600; color: #b3221b">No puedes revisar este pedido</p><p style="margin: 2px 0 0">Tú lo compraste. Debe revisarlo otro almacenero, el encargado de la tienda o un administrador.</p></div></div>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px"><div style="min-width: 0"><nav aria-label="Migas de pan"><ol style="list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 6px; font-size: 14px"><li><a href="#" class="crumb" style="color: #45484d; text-decoration: none">Pedidos</a></li><li aria-hidden="true" style="color: #c9cdd3; display: flex"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></li><li><a href="#" class="crumb" style="color: #45484d; text-decoration: none">P-0139</a></li><li aria-hidden="true" style="color: #c9cdd3; display: flex"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></li><li aria-current="page" style="font-weight: 600">Revisión</li></ol></nav><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px"><h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-weight: 600; font-size: 40px; letter-spacing: -1.3px; line-height: 1.1">Revisar pedido P-0139</h1><span style="{{ps.bs}}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ps.bi}}"></path></svg>{{ps.bl}}</span></div><p style="margin: 6px 0 0; font-size: 15px; color: #6b6f76">Comprado por Luis Martín · enviado hoy 15:40 · 5 productos</p></div><div style="display: flex; flex-wrap: wrap; gap: 8px"></div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 1 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><section aria-label="Entregado, gastado y sobrante" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px"><div style="background: #f6f8fa; border-radius: 20px; padding: 16px 18px"><p style="margin: 0; font-size: 13px; color: #6b6f76">Entregado</p><p style="margin: 2px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; white-space: nowrap">{{entregado}}</p></div><div style="background: #f6f8fa; border-radius: 20px; padding: 16px 18px"><p style="margin: 0; font-size: 13px; color: #6b6f76">Gastado</p><p style="margin: 2px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; white-space: nowrap">{{gastado}}</p></div><div style="{{sobBox}}"><p style="margin: 0; font-size: 13px; font-weight: 600">{{sobLabel}}</p><p style="margin: 2px 0 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500; letter-spacing: -0.6px; font-variant-numeric: tabular-nums; white-space: nowrap">{{sobValue}}</p></div></section></sc-if>
+<section aria-labelledby="ln-h" style="background: #f6f8fa; border-radius: 24px; padding: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 14px">
+<div><h2 id="ln-h" style="margin: 0; font-size: 18px; font-weight: 600">Lo que llegó</h2><p style="margin: 2px 0 0; font-size: 13px; color: #6b6f76">Cuenta lo recibido. Si no coincide con lo reportado por el comprador, se resalta.</p></div>
+<span style="font-size: 13px; color: #45484d">Cantidades en presentación de compra</span></div>
+<div style="background: #ffffff; border-radius: 18px; overflow: hidden">
+<table style="width: 100%; border-collapse: collapse">
+<thead><tr><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; padding-left: 16px; background: #ffffff">Producto</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff">Destino</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff; text-align: right">Pedida</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff; text-align: right">Reportada</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff; text-align: center">Recibida</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff">Diferencia</th>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff; text-align: right">Costo unit.</th><th scope="col" style="text-align: left; padding: 12px; font-size: 12px; font-weight: 600; color: #6b6f76; background: #f6f8fa; white-space: nowrap; background: #ffffff; text-align: right; padding-right: 16px">Total</th></sc-if></tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<tr style="{{r.trStyle}}">
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; padding-left: 16px"><p style="margin: 0; font-weight: 600">{{r.prod}}</p><p style="margin: 0; font-size: 12px; color: #6b6f76">{{r.pres}}</p></td>
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle"><span style="{{r.destStyle}}">{{r.dest}}</span></td>
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.ped}}</td>
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.rep}}</td>
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; text-align: center"><label><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap">{{r.recLabel}}</span><input type="number" min="0" class="fld" value="{{r.rec}}" onChange="{{r.onRec}}" disabled="{{blocked}}" style="{{r.recStyle}}"></label></td>
+<td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle"><span style="{{r.diffStyle}}">{{r.diff}}</span></td>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.cost}}</td><td style="padding: 12px; border-top: 1px solid #eceef1; vertical-align: middle; text-align: right; padding-right: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{r.total}}</td></sc-if>
+</tr>
+<sc-if value="{{r.split}}" hint-placeholder-val="{{ false }}">
+<tr><td colspan="8" style="padding: 0 16px 14px; background: #fcfcfd">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: #f6f8fa">
+<span style="font-size: 13px; font-weight: 600; margin-right: 4px">Repartir entre tiendas</span>
+<sc-for list="{{split}}" as="s" hint-placeholder-count="3"><label style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px">{{s.name}}<input type="number" min="0" class="fld" value="{{s.val}}" onChange="{{s.on}}" disabled="{{blocked}}" style="{{s.style}}"></label></sc-for>
+<span style="{{splitChip}}">{{splitText}}</span></div></td></tr>
+</sc-if>
+</sc-for>
+</tbody></table></div>
+</section>
+</div>
+
+<aside aria-labelledby="sum-h" style="flex: 0 0 340px; max-width: 100%; position: sticky; top: 16px; background: #f6f8fa; border-radius: 24px; padding: 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+<p id="sum-h" style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">AL CONFIRMAR ENTRARÁ</p>
+<div style="background: #ffffff; border-radius: 16px; padding: 4px 14px">
+<sc-for list="{{entries}}" as="e" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f2f4"><span><span style="display: block; font-weight: 600">{{e.prod}}</span><span style="font-size: 12px; color: #6b6f76">{{e.where}}</span></span><span style="font-weight: 600; color: #1e7a50; font-variant-numeric: tabular-nums; white-space: nowrap">{{e.qty}}</span></div></sc-for>
+</div>
+<sc-if value="{{C}}" hint-placeholder-val="{{ true }}"><div style="background: #ffffff; border-radius: 16px; padding: 4px 14px">
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f2f4"><span style="color: #45484d">Gastado</span><strong style="font-variant-numeric: tabular-nums; white-space: nowrap">{{gastado}}</strong></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0"><span style="color: #45484d">Faltante valorado</span><strong style="{{faltStyle}}">{{faltante}}</strong></div></div></sc-if>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{checks}}" as="k" hint-placeholder-count="2"><li style="display: flex; align-items: center; gap: 10px; font-size: 13px"><span aria-hidden="true" style="{{k.icon}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{k.d}}"></path></svg></span><span style="{{k.ts}}">{{k.text}}</span></li></sc-for></ul>
+<button type="button" onClick="{{askOk}}" disabled="{{okDisabled}}" style="{{okStyle}}">Confirmar y sumar al stock</button>
+<button type="button" class="bt" onClick="{{askDev}}" disabled="{{blocked}}" style="{{devStyle}}">Devolver al comprador</button>
+</aside>
+</div>
+<sc-if value="{{dlgOk}}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; z-index: 30; background: rgba(28,28,30,0.32); display: flex; align-items: flex-start; justify-content: center; padding: 140px 16px 16px; box-sizing: border-box"><div role="dialog" aria-modal="true" aria-label="Confirmar y sumar al stock" style="width: 520px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 28px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.22); display: flex; flex-direction: column; gap: 16px"><div><h2 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.4px">Confirmar y sumar al stock</h2><p style="margin: 4px 0 0; color: #45484d">Esto es lo que se sumará a las existencias:</p></div>
+<div style="background: #f6f8fa; border-radius: 18px; padding: 4px 14px"><sc-for list="{{entries}}" as="e" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eceef1"><span>{{e.prod}} <span style="color: #6b6f76">· {{e.where}}</span></span><strong style="color: #1e7a50; font-variant-numeric: tabular-nums; white-space: nowrap">{{e.qty}}</strong></div></sc-for></div>
+<p style="margin: 0; font-size: 13px; color: #45484d">Se crea un lote por línea con fecha de hoy. El pedido pasa a <strong>Cumplido</strong> y ya solo un administrador podrá corregirlo.</p><div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap"><button type="button" onClick="{{closeDlg}}" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Cancelar</button><button type="button" onClick="{{confirm}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Confirmar</button></div></div></div></sc-if><sc-if value="{{dlgDev}}" hint-placeholder-val="{{ false }}"><div style="position: absolute; inset: 0; z-index: 30; background: rgba(28,28,30,0.32); display: flex; align-items: flex-start; justify-content: center; padding: 140px 16px 16px; box-sizing: border-box"><div role="dialog" aria-modal="true" aria-label="Devolver al comprador" style="width: 520px; max-width: 100%; background: #ffffff; border-radius: 28px; padding: 28px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(28,28,30,0.08), 0 30px 70px rgba(28,28,30,0.22); display: flex; flex-direction: column; gap: 16px"><div><h2 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.4px">Devolver al comprador</h2><p style="margin: 4px 0 0; color: #45484d">El pedido vuelve a «Devuelto» y Luis podrá corregirlo.</p></div>
+<label style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; margin-bottom: 8px">Nota para Luis <span style="color: #b3221b">*</span></span>
+<textarea class="fld" rows="4" value="{{note}}" onChange="{{onNote}}" placeholder="Ej. Llegó 1 saco de frijoles, no 2. Corrige la cantidad comprada." style="box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 20px; padding: 14px 16px; font: inherit; font-size: 15px; resize: vertical"></textarea>
+<span style="margin: 6px 0 0; font-size: 13px; color: #6b6f76">Obligatoria. Luis la verá arriba de su pedido.</span></label><div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap"><button type="button" onClick="{{closeDlg}}" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Cancelar</button><button type="button" onClick="{{doDev}}" disabled="{{devDisabled}}" style="{{devBtn}}">Devolver</button></div></div></div></sc-if>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}"><div role="status" style="position: fixed; right: 24px; bottom: 24px; z-index: 31; background: #1c1c1e; color: #ffffff; border-radius: 18px; padding: 14px 18px; display: flex; align-items: center; gap: 10px; font-weight: 600"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7fd6a6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{doneText}}</div></sc-if>
+</div></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 1440, "height": 1180}, "costs": false}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({ bell: false, nRead: false }, { dlg: null, note: '', done: null, split: { t23: 1, t5: 1, tg: 0 }, lines: [
+      { id: 'arroz', prod: 'Arroz', pres: 'saco', presFull: 'Saco de 25 lb', cont: 25, unit: 'lb', ped: 4, rep: 4, rec: 4, cost: 850, dest: 'Almacén general' },
+      { id: 'aceite', prod: 'Aceite de soya', pres: 'caja', presFull: 'Caja de 12 × 1 L', cont: 12, unit: 'L', ped: 3, rep: 2, rec: 2, cost: 2400, dest: 'Almacén general' },
+      { id: 'frijol', prod: 'Frijoles negros', pres: 'saco', presFull: 'Saco de 50 lb', cont: 50, unit: 'lb', ped: 2, rep: 2, rec: 1, cost: 3100, dest: 'Almacén general' },
+      { id: 'pollo', prod: 'Pollo (muslos)', pres: 'caja', presFull: 'Caja de 40 lb', cont: 40, unit: 'lb', ped: 2, rep: 2, rec: 2, cost: 4200, dest: 'Entrega directa · General', split: true },
+      { id: 'azucar', prod: 'Azúcar refino', pres: 'saco', presFull: 'Saco de 50 lb', cont: 50, unit: 'lb', ped: 1, rep: 0, rec: 0, cost: 0, dest: 'Almacén general' }
+    ] });
+  }
+  renderVals() {
+    const st = this.state;
+    const P = this.props;
+    const ACTIVE = 'pedidos';
+    const ME = ['Raul', 'Almacenero', 'R', 'background: #ffe6e4; color: #b3221b'];
+
+    const C = this.props.costs !== false;
+    const fq = (n, d) => { const neg = n < 0; const s = Math.abs(n).toFixed(d).split('.'); s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); return (neg ? '−' : '') + s[0] + (d ? ',' + s[1] : ''); };
+    const fm = (n, cur) => fq(n, 2) + ' ' + (cur || 'CUP');
+    const chip = 'display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; ';
+    const ST = { normal: ['Normal', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], bajo: ['Bajo', 'background: #fff4cf; color: #7a5200', 'M12 6v8M12 18v.01'], agotado: ['Agotado', 'background: #ffe6e4; color: #b3221b; font-weight: 700', 'M6 6l12 12M18 6L6 18'] };
+    const sb = (k) => ({ bl: ST[k][0], bs: chip + ST[k][1], bi: ST[k][2] });
+    const PS = { borrador: ['Borrador', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M4 20h4L19 9l-4-4L4 16z'], abierto: ['Abierto · en curso', 'background: #ffc93c; color: #1c1c1e', 'M12 7.5V12l3 2'], revision: ['En revisión', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-3.5-3.5'], cumplido: ['Cumplido', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], devuelto: ['Devuelto', 'background: #ffe6e4; color: #b3221b', 'M15 5l-7 7 7 7'], cancelado: ['Cancelado', 'background: #f6f8fa; color: #6b6f76', 'M6 6l12 12M18 6L6 18'] };
+    const pb = (k) => ({ bl: PS[k][0], bs: chip + PS[k][1], bi: PS[k][2] });
+    const LS = { pendiente: ['Pendiente', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M12 7.5V12l3 2'], surtida: ['Surtida', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], parcial: ['Surtida en parte', 'background: #fff4cf; color: #7a5200', 'M6 12h12'], comprar: ['Por comprar', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2'], rechazada: ['Rechazada', 'background: #ffe6e4; color: #b3221b', 'M6 6l12 12M18 6L6 18'] };
+    const lb = (k) => ({ bl: LS[k][0], bs: chip + LS[k][1], bi: LS[k][2] });
+    const NI = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      notificaciones: ['M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z', 'M10 21h4', ''],
+      existencias: ['M3 21V9l9-6 9 6v12', 'M7 21v-8h10v8', 'M7 17h10'],
+      solicitudes: ['M9 3.5h6v3H9z', 'M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2', 'M9 12h6M9 16h4'],
+      pedidos: ['M5 8h14l-1 13H6z', 'M9 8V6a3 3 0 0 1 6 0v2', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      divisas: ['M3 6h18v12H3z', 'M12 9.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z', 'M6.5 9v.01M17.5 15v.01'],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const NAVS = [['GENERAL', [['inicio', 'Inicio'], ['notificaciones', 'Notificaciones']]], ['ALMACÉN', [['existencias', 'Existencias'], ['solicitudes', 'Solicitudes', 6], ['pedidos', 'Pedidos']]], ['CATÁLOGO', [['productos', 'Productos'], ['categorias', 'Categorías'], ['divisas', 'Divisas']]], ['ADMINISTRACIÓN', [['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['historial', 'Historial']]]];
+    const navSecs = NAVS.map(([t, items]) => ({ t, items: items.map(([k, label, badge]) => { const a = k === ACTIVE; return {
+      label, badge: badge ? String(badge) : '', hasBadge: !!badge, dot: a && !badge, current: a ? 'page' : 'false', cls: a ? '' : 'nav-i',
+      d1: NI[k][0], d2: NI[k][1], d3: NI[k][2], iconColor: a ? '#d92d25' : 'currentColor',
+      badgeStyle: 'min-width: 22px; height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (a ? 'background: #d92d25; color: #ffffff' : 'background: #ffffff; color: #1c1c1e'),
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (a ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }; }) }));
+    const PR = { info: ['Info', 'background: #f6f8fa; color: #45484d'], aviso: ['Aviso', 'background: #fff4cf; color: #7a5200'], urgente: ['Urgente', 'background: #ffe6e4; color: #b3221b'] };
+    const NOTIF = [
+      { mod: 'pedidos', pr: 'urgente', title: 'Pedido P-0139 listo para revisar', text: C ? 'Luis Martín terminó la compra. Gastado 18.450,00 CUP.' : 'Luis Martín terminó la compra: 5 líneas.', meta: 'hace 5 min', u: true },
+      { mod: 'existencias', pr: 'aviso', title: 'Aceite de soya agotado', text: 'El almacén general llegó a 0 L.', meta: 'hace 20 min · Almacén general', u: true },
+      { mod: 'solicitudes', pr: 'info', title: 'Nueva solicitud de reposición', text: 'Tienda 5ta Avenida pide 4 productos.', meta: 'hace 1 h · Tienda 5ta Avenida', u: true },
+      { mod: 'existencias', pr: 'info', title: 'Entrada inicial registrada', text: 'Raul registró 5 sacos de arroz (125,000 lb).', meta: 'hace 3 h · Almacén general', u: false }
+    ];
+    const allReadNow = !!st.nRead;
+    const notifs = NOTIF.map((m) => { const u = m.u && !allReadNow; return {
+      title: m.title, text: m.text, meta: m.meta, unread: u, pr: PR[m.pr][0], prStyle: 'height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 11px; font-weight: 700; ' + PR[m.pr][1],
+      titleStyle: 'font-size: 14px; ' + (u ? 'font-weight: 600' : 'font-weight: 500; color: #45484d'),
+      d1: NI[m.mod][0], d2: NI[m.mod][1], d3: NI[m.mod][2],
+      iconBox: 'width: 36px; height: 36px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (m.pr === 'urgente' ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #45484d')
+    }; });
+    const unread = notifs.filter((m) => m.unread).length;
+    const COMMON = {
+      navSecs, notifs, unread: String(unread), hasUnread: unread > 0, allRead: unread === 0,
+      bellOpen: !!st.bell, bellAria: st.bell ? 'true' : 'false', bellLabel: 'Notificaciones' + (unread ? ', ' + unread + ' sin leer' : ''),
+      bellBtn: 'position: relative; width: 44px; height: 44px; border: 0; border-radius: 9999px; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: ' + (st.bell ? '#ffe6e4' : '#f6f8fa'),
+      toggleBell: () => this.setState({ bell: !st.bell }), markAll: () => this.setState({ nRead: true }),
+      meName: ME[0], meRole: ME[1], meInitial: ME[2], meAvatar: 'width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 700; ' + ME[3],
+      C, noC: !C
+    };
+
+
+    const BTNP = 'height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer';
+    const BTNPS = 'height: 40px; padding: 0 16px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer';
+
+    const NUMS = 'font-variant-numeric: tabular-nums; white-space: nowrap; ';
+
+    const segB = (on) => 'height: 36px; padding: 0 14px; border: 0; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #1c1c1e; color: #ffffff' : 'background: transparent; color: #45484d');
+    const numIn = (bad) => 'width: 72px; height: 40px; box-sizing: border-box; border-radius: 9999px; padding: 0 10px; text-align: center; font: inherit; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; background: #ffffff; ' + (bad ? 'border: 2px solid #d92d25; background: #fff7f6' : 'border: 1.5px solid #c9cdd3');
+
+    const cmpVals = (ent, gas) => { const r = ent - gas; const over = r < 0; return {
+      entregado: fm(ent), gastado: fm(gas), sobLabel: over ? 'Excedido' : 'Sobrante', sobValue: (over ? '−' : '+') + fm(Math.abs(r)),
+      sobBox: 'border-radius: 20px; padding: 16px 18px; ' + (over ? 'background: #ffe6e4; color: #b3221b' : 'background: #e6f4ec; color: #1e7a50') }; };
+
+    const blocked = !!P.blocked;
+    const PLR = { saco: 'sacos', caja: 'cajas' };
+    const pl = (n, w) => (n === 1 ? w : PLR[w]);
+    const upd = (id, v) => this.setState({ lines: st.lines.map((x) => x.id === id ? Object.assign({}, x, { rec: Math.max(0, parseInt(v, 10) || 0) }) : x) });
+    let gas = 0, falt = 0, faltTxt = [];
+    const rows = st.lines.map((l) => {
+      gas += l.rep * l.cost;
+      const d = l.rec - l.rep;
+      if (d < 0) { falt += -d * l.cost; faltTxt.push(-d + ' ' + pl(-d, l.pres)); }
+      const none = l.rep === 0;
+      return {
+        prod: l.prod, pres: l.presFull, dest: l.dest, split: !!l.split,
+        destStyle: chip + (l.split ? 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3' : 'background: #f6f8fa; color: #1c1c1e'),
+        ped: l.ped + ' ' + pl(l.ped, l.pres), rep: none ? 'No comprado' : l.rep + ' ' + pl(l.rep, l.pres),
+        rec: String(l.rec), recLabel: 'Recibida de ' + l.prod, onRec: (e) => upd(l.id, e.target.value), recStyle: numIn(d !== 0) + (blocked ? '; opacity: 0.55' : ''),
+        diff: d === 0 ? (none ? 'Faltante del pedido' : 'Coincide') : (d < 0 ? '−' + (-d) + ' ' + pl(-d, l.pres) : '+' + d + ' ' + pl(d, l.pres)),
+        diffStyle: chip + (d === 0 ? (none ? 'background: #f6f8fa; color: #45484d' : 'background: #e6f4ec; color: #1e7a50') : 'background: #ffe6e4; color: #b3221b; font-weight: 700'),
+        cost: l.cost ? fm(l.cost) : '—', total: fm(l.rec * l.cost),
+        trStyle: d !== 0 ? 'background: #fff7f6' : ''
+      };
+    });
+    const pollo = st.lines.find((l) => l.split);
+    const SN = [['t23', 'Tienda 23 y L'], ['t5', 'Tienda 5ta Avenida'], ['tg', 'Cafetería G']];
+    const splitSum = SN.reduce((a, [k]) => a + (st.split[k] || 0), 0);
+    const splitOk = splitSum === pollo.rec;
+    const split = SN.map(([k, name]) => ({ name, val: String(st.split[k] || 0), on: (e) => this.setState({ split: Object.assign({}, st.split, { [k]: Math.max(0, parseInt(e.target.value, 10) || 0) }) }), style: numIn(!splitOk) }));
+    const entries = [];
+    st.lines.forEach((l) => {
+      if (!l.rec) return;
+      if (l.split) SN.forEach(([k, name]) => { if (st.split[k]) entries.push({ prod: l.prod, where: name, qty: '+' + fq(st.split[k] * l.cont, 3) + ' ' + l.unit }); });
+      else entries.push({ prod: l.prod, where: 'Almacén general', qty: '+' + fq(l.rec * l.cont, 3) + ' ' + l.unit });
+    });
+    const ck = (ok) => ({ icon: 'width: 20px; height: 20px; flex: none; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: ' + (ok ? '#1e7a50' : '#d92d25'), d: ok ? 'M5 12.5l4.5 4.5L19 7.5' : 'M7 7l10 10M17 7L7 17', ts: ok ? '' : 'color: #b3221b; font-weight: 600' });
+    const checks = [Object.assign({ text: splitOk ? 'El reparto del pollo cuadra (' + splitSum + ' de ' + pollo.rec + ')' : 'Reparte el pollo: ' + splitSum + ' de ' + pollo.rec + ' cajas' }, ck(splitOk))];
+    const canOk = splitOk && !blocked;
+    const V = Object.assign(cmpVals(25000, gas), {
+      ps: pb('revision'), blocked, rows, split, entries, checks,
+      splitText: splitOk ? 'Cuadra: ' + splitSum + ' de ' + pollo.rec : 'Faltan ' + (pollo.rec - splitSum) + ' por repartir', splitChip: chip + (splitOk ? 'background: #e6f4ec; color: #1e7a50' : 'background: #ffe6e4; color: #b3221b'),
+      faltante: falt ? fm(falt) + ' · ' + faltTxt.join(', ') : 'Sin faltantes', faltStyle: 'text-align: right; ' + NUMS + (falt ? 'color: #b3221b' : 'color: #1e7a50'),
+      okDisabled: !canOk, okStyle: BTNP + (canOk ? '' : '; background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      devStyle: 'height: 48px; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; background: #ffffff; ' + (blocked ? 'border: 1.5px solid #e4e6ea; color: #8c9097; cursor: not-allowed' : 'border: 1.5px solid #f8c9c5; color: #d92d25; cursor: pointer'),
+      dlgOk: st.dlg === 'ok', dlgDev: st.dlg === 'dev', askOk: () => { if (canOk) this.setState({ dlg: 'ok' }); }, askDev: () => { if (!blocked) this.setState({ dlg: 'dev' }); }, closeDlg: () => this.setState({ dlg: null }),
+      confirm: () => this.setState({ dlg: null, done: 'ok' }), note: st.note, onNote: (e) => this.setState({ note: e.target.value }),
+      devDisabled: st.note.trim().length < 10, devBtn: BTNPS + (st.note.trim().length < 10 ? '; background: #eceef1; color: #8c9097; cursor: not-allowed' : ''),
+      doDev: () => { if (st.note.trim().length >= 10) this.setState({ dlg: null, done: 'dev' }); },
+      done: !!st.done, doneText: st.done === 'dev' ? 'Pedido devuelto a Luis Martín.' : 'Stock actualizado. P-0139 está cumplido.'
+    });
+
+    return Object.assign(COMMON, V);
+  }
+}
+</script>
+</body>
+</html>
