@@ -1,6 +1,6 @@
 import type { AuthEventEntry, HistoryEntry } from "@/core/application/ports/history-reader";
 import type { AuditRowData } from "@/components/ui/audit-table";
-import { AUTH_EVENTS, CHANNEL_ICONS, ENTITY_LABELS, HISTORY_MODULES, actionInfo, channelLabel, diffFields, entityName, formatValue } from "./history-utils";
+import { AUTH_EVENTS, CHANNEL_ICONS, ENTITY_LABELS, HISTORY_MODULES, operationInfo, channelLabel, diffFields, entityName, formatValue } from "./history-utils";
 
 const channel = (key: string) => ({ key, label: channelLabel(key), icon: CHANNEL_ICONS[key] ?? ("Monitor" as const) });
 
@@ -14,7 +14,7 @@ export function toAuditRow(e: HistoryEntry, names: Map<string, string>, tz: stri
     id: e.id,
     createdAt: e.createdAt.toISOString(),
     actor: e.actorId ? (names.get(e.actorId) ?? "Usuario") : null,
-    action: actionInfo(e.action),
+    action: operationInfo(e.action, e.entityType, e.before, e.after),
     module: HISTORY_MODULES[e.module] ?? e.module,
     entity: { type: ENTITY_LABELS[e.entityType] ?? e.entityType, name: entityName(e.before, e.after), id: e.entityId },
     channel: channel(e.channel),

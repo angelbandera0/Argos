@@ -6,6 +6,11 @@ import { stripSensitive } from "@/core/application/use-cases/history/sanitize";
 /** Single module -> label map. audit_log records products, roles, users and organization; only products has role permissions today. */
 export const HISTORY_MODULES: Record<string, string> = {
   products: "Productos",
+  currencies: "Divisas",
+  stock: "Existencias",
+  requests: "Solicitudes",
+  orders: "Pedidos",
+  notifications: "Notificaciones",
   roles: "Roles",
   users: "Usuarios",
   organization: "Organización",
@@ -16,6 +21,21 @@ export const ENTITY_LABELS: Record<string, string> = {
   categories: "Categoría",
   roles: "Rol",
   role_permissions: "Permisos de rol",
+  role_special_permissions: "Permisos especiales de rol",
+  currencies: "Divisa",
+  currency_denominations: "Denominación",
+  product_stock_settings: "Configuración de existencias",
+  product_presentations: "Presentación",
+  product_movement_units: "Unidad de movimiento",
+  stock_minimums: "Mínimo",
+  stock_movements: "Movimiento",
+  write_off_reasons: "Motivo de baja",
+  solicitudes: "Solicitud",
+  solicitud_lineas: "Línea de solicitud",
+  solicitud_asignaciones: "Asignación de solicitud",
+  pedidos: "Pedido",
+  pedido_lineas: "Línea de pedido",
+  pedido_ajustes: "Corrección de pedido",
   role_company_exclusions: "Exclusión de rol",
   profiles: "Usuario",
   user_stores: "Asignación de tienda",
@@ -31,6 +51,34 @@ export const ACTIONS: Record<string, { label: string; variant: BadgeVariant }> =
   reactivate: { label: "Reactivación", variant: "success" },
   delete: { label: "Eliminación", variant: "danger" },
 };
+
+const MOVEMENT_TYPES: Record<string, { label: string; variant: BadgeVariant }> = {
+  initial_entry: { label: "Entrada inicial", variant: "success" },
+  purchase_entry: { label: "Entrada de compra", variant: "success" },
+  direct_entry: { label: "Entrada directa", variant: "success" },
+  transfer_out: { label: "Traslado (salida)", variant: "new" },
+  transfer_in: { label: "Traslado (entrada)", variant: "new" },
+  write_off: { label: "Baja", variant: "danger" },
+  adjustment: { label: "Ajuste", variant: "warning" },
+  consumption: { label: "Consumo", variant: "neutral" },
+};
+
+const ORDER_STATUS: Record<string, { label: string; variant: BadgeVariant }> = {
+  in_review: { label: "Revisión", variant: "new" },
+  fulfilled: { label: "Confirmación", variant: "success" },
+  returned: { label: "Devolución", variant: "warning" },
+};
+
+/** Module 2 operations: movement type, order review/confirmation/return and corrections; otherwise the generic action. */
+export function operationInfo(action: string, entityType: string, before: unknown, after: unknown) {
+  const a = asRecord(after);
+  if (entityType === "stock_movements" && typeof a.type === "string" && MOVEMENT_TYPES[a.type]) return MOVEMENT_TYPES[a.type];
+  if (entityType === "pedido_ajustes") return { label: "Corrección", variant: "warning" as const };
+  if (entityType === "pedidos" && a.status !== asRecord(before).status && typeof a.status === "string" && ORDER_STATUS[a.status]) {
+    return ORDER_STATUS[a.status];
+  }
+  return actionInfo(action);
+}
 
 export const CHANNELS: Record<string, string> = {
   ui: "Web",

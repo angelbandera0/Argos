@@ -14,8 +14,21 @@ export function stripSensitive(value: unknown): unknown {
   return value;
 }
 
-export const sanitizeEntry = (e: HistoryEntry): HistoryEntry => ({
-  ...e,
-  before: stripSensitive(e.before),
-  after: stripSensitive(e.after),
-});
+const COST = /(^|_)(unit_cost|cost|costs|amount|amount_given|total|price|shortage_value)(_|$)/i;
+
+export function stripCostValues(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripCostValues);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([k]) => !COST.test(k))
+        .map(([k, v]) => [k, stripCostValues(v)]),
+    );
+  }
+  return value;
+}
+
+export const sanitizeEntry = (e: HistoryEntry, seeCosts = false): HistoryEntry => {
+  const clean = (v: unknown) => (seeCosts ? stripSensitive(v) : stripCostValues(stripSensitive(v)));
+  return { ...e, before: clean(e.before), after: clean(e.after) };
+};

@@ -3,6 +3,7 @@ import { requireOperatorStore } from "@/core/application/use-cases/access/assert
 import type { Actor } from "@/core/domain/actor";
 import { Forbidden } from "@/core/domain/errors";
 import type { Module } from "@/core/domain/permissions";
+import { canSeeCosts } from "@/core/application/use-cases/stock/shared";
 import { sanitizeEntry } from "./sanitize";
 import { resolveAdminScope, type HistoryDeps } from "./shared";
 
@@ -14,15 +15,17 @@ export interface ListHistoryInput extends HistoryFilter {
 export function makeListHistory(deps: HistoryDeps) {
   return async (actor: Actor, input: ListHistoryInput = {}): Promise<HistoryPage<HistoryEntry>> => {
     let companyId: string | undefined;
+    let seeCosts = actor.kind !== "operator";
     if (actor.kind === "operator") {
       const { store } = await requireOperatorStore(deps, actor);
       const requested = [...(input.module ? [input.module] : []), ...(input.modules ?? [])];
       if (!requested.length || requested.some((m) => !store.permissions[m as Module]?.view)) throw new Forbidden();
       companyId = store.companyId;
+      seeCosts = canSeeCosts(actor, store);
     } else {
       companyId = await resolveAdminScope(deps, actor, input.companyId);
     }
     const page = await deps.history.list({ ...input, companyId });
-    return { ...page, items: page.items.map(sanitizeEntry) };
+    return { ...page, items: page.items.map((e) => sanitizeEntry(e, seeCosts)) };
   };
 }
