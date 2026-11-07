@@ -10,7 +10,7 @@ export const NAV = {
   home: item("inicio", "Inicio", "/", "LayoutDashboard"),
   notifications: item("notificaciones", "Notificaciones", "/notificaciones", "Bell"),
   stock: item("existencias", "Existencias", "/existencias", "Warehouse"),
-  requests: item("solicitudes", "Solicitudes", "/solicitudes", "ClipboardList", { available: false }),
+  requests: item("solicitudes", "Solicitudes", "/solicitudes", "ClipboardList"),
   orders: item("pedidos", "Pedidos", "/pedidos", "ShoppingBag", { available: false }),
   products: item("productos", "Productos", "/catalogo/productos", "Box"),
   categories: item("categorias", "Categorías", "/catalogo/categorias", "Tags"),

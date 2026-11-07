@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { saveMinimumAction } from "@/app/(app)/existencias/[productId]/actions";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { buttonClass } from "@/components/ui/button-class";
 import { Chip } from "@/components/ui/chip";
 import { EntityCard } from "@/components/ui/entity-card";
 import { Field, Input } from "@/components/ui/field";
@@ -30,6 +32,7 @@ export function StoreStockList({
   location,
   canMinimums,
   canDirect,
+  canRequest,
   entry,
   costs,
 }: {
@@ -41,6 +44,7 @@ export function StoreStockList({
   location: string;
   canMinimums: boolean;
   canDirect: boolean;
+  canRequest: boolean;
   costs: boolean;
   entry: { locationId: string; products: EntryProduct[]; currencies: EntryCurrency[] };
 }) {
@@ -58,6 +62,11 @@ export function StoreStockList({
 
   return (
     <>
+      {canRequest && counts.low + counts.out > 0 && (
+        <Link className={buttonClass("secondary", "md")} href="/solicitudes/nueva?reponer=1">
+          Solicitar reposición de los agotados
+        </Link>
+      )}
       <ListToolbar
         submitLabel={false}
         search={{ label: "Buscar producto", placeholder: "Buscar producto", defaultValue: filters.q }}

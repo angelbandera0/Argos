@@ -85,6 +85,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
         costs={costs}
         canMinimums={can("configure_minimums")}
         canDirect={can("direct_store_entry")}
+        canRequest={can("request_replenishment")}
         entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       />
     );
