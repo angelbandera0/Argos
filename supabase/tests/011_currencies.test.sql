@@ -53,8 +53,8 @@ update currencies set is_default = true where id = '00000000-0000-0000-0000-0000
 select is((select count(*)::int from currencies where company_id = '00000000-0000-0000-0000-0000000000a1' and is_default), 1, 'D-03: only one default per company');
 select is((select id from currencies where company_id = '00000000-0000-0000-0000-0000000000a1' and is_default), '00000000-0000-0000-0000-000000000c01'::uuid, 'marking a default unmarks the previous one');
 
-select ok((select count(*) from audit_log where entity_type = 'currencies' and module = 'currencies' and action = 'create') >= 3, 'D-06: creating currencies is audited under the currencies module');
-select ok((select count(*) from audit_log where entity_type = 'currency_denominations' and module = 'currencies') = 1, 'D-06: denominations are audited');
+select ok((select count(*) from audit_log where entity_type = 'currencies' and module = 'currencies' and action = 'create' and company_id in ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2')) >= 3, 'D-06: creating currencies is audited under the currencies module');
+select ok((select count(*) from audit_log where entity_type = 'currency_denominations' and module = 'currencies' and company_id in ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000b2')) = 1, 'D-06: denominations are audited');
 
 update currencies set active = false where id = '00000000-0000-0000-0000-000000000c02';
 select is((select count(*)::int from audit_log where entity_id = '00000000-0000-0000-0000-000000000c02' and action = 'deactivate'), 1, 'deactivating is audited');
