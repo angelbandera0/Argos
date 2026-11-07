@@ -30,8 +30,8 @@ async function Editor({ params }: { params: PageProps<"/divisas/[id]">["params"]
   return (
     <div className="stack">
       <PageHeader
-        title={`Divisa: ${currency.code}`}
-        description="Edita sus datos y gestiona sus denominaciones."
+        title="Editar divisa"
+        description="Cambia cómo se escriben los montos y qué billetes y monedas existen."
         breadcrumbs={[{ label: "Divisas", href: "/divisas" }, { label: currency.code }]}
       />
       <CurrencyForm currencyId={currency.id} initial={initial} />

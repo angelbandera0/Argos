@@ -7,14 +7,14 @@ import {
   setDenominationActiveAction,
   updateDenominationAction,
 } from "@/app/(app)/divisas/actions";
-import { NAV_ICONS, Pencil, Plus, Power, Trash2 } from "@/components/icons";
+import { Pencil, Plus, Trash2 } from "@/components/icons";
 import { Alert } from "@/components/ui/alert";
 import { AlertDialog } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FormSection } from "@/components/ui/form-section";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
 import type { Denomination } from "@/core/application/ports/currency-repository";
 import {
@@ -26,8 +26,6 @@ import {
   parseDenominationValue,
   sortDenominations,
 } from "./currency-form-logic";
-
-const { Coins } = NAV_ICONS;
 
 const INVALID_VALUE = "Escribe un valor mayor que 0.";
 
@@ -101,28 +99,23 @@ function Row({ item, all }: { item: Denomination; all: Denomination[] }) {
 
   return (
     <div className="ui-cat-row">
-      <span className={`ui-cat-icon${item.active ? "" : " ui-cat-icon-empty"}`} aria-hidden="true">
-        <Coins />
-      </span>
+      <span className={`ui-den-shape ui-den-${item.kind}${item.active ? "" : " ui-den-off"}`} aria-hidden="true" />
       <div className="ui-cat-text">
         <strong>{label}</strong>
         <span className={error ? "ui-cat-error" : "ui-cat-note"} role={error ? "alert" : undefined}>
           {error ?? kindLabel(item.kind)}
         </span>
       </div>
-      <Badge variant={item.active ? "success" : "neutral"}>{item.active ? "Activa" : "Inactiva"}</Badge>
       <Button variant="ghost" size="sm" iconLeft={<Pencil aria-hidden="true" />} aria-label={`Editar ${label}`} onClick={() => setEditing(true)}>
         Editar
       </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        iconLeft={<Power aria-hidden="true" />}
-        loading={busy}
-        onClick={() => run(() => setDenominationActiveAction(item.id, !item.active), item.active ? "Denominación desactivada" : "Denominación reactivada")}
-      >
-        {item.active ? "Desactivar" : "Reactivar"}
-      </Button>
+      <Switch
+        label={item.active ? "Activa" : "Inactiva"}
+        aria-label={`Activar ${label}`}
+        checked={item.active}
+        disabled={busy}
+        onCheckedChange={(v) => run(() => setDenominationActiveAction(item.id, v), v ? "Denominación reactivada" : "Denominación desactivada")}
+      />
       <button type="button" className="ui-cat-trash" aria-label={`Eliminar ${label}`} title={`Eliminar ${label}`} onClick={() => (setError(undefined), setConfirming(true))}>
         <Trash2 aria-hidden="true" />
       </button>
@@ -172,7 +165,7 @@ export function DenominationManager({ currencyId, items }: { currencyId: string 
     <FormSection
       n={3}
       title="Denominaciones"
-      description={locked ? "Guarda la divisa para añadir denominaciones." : "Billetes y monedas de esta divisa, de menor a mayor valor."}
+      description={locked ? "Guarda la divisa para añadir denominaciones." : "Billetes y monedas, de mayor a menor. Se usan para contar efectivo."}
     >
       <form className="ui-cat-add" aria-label="Nueva denominación" onSubmit={add}>
         <div className="ui-cat-add-field">

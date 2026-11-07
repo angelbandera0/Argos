@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Currency, CurrencyRepository, Denomination } from "@/core/application/ports/currency-repository";
+import type { Currency, CurrencyListItem, CurrencyRepository, Denomination } from "@/core/application/ports/currency-repository";
 import { Forbidden, NotFound, RuleViolation, type RuleCode } from "@/core/domain/errors";
 
 type PgError = { code?: string; message?: string };
@@ -100,11 +100,17 @@ export function makeCurrencyRepository(supabase: SupabaseClient): CurrencyReposi
     softDelete: (id) => updateOne("currencies", id, { deleted_at: new Date().toISOString() }),
 
     async list(companyId, filter) {
-      let q = supabase.from("currencies").select(CURRENCY_COLS).eq("company_id", companyId).is("deleted_at", null);
+      let q = supabase
+        .from("currencies")
+        .select(`${CURRENCY_COLS}, currency_denominations(count)`)
+        .is("currency_denominations.deleted_at", null).eq("company_id", companyId).is("deleted_at", null);
       if (filter?.active !== undefined) q = q.eq("active", filter.active);
       const { data, error } = await q.order("code").order("id");
       if (error) currencyError("list currencies", error, "CODE_TAKEN");
-      return (data as CurrencyRow[]).map(toCurrency);
+      return (data as (CurrencyRow & { currency_denominations: { count: number }[] })[]).map((r) => ({
+        ...toCurrency(r),
+        denominationCount: r.currency_denominations[0]?.count ?? 0,
+      }));
     },
 
     async createDenomination(i) {

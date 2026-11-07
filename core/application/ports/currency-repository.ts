@@ -11,6 +11,8 @@ export interface Currency {
   active: boolean;
 }
 
+export type CurrencyListItem = Currency & { denominationCount: number };
+
 export interface Denomination {
   id: string;
   companyId: string;
@@ -32,7 +34,7 @@ export interface CurrencyRepository {
   update(id: string, changes: CurrencyChanges): Promise<void>;
   get(id: string): Promise<Currency | null>;
   softDelete(id: string): Promise<void>;
-  list(companyId: string, filter?: { active?: boolean }): Promise<Currency[]>;
+  list(companyId: string, filter?: { active?: boolean }): Promise<CurrencyListItem[]>;
   createDenomination(i: Omit<Denomination, "id">): Promise<Denomination>;
   updateDenomination(id: string, changes: DenominationChanges): Promise<void>;
   getDenomination(id: string): Promise<Denomination | null>;

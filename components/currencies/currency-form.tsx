@@ -6,16 +6,14 @@ import { useActionState, useEffect, useState } from "react";
 import { createCurrencyAction, type CurrencyActionState, updateCurrencyAction } from "@/app/(app)/divisas/actions";
 import { NAV_ICONS } from "@/components/icons";
 import { buttonClass } from "@/components/ui/button-class";
-import { Chip } from "@/components/ui/chip";
 import { Field, Input } from "@/components/ui/field";
 import { FormSection } from "@/components/ui/form-section";
 import { FormShell, FormSubmit } from "@/components/ui/form-shell";
 import { Select } from "@/components/ui/select";
 import { SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
-import { Switch } from "@/components/ui/switch";
 import { ToggleCard } from "@/components/ui/toggle-card";
 import { useToast } from "@/components/ui/toast";
-import { currencyErrors, previewAmount, SAMPLE_AMOUNT } from "./currency-form-logic";
+import { currencyErrors, moneyExamples } from "./currency-form-logic";
 
 export interface CurrencyInitial {
   code: string;
@@ -28,7 +26,8 @@ export interface CurrencyInitial {
 
 const { Coins } = NAV_ICONS;
 
-const DECIMAL_OPTIONS = [0, 1, 2, 3, 4].map((n) => ({ value: String(n), label: String(n) }));
+const decimalOptions = (current: number) =>
+  [...new Set([0, 2, 3, current])].sort().map((n) => ({ value: String(n), label: String(n) }));
 
 export function CurrencyForm({ currencyId, initial }: { currencyId: string | null; initial: CurrencyInitial }) {
   const [state, action, pending] = useActionState<CurrencyActionState, FormData>(
@@ -80,22 +79,9 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
             </>
           }
         >
-          <SummaryCard
-            rows={[
-              { label: "Así se verá", value: <strong>{previewAmount(symbol, decimals)}</strong> },
-              { label: "Decimales", value: decimals || "—" },
-              {
-                label: "Estado",
-                value: (
-                  <>
-                    <Chip variant={active ? undefined : "ring"}>{active ? "Activa" : "Inactiva"}</Chip>
-                    {isDefault && <Chip>Predeterminada</Chip>}
-                  </>
-                ),
-              },
-            ]}
-          />
-          <p className="hint">Ejemplo con {SAMPLE_AMOUNT.toLocaleString("es")}.</p>
+          <p className="eyebrow">Así se verán los montos</p>
+          <SummaryCard rows={moneyExamples(code, decimals).map((x) => ({ label: x.label, value: <strong>{x.value}</strong> }))} />
+          <p className="hint">Separador de miles «.» y decimal «,». En tablas, las cifras se alinean a la derecha.</p>
         </SummaryPanel>
       }
     >
@@ -103,8 +89,8 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
       <input type="hidden" name="isDefault" value={String(isDefault)} />
       <input type="hidden" name="active" value={String(active)} />
 
-      <FormSection n={1} title="Datos de la divisa" description="Cómo se identifica y se muestra en pedidos e importes.">
-        <Field label="Código" htmlFor="code" hint="Ej. PEN, USD, EUR." error={state.codeError ?? shown.code}>
+      <FormSection n={1} title="Datos de la divisa" description="Cambia cómo se escriben los montos y qué billetes y monedas existen.">
+        <Field label="Código" htmlFor="code" hint="3 letras, ej. CUP." error={state.codeError ?? shown.code}>
           <Input
             id="code"
             name="code"
@@ -142,8 +128,8 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
             aria-invalid={shown.symbol ? true : undefined}
           />
         </Field>
-        <Field label="Decimales" htmlFor="decimals" hint="De 0 a 4." error={shown.decimals}>
-          <Select id="decimals" options={DECIMAL_OPTIONS} value={decimals} onValueChange={(v) => setDecimals(v ?? "")} invalid={!!shown.decimals} />
+        <Field label="Decimales" htmlFor="decimals" error={shown.decimals}>
+          <Select id="decimals" options={decimalOptions(initial.decimals)} value={decimals} onValueChange={(v) => setDecimals(v ?? "")} invalid={!!shown.decimals} />
         </Field>
       </FormSection>
 
@@ -151,14 +137,23 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
         <ToggleCard
           icon={<Coins />}
           title="Predeterminada"
-          description="Se propone al crear pedidos. Solo una divisa lo es a la vez."
+          description="Se propone en pedidos y entradas."
           checked={isDefault}
-          onCheckedChange={setIsDefault}
+          onCheckedChange={(v) => {
+            setIsDefault(v);
+            if (v) setActive(true);
+          }}
         />
-        <Switch
-          label="Activa"
-          description="Las divisas inactivas no se ofrecen en pedidos nuevos."
+        <ToggleCard
+          icon={<Coins />}
+          title="Activa"
+          description={
+            isDefault
+              ? "Una divisa predeterminada no se puede desactivar. Elige antes otra predeterminada."
+              : "Inactiva no se ofrece en pedidos nuevos."
+          }
           checked={active}
+          disabled={isDefault}
           onCheckedChange={setActive}
         />
       </FormSection>

@@ -1,4 +1,4 @@
-import type { Currency } from "@/core/application/ports/currency-repository";
+import type { CurrencyListItem } from "@/core/application/ports/currency-repository";
 import type { Actor } from "@/core/domain/actor";
 import { nameKey } from "@/core/domain/name";
 import { resolveCurrencyScope, type CurrencyDeps } from "./shared";
@@ -10,7 +10,7 @@ export interface ListCurrenciesInput {
 }
 
 export function makeListCurrencies(deps: CurrencyDeps) {
-  return async (actor: Actor, input: ListCurrenciesInput = {}): Promise<Currency[]> => {
+  return async (actor: Actor, input: ListCurrenciesInput = {}): Promise<CurrencyListItem[]> => {
     const { companyId } = await resolveCurrencyScope(deps, actor, { companyId: input.companyId, write: false });
     const all = await deps.currencies.list(companyId, { active: input.active });
     const term = nameKey(input.search ?? "");

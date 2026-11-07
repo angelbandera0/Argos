@@ -77,7 +77,7 @@ export function CurrencyMenu({ id, name, active }: { id: string; name: string; a
           {deleting
             ? "La divisa dejará de aparecer en tu lista. Si ya tiene datos asociados, no se podrá eliminar."
             : active
-              ? "La divisa dejará de ofrecerse en pedidos nuevos. Los pedidos existentes no cambian."
+              ? "Ya no se ofrecerá en pedidos nuevos. Los pedidos, lotes y costos que ya la usan no cambian y se siguen viendo con su formato."
               : "La divisa volverá a ofrecerse en pedidos nuevos."}
         </p>
         {error && <Alert variant="danger">{error}</Alert>}

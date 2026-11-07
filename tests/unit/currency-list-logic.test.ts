@@ -20,7 +20,7 @@ describe("currency list logic", () => {
     expect(activeParam("inactivas")).toBe(false);
   });
   it("formats amounts by decimals", () => {
-    expect(formatAmount(1234.5, 2)).toBe("1234,50");
+    expect(formatAmount(1234.5, 2)).toBe("1.234,50");
     expect(formatAmount(15000, 0)).toBe("15.000");
   });
   it("labels denominations", () => {

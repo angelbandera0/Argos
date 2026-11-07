@@ -1,6 +1,7 @@
 import type {
   Currency,
   CurrencyChanges,
+  CurrencyListItem,
   CurrencyRepository,
   Denomination,
   DenominationChanges,
@@ -62,10 +63,13 @@ export class InMemoryCurrencies implements CurrencyRepository {
     this.deleted.add(id);
   }
 
-  async list(companyId: string, filter?: { active?: boolean }): Promise<Currency[]> {
+  async list(companyId: string, filter?: { active?: boolean }): Promise<CurrencyListItem[]> {
     return this.live(this.currencies)
       .filter((c) => c.companyId === companyId && (filter?.active === undefined || c.active === filter.active))
-      .map((c) => ({ ...c }));
+      .map((c) => ({
+        ...c,
+        denominationCount: this.live(this.denominations).filter((d) => d.currencyId === c.id).length,
+      }));
   }
 
   async createDenomination(i: Omit<Denomination, "id">): Promise<Denomination> {

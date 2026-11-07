@@ -42,18 +42,7 @@ async function CurrencyListContent({ searchParams }: { searchParams: PageProps<"
       currencies.listCurrencies(actor, { companyId }),
       currencies.listCurrencies(actor, { companyId, active: activeParam(status), search: text }),
     ]);
-    const rows = await Promise.all(
-      filtered.map(async (c) => ({
-        id: c.id,
-        code: c.code,
-        name: c.name,
-        symbol: c.symbol,
-        decimals: c.decimals,
-        isDefault: c.isDefault,
-        active: c.active,
-        denominations: (await currencies.listDenominations(actor, { currencyId: c.id })).length,
-      })),
-    );
+    const rows = filtered.map((c) => ({ ...c, denominations: c.denominationCount }));
     data = { total: all.length, rows };
   } catch {
     return <Alert variant="danger">No se pudieron cargar las divisas. Recarga la página.</Alert>;
@@ -73,7 +62,7 @@ async function CurrencyListContent({ searchParams }: { searchParams: PageProps<"
 export default function CurrenciesPage(props: PageProps<"/divisas">) {
   return (
     <div className="stack">
-      <PageHeader title="Divisas" description="Monedas de tu compañía y sus denominaciones." actions={<NewCurrencyLink />} />
+      <PageHeader title="Divisas" description="Monedas que se usan en pedidos y costos. La predeterminada se propone siempre." actions={<NewCurrencyLink />} />
       <Suspense fallback={<Loading />}>
         <CurrencyListContent searchParams={props.searchParams} />
       </Suspense>

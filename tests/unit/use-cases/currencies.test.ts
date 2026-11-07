@@ -48,6 +48,16 @@ describe("currencies use cases", () => {
     await s.create(admin("a2"), { ...mxn, companyId: "c2" });
   });
 
+  it("lists the denomination count per currency", async () => {
+    const s = build();
+    const a = await s.create(admin("a1"), mxn);
+    await s.create(admin("a1"), { ...mxn, code: "USD" });
+    await s.addDen(admin("a1"), { currencyId: a.id, value: 5, kind: "bill" });
+    await s.addDen(admin("a1"), { currencyId: a.id, value: 1, kind: "coin" });
+    const rows = await s.list(admin("a1"), { companyId: "c1" });
+    expect(rows.map((r) => [r.code, r.denominationCount])).toEqual([["MXN", 2], ["USD", 0]]);
+  });
+
   it("only one default per company", async () => {
     const s = build();
     const a = await s.create(admin("a1"), { ...mxn, isDefault: true });

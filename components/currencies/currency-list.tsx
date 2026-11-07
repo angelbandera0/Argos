@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { NAV_ICONS } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button-class";
 import { Chip } from "@/components/ui/chip";
@@ -11,8 +10,6 @@ import { EntityCard } from "@/components/ui/entity-card";
 import { ListToolbar } from "@/components/ui/list-toolbar";
 import { CurrencyMenu } from "./currency-menu";
 import { denominationsLabel, formatAmount, type StatusFilter } from "./currency-list-logic";
-
-const { Coins } = NAV_ICONS;
 
 export type CurrencyRow = {
   id: string;
@@ -74,10 +71,9 @@ export function CurrencyList({ rows, q, status }: { rows: CurrencyRow[]; q: stri
           {rows.map((r) => (
             <EntityCard
               key={r.id}
-              avatar={<Coins />}
-              avatarClassName="co-tone-1"
+              avatar={r.code}
+              avatarClassName={r.isDefault ? "co-tone-1" : undefined}
               title={<Link href={`/divisas/${r.id}`}>{r.name}</Link>}
-              code={r.code}
               badge={<CurrencyMenu id={r.id} name={r.name} active={r.active} />}
               chip={
                 <>

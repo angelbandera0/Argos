@@ -7,7 +7,7 @@ export function parseStatusFilter(value: unknown): StatusFilter {
 export const activeParam = (f: StatusFilter): boolean | undefined => (f === "" ? undefined : f === "activas");
 
 export function formatAmount(value: number, decimals: number): string {
-  return new Intl.NumberFormat("es", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value);
+  return new Intl.NumberFormat("es", { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: "always" }).format(value);
 }
 
 export const denominationsLabel = (n: number) => (n === 0 ? "Ninguna" : `${n} ${n === 1 ? "denominación" : "denominaciones"}`);
