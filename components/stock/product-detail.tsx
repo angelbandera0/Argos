@@ -14,6 +14,7 @@ import { ViewState } from "@/components/ui/view-state";
 import { Button } from "@/components/ui/button";
 import type { Unit } from "@/core/domain/stock";
 import { type DetailFilters, MOVEMENT_PAGE_SIZE, MOVEMENT_TYPES, detailQuery, lotOriginLabel, movementTypeLabel, signedQty } from "./product-detail-logic";
+import { CostAdjustDialog, CostHistoryDialog, type CostLot } from "./cost-adjust-dialog";
 import { AdjustLotDialog } from "./ops-dialogs";
 import { ProductConfigTab } from "./product-config-tab";
 import { formatStockQty } from "./stock-list-logic";
@@ -31,6 +32,7 @@ export function ProductDetailTabs({
   unit,
   costs,
   canAdjust,
+  canCorrectCost = false,
   currencies,
   filters,
   config,
@@ -41,15 +43,23 @@ export function ProductDetailTabs({
   unit: Unit;
   costs: boolean;
   canAdjust: boolean;
+  canCorrectCost?: boolean;
   currencies: Currencies;
   filters: DetailFilters;
   config: React.ComponentProps<typeof ProductConfigTab>;
 }) {
   const [adjusting, setAdjusting] = useState<LotRow | null>(null);
+  const [costDialog, setCostDialog] = useState<{ lot: CostLot; mode: "fix" | "history" } | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const go = (patch: Partial<DetailFilters>) => router.replace(`${pathname}${detailQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });
   const cost = (m: Money) => (m === undefined ? null : <MoneyValue value={m ? m.amount : null} currency={(m && currencies[m.currencyId]) || FALLBACK} />);
+  const costLot = (r: LotRow): CostLot => ({
+    id: r.id,
+    label: `Lote ${r.id.slice(0, 8)}`,
+    unitCost: r.unitCost ? r.unitCost.amount : null,
+    currencyCode: (r.unitCost && currencies[r.unitCost.currencyId]?.code) || "",
+  });
   const hasFilters = !!(filters.tipo || filters.desde || filters.hasta);
 
   const lotColumns: Column<LotRow>[] = [
@@ -82,7 +92,7 @@ export function ProductDetailTabs({
             lots.length === 0 ? (
               <ViewState kind="empty" entity="lotes" text="Este producto no tiene lotes con existencia en la ubicación." canCreate={false} />
             ) : (
-              <DataTable label="Lotes" columns={lotColumns} rows={lots} getRowId={(r) => r.id} rowActions={canAdjust ? (r) => [{ label: "Ajustar lote", onSelect: () => setAdjusting(r) }] : undefined} />
+              <DataTable label="Lotes" columns={lotColumns} rows={lots} getRowId={(r) => r.id} rowActions={canAdjust || costs ? (r) => [...(canAdjust ? [{ label: "Ajustar lote", onSelect: () => setAdjusting(r) }] : []), ...(canCorrectCost ? [{ label: "Corregir costo", onSelect: () => setCostDialog({ lot: costLot(r), mode: "fix" }) }] : []), ...(costs ? [{ label: "Ver ajustes de costo", onSelect: () => setCostDialog({ lot: costLot(r), mode: "history" }) }] : [])] : undefined} />
             ),
         },
         {
@@ -124,6 +134,8 @@ export function ProductDetailTabs({
         { value: "configuracion", label: "Configuración", content: <ProductConfigTab {...config} /> },
       ]}
     />
+    {costDialog?.mode === "fix" && <CostAdjustDialog lot={costDialog.lot} onClose={() => setCostDialog(null)} />}
+    {costDialog?.mode === "history" && <CostHistoryDialog lot={costDialog.lot} onClose={() => setCostDialog(null)} />}
     {adjusting && <AdjustLotDialog lot={adjusting} unit={unit} onClose={() => setAdjusting(null)} />}
     </>
   );

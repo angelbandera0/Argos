@@ -70,6 +70,8 @@ const ERRORS: Record<string, string> = {
   CODE_TAKEN: "Ya existe un motivo con ese nombre.",
   NAME_TAKEN: "Ya existe un motivo con ese nombre.",
   STANDARD_REASON: "Los motivos estándar no se pueden eliminar ni renombrar.",
+  INVALID_COST: "El costo debe ser un número mayor o igual que cero, con máximo 6 decimales.",
+  CURRENCY_REQUIRED: "Este lote no tiene costo ni divisa conocidos; no se puede corregir.",
   REASON_IN_USE: "El motivo ya tiene bajas registradas; desactívalo en su lugar.",
 };
 

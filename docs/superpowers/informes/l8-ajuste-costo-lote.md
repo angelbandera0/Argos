@@ -5,3 +5,6 @@
 
 # Parte 2 (TS + API)
 - adjustLotCost/listLotCostAdjustments (puerto, repo, fake, factory), errores INVALID_COST y CURRENCY_REQUIRED traducidos, POST/GET /api/v1/stock/lots/{id}/cost-adjustments + OpenAPI, etiquetas de historial. verify:fast OK (800 casos), int stock 8/8.
+
+# Parte 3 (UI)
+- `cost-adjust-dialog.tsx` (Corregir costo con resumen «De X a Y», aviso si no hay costo/divisa, historial de ajustes), acción de fila en pestaña Lotes (admin o see_costs+correct_orders; historial con see_costs), sección en pestaña Corrección de /pedidos/[id]; lógica pura en `cost-adjust-logic.ts` (+4 pruebas). verify:fast OK (804 casos). Sin prueba en navegador.

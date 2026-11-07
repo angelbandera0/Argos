@@ -114,6 +114,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         unit={unit}
         costs={costs}
         canAdjust={can("adjust_stock")}
+        canCorrectCost={costs && can("correct_orders")}
         currencies={Object.fromEntries(currencyList.map((c) => [c.id, { code: c.code, decimals: c.decimals }]))}
         filters={filters}
         config={{

@@ -7,6 +7,7 @@ import { ReviewPanel } from "@/components/orders/review-panel";
 import { timelineSteps, type LotOption } from "@/components/orders/review-logic";
 import { draftFromLine } from "@/components/orders/purchase-logic";
 import { PurchasePanel } from "@/components/orders/purchase-panel";
+import type { CostLot } from "@/components/stock/cost-adjust-dialog";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Tabs } from "@/components/ui/tabs";
@@ -48,6 +49,19 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
       return { lotId: r.lot_id, remaining, label: `${line?.productName ?? "Lote"} · quedan ${remaining} ${line?.unit ?? ""}`.trim() };
     });
   }
+  let costLots: CostLot[] = [];
+  if (canAdjust && can("see_costs") && lots.length) {
+    const costs = await supabase.from("lot_costs").select("lot_id, unit_cost, currency_id").in("lot_id", lots.map((l) => l.lotId));
+    const byLot = new Map((costs.data ?? []).map((c) => [c.lot_id as string, c]));
+    const codes = new Map<string, string>();
+    for (const c of byLot.values()) {
+      if (c.currency_id && !codes.has(c.currency_id)) codes.set(c.currency_id, (await makeCurrencyRepository(supabase).get(c.currency_id).catch(() => null))?.code ?? "");
+    }
+    costLots = lots.map((l) => {
+      const c = byLot.get(l.lotId);
+      return { id: l.lotId, label: l.label, unitCost: c?.unit_cost === null || c?.unit_cost === undefined ? null : Number(c.unit_cost), currencyCode: (c?.currency_id && codes.get(c.currency_id)) || "" };
+    });
+  }
   const events = await orders.listOrderEvents(actor, { companyId, orderId: order.id });
   const sections = [
     canBuy && {
@@ -74,7 +88,7 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
       label: "Detalle",
       content: <DetailPanel order={order} steps={timelineSteps(events, order.status)} currency={currency} />,
     },
-    canAdjust && { value: "correccion", label: "Corrección", content: <AdjustPanel orderId={order.id} lots={lots} /> },
+    canAdjust && { value: "correccion", label: "Corrección", content: <AdjustPanel orderId={order.id} lots={lots} costLots={costLots} /> },
   ].filter((s) => !!s);
   return (
     <>

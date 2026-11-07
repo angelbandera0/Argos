@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { adjustSchema, reasonCode, reasonNameSchema, stockOpErrorMessage, surplusSchema, writeOffSchema } from "@/components/stock/ops-logic";
+import { costAdjustSchema } from "@/components/stock/cost-adjust-logic";
+import { createServerClient } from "@/infrastructure/supabase/server-client";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -62,6 +64,40 @@ export async function adjustLotAction(_prev: OpActionState, f: FormData): Promis
   if (!p.success) return INVALID;
   const d = p.data;
   return run(({ actor, stock }) => stock.adjustLot(actor, { lotId: d.lotId, delta: d.delta, reasonText: d.text }));
+}
+
+export async function adjustLotCostAction(_prev: OpActionState, f: FormData): Promise<OpActionState> {
+  const p = costAdjustSchema.safeParse({ lotId: text(f, "lotId"), newUnitCost: text(f, "newUnitCost"), text: text(f, "text") });
+  if (!p.success) return p.error.issues.some((i) => i.path[0] === "newUnitCost") ? { error: stockOpErrorMessage("INVALID_COST") } : INVALID;
+  const d = p.data;
+  const r = await run(({ actor, stock }) => stock.adjustLotCost(actor, { lotId: d.lotId, newUnitCost: d.newUnitCost, reason: d.text }));
+  if (!r.error) revalidatePath("/pedidos", "layout");
+  return r;
+}
+
+export interface CostAdjustmentRow {
+  id: string;
+  oldUnitCost: number | null;
+  newUnitCost: number;
+  reason: string;
+  by: string;
+  createdAt: string;
+}
+
+export async function loadCostAdjustmentsAction(lotId: string): Promise<CostAdjustmentRow[]> {
+  const { actor, stock } = await requireStockUser();
+  try {
+    const list = await stock.listLotCostAdjustments(actor, { lotId });
+    const ids = [...new Set(list.map((a) => a.createdBy).filter((x): x is string => !!x))];
+    const names = new Map<string, string>();
+    if (ids.length) {
+      const { data } = await (await createServerClient()).from("profiles").select("id, display_name").in("id", ids);
+      for (const r of data ?? []) names.set(r.id, r.display_name);
+    }
+    return list.map((a) => ({ id: a.id, oldUnitCost: a.oldUnitCost, newUnitCost: a.newUnitCost, reason: a.reason, by: (a.createdBy && names.get(a.createdBy)) || "Administrador", createdAt: a.createdAt }));
+  } catch {
+    return [];
+  }
 }
 
 export async function registerSurplusAction(locationId: string, _prev: OpActionState, f: FormData): Promise<OpActionState> {

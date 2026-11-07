@@ -8,9 +8,11 @@ import { Card } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { CostAdjustDialog, CostHistoryDialog, type CostLot } from "@/components/stock/cost-adjust-dialog";
 import { adjustValid, type LotOption } from "./review-logic";
 
-export function AdjustPanel({ orderId, lots }: { orderId: string; lots: LotOption[] }) {
+export function AdjustPanel({ orderId, lots, costLots = [] }: { orderId: string; lots: LotOption[]; costLots?: CostLot[] }) {
+  const [costDialog, setCostDialog] = useState<{ lot: CostLot; mode: "fix" | "history" } | null>(null);
   const [lotId, setLotId] = useState<string | null>(null);
   const [delta, setDelta] = useState("");
   const [reason, setReason] = useState("");
@@ -45,6 +47,21 @@ export function AdjustPanel({ orderId, lots }: { orderId: string; lots: LotOptio
           Aplicar corrección
         </Button>
       </div>
+      {costLots.length > 0 && (
+        <div className="stack">
+          <h2>Corregir costo de un lote</h2>
+          <p className="muted">Es un ajuste de valor: lo ya consumido o trasladado conserva su costo.</p>
+          {costLots.map((l) => (
+            <div key={l.id} className="row">
+              <span>{l.label}</span>
+              <Button variant="outline" size="sm" onClick={() => setCostDialog({ lot: l, mode: "fix" })}>Corregir costo</Button>
+              <Button variant="ghost" size="sm" onClick={() => setCostDialog({ lot: l, mode: "history" })}>Ver ajustes</Button>
+            </div>
+          ))}
+        </div>
+      )}
+      {costDialog?.mode === "fix" && <CostAdjustDialog lot={costDialog.lot} onClose={() => setCostDialog(null)} />}
+      {costDialog?.mode === "history" && <CostHistoryDialog lot={costDialog.lot} onClose={() => setCostDialog(null)} />}
     </Card>
   );
 }
