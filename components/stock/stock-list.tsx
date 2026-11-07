@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
+import { WriteOffButton } from "./ops-dialogs";
 import { TransferButton } from "./transfer-button";
 import { EntryButton } from "./entry-button";
 import type { EntryCurrency, EntryProduct } from "./entry-dialog";
@@ -181,7 +182,7 @@ export function StockList({
           isWarehouse && (canEntry || canTransfer || canWriteOff) ? (
             <>
               {canTransfer && <TransferButton {...transfer} />}
-              {canWriteOff && <Button variant="secondary" disabled title="Próximamente">Dar de baja</Button>}
+              {canWriteOff && <WriteOffButton locationId={transfer.fromLocationId} products={transfer.products} />}
               {entryButton}
             </>
           ) : entryButton

@@ -9,7 +9,7 @@ describe("buildNav", () => {
   it("gives admins the four sections in order", () => {
     const nav = buildNav({ kind: "admin" });
     expect(nav.map((s) => s.title)).toEqual(["General", "Almacén", "Catálogo", "Administración"]);
-    expect(ids(nav)).toEqual(["inicio", "notificaciones", "existencias", "solicitudes", "pedidos", "productos", "categorias", "divisas", "companias", "roles", "usuarios", "historial"]);
+    expect(ids(nav)).toEqual(["inicio", "notificaciones", "existencias", "solicitudes", "pedidos", "motivos", "productos", "categorias", "divisas", "companias", "roles", "usuarios", "historial"]);
   });
 
   it("marks only the pages not built yet as unavailable", () => {

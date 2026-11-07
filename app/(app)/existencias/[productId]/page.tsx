@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
 import { formatStockQty, parsePage } from "@/components/stock/stock-list-logic";
-import { Button } from "@/components/ui/button";
+import { SurplusButton, WriteOffButton } from "@/components/stock/ops-dialogs";
 import { TransferButton } from "@/components/stock/transfer-button";
 import { EntryButton } from "@/components/stock/entry-button";
 import { PageHeader } from "@/components/ui/page-header";
@@ -82,7 +82,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
   const name = products.find((p) => p.id === productId)?.name ?? "Producto";
   const unit = detail.config.baseUnit;
   const isWarehouse = location.kind === "warehouse";
-  const gated = isWarehouse ? [can("write_off") && "Dar de baja"].filter(Boolean) : [];
+  const curs = currencyList.map((c) => ({ id: c.id, code: c.code }));
   const stores = locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name }));
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = can(isWarehouse ? "initial_entry" : "direct_store_entry");
@@ -94,9 +94,8 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         breadcrumbs={[{ label: "Existencias", href: `/existencias?ubicacion=${location.id}` }, { label: name }]}
         description={`${location.name} · Existencia ${formatStockQty(detail.quantity, unit)}`}
         actions={[
-          ...gated.map((label) => (
-            <Button key={String(label)} variant="secondary" disabled title="Próximamente">{label}</Button>
-          )),
+          isWarehouse && can("write_off") && <WriteOffButton key="writeoff" locationId={location.id} products={[]} productId={productId} />,
+          can("adjust_stock") && <SurplusButton key="surplus" locationId={location.id} products={[]} productId={productId} costs={costs} currencies={curs} />,
           isWarehouse && can("transfer") && (
             <TransferButton key="transfer" fromLocationId={location.id} stores={stores} products={[]} productId={productId} canChooseLot={can("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
           ),
@@ -114,6 +113,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         total={moves.total}
         unit={unit}
         costs={costs}
+        canAdjust={can("adjust_stock")}
         currencies={Object.fromEntries(currencyList.map((c) => [c.id, { code: c.code, decimals: c.decimals }]))}
         filters={filters}
         config={{

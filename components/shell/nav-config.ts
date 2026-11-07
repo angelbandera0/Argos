@@ -14,6 +14,7 @@ export const NAV = {
   orders: item("pedidos", "Pedidos", "/pedidos", "ShoppingBag", { available: false }),
   products: item("productos", "Productos", "/catalogo/productos", "Box"),
   categories: item("categorias", "Categorías", "/catalogo/categorias", "Tags"),
+  reasons: item("motivos", "Motivos de baja", "/existencias/motivos", "ClipboardList"),
   currencies: item("divisas", "Divisas", "/divisas", "Banknote"),
   companies: item("companias", "Compañías", "/companias", "Building2"),
   roles: item("roles", "Roles", "/roles", "KeyRound"),
@@ -31,7 +32,7 @@ export function buildNav({ kind, permissions }: NavActor): NavSection[] {
   const can = (m: Module) => admin || (operator && !!permissions?.[m]?.view);
   const sections: NavSection[] = [
     { title: "General", items: [NAV.home, NAV.notifications] },
-    { title: "Almacén", items: WAREHOUSE.filter(([m]) => can(m)).map(([, i]) => i) },
+    { title: "Almacén", items: [...WAREHOUSE.filter(([m]) => can(m)).map(([, i]) => i), ...(admin ? [NAV.reasons] : [])] },
     {
       title: "Catálogo",
       items: [...(can("products") ? [NAV.products] : []), ...(admin ? [NAV.categories, NAV.currencies] : [])],

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Chip } from "@/components/ui/chip";
 import { type Column, DataTable } from "@/components/ui/data-table";
@@ -13,6 +14,7 @@ import { ViewState } from "@/components/ui/view-state";
 import { Button } from "@/components/ui/button";
 import type { Unit } from "@/core/domain/stock";
 import { type DetailFilters, MOVEMENT_PAGE_SIZE, MOVEMENT_TYPES, detailQuery, lotOriginLabel, movementTypeLabel, signedQty } from "./product-detail-logic";
+import { AdjustLotDialog } from "./ops-dialogs";
 import { ProductConfigTab } from "./product-config-tab";
 import { formatStockQty } from "./stock-list-logic";
 
@@ -28,6 +30,7 @@ export function ProductDetailTabs({
   total,
   unit,
   costs,
+  canAdjust,
   currencies,
   filters,
   config,
@@ -37,10 +40,12 @@ export function ProductDetailTabs({
   total: number;
   unit: Unit;
   costs: boolean;
+  canAdjust: boolean;
   currencies: Currencies;
   filters: DetailFilters;
   config: React.ComponentProps<typeof ProductConfigTab>;
 }) {
+  const [adjusting, setAdjusting] = useState<LotRow | null>(null);
   const router = useRouter();
   const pathname = usePathname();
   const go = (patch: Partial<DetailFilters>) => router.replace(`${pathname}${detailQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });
@@ -64,6 +69,7 @@ export function ProductDetailTabs({
   ];
 
   return (
+    <>
     <Tabs
       aria-label="Detalle del producto"
       value={filters.pestana}
@@ -76,7 +82,7 @@ export function ProductDetailTabs({
             lots.length === 0 ? (
               <ViewState kind="empty" entity="lotes" text="Este producto no tiene lotes con existencia en la ubicación." canCreate={false} />
             ) : (
-              <DataTable label="Lotes" columns={lotColumns} rows={lots} getRowId={(r) => r.id} />
+              <DataTable label="Lotes" columns={lotColumns} rows={lots} getRowId={(r) => r.id} rowActions={canAdjust ? (r) => [{ label: "Ajustar lote", onSelect: () => setAdjusting(r) }] : undefined} />
             ),
         },
         {
@@ -118,5 +124,7 @@ export function ProductDetailTabs({
         { value: "configuracion", label: "Configuración", content: <ProductConfigTab {...config} /> },
       ]}
     />
+    {adjusting && <AdjustLotDialog lot={adjusting} unit={unit} onClose={() => setAdjusting(null)} />}
+    </>
   );
 }
