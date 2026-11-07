@@ -9,6 +9,7 @@ export interface NotificationItem {
   title: string;
   body: string;
   link: string | null;
+  storeId?: string | null;
   createdAt: string;
   read: boolean;
 }
