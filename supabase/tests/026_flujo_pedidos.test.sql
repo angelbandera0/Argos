@@ -73,7 +73,7 @@ select lives_ok(format($$select public.register_pedido_purchase('%s', jsonb_buil
   jsonb_build_object('line_id', (select id from pedido_lineas where order_id = '%s' and dest = 'direct'), 'qty_bought', 9, 'unit_cost', 10),
   jsonb_build_object('line_id', (select id from pedido_lineas where order_id = '%s' and dest = 'store'), 'qty_bought', 3, 'unit_cost', 5)), 200)$$,
   (select v from ctx where k = 'o1'), (select v from ctx where k = 'o1'), (select v from ctx where k = 'o1')), 'purchase registered');
-select is((select count(*)::int from pedido_linea_costos), 0, 'buyer without see_costs cannot read costs');
+select is((select count(*)::int from pedido_linea_costos), 2, 'buyer reads the costs of own order (order_buyer_costs)');
 select is(public.submit_pedido_review((select v from ctx where k = 'o1')), '{"given": 200.00, "spent": 105.00, "leftover": 95.00}'::jsonb, 'comparison given/spent/leftover');
 select tests.clear_auth();
 select is((select status from pedidos where id = (select v from ctx where k = 'o1')), 'in_review', 'order in review');
