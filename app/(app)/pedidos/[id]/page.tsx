@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { orderBadge, orderNumber } from "@/components/orders/order-logic";
+import { AdjustPanel } from "@/components/orders/adjust-panel";
+import { DetailPanel } from "@/components/orders/detail-panel";
+import { ReviewPanel } from "@/components/orders/review-panel";
+import { timelineSteps, type LotOption } from "@/components/orders/review-logic";
 import { draftFromLine } from "@/components/orders/purchase-logic";
 import { PurchasePanel } from "@/components/orders/purchase-panel";
 import { PageHeader } from "@/components/ui/page-header";
@@ -18,7 +22,7 @@ export const metadata: Metadata = { title: "Pedido · Argos" };
 
 async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["params"] }) {
   const { id } = await params;
-  const { actor, orders, supabase, companyId } = await requireOrderUser();
+  const { actor, orders, supabase, companyId, can, stock } = await requireOrderUser();
   let order;
   try {
     order = await orders.getOrder(actor, { companyId, orderId: id });
@@ -29,7 +33,26 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
   }
   const currency = (order.currencyId && (await makeCurrencyRepository(supabase).get(order.currencyId).catch(() => null))) || { code: "", decimals: 2 };
   const canBuy = (order.buyerId === actor.userId || actor.kind === "admin") && (order.status === "open" || order.status === "returned");
-  /* T27 añade aquí las secciones de revisión, detalle y corrección (misma lista de pestañas). */
+  const canReview = order.status === "in_review" && can("review_orders") && order.buyerId !== actor.userId;
+  const canAdjust = order.status === "fulfilled" && can("correct_orders");
+  const stores = canReview
+    ? (await stock.listLocations(actor, { companyId })).filter((l) => l.kind === "store" && l.storeId).map((l) => ({ id: l.storeId as string, name: l.name }))
+    : [];
+  let lots: LotOption[] = [];
+  let adjustments: { reason: string; at: string }[] = [];
+  if (canAdjust || order.status === "fulfilled") {
+    const [pl, aj] = await Promise.all([
+      supabase.from("pedido_lotes").select("lot_id, line_id, lots(remaining)").eq("order_id", order.id),
+      supabase.from("pedido_ajustes").select("reason, created_at").eq("order_id", order.id).order("created_at"),
+    ]);
+    const names = new Map(order.lines.map((l) => [l.id, l]));
+    lots = ((pl.data ?? []) as unknown as { lot_id: string; line_id: string; lots: { remaining: number | string } | null }[]).map((r) => {
+      const remaining = Number(r.lots?.remaining ?? 0);
+      const line = names.get(r.line_id);
+      return { lotId: r.lot_id, remaining, label: `${line?.productName ?? "Lote"} · quedan ${remaining} ${line?.unit ?? ""}`.trim() };
+    });
+    adjustments = ((aj.data ?? []) as { reason: string; created_at: string }[]).map((a) => ({ reason: a.reason, at: a.created_at.slice(0, 10) }));
+  }
   const sections = [
     canBuy && {
       value: "compra",
@@ -45,15 +68,22 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
         />
       ),
     },
+    canReview && {
+      value: "revision",
+      label: "Revisión",
+      content: <ReviewPanel orderId={order.id} lines={order.lines} stores={stores} currency={currency} showCosts={order.spent !== undefined} />,
+    },
+    {
+      value: "detalle",
+      label: "Detalle",
+      content: <DetailPanel order={order} steps={timelineSteps(order.status, !!order.buyerId, adjustments)} currency={currency} />,
+    },
+    canAdjust && { value: "correccion", label: "Corrección", content: <AdjustPanel orderId={order.id} lots={lots} /> },
   ].filter((s) => !!s);
   return (
     <>
       <PageHeader title={`Pedido ${orderNumber(order.id)}`} actions={<StatusBadge {...orderBadge(order.status)} />} />
-      {sections.length === 0 ? (
-        <ViewState kind="empty" entity="detalle" title="Este pedido no está en compra." text="El detalle y la revisión llegan en la siguiente entrega." canCreate={false} />
-      ) : (
-        <Tabs aria-label="Secciones del pedido" defaultValue={sections[0].value} items={sections} />
-      )}
+      <Tabs aria-label="Secciones del pedido" defaultValue={sections[0].value} items={sections} />
     </>
   );
 }
