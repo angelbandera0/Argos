@@ -105,7 +105,7 @@ export function makeHistoryReader(supabase: SupabaseClient): HistoryReader {
   return {
     async list(i) {
       const size = pageSize(i.limit);
-      let q = auditFilters(supabase.from("audit_log").select(AUDIT_COLS), i);
+      let q = auditFilters(supabase.from("audit_history").select(AUDIT_COLS), i);
       if (i.cursor) q = q.or(keysetFilter(i.cursor));
       const { data, error } = await q.order("created_at", { ascending: false }).order("id", { ascending: false }).limit(size + 1);
       if (error) throw new Error(`list history failed (${error.code ?? "unknown"})`);
