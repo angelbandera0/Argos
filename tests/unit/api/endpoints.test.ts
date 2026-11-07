@@ -91,6 +91,10 @@ const rows: Row[] = [
   ["currencies/[id]/denominations/[denominationId]", "PATCH", "/currencies/m1/denominations/d1", { value: 10 }, { id: "m1", denominationId: "d1" }, "currencies.updateDenomination", "admin", 204],
   ["currencies/[id]/denominations/[denominationId]", "PATCH", "/currencies/m1/denominations/d1", { active: false }, { id: "m1", denominationId: "d1" }, "currencies.setDenominationActive", "admin", 204],
   ["currencies/[id]/denominations/[denominationId]", "DELETE", "/currencies/m1/denominations/d1", undefined, { id: "m1", denominationId: "d1" }, "currencies.deleteDenomination", "admin", 204],
+  ["notifications", "GET", "/notifications?module=stock&priority=urgent&read=unread&page=2&pageSize=10", undefined, {}, "notifications.listNotifications", "operator", 200],
+  ["notifications/unread-count", "GET", "/notifications/unread-count", undefined, {}, "notifications.countUnreadNotifications", "admin", 200],
+  ["notifications/read", "POST", "/notifications/read", { ids: ["3f1e2d4c-5b6a-4789-8abc-0123456789ab"] }, {}, "notifications.markNotificationsRead", "operator", 200],
+  ["notifications/read", "POST", "/notifications/read", undefined, {}, "notifications.markNotificationsRead", "admin", 200],
   ["history/[module]", "GET", "/history/products?companyId=c1&actions=create,update", undefined, { module: "products" }, "history.listHistory", "admin", 200],
   ["auth-events", "GET", "/auth-events?companyId=c1&events=login_ok", undefined, {}, "history.listAuthEvents", "admin", 200],
 ];

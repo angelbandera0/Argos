@@ -5,6 +5,7 @@ import { getEnv } from "@/infrastructure/env";
 import { makeCatalog } from "./catalog-factory";
 import { makeCurrencies } from "./currencies-factory";
 import { makeHistory } from "./history-factory";
+import { makeNotifications } from "./notifications-factory";
 import { makeOrg } from "./org-factory";
 import { makeRoles } from "./roles-factory";
 import { makeUsers } from "./users-factory";
@@ -24,6 +25,7 @@ export function makeApiServices(token: string) {
     catalog: makeCatalog(supabase),
     currencies: makeCurrencies(supabase),
     history: makeHistory(supabase),
+    notifications: makeNotifications(supabase),
     listAdmins: makeListAdmins({ users: org.users }),
   };
 }

@@ -69,6 +69,9 @@ const OPERATIONS: Op[] = [
   ["post", "/api/v1/currencies/{id}/denominations", "Add a denomination", "createDenomination", "201"],
   ["patch", "/api/v1/currencies/{id}/denominations/{denominationId}", "Update a denomination", "updateDenomination", "204"],
   ["delete", "/api/v1/currencies/{id}/denominations/{denominationId}", "Delete a denomination", undefined, "204"],
+  ["get", "/api/v1/notifications", "List own notifications (module, operation, priority, read, storeId, from, to, page, pageSize)"],
+  ["get", "/api/v1/notifications/unread-count", "Count own unread notifications"],
+  ["post", "/api/v1/notifications/read", "Mark own notifications read (ids omitted = all)", "markNotificationsRead"],
   ["get", "/api/v1/history/{module}", "List a module's history (cursor)"],
   ["get", "/api/v1/auth-events", "List authentication events (cursor)"],
 ];

@@ -42,6 +42,7 @@ export const schemas = {
   }),
   exclusions: z.object({ companyIds: z.array(id) }),
   createCategory: z.object({ companyId: id.optional(), name: z.string() }),
+  markNotificationsRead: z.object({ ids: z.array(z.uuid()).optional() }),
   createCurrency: z.object({
     companyId: id.optional(),
     code: z.string(),
