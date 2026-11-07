@@ -24,14 +24,14 @@ export const lotOriginLabel = (o: string) => LOT_ORIGINS[o] ?? o;
 export const parseMovementType = (v: unknown) => (typeof v === "string" && v in MOVEMENT_TYPES ? v : "");
 export const parseIsoDate = (v: unknown) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : "");
 
-export type DetailFilters = { ubicacion: string; pestana: "lotes" | "movimientos"; tipo: string; desde: string; hasta: string; pagina: number };
+export type DetailFilters = { ubicacion: string; pestana: "lotes" | "movimientos" | "configuracion"; tipo: string; desde: string; hasta: string; pagina: number };
 
-export const parseTab = (v: unknown): DetailFilters["pestana"] => (v === "movimientos" ? "movimientos" : "lotes");
+export const parseTab = (v: unknown): DetailFilters["pestana"] => (v === "movimientos" || v === "configuracion" ? v : "lotes");
 
 export function detailQuery(f: Partial<DetailFilters>): string {
   const sp = new URLSearchParams();
   if (f.ubicacion) sp.set("ubicacion", f.ubicacion);
-  if (f.pestana === "movimientos") sp.set("pestana", "movimientos");
+  if (f.pestana === "movimientos" || f.pestana === "configuracion") sp.set("pestana", f.pestana);
   if (f.tipo) sp.set("tipo", f.tipo);
   if (f.desde) sp.set("desde", f.desde);
   if (f.hasta) sp.set("hasta", f.hasta);

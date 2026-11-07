@@ -68,6 +68,15 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
     }),
     costs ? currencies.listCurrencies(actor, { companyId }).catch(() => []) : Promise.resolve([]),
   ]);
+  const cfg = await stock.getProductStockConfig(actor, { productId });
+  const minimums = (
+    await Promise.all(
+      locations.map(async (l) => {
+        const d = await stock.getProductStock(actor, { productId, locationId: l.id, onlyAvailable: true }).catch(() => null);
+        return d && { locationId: l.id, name: l.name, minimum: d.minimum };
+      }),
+    )
+  ).filter((m) => m !== null);
   const name = products.find((p) => p.id === productId)?.name ?? "Producto";
   const unit = detail.config.baseUnit;
   const isWarehouse = location.kind === "warehouse";
@@ -94,6 +103,15 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         costs={costs}
         currencies={Object.fromEntries(currencyList.map((c) => [c.id, { code: c.code, decimals: c.decimals }]))}
         filters={filters}
+        config={{
+          productId,
+          baseUnit: cfg.baseUnit,
+          presentations: cfg.presentations.map((p) => ({ id: p.id, name: p.name, value: p.content, active: p.active })),
+          movementUnits: cfg.movementUnits.map((u) => ({ id: u.id, name: u.name, value: u.equivalence, active: u.active })),
+          minimums,
+          canUnits: can("configure_units"),
+          canMinimums: can("configure_minimums"),
+        }}
       />
     </>
   );

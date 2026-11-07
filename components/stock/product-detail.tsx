@@ -13,6 +13,7 @@ import { ViewState } from "@/components/ui/view-state";
 import { Button } from "@/components/ui/button";
 import type { Unit } from "@/core/domain/stock";
 import { type DetailFilters, MOVEMENT_PAGE_SIZE, MOVEMENT_TYPES, detailQuery, lotOriginLabel, movementTypeLabel, signedQty } from "./product-detail-logic";
+import { ProductConfigTab } from "./product-config-tab";
 import { formatStockQty } from "./stock-list-logic";
 
 type Money = { amount: number; currencyId: string } | null | undefined;
@@ -29,6 +30,7 @@ export function ProductDetailTabs({
   costs,
   currencies,
   filters,
+  config,
 }: {
   lots: LotRow[];
   movements: MovementRow[];
@@ -37,6 +39,7 @@ export function ProductDetailTabs({
   costs: boolean;
   currencies: Currencies;
   filters: DetailFilters;
+  config: React.ComponentProps<typeof ProductConfigTab>;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -64,7 +67,7 @@ export function ProductDetailTabs({
     <Tabs
       aria-label="Detalle del producto"
       value={filters.pestana}
-      onValueChange={(v) => go({ pestana: v === "movimientos" ? "movimientos" : "lotes", tipo: "", desde: "", hasta: "" })}
+      onValueChange={(v) => go({ pestana: v === "movimientos" || v === "configuracion" ? v : "lotes", tipo: "", desde: "", hasta: "" })}
       items={[
         {
           value: "lotes",
@@ -112,6 +115,7 @@ export function ProductDetailTabs({
             </div>
           ),
         },
+        { value: "configuracion", label: "Configuración", content: <ProductConfigTab {...config} /> },
       ]}
     />
   );
