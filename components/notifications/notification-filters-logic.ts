@@ -15,6 +15,7 @@ export const OPERATIONS: Record<string, string> = {
   fulfilled: "Cumplida",
   shortage_detected: "Faltante detectado",
   initial_entry: "Entrada inicial",
+  surplus: "Sobrante de conteo",
   low_stock: "Existencia baja",
   out_of_stock: "Agotado",
 };
