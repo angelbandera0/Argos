@@ -110,6 +110,8 @@ describe("queries", () => {
     expect((await s.list(A, { companyId: "c1" })).total).toBe(2);
     expect((await s.list(operator("u-edit"), {})).total).toBe(2);
     expect((await s.list(operator("u-view"), { storeId: "t-u-all" })).items.map((r) => r.storeId)).toEqual(["t-u-view"]);
+    expect((await s.list(A, { companyId: "c1", createdFrom: "2026-01-01", createdTo: "2026-01-02" })).total).toBe(2);
+    expect((await s.list(A, { companyId: "c1", createdFrom: "2026-01-02" })).total).toBe(0);
     await expect(s.list(operator("u-none"), {})).rejects.toMatchObject({ name: "Forbidden" });
     expect((await s.get(operator("u-view"), { requestId: "req-1" })).id).toBe("req-1");
     await expect(s.get(operator("u-view"), { requestId: "req-2" })).rejects.toMatchObject({ name: "NotFound" });

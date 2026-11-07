@@ -7,7 +7,7 @@ import { canSeeStore, isHandler, requireHandler, resolveRequestScope, type Reque
 export function makeListRequests(deps: RequestDeps) {
   return async (actor: Actor, input: { companyId?: string; page?: number; pageSize?: number } & RequestFilters) => {
     const scope = await resolveRequestScope(deps, actor, input);
-    const filters = { status: input.status, storeId: input.storeId };
+    const filters = { status: input.status, storeId: input.storeId, createdFrom: input.createdFrom, createdTo: input.createdTo };
     if (!isHandler(scope)) {
       if (!scope.access?.permissions.requests?.view) throw new Forbidden();
       filters.storeId = scope.access.storeId;

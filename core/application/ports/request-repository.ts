@@ -29,6 +29,9 @@ export interface RequestDetail extends RequestSummary {
 export interface RequestFilters {
   storeId?: string;
   status?: RequestStatus;
+  /** Inclusive lower / exclusive upper bound on createdAt (ISO). */
+  createdFrom?: string;
+  createdTo?: string;
 }
 
 export interface BagRow {

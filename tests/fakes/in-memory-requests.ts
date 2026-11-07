@@ -51,7 +51,7 @@ export class InMemoryRequests implements RequestRepository {
 
   async list(companyId: string, filters: RequestFilters, page: { offset: number; limit: number }) {
     const all = this.requests
-      .filter((r) => r.companyId === companyId && (!filters.storeId || r.storeId === filters.storeId))
+      .filter((r) => r.companyId === companyId && (!filters.storeId || r.storeId === filters.storeId) && (!filters.createdFrom || r.createdAt >= filters.createdFrom) && (!filters.createdTo || r.createdAt < filters.createdTo))
       .map((r) => this.withStatus(r))
       .filter((r) => !filters.status || r.status === filters.status);
     const items: RequestSummary[] = all.slice(page.offset, page.offset + page.limit);

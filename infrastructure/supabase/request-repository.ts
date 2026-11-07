@@ -123,6 +123,8 @@ export function makeRequestRepository(supabase: SupabaseClient): RequestReposito
       let q = supabase.from("solicitudes").select(REQUEST_COLS, { count: "exact" }).eq("company_id", companyId);
       if (filters.storeId) q = q.eq("store_id", filters.storeId);
       if (ids) q = q.in("id", ids);
+      if (filters.createdFrom) q = q.gte("created_at", filters.createdFrom);
+      if (filters.createdTo) q = q.lt("created_at", filters.createdTo);
       const { data, error, count } = await q.order("created_at", { ascending: false }).order("id").range(page.offset, page.offset + page.limit - 1);
       fail("list requests", error);
       return { items: await summaries(data as RequestRow[]), total: count ?? 0 };
