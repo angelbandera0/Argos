@@ -14,6 +14,14 @@ export function makeListOrders(deps: OrderDeps) {
   };
 }
 
+export function makeListOrderEvents(deps: OrderDeps) {
+  return async (actor: Actor, input: { companyId?: string; orderId: string }) => {
+    const scope = await resolveOrderScope(deps, actor, input);
+    await loadOrder(deps, scope, input.orderId);
+    return deps.orders.listEvents(input.orderId);
+  };
+}
+
 /** Costs are visible only with see_costs (or admin) and, for the order's own buyer, the purchase costs without the shortage value; null stays "no known cost". */
 export function makeGetOrder(deps: OrderDeps) {
   return async (actor: Actor, input: { companyId?: string; orderId: string }): Promise<OrderDetail> => {

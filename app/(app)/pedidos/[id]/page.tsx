@@ -39,20 +39,16 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
     ? (await stock.listLocations(actor, { companyId })).filter((l) => l.kind === "store" && l.storeId).map((l) => ({ id: l.storeId as string, name: l.name }))
     : [];
   let lots: LotOption[] = [];
-  let adjustments: { reason: string; at: string }[] = [];
   if (canAdjust || order.status === "fulfilled") {
-    const [pl, aj] = await Promise.all([
-      supabase.from("pedido_lotes").select("lot_id, line_id, lots(remaining)").eq("order_id", order.id),
-      supabase.from("pedido_ajustes").select("reason, created_at").eq("order_id", order.id).order("created_at"),
-    ]);
+    const pl = await supabase.from("pedido_lotes").select("lot_id, line_id, lots(remaining)").eq("order_id", order.id);
     const names = new Map(order.lines.map((l) => [l.id, l]));
     lots = ((pl.data ?? []) as unknown as { lot_id: string; line_id: string; lots: { remaining: number | string } | null }[]).map((r) => {
       const remaining = Number(r.lots?.remaining ?? 0);
       const line = names.get(r.line_id);
       return { lotId: r.lot_id, remaining, label: `${line?.productName ?? "Lote"} · quedan ${remaining} ${line?.unit ?? ""}`.trim() };
     });
-    adjustments = ((aj.data ?? []) as { reason: string; created_at: string }[]).map((a) => ({ reason: a.reason, at: a.created_at.slice(0, 10) }));
   }
+  const events = await orders.listOrderEvents(actor, { companyId, orderId: order.id });
   const sections = [
     canBuy && {
       value: "compra",
@@ -76,7 +72,7 @@ async function OrderContent({ params }: { params: PageProps<"/pedidos/[id]">["pa
     {
       value: "detalle",
       label: "Detalle",
-      content: <DetailPanel order={order} steps={timelineSteps(order.status, !!order.buyerId, adjustments)} currency={currency} />,
+      content: <DetailPanel order={order} steps={timelineSteps(events, order.status)} currency={currency} />,
     },
     canAdjust && { value: "correccion", label: "Corrección", content: <AdjustPanel orderId={order.id} lots={lots} /> },
   ].filter((s) => !!s);

@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { makeAdjustOrder, makeAssignBuyer, makeConfirmOrder, makeCreateOrder, makeRegisterPurchase, makeReturnOrder, makeSaveReview, makeSubmitReview } from "@/core/application/use-cases/orders/commands";
-import { makeGetOrder, makeListOrders } from "@/core/application/use-cases/orders/queries";
+import { makeGetOrder, makeListOrderEvents, makeListOrders } from "@/core/application/use-cases/orders/queries";
 import { makeCompanyRepository } from "./company-repository";
 import { makeOrderRepository } from "./order-repository";
 import { makeSessionRepository } from "./session-repository";
@@ -27,5 +27,6 @@ export function makeOrders(supabase: SupabaseClient) {
     adjustOrder: makeAdjustOrder(deps),
     listOrders: makeListOrders(deps),
     getOrder: makeGetOrder(deps),
+    listOrderEvents: makeListOrderEvents(deps),
   };
 }

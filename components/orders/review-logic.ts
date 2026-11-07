@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { OrderLine } from "@/core/application/ports/order-repository";
 import type { OrderStatus, StorePart } from "@/core/domain/orders";
+import type { OrderEvent, OrderEventKind } from "@/core/application/ports/order-repository";
 import type { TimelineStep } from "@/components/ui/state-timeline";
 
 const r3 = (n: number) => Number(n.toFixed(3));
@@ -73,17 +74,26 @@ const ERRORS: Record<string, string> = {
 
 export const reviewErrorMessage = (code?: string) => (code && ERRORS[code]) || "No se pudo completar la acción. Inténtalo de nuevo.";
 
-export function timelineSteps(status: OrderStatus, hasBuyer: boolean, adjustments: { reason: string; at: string }[]): TimelineStep[] {
-  const done = (cond: boolean) => (cond ? "done" : "upcoming");
-  const steps: TimelineStep[] = [
-    { title: "Pedido armado", state: "done" },
-    { title: "Compra", state: status === "open" ? "now" : status === "draft" ? "upcoming" : "done", meta: hasBuyer ? undefined : "Sin comprador asignado" },
-    { title: "Revisión", state: status === "in_review" ? "now" : done(status === "fulfilled" || status === "returned") },
-  ];
-  if (status === "returned") steps.push({ title: "Devuelto a corrección", state: "returned" });
-  if (status === "cancelled") steps.push({ title: "Cancelado", state: "returned" });
-  else steps.push({ title: "Cumplido", state: status === "fulfilled" ? "confirmed" : "upcoming" });
-  for (const a of adjustments) steps.push({ title: "Ajuste", state: "done", meta: a.at, note: a.reason });
+const EVENT_TITLES: Record<OrderEventKind, string> = {
+  created: "Pedido armado",
+  assigned: "Comprador asignado",
+  purchased: "Compra registrada",
+  submitted: "Enviado a revisión",
+  reviewed: "Revisión guardada",
+  returned: "Devuelto a corrección",
+  confirmed: "Cumplido",
+  adjusted: "Ajuste",
+};
+
+export function timelineSteps(events: OrderEvent[], status: OrderStatus): TimelineStep[] {
+  const steps: TimelineStep[] = events.map((e) => ({
+    title: EVENT_TITLES[e.kind],
+    state: e.kind === "returned" ? "returned" : e.kind === "confirmed" ? "confirmed" : "done",
+    meta: e.at.slice(0, 10),
+    note: e.note ?? undefined,
+  }));
+  if (status === "open" || status === "returned") steps.push({ title: "Compra", state: "now" });
+  if (status === "in_review") steps.push({ title: "Revisión", state: "now" });
   return steps;
 }
 

@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { OrderDetail, OrderLine, OrderRepository, OrderSummary } from "@/core/application/ports/order-repository";
+import type { OrderDetail, OrderEvent, OrderLine, OrderRepository, OrderSummary } from "@/core/application/ports/order-repository";
 import { translateOrderError } from "@/core/domain/errors";
 import type { OrderDest, OrderStatus, StorePart } from "@/core/domain/orders";
 import { replenishmentError } from "./replenishment-errors";
@@ -120,6 +120,12 @@ export function makeOrderRepository(supabase: SupabaseClient): OrderRepository {
       const { data, error, count } = await q.order("created_at", { ascending: false }).order("id").range(page.offset, page.offset + page.limit - 1);
       fail("list orders", error);
       return { items: await summaries(data as OrderRow[]), total: count ?? 0 };
+    },
+
+    async listEvents(orderId) {
+      const { data, error } = await supabase.from("pedido_eventos").select("kind, actor, at, nota").eq("order_id", orderId).order("at").order("id");
+      fail("read order events", error);
+      return (data as { kind: OrderEvent["kind"]; actor: string | null; at: string; nota: string | null }[]).map((e) => ({ kind: e.kind, actor: e.actor, at: e.at, note: e.nota }));
     },
 
     async get(orderId) {

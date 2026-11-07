@@ -38,8 +38,9 @@ describe("review-logic", () => {
     expect(reviewSchema.safeParse({ kind: "return", orderId: "o", note: "falta frijol" }).success).toBe(true);
   });
   it("timeline reflects status", () => {
-    expect(timelineSteps("in_review", true, []).map((s) => s.state)).toEqual(["done", "done", "now", "upcoming"]);
-    expect(timelineSteps("fulfilled", true, [{ reason: "x", at: "hoy" }]).at(-1)?.title).toBe("Ajuste");
+    const ev = (kind: "created" | "submitted" | "confirmed" | "adjusted", note: string | null = null) => ({ kind, actor: null, at: "2026-11-07T10:00:00Z", note });
+    expect(timelineSteps([ev("created"), ev("submitted")], "in_review").map((s) => s.state)).toEqual(["done", "done", "now"]);
+    expect(timelineSteps([ev("created"), ev("confirmed"), ev("adjusted", "x")], "fulfilled").at(-1)).toMatchObject({ title: "Ajuste", note: "x", meta: "2026-11-07" });
   });
   it("adjust never leaves a lot negative", () => {
     const lot = { lotId: "x", label: "L", remaining: 5 };

@@ -8,10 +8,10 @@ const ICONS = { done: Check, now: Clock, returned: ArrowLeft, confirmed: Check, 
 export function StateTimeline({ steps, orientation = "horizontal" }: { steps: TimelineStep[]; orientation?: "horizontal" | "vertical" }) {
   return (
     <ol className={`ui-timeline ui-timeline-${orientation}`}>
-      {steps.map((s) => {
+      {steps.map((s, i) => {
         const Icon = ICONS[s.state];
         return (
-          <li key={s.title} className="ui-timeline-step" aria-current={s.state === "now" ? "step" : undefined}>
+          <li key={`${i}-${s.title}`} className="ui-timeline-step" aria-current={s.state === "now" ? "step" : undefined}>
             <span className={`ui-timeline-dot ui-timeline-${s.state}`} aria-hidden="true">
               {Icon && <Icon />}
             </span>

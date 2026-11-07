@@ -1,6 +1,7 @@
 import type {
   CreateOrderCommand,
   OrderDetail,
+  OrderEvent,
   OrderFilters,
   OrderRepository,
   PurchaseCommand,
@@ -117,6 +118,12 @@ export class InMemoryOrders implements OrderRepository {
         (!filters.createdTo || o.createdAt < filters.createdTo),
     );
     return { items: all.slice(page.offset, page.offset + page.limit), total: all.length };
+  }
+
+  events: Record<string, OrderEvent[]> = {};
+
+  async listEvents(orderId: string) {
+    return structuredClone(this.events[orderId] ?? []);
   }
 
   async get(orderId: string) {

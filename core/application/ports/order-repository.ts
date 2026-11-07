@@ -37,6 +37,15 @@ export interface OrderDetail extends OrderSummary {
   shortageValue?: number | null;
 }
 
+export type OrderEventKind = "created" | "assigned" | "purchased" | "submitted" | "reviewed" | "returned" | "confirmed" | "adjusted";
+
+export interface OrderEvent {
+  kind: OrderEventKind;
+  actor: string | null;
+  at: string;
+  note: string | null;
+}
+
 export interface CreateOrderCommand {
   currencyId?: string;
   note?: string;
@@ -76,4 +85,5 @@ export interface OrderRepository {
   adjust(orderId: string, reason: string, lines: { lotId: string; delta: number }[]): Promise<string>;
   list(companyId: string, filters: OrderFilters, page: { offset: number; limit: number }): Promise<{ items: OrderSummary[]; total: number }>;
   get(orderId: string): Promise<OrderDetail | null>;
+  listEvents(orderId: string): Promise<OrderEvent[]>;
 }
