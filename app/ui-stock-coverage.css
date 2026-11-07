@@ -1,0 +1,5 @@
+.ui-stock-coverage { display: inline-flex; flex-direction: column; gap: var(--space-1-5); align-items: flex-start; }
+.ui-stock-coverage-bar { width: calc(var(--space-8) * 6 + var(--space-2)); height: var(--space-1-5); border-radius: var(--radius-pill); background: var(--color-hover); overflow: hidden; }
+.ui-stock-coverage-bar span { display: block; height: 100%; border-radius: var(--radius-pill); }
+.ui-stock-coverage-bar[data-state="full"] span { background: var(--coverage-full); }
+.ui-stock-coverage-bar[data-state="part"] span { background: var(--coverage-part); }

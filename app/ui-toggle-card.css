@@ -8,3 +8,7 @@
 .ui-toggle-card-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .ui-toggle-card-text strong { font: var(--text-body); font-weight: 600; }
 .ui-toggle-card[aria-checked="true"] .ui-switch { background: var(--color-success); }
+.ui-toggle-card[data-tone="delicate"][aria-checked="true"] { background: var(--diff-row-bg); border-color: var(--color-danger-border); }
+.ui-toggle-card[data-tone="delicate"][aria-checked="true"] .ui-toggle-card-icon { color: var(--color-danger-text); }
+.ui-toggle-card[data-tone="delicate"][aria-checked="true"] .ui-switch { background: var(--color-danger); }
+.ui-toggle-card-lock { flex: none; width: var(--size-icon-sm); height: var(--size-icon-sm); color: var(--color-muted); }

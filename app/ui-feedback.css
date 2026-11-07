@@ -98,3 +98,4 @@
 @media (prefers-reduced-motion: reduce) {
   .toast, .dialog-backdrop, .dialog-popup { transition: none; }
 }
+.badge-icon { display: inline-grid; place-items: center; } .badge-icon svg { width: var(--space-3-5); height: var(--space-3-5); }

@@ -1,0 +1,5 @@
+.ui-segmented { display: inline-flex; gap: var(--space-1); padding: var(--space-1); border-radius: var(--radius-pill); background: var(--color-hover); }
+.ui-segmented-item { display: grid; place-items: center; min-width: var(--size-control-sm); height: var(--size-control-sm); padding: 0 var(--space-4); border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--color-ink-2); font: var(--text-body); font-weight: 600; cursor: pointer; }
+.ui-segmented-item[data-checked] { background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-raised); }
+.ui-segmented-item:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ui-segmented-item[data-disabled] { cursor: not-allowed; opacity: 0.5; }

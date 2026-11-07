@@ -16,8 +16,8 @@ const TOAST_TIMEOUT = 5000;
 export const toastTimeout = (tone: Tone) => (tone === "danger" ? 0 : TOAST_TIMEOUT);
 
 export type BadgeVariant = "success" | "warning" | "danger" | "neutral" | "new" | "count";
-export const badgeClass = (variant: BadgeVariant, className?: string) =>
-  `badge badge-${variant}${variant === "count" ? "" : " badge-dot"}${className ? ` ${className}` : ""}`;
+export const badgeClass = (variant: BadgeVariant, className?: string, icon?: boolean) =>
+  `badge badge-${variant}${variant === "count" || icon ? "" : " badge-dot"}${className ? ` ${className}` : ""}`;
 
 export type ChipVariant = "neutral" | "alert" | "open" | "ring" | Tone;
 export function chipClass(opts: { variant?: ChipVariant; filter?: boolean; removable?: boolean; className?: string }) {

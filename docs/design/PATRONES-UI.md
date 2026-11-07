@@ -45,13 +45,19 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Pie de listados en grilla de tarjetas (paginación por URL) | `Pager` | `components/ui/pager.tsx` (galería `/ui`) |
 | Casillas de PIN (vacías/dígitos/ocultas) | `PinSlots` (`size` sm/lg) | `components/users/user-created-dialog.tsx` |
 | Formulario de usuario (§6.40) | `FormShell aside` + `FormSection`, usuario con prefijo fijo y comprobación en vivo (`checkUsernameAction`), `Select` de rol con franja de permisos, tiendas por sede con casilla mixta, `SummaryPanel` «Así entrará» con `PinSlots`; diálogo «Usuario creado» (`Dialog tone="success"`, `dismissible={false}`); lógica pura en `user-form-logic.ts` | `components/users/new-user-form.tsx` |
-| Interruptor destacado de un estado (p. ej. disponibilidad) | `ToggleCard` | `components/ui/toggle-card.tsx` (galería `/ui`) |
+| Interruptor destacado de un estado (p. ej. disponibilidad); `tone="delicate"` para permisos sensibles, `locked` con candado (§6.51) | `ToggleCard` | `components/ui/toggle-card.tsx` (galería `/ui`) |
 | Vista previa de cómo se verá algo en otra pantalla | `SalesPreview` | `components/ui/sales-preview.tsx` (galería `/ui`) |
+| Tarjeta de entidad con código en caja de 64 px (`codeBox`) e insignia con icono (`Badge icon`) | `EntityCard codeBox` | `components/currencies/currency-list.tsx` |
 | Cantidad con unidad de presentación y equivalente en base (§6.43); lógica en `quantity-logic.ts` | `QuantityInput` | `components/ui/quantity-input.tsx` (galería `/ui`) |
 | Reparto PEPS entre lotes, costos solo con `showCosts` (§6.44); lógica en `lot-logic.ts` | `LotPicker` | `components/ui/lot-picker.tsx` (galería `/ui`) |
 | Estado de existencia, línea, solicitud o pedido: color + texto + icono (§6.45) | `StatusBadge` | `components/ui/status-badge.tsx` (galería `/ui`) |
 | Pasos de un pedido, horizontal en cabecera o vertical en detalle (§6.46) | `StateTimeline` | `components/ui/state-timeline.tsx` (galería `/ui`) |
 | Entregado · Gastado · Sobrante; `hideAmounts` sin permiso de costos (§6.47); lógica en `spend-logic.ts` | `SpendSummary` | `components/ui/spend-summary.tsx` (galería `/ui`) |
+| Cobertura de lo que hay frente a lo necesario, chip + barra (§6.48); lógica en `coverage-logic.ts` | `StockCoverage` | `components/ui/stock-coverage.tsx` (galería `/ui`) |
+| Barra flotante de decisiones pendientes con Deshacer todo / Aplicar (§6.49); lógica en `decisions-logic.ts` | `DecisionsBar` | `components/ui/decisions-bar.tsx` (galería `/ui`) |
+| Repartir una cantidad entre tiendas, debe cuadrar (§6.50); lógica en `split-logic.ts` | `StoreSplit` | `components/ui/store-split.tsx` (galería `/ui`) |
+| Pedida · Reportada · Recibida con diferencia (§6.52); `showCosts`; lógica en `diff-logic.ts` | `ThreeQtyTable` | `components/ui/three-qty-table.tsx` (galería `/ui`) |
+| Elegir una opción corta (p. ej. decimales) en un segmentado | `SegmentedControl` | `components/ui/segmented-control.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

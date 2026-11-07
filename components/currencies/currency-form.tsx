@@ -9,7 +9,7 @@ import { buttonClass } from "@/components/ui/button-class";
 import { Field, Input } from "@/components/ui/field";
 import { FormSection } from "@/components/ui/form-section";
 import { FormShell, FormSubmit } from "@/components/ui/form-shell";
-import { Select } from "@/components/ui/select";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
 import { ToggleCard } from "@/components/ui/toggle-card";
 import { useToast } from "@/components/ui/toast";
@@ -129,7 +129,7 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
           />
         </Field>
         <Field label="Decimales" htmlFor="decimals" error={shown.decimals}>
-          <Select id="decimals" options={decimalOptions(initial.decimals)} value={decimals} onValueChange={(v) => setDecimals(v ?? "")} invalid={!!shown.decimals} />
+          <SegmentedControl id="decimals" aria-label="Decimales" options={decimalOptions(initial.decimals)} value={decimals} onValueChange={(v) => setDecimals(String(v))} />
         </Field>
       </FormSection>
 
@@ -154,6 +154,7 @@ export function CurrencyForm({ currencyId, initial }: { currencyId: string | nul
           }
           checked={active}
           disabled={isDefault}
+          locked={isDefault}
           onCheckedChange={setActive}
         />
       </FormSection>

@@ -25,6 +25,11 @@ import { LotPickerSection } from "./sections/lot-picker";
 import { StatusBadgeSection } from "./sections/status-badge";
 import { StateTimelineSection } from "./sections/state-timeline";
 import { SpendSummarySection } from "./sections/spend-summary";
+import { StockCoverageSection } from "./sections/stock-coverage";
+import { DecisionsBarSection } from "./sections/decisions-bar";
+import { StoreSplitSection } from "./sections/store-split";
+import { ThreeQtyTableSection } from "./sections/three-qty-table";
+import { SegmentedControlSection } from "./sections/segmented-control";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -72,6 +77,11 @@ const sections = [
   { id: "status-badge", title: "StatusBadge", description: "Insignias de 26 px con icono: existencia, línea, solicitud y pedido (§6.45).", content: <StatusBadgeSection /> },
   { id: "state-timeline", title: "StateTimeline", description: "Línea de tiempo horizontal y vertical (§6.46).", content: <StateTimelineSection /> },
   { id: "spend-summary", title: "SpendSummary", description: "Entregado · Gastado · Sobrante con gasto por producto (§6.47).", content: <SpendSummarySection /> },
+  { id: "stock-coverage", title: "StockCoverage", description: "Barra de cobertura de stock con chip «Cubre todo / parte / Sin existencia» (§6.48).", content: <StockCoverageSection /> },
+  { id: "decisions-bar", title: "DecisionsBar", description: "Píldora sticky de decisiones pendientes; barra oscura compacta en móvil (§6.49).", content: <DecisionsBarSection /> },
+  { id: "store-split", title: "StoreSplit", description: "Reparto de una cantidad entre tiendas con chip «Cuadra / Faltan» (§6.50).", content: <StoreSplitSection /> },
+  { id: "three-qty-table", title: "ThreeQtyTable", description: "Pedida · Reportada · Recibida editable con diferencia resaltada y costos opcionales (§6.52).", content: <ThreeQtyTableSection /> },
+  { id: "segmented-control", title: "SegmentedControl", description: "Segmentado de una sola opción (radiogroup), p. ej. decimales.", content: <SegmentedControlSection /> },
 ];
 
 export default function UiPage() {

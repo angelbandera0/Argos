@@ -4,6 +4,7 @@
 @import "../docs/design/modulo2/tokens-modulo2.css";
 @import "./ui-category-list.css";
 @import "./ui-choice-card.css";
+@import "./ui-decisions-bar.css";
 @import "./ui-entity-card.css";
 @import "./ui-form-section.css";
 @import "./ui-inputs.css";
@@ -17,10 +18,14 @@
 @import "./ui-quantity-input.css";
 @import "./ui-role-form.css";
 @import "./ui-sales-preview.css";
+@import "./ui-segmented-control.css";
 @import "./ui-spend-summary.css";
 @import "./ui-state-timeline.css";
 @import "./ui-status-badge.css";
+@import "./ui-stock-coverage.css";
+@import "./ui-store-split.css";
 @import "./ui-summary-panel.css";
+@import "./ui-three-qty-table.css";
 @import "./ui-toggle-card.css";
 @import "./ui-user-form.css";
 @import "./ui-user-list.css";

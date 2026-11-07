@@ -3,6 +3,7 @@ export type EntityCardDatum = { label: string; value: React.ReactNode };
 export function EntityCard({
   avatar,
   avatarClassName,
+  codeBox,
   title,
   code,
   chip,
@@ -17,6 +18,7 @@ export function EntityCard({
 }: Omit<React.ComponentProps<"article">, "title"> & {
   avatar: React.ReactNode;
   avatarClassName?: string;
+  codeBox?: boolean;
   title: React.ReactNode;
   code?: React.ReactNode;
   chip?: React.ReactNode;
@@ -27,7 +29,7 @@ export function EntityCard({
   inactive?: boolean;
 }) {
   return (
-    <article className={`ui-entity-card${className ? ` ${className}` : ""}`} data-inactive={inactive || undefined} {...props}>
+    <article className={`ui-entity-card${className ? ` ${className}` : ""}`} data-inactive={inactive || undefined} data-code-box={codeBox || undefined} {...props}>
       <header className="ui-entity-card-head">
         <span className={`ui-entity-card-avatar${avatarClassName ? ` ${avatarClassName}` : ""}`} aria-hidden="true">
           {avatar}

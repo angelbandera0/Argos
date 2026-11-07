@@ -1,0 +1,8 @@
+.ui-three-qty { width: 100%; border-collapse: collapse; font: var(--text-body); }
+.ui-three-qty th, .ui-three-qty td { padding: var(--space-3) var(--space-4); text-align: right; border-bottom: var(--border-hairline) solid var(--color-line-soft); }
+.ui-three-qty thead th { font: var(--text-overline); color: var(--color-muted); text-transform: uppercase; }
+.ui-three-qty th:first-child, .ui-three-qty td:nth-child(5) { text-align: left; }
+.ui-three-qty tbody th { font-weight: 600; }
+.ui-three-qty tr[data-diff] { background: var(--diff-row-bg); }
+.ui-three-qty-input { width: var(--size-qty-input); text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ui-three-qty-diff { font-weight: 700; }

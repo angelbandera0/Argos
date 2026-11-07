@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -72,13 +73,14 @@ export function CurrencyList({ rows, q, status }: { rows: CurrencyRow[]; q: stri
             <EntityCard
               key={r.id}
               avatar={r.code}
+              codeBox
               avatarClassName={r.isDefault ? "co-tone-1" : undefined}
               title={<Link href={`/divisas/${r.id}`}>{r.name}</Link>}
               badge={<CurrencyMenu id={r.id} name={r.name} active={r.active} />}
               chip={
                 <>
                   <Badge variant={r.active ? "success" : "neutral"}>{r.active ? "Activa" : "Inactiva"}</Badge>
-                  {r.isDefault && <Badge variant="new">Predeterminada</Badge>}
+                  {r.isDefault && <Badge variant="new" icon={<Star />}>Predeterminada</Badge>}
                 </>
               }
               actions={

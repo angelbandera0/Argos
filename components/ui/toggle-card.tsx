@@ -1,5 +1,7 @@
 "use client";
 
+import { Lock } from "lucide-react";
+
 export function ToggleCard({
   checked,
   onCheckedChange,
@@ -7,6 +9,8 @@ export function ToggleCard({
   title,
   description,
   disabled,
+  tone = "good",
+  locked,
   className,
   ...props
 }: Omit<React.ComponentProps<"button">, "onChange" | "title"> & {
@@ -15,6 +19,8 @@ export function ToggleCard({
   icon: React.ReactNode;
   title: React.ReactNode;
   description?: React.ReactNode;
+  tone?: "good" | "delicate";
+  locked?: boolean;
 }) {
   return (
     <button
@@ -22,6 +28,7 @@ export function ToggleCard({
       role="switch"
       aria-checked={checked}
       disabled={disabled}
+      data-tone={tone}
       className={`ui-toggle-card${className ? ` ${className}` : ""}`}
       onClick={() => onCheckedChange(!checked)}
       {...props}
@@ -33,6 +40,7 @@ export function ToggleCard({
         <strong>{title}</strong>
         {description && <span className="hint">{description}</span>}
       </span>
+      {locked && <Lock className="ui-toggle-card-lock" aria-label="Bloqueado" />}
       <span className="ui-switch" data-checked={checked || undefined} aria-hidden="true">
         <span className="ui-switch-thumb" data-checked={checked || undefined} />
       </span>
