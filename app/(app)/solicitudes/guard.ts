@@ -6,5 +6,5 @@ import { requireStockUser } from "../existencias/guard";
 export async function requireRequestUser() {
   const user = await requireStockUser();
   const requests = makeRequests(await createServerClient());
-  return { ...user, requests, canRequest: user.can("request_replenishment") };
+  return { ...user, requests, canRequest: user.can("request_replenishment"), canHandle: user.can("handle_requests") };
 }

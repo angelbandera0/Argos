@@ -64,6 +64,20 @@ export default function RequestsPage() {
 }
 
 async function HeaderAction() {
-  const { canRequest } = await requireRequestUser();
-  return canRequest ? <NewLink /> : null;
+  const { canRequest, canHandle } = await requireRequestUser();
+  return (
+    <>
+      {canHandle && (
+        <>
+          <Link className={buttonClass("secondary", "md")} href="/solicitudes/bandeja">
+            Bandeja
+          </Link>
+          <Link className={buttonClass("secondary", "md")} href="/solicitudes/bolsa">
+            Bolsa por comprar
+          </Link>
+        </>
+      )}
+      {canRequest && <NewLink />}
+    </>
+  );
 }
