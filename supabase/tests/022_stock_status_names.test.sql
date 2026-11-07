@@ -27,7 +27,7 @@ insert into roles (id, owner_id, name) values
   ('00000000-0000-0000-0000-0000002200d2', (select v from ctx where k = 'ana'), 'SinStock');
 insert into role_permissions (role_id, module, can_view) values
   ('00000000-0000-0000-0000-0000002200d1', 'stock', true),
-  ('00000000-0000-0000-0000-0000002200d2', 'sales', true);
+  ('00000000-0000-0000-0000-0000002200d2', 'currencies', true);
 
 insert into user_stores (user_id, store_id, company_id, role_id) values
   ((select v from ctx where k = 'sv'), '00000000-0000-0000-0000-0000002200f1', '00000000-0000-0000-0000-0000002200a1', '00000000-0000-0000-0000-0000002200d1'),
