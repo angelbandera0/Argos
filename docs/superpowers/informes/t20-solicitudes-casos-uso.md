@@ -1,0 +1,5 @@
+# T20 · Casos de uso de solicitudes
+
+SQL: migración `*_attend_request_line.sql`, RPC `attend_request_line(line, kind, qty_base, reason, picks, deviation_reason)` (admin o `handle_requests` en almacén). Inserta la asignación y, si `fulfilled`, llama a `register_transfer` (unidad `base`, doc `solicitud_asignacion` = id de la asignación; exige además `transfer`). Notifica `requests/handled` o `rejected` a la tienda (`requests.view`). La notificación `assigned` queda para pedidos (T21). pgTAP 025 (12/12); `test:db` completo en verde.
+TS: dominio `core/domain/requests` (estado derivado de línea/solicitud, `validateAttend`), puerto `request-repository.ts`, casos de uso en `core/application/use-cases/requests/` (createRequest, attendRequestLine, listRequests, getRequest, listPurchaseBag), `translateRequestError` en `core/domain/errors.ts`, fake `tests/fakes/in-memory-requests.ts`, tests `tests/unit/use-cases/requests.test.ts`. `resolveStockScope` ahora acepta deps sin `stock`.
+Pendiente T22: adaptador Supabase (usar `translateRequestError`) y API. Cantidades de atención en unidad base.

@@ -41,7 +41,11 @@ export type RuleCode =
   | "PRODUCT_NOT_STORABLE"
   | "ADJUST_EXCEEDS_LOT"
   | "INVALID_REVERSES"
-  | "STANDARD_REASON_LOCKED";
+  | "STANDARD_REASON_LOCKED"
+  | "EMPTY_REQUEST"
+  | "DUPLICATE_PRODUCT"
+  | "ASSIGNMENT_EXCEEDS_LINE"
+  | "INVALID_KIND";
 
 export class Forbidden extends Error {
   constructor() {
@@ -93,4 +97,13 @@ export function translateStockError(code: string): Error {
   if (/\bFORBIDDEN\b/.test(code)) return new Forbidden();
   const found = STOCK_CODES.find((c) => new RegExp(`\\b${c}\\b`).test(code));
   return found ? new RuleViolation(found) : new Error(code);
+}
+
+const REQUEST_CODES: RuleCode[] = ["EMPTY_REQUEST", "DUPLICATE_PRODUCT", "ASSIGNMENT_EXCEEDS_LINE", "INVALID_KIND", "REASON_REQUIRED"];
+
+/** Same as translateStockError, plus the request codes (attending a line may also fail on the transfer). */
+export function translateRequestError(code: string): Error {
+  if (/\b(STORE_NOT_FOUND|LINE_NOT_FOUND)\b/.test(code)) return new NotFound();
+  const found = REQUEST_CODES.find((c) => new RegExp(`\\b${c}\\b`).test(code));
+  return found ? new RuleViolation(found) : translateStockError(code);
 }

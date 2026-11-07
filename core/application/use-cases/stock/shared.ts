@@ -38,7 +38,7 @@ export function pageOf(input: { page?: number; pageSize?: number }) {
 }
 
 /** Admins reach the companies they administer; operators their active store's company. */
-export async function resolveStockScope(deps: StockDeps, actor: Actor, input: { companyId?: string }): Promise<StockScope> {
+export async function resolveStockScope(deps: Omit<StockDeps, "stock">, actor: Actor, input: { companyId?: string }): Promise<StockScope> {
   if (actor.kind === "admin") {
     if (!input.companyId) throw new Forbidden();
     const admins = await deps.companies.listAdmins(input.companyId);
