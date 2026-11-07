@@ -90,6 +90,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       canTransfer={can("transfer")}
       canWriteOff={can("write_off")}
       canDirect={can("direct_store_entry")}
+      transfer={{ fromLocationId: location.id, stores: locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name })), products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), canChooseLot: can("choose_lot"), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       isWarehouse={location.kind === "warehouse"}
     />

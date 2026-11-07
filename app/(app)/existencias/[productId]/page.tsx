@@ -5,6 +5,7 @@ import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
 import { formatStockQty, parsePage } from "@/components/stock/stock-list-logic";
 import { Button } from "@/components/ui/button";
+import { TransferButton } from "@/components/stock/transfer-button";
 import { EntryButton } from "@/components/stock/entry-button";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -81,7 +82,8 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
   const name = products.find((p) => p.id === productId)?.name ?? "Producto";
   const unit = detail.config.baseUnit;
   const isWarehouse = location.kind === "warehouse";
-  const gated = isWarehouse ? [can("transfer") && "Trasladar a tienda", can("write_off") && "Dar de baja"].filter(Boolean) : [];
+  const gated = isWarehouse ? [can("write_off") && "Dar de baja"].filter(Boolean) : [];
+  const stores = locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name }));
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = can(isWarehouse ? "initial_entry" : "direct_store_entry");
 
@@ -95,6 +97,9 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
           ...gated.map((label) => (
             <Button key={String(label)} variant="secondary" disabled title="Próximamente">{label}</Button>
           )),
+          isWarehouse && can("transfer") && (
+            <TransferButton key="transfer" fromLocationId={location.id} stores={stores} products={[]} productId={productId} canChooseLot={can("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
+          ),
           canEnter && (
             <EntryButton key="entry" kind={entryKind} locationId={location.id} products={[]} productId={productId} costs={costs} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />
           ),

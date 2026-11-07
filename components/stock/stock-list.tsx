@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
+import { TransferButton } from "./transfer-button";
 import { EntryButton } from "./entry-button";
 import type { EntryCurrency, EntryProduct } from "./entry-dialog";
 import { type Column, DataTable } from "@/components/ui/data-table";
@@ -62,6 +63,7 @@ export function StockList({
   canDirect,
   isWarehouse,
   entry,
+  transfer,
 }: {
   rows: StockRow[];
   total: number;
@@ -80,6 +82,7 @@ export function StockList({
   canDirect: boolean;
   isWarehouse: boolean;
   entry: { locationId: string; products: EntryProduct[]; currencies: EntryCurrency[] };
+  transfer: React.ComponentProps<typeof TransferButton>;
 }) {
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = isWarehouse ? canEntry : canDirect;
@@ -177,7 +180,7 @@ export function StockList({
         primary={
           isWarehouse && (canEntry || canTransfer || canWriteOff) ? (
             <>
-              {canTransfer && <Button variant="secondary" disabled title="Próximamente">Trasladar a tienda</Button>}
+              {canTransfer && <TransferButton {...transfer} />}
               {canWriteOff && <Button variant="secondary" disabled title="Próximamente">Dar de baja</Button>}
               {entryButton}
             </>
