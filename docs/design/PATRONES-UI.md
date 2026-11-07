@@ -58,6 +58,8 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Repartir una cantidad entre tiendas, debe cuadrar (§6.50); lógica en `split-logic.ts` | `StoreSplit` | `components/ui/store-split.tsx` (galería `/ui`) |
 | Pedida · Reportada · Recibida con diferencia (§6.52); `showCosts`; lógica en `diff-logic.ts` | `ThreeQtyTable` | `components/ui/three-qty-table.tsx` (galería `/ui`) |
 | Elegir una opción corta (p. ej. decimales) en un segmentado | `SegmentedControl` | `components/ui/segmented-control.tsx` (galería `/ui`) |
+| Estado de vista de una pantalla (cargando/vacío/sin coincidencias/error/sin permiso, M8) | `ViewState` | `components/ui/view-state.tsx` (galería `/ui`) |
+| Importe monetario o costo; `value={null}` = «Sin costo conocido», `costs={false}` no renderiza nada | `MoneyValue` | `components/ui/money-value.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

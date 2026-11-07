@@ -49,3 +49,5 @@
   border-radius: 9999px;
 }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+:root { --size-state-icon: 56px; }
