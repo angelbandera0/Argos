@@ -110,7 +110,7 @@ select is((select status from stock_status where product_id = '00000000-0000-000
 select ok((select minimum is null and status = 'normal' from stock_status where product_id = '00000000-0000-0000-0000-0000000000e4'), 'without a minimum the minimum is null');
 select is((select count(*)::int from stock_status where product_id = '00000000-0000-0000-0000-0000000000e1'), 1, 'only locations with lots or a minimum');
 select is((select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'stock_status' and column_name ~* 'cost|price|currency'), 0, 'the view has no cost columns');
-select is((select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'stock_status'), 6, 'the view has the six columns');
+select is((select count(*)::int from information_schema.columns where table_schema = 'public' and table_name = 'stock_status'), 9, 'the view has the nine columns');
 select is((select count(*)::int from stock_status where location_id = (select v from ctx where k = 'l1')), 1, 'an admin sees store locations');
 select tests.authenticate_as((select v from ctx where k = 'v2'), 'aal1', '00000000-0000-0000-0000-0000000005d2');
 select is((select count(*)::int from stock_status where location_id = (select v from ctx where k = 'l1')), 0, 'a store operator does not see another store');
