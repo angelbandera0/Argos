@@ -46,6 +46,7 @@ const access = (storeId: string, companyId: string, ...ops: Op[]): StoreAccess =
   roleSessionSeconds: null,
   companyCapSeconds: 86400,
   operational: true,
+  specialPermissions: [],
   permissions: perms(...ops),
 });
 

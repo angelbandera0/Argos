@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { StoreAccess, StoreAccessReader } from "@/core/application/ports/store-access-reader";
-import { MODULES, type PermissionMap, type PermissionSet } from "@/core/domain/permissions";
+import { MODULES, type PermissionMap, type PermissionSet, type SpecialGrant } from "@/core/domain/permissions";
 
 type Row = {
   store_id: string;
@@ -14,6 +14,7 @@ type Row = {
   company_cap_seconds: number;
   operational: boolean;
   permissions: Partial<Record<string, Partial<PermissionSet>>>;
+  special: SpecialGrant[];
 };
 
 const flags = (p?: Partial<PermissionSet>): PermissionSet => ({ view: p?.view ?? false, create: p?.create ?? false, edit: p?.edit ?? false, delete: p?.delete ?? false });
@@ -32,6 +33,7 @@ const toAccess = (r: Row): StoreAccess => ({
   companyCapSeconds: r.company_cap_seconds,
   operational: r.operational,
   permissions: toPermissions(r.permissions),
+  specialPermissions: r.special.map((s) => ({ permission: s.permission, warehouse: s.warehouse })),
 });
 
 /** The SQL function reads as the signed-in operator (auth.uid()); the userId argument must match that client. */

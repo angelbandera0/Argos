@@ -46,3 +46,11 @@ export function assertValidSpecialPermissions(grants: SpecialGrant[]): void {
     seen.add(g.permission);
   }
 }
+
+export function hasSpecial(
+  access: { specialPermissions: SpecialGrant[] },
+  permission: SpecialPermission,
+  opts: { warehouse?: boolean } = {},
+): boolean {
+  return access.specialPermissions.some((g) => g.permission === permission && (!opts.warehouse || g.warehouse));
+}

@@ -73,7 +73,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
       { key: "choose_lot", label: "Elegir lote en salidas", description: "Decide de qué lote sale la mercancía.", scoped: true },
       { key: "initial_entry", label: "Entrada inicial", description: "Registra las existencias con las que arranca un producto.", scoped: true },
       { key: "direct_store_entry", label: "Entrada directa a tienda", description: "Da entrada a una tienda sin pasar por el almacén." },
-      { key: "transfer", label: "Trasladar a tienda", description: "Envía mercancía del almacén a las tiendas." },
+      { key: "transfer", label: "Trasladar a tienda", description: "Envía mercancía del almacén a las tiendas.", scoped: true },
       { key: "write_off", label: "Dar bajas", description: "Descuenta mercancía dañada, vencida o perdida.", scoped: true },
       { key: "adjust_stock", label: "Ajustar existencias", description: "Corrige la cantidad registrada tras un conteo.", scoped: true },
       { key: "configure_units", label: "Configurar unidades", description: "Define unidades y presentaciones del producto." },
@@ -87,7 +87,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
     icon: "Inbox",
     specials: [
       { key: "request_replenishment", label: "Solicitar reposición", description: "Pide mercancía al almacén desde una tienda." },
-      { key: "handle_requests", label: "Atender solicitudes", description: "Responde las solicitudes de las tiendas." },
+      { key: "handle_requests", label: "Atender solicitudes", description: "Responde las solicitudes de las tiendas.", scoped: true },
     ],
   },
   {

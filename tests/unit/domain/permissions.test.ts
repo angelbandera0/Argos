@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertValidPermissions } from "@/core/domain/permissions";
+import { assertValidPermissions, hasSpecial } from "@/core/domain/permissions";
 import { RuleViolation } from "@/core/domain/errors";
 
 describe("assertValidPermissions", () => {
@@ -39,5 +39,15 @@ describe("module rules", () => {
   it("limits notifications to view", () => {
     expect(() => assertValidPermissions({ view: true, create: false, edit: false, delete: true }, "notifications")).toThrow();
     expect(() => assertValidPermissions({ view: true, create: false, edit: false, delete: false }, "notifications")).not.toThrow();
+  });
+});
+
+describe("hasSpecial", () => {
+  const access = { specialPermissions: [{ permission: "transfer" as const, warehouse: false }, { permission: "write_off" as const, warehouse: true }] };
+  it("checks the grant and the warehouse scope", () => {
+    expect(hasSpecial(access, "transfer")).toBe(true);
+    expect(hasSpecial(access, "transfer", { warehouse: true })).toBe(false);
+    expect(hasSpecial(access, "write_off", { warehouse: true })).toBe(true);
+    expect(hasSpecial(access, "adjust_stock")).toBe(false);
   });
 });
