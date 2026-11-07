@@ -17,6 +17,7 @@ import { makeUsers } from "@/infrastructure/supabase/users-factory";
 const HOME: NavItem = { id: "inicio", label: "Inicio", href: "/", icon: "LayoutDashboard" };
 const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
 const ROLES: NavItem = { id: "roles", label: "Roles", href: "/roles", icon: "KeyRound" };
+const CURRENCIES: NavItem = { id: "divisas", label: "Divisas", href: "/divisas", icon: "Coins" };
 const USERS: NavItem = { id: "usuarios", label: "Usuarios", href: "/usuarios", icon: "Users" };
 const ADMINS: NavItem = {
   id: "administradores",
@@ -78,7 +79,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       company={company}
-      nav={superadmin ? [HOME, ADMINS, COMPANIES, HISTORY] : [HOME, COMPANIES, ROLES, USERS, CATEGORIES, PRODUCTS, HISTORY]}
+      nav={superadmin ? [HOME, ADMINS, COMPANIES, HISTORY] : [HOME, COMPANIES, ROLES, USERS, CURRENCIES, CATEGORIES, PRODUCTS, HISTORY]}
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",
