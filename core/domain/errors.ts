@@ -58,7 +58,10 @@ export type RuleCode =
   | "NOTE_REQUIRED"
   | "INVALID_LINES"
   | "ASSIGNMENT_ALREADY_ORDERED"
-  | "INVALID_LOCATION";
+  | "INVALID_LOCATION"
+  | "INVALID_ASSIGNMENT"
+  | "INVALID_PLAN"
+  | "INVALID_CURRENCY";
 
 export class Forbidden extends Error {
   constructor() {
@@ -124,6 +127,7 @@ export function translateRequestError(code: string): Error {
 const ORDER_CODES: RuleCode[] = [
   "PLAN_MISMATCH", "BUYER_NOT_ELIGIBLE", "BUYER_CANNOT_REVIEW", "INVALID_STATUS", "PURCHASE_INCOMPLETE", "MISSING_COST",
   "REPARTO_REQUIRED", "REPARTO_MISMATCH", "NOTE_REQUIRED", "INVALID_LINES", "ASSIGNMENT_ALREADY_ORDERED", "INVALID_LOCATION",
+  "INVALID_ASSIGNMENT", "INVALID_PLAN", "INVALID_CURRENCY",
 ];
 
 /** Same as translateStockError, plus the order codes (confirming and adjusting also touch stock). */

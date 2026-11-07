@@ -11,6 +11,8 @@ describe("toProblem", () => {
     [new RuleViolation("STANDARD_REASON_LOCKED"), 403, "STANDARD_REASON_LOCKED"],
     [new RuleViolation("NAME_TAKEN"), 409, "NAME_TAKEN"],
     [new RuleViolation("BASE_UNIT_IN_USE"), 409, "BASE_UNIT_IN_USE"],
+    [new RuleViolation("ASSIGNMENT_ALREADY_ORDERED"), 409, "ASSIGNMENT_ALREADY_ORDERED"],
+    [new RuleViolation("INVALID_STATUS"), 409, "INVALID_STATUS"],
     [new RuleViolation("INSUFFICIENT_STOCK"), 422, "INSUFFICIENT_STOCK"],
     [new AuthFailed(), 401, undefined],
     [new SessionExpired(), 401, undefined],

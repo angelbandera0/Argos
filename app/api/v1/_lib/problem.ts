@@ -7,7 +7,7 @@ import {
 } from "@/core/domain/errors";
 
 const FORBIDDEN_CODES = ["COST_NOT_ALLOWED", "CHOOSE_LOT_FORBIDDEN", "STANDARD_REASON_LOCKED"];
-const CONFLICT_CODES = ["NAME_TAKEN", "CODE_TAKEN", "BASE_UNIT_IN_USE", "DUPLICATE_LOT"];
+const CONFLICT_CODES = ["NAME_TAKEN", "CODE_TAKEN", "BASE_UNIT_IN_USE", "DUPLICATE_LOT", "ASSIGNMENT_ALREADY_ORDERED", "INVALID_STATUS"];
 
 export function problem(status: number, title: string, code?: string): Response {
   return new Response(JSON.stringify({ type: "about:blank", title, status, ...(code && { code }) }), {

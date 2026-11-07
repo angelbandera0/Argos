@@ -9,6 +9,7 @@ const special = z.array(
   z.object({ permission: z.enum(SPECIAL_PERMISSIONS), warehouse: z.boolean() }),
 );
 
+const storeParts = z.array(z.object({ storeId: id, qty: z.number() }));
 const picks = z.array(z.object({ lotId: id, qty: z.number() })).optional();
 const movement = { productId: id, qty: z.number(), unit: z.string(), picks, deviationReason: z.string().optional() };
 const entry = {
@@ -111,6 +112,45 @@ export const schemas = {
     unitCost: z.number().optional(),
     currencyId: id.optional(),
   }),
+  createRequest: z.object({ companyId: id.optional(), storeId: id, note: z.string().optional(), lines: z.array(z.object({ productId: id, qty: z.number(), unit: z.string() })) }),
+  attendRequestLine: z.object({
+    companyId: id.optional(),
+    kind: z.enum(["fulfilled", "to_buy", "pending", "rejected"]),
+    qtyBase: z.number(),
+    reason: z.string().optional(),
+    picks,
+    deviationReason: z.string().optional(),
+  }),
+  createOrder: z.object({
+    companyId: id.optional(),
+    currencyId: id.optional(),
+    note: z.string().optional(),
+    lines: z.array(
+      z.object({
+        productId: id,
+        dest: z.enum(["warehouse", "store", "direct"]),
+        storeId: id.optional(),
+        qty: z.number(),
+        unit: z.string(),
+        content: z.number(),
+        assignmentId: id.optional(),
+        plan: storeParts.optional(),
+      }),
+    ),
+  }),
+  assignBuyer: z.object({ companyId: id.optional(), buyerId: id }),
+  registerPurchase: z.object({
+    companyId: id.optional(),
+    lines: z.array(z.object({ lineId: id, qtyBought: z.number(), unitCost: z.number() })),
+    amountGiven: z.number().optional(),
+  }),
+  saveOrderReview: z.object({ companyId: id.optional(), lines: z.array(z.object({ lineId: id, qtyReceived: z.number() })) }),
+  confirmOrder: z.object({
+    companyId: id.optional(),
+    lines: z.array(z.object({ lineId: id, qtyReceived: z.number().optional(), reparto: storeParts.optional() })).optional(),
+  }),
+  returnOrder: z.object({ companyId: id.optional(), note: z.string() }),
+  adjustOrder: z.object({ companyId: id.optional(), reason: z.string(), lines: z.array(z.object({ lotId: id, delta: z.number() })) }),
   createWriteOffReason: z.object({ companyId: id, code: z.string(), name: z.string() }),
   updateWriteOffReason: z.object({ name: z.string().optional(), active: z.boolean().optional() }),
 };

@@ -6,7 +6,9 @@ import { makeCatalog } from "./catalog-factory";
 import { makeCurrencies } from "./currencies-factory";
 import { makeHistory } from "./history-factory";
 import { makeNotifications } from "./notifications-factory";
+import { makeOrders } from "./order-factory";
 import { makeOrg } from "./org-factory";
+import { makeRequests } from "./request-factory";
 import { makeRoles } from "./roles-factory";
 import { makeStock } from "./stock-factory";
 import { makeUsers } from "./users-factory";
@@ -28,6 +30,8 @@ export function makeApiServices(token: string) {
     history: makeHistory(supabase),
     notifications: makeNotifications(supabase),
     stock: makeStock(supabase),
+    requests: makeRequests(supabase),
+    orders: makeOrders(supabase),
     listAdmins: makeListAdmins({ users: org.users }),
   };
 }
