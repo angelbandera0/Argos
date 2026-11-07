@@ -7,7 +7,7 @@ Resumen de `DESIGN-modulo2.md` (adenda a `DESIGN.md`): ante cualquier duda o aus
 - Amarillo relleno con texto `--color-ink` solo para «hoy / en curso / abierto» (pedido abierto, filtro Hoy, Sin atender, paso actual). «Sugerido» o «predeterminado» van en rojo tint.
 - Máximo un bloque rojo grande por vista. Un aviso con acción usa botón de contorno (`--color-danger-border`, texto `--color-red-hover`).
 - Táctil ≥ 44 px. Estado = color + texto + icono (insignias con icono de 12 px).
-- Sin emojis ni fondos oscuros. Negro (`--color-ink`) solo en el segmento elegido, el paso «hecho» de una línea de tiempo y los toasts. Ojo: M7 usa negro en algunos botones y medidores; ante la duda, manda el original.
+- Sin emojis. Sin fondos oscuros, **salvo la excepción autorizada por el usuario (2026-11-07) para el módulo 2**: botones y medidores negros de M7, toasts (`--toast-bg`) y la barra oscura móvil de 6.49. Fuera de esos casos sigue vigente la prohibición.
 
 ## Tokens nuevos (M2)
 En `tokens-modulo2.css`, importado después de `tokens.css`.

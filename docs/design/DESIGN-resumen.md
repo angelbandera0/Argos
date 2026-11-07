@@ -2,7 +2,7 @@ Resumen operativo de DESIGN.md; ante cualquier duda o ausencia, el original mand
 
 ## Reglas obligatorias
 - Solo tokens de `tokens.css`. Prohibido hex, px, tamaños o sombras sueltos en componentes. Si falta algo, crear el token y documentarlo en DESIGN.md (§0, §11).
-- Prohibidos fondos negros, grafito o degradados. El negro es solo para texto (§1, §2.3).
+- Prohibidos fondos negros, grafito o degradados (excepción del módulo 2: ver `modulo2/DESIGN-modulo2-resumen.md`). El negro es solo para texto (§1, §2.3).
 - Prohibido texto blanco pequeño sobre `--color-red`. Prohibido texto o iconos amarillos sobre blanco (§2.2, §11).
 - Prohibido texto amarillo: el amarillo va como relleno con texto `--color-ink` (§2.3).
 - Máximo un bloque grande rojo por vista (§1.2, §11).

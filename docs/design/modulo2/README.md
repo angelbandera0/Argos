@@ -64,8 +64,8 @@ Las secciones son las de M7 (`DESIGN-modulo2.md`, línea entre paréntesis). Las
 | Historial ampliado (502) | `6-roles-historial/M2-Historial`, `-SinCostos` | T29 |
 | Notificaciones y campana (M5, línea 120) | `5-notificaciones/M2-Notificaciones` | T07 |
 | Dashboard con solicitudes del día (M5, línea 149) | `5-notificaciones/M2-Dashboard` | T07, T28 |
-| Estados de vista (M8, línea 510) | `7-transversales/M2-Estados` | — |
-| Piezas comunes | `7-transversales/M2-Piezas` | — |
+| Estados de vista (M8, línea 510) | `7-transversales/M2-Estados` | T03d |
+| Piezas comunes | `7-transversales/M2-Piezas` | T03c, T03d |
 
 ## Prioridad de diseño (del brief)
 

@@ -226,7 +226,7 @@ Se usa en la bandeja.
 ### 6.49 Barra de decisiones pendientes
 
 - Es una píldora blanca flotante (`position: sticky; bottom: 16px`, sombra flotante): «5 decisiones listas · 3 traslados · 1 por comprar · 1 rechazo» + «Deshacer todo» (Contorno) + «Aplicar decisiones» (Primario).
-- En móvil es una barra oscura compacta encima de la navegación, con «Aplicar». Es la única superficie oscura del módulo.
+- En móvil es una barra oscura compacta encima de la navegación, con «Aplicar». Es la única superficie oscura del módulo. **Excepción autorizada por el usuario (2026-11-07):** en el módulo 2 se permiten esta barra, los toasts oscuros y los botones y medidores negros de M7, aunque `DESIGN.md` prohíba fondos oscuros.
 
 ### 6.50 Reparto por tienda
 

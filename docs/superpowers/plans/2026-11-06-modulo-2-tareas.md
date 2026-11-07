@@ -18,7 +18,7 @@
 - Se para tras cada tarea y se espera el «sigue».
 
 ## Dependencias entre partes
-`T00` → Divisas (`T01-03`) → Permisos (`T04`) → Notificaciones (`T05-07`) → Almacén (`T08-17`) → Reposición y pedidos (`T18-28`) → Cierre (`T29-31`).
+`T00` → Divisas (`T01-03`) → Componentes UI (`T03c-e`) → Permisos (`T04`) → Notificaciones (`T05-07`) → Almacén (`T08-17`) → Reposición y pedidos (`T18-28`) → Cierre (`T29-31`).
 
 ---
 
@@ -29,6 +29,12 @@
 - [ ] **T01 · Esquema de divisas.** Migración `divisas` y `denominaciones` (RLS por compañía, únicos, borrado lógico, trigger de historial) + pgTAP. `test:db`.
 - [ ] **T02 · Casos de uso, repositorio y API de divisas.** Crear/editar/desactivar/eliminar divisa y denominación; predeterminada; reglas D-03/D-04; endpoints `/api/v1/divisas`. Unit + `test:int`.
 - [ ] **T03 · Páginas de divisas (UI, brief §B).** Lista, formulario con denominaciones, confirmaciones.
+
+## Parte 1b · Componentes Argos UI del módulo 2
+Obligatorio por CLAUDE.md: todo componente nuevo va en `components/ui/`, en la galería `/ui` y en `DESIGN-resumen.md`. Diseño en `docs/design/modulo2/` (leer `DESIGN-modulo2-resumen.md` y la sección con `pnpm design:section --file docs/design/modulo2/DESIGN-modulo2.md`). Excepción de fondos oscuros autorizada para este módulo.
+- [ ] **T03c · Componentes 6.43–6.52.** Importar `tokens-modulo2.css` en `app/globals.css`; crear con `pnpm new:ui` los componentes: selector de cantidad con unidad, selector de lote (PEPS), insignias de estado (existencia, solicitud, pedido), línea de tiempo, bloque Entregado · Gastado · Sobrante, cobertura de stock, barra de decisiones pendientes, reparto por tienda, tarjeta-interruptor (reutilizar `ToggleCard` si coincide) y tabla de tres cantidades. Pruebas unitarias de la lógica pura, secciones en `/ui` y filas en `PATRONES-UI.md` y `DESIGN-resumen.md`. Dividir en dos subagentes si supera ~20 llamadas.
+- [ ] **T03d · Estados de vista y piezas transversales.** Estados cargando/vacío/error/sin permiso del módulo (M8, `M2-Estados`) y piezas comunes (`M2-Piezas`) como componentes o variantes de `Skeleton`, `EmptyState`, `Alert` y `Toast`; etiqueta «sin costo conocido»; valores monetarios con formato de divisa y variante sin costos. En `/ui` y `DESIGN-resumen.md`.
+- [ ] **T03e · Ajustar T03 a los diseños `M2-Divisas` y `M2-Divisa-Form`.** Comparar la UI de divisas ya construida con las maquetas y corregir diferencias; resolver el conteo de denominaciones (N+1).
 
 ## Parte 2 · Permisos (base transversal)
 - [ ] **T04 · Módulos y permisos especiales de roles.** Ampliar `core/domain/permissions.ts` con los módulos nuevos y los permisos especiales (05), migración del catálogo y de `app.*` para consultarlos con alcance (almacén general sí/no + tiendas asignadas, M2-D14), pgTAP, y sección nueva en el formulario de rol (brief §G.1). `test:db` + unit.
