@@ -96,7 +96,7 @@ select is(app.stock_status(5, null), 'normal', 'without a minimum it is normal')
 select is(app.stock_status(0, null), 'out', 'zero without a minimum is out');
 select is(app.stock_status(0, 0), 'out', 'zero with minimum zero is out');
 select is(app.stock_status(1, 0), 'normal', 'above a zero minimum is normal');
-select is(has_function_privilege('authenticated', 'app.stock_status(numeric, numeric)', 'execute'), false, 'stock_status is internal');
+select is(has_function_privilege('authenticated', 'app.stock_status(numeric, numeric)', 'execute') and not has_function_privilege('anon', 'app.stock_status(numeric, numeric)', 'execute'), true, 'stock_status is a pure function executable by authenticated (the view needs it) and not by anon');
 select is(has_function_privilege('authenticated', 'app.notify_stock_status(uuid, uuid, uuid, numeric)', 'execute'), false, 'notify_stock_status is internal');
 select is((select count(*)::int from nt), 0, 'entries do not notify');
 
