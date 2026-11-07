@@ -11,6 +11,7 @@ Estado: **Borrador de diseño** (2026-11-06). Lee solo el archivo que necesites;
 | `04-reposicion-pedidos.md` | Solicitudes, bolsa por comprar, pedido, compra, revisión, correcciones | Tocas el flujo de reposición |
 | `05-roles-historial.md` | Permisos nuevos, cambios en REQ-007 y REQ-009 | Tocas roles, permisos o historial |
 | `../../../design/screens/MODULO-2-BRIEF-DISENO.md` | Brief de pantallas para Claude Design, por módulo | Diseñas o maquetas la UI |
+| `../../../design/modulo2/README.md` | Diseño resultante del Módulo 2 (guía, tokens y maquetas) | Implementas la UI; las maquetas mandan sobre el brief |
 
 ## Orden de construcción
 1. Divisas → 2. Notificaciones → 3. Almacén y stock → 4. Reposición y pedidos (+ roles e historial se actualizan en cada paso).

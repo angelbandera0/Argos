@@ -1,0 +1,51 @@
+/* Argos · Módulo 2 — Almacén y pedidos
+   Tokens nuevos. Importar DESPUÉS de tokens.css. */
+:root {
+  /* Estado de existencia */
+  --stock-normal-bg: #E6F4EC;
+  --stock-normal-fg: #1E7A50;
+  --stock-low-bg: #FFF4CF;
+  --stock-low-fg: #7A5200;
+  --stock-out-bg: #FFE6E4;
+  --stock-out-fg: #B3221B;
+
+  /* Estados de pedido / solicitud */
+  --state-open-bg: #FFC93C;      /* «Abierto · en curso», «Sin atender», «Hoy» */
+  --state-open-fg: #1C1C1E;
+  --state-review-ring: #C9CDD3;  /* En revisión, Por comprar: blanco + contorno */
+  --state-draft-ring: #E4E6EA;   /* Borrador, Pendiente: panel + contorno suave */
+
+  /* Revisión y cobertura */
+  --diff-row-bg: #FFF7F6;
+  --coverage-full: #1E7A50;
+  --coverage-part: #E0A800;
+  --coverage-none: transparent;
+
+  /* Lotes */
+  --lot-suggested-bg: #FFE6E4;
+  --lot-suggested-fg: #B3221B;
+
+  /* Avisos breves */
+  --toast-bg: #1C1C1E;
+  --toast-fg: #FFFFFF;
+  --toast-icon-ok: #7FD6A6;
+
+  /* Tamaños */
+  --size-qty-input: 72px;        /* campo de cantidad en tablas */
+  --size-stepper-btn: 40px;      /* − / + dentro de un campo de 48 px */
+  --size-badge: 26px;
+  --size-lot-code: 13px;
+}
+
+/* Cifras */
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Skeleton (estado Cargando) */
+@keyframes argos-sk { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+.skeleton {
+  background: linear-gradient(90deg, var(--color-hover, #ECEEF1) 0, var(--color-panel, #F6F8FA) 50%, var(--color-hover, #ECEEF1) 100%);
+  background-size: 400px 100%;
+  animation: argos-sk 1.4s linear infinite;
+  border-radius: 9999px;
+}
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }

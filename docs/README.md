@@ -30,6 +30,7 @@ Next.js en Vercel · Supabase Cloud · Clean Architecture · API REST `/api/v1` 
 | `superpowers/plans/` | Planes de implementación por módulo (`2026-10-25-modulo-1-implementacion.md`) |
 | `superpowers/specs/2026-11-06-modulo-2-almacen-pedidos/INDEX.md` | Diseño del Módulo 2 (almacén y pedidos de compra), por partes; empieza por el índice |
 | `design/screens/MODULO-2-BRIEF-DISENO.md` | Brief de pantallas del Módulo 2 para Claude Design |
+| `design/modulo2/README.md` | Diseño resultante del Módulo 2 (guía, tokens y maquetas); índice y resumen en esa carpeta |
 | `design/` | Guía visual: `DESIGN.md`, `tokens.css`, preset de Tailwind y capturas |
 | `design/screens/` | Diseño de pantallas por módulo (`MODULO-1-PANTALLAS.md`) y maquetas HTML en `mockups/` |
 | `OPEN_QUESTIONS.md` | Dudas, contradicciones y supuestos pendientes |

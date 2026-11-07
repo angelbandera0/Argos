@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi pedido</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Inter+Tight:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#d92d25}a:hover{color:#b3221b}
+input::placeholder,textarea::placeholder{color:#8c9097}
+.nav-i:hover{background:#eceef1}
+.crumb:hover{color:#1c1c1e}
+.row:hover td{background:#fafbfc}
+.ib:hover{background:#eceef1}
+.mi:hover{background:#f6f8fa}
+.gh:hover{background:#f6f8fa}
+.bt:hover{background:#fff4f3}
+.np:hover{background:#f6f8fa}
+.fld:focus,.sel:focus{outline:none;border-color:#d92d25 !important;box-shadow:0 0 0 4px #ffe6e4}
+input[type=number]::-webkit-inner-spin-button{opacity:0.4}
+@keyframes sk{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.sk{background:linear-gradient(90deg,#eceef1 0,#f6f8fa 50%,#eceef1 100%);background-size:400px 100%;animation:sk 1.4s linear infinite;border-radius:9999px}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; box-sizing: border-box; background: #ffffff; color: #1c1c1e; font-family: Inter, Arial, sans-serif; font-size: 14px; line-height: 1.45"><header style="display: flex; align-items: center; gap: 10px; padding: 14px 16px 8px"><button type="button" aria-label="Volver" class="ib" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></button><div style="flex: 1; min-width: 0"><p style="margin: 0; font-size: 12px; color: #6b6f76; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Asignado por Raul · hoy 08:30</p><h1 style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.4px; line-height: 1.2">Pedido P-0142</h1></div><button type="button" aria-label="Notificaciones, 3 sin leer" style="position: relative; width: 44px; height: 44px; flex: none; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg><span aria-hidden="true" style="position: absolute; top: 4px; right: 3px; min-width: 18px; height: 18px; border-radius: 9999px; background: #d92d25; color: #ffffff; border: 2px solid #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-sizing: border-box">3</span></button></header>
+<main style="padding: 4px 16px 0; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><span style="{{ps.bs}}"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ps.bi}}"></path></svg>{{ps.bl}}</span><span style="font-size: 13px; color: #6b6f76">{{linesInfo}}</span></div>
+
+<sc-if value="{{devuelto}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="background: #ffe6e4; border-radius: 20px; padding: 14px 16px; display: flex; gap: 12px">
+<span aria-hidden="true" style="width: 32px; height: 32px; flex: none; border-radius: 9999px; background: #ffffff; color: #d92d25; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></span>
+<div><p style="margin: 0; font-weight: 600; color: #b3221b">Te lo devolvieron para corregir</p>
+<p style="margin: 4px 0 0; color: #1c1c1e">«Llegaron 10 L de aceite, no 2 cajas. Revisa la cantidad y el costo.»</p>
+<p style="margin: 6px 0 0; font-size: 12px; color: #45484d">Raul · hoy 16:20</p></div></div>
+</sc-if>
+
+<section aria-label="Dinero del pedido" style="background: #f6f8fa; border-radius: 24px; padding: 18px">
+<p style="margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #6b6f76">MONTO ENTREGADO</p>
+<p style="margin: 2px 0 12px; font-family: 'Inter Tight', Arial, sans-serif; font-size: 32px; font-weight: 500; letter-spacing: -0.8px; font-variant-numeric: tabular-nums; white-space: nowrap">{{entregado}}</p>
+<div role="meter" aria-label="Gastado del monto entregado" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{pct}}" style="height: 10px; border-radius: 9999px; background: #ffffff; overflow: hidden"><div style="{{bar}}"></div></div>
+<div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px"><span>Gastado <strong style="font-variant-numeric: tabular-nums; white-space: nowrap">{{gastado}}</strong></span><span style="{{restStyle}}">{{restLabel}}</span></div>
+</section>
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px">
+<h2 style="margin: 0; font-size: 17px; font-weight: 600">Productos</h2><div role="group" aria-label="Mostrar" style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{filters}}" as="f" hint-placeholder-count="3"><button type="button" aria-pressed="{{f.aria}}" onClick="{{f.pick}}" style="{{f.style}}">{{f.label}}<sc-if value="{{f.hasCount}}" hint-placeholder-val="{{ true }}"><span style="{{f.countStyle}}">{{f.count}}</span></sc-if></button></sc-for></div></div>
+
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+<article aria-label="{{l.prod}}" style="background: #f6f8fa; border-radius: 24px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 12px; align-items: flex-start">
+<span aria-hidden="true" style="{{l.icon}}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"></path><path d="M3 8v8l9 5 9-5V8"></path><path d="M12 13v8"></path></svg></span>
+<div style="flex: 1; min-width: 0"><h3 style="margin: 0; font-size: 16px; font-weight: 600">{{l.prod}}</h3>
+<p style="margin: 1px 0 0; font-size: 13px; color: #45484d">Pedido: <strong>{{l.pedLabel}}</strong> <span style="color: #6b6f76">= {{l.pedBase}}</span></p>
+<p style="margin: 4px 0 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b6f76"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"></path><path d="M14 10h4l3 3v3h-7"></path><path d="M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path><path d="M17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg>{{l.dest}}</p></div>
+<p style="{{l.totalStyle}}">{{l.total}}</p></div>
+
+<div><p id="{{l.qid}}" style="margin: 0 0 8px; font-size: 13px; font-weight: 600">¿Lo compraste?</p>
+<div role="radiogroup" aria-labelledby="{{l.qid}}" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 9999px; background: #ffffff">
+<button type="button" role="radio" aria-checked="{{l.yesAria}}" onClick="{{l.setYes}}" style="{{l.yesStyle}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Sí</button>
+<button type="button" role="radio" aria-checked="{{l.noAria}}" onClick="{{l.setNo}}" style="{{l.noStyle}}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>No</button>
+</div></div>
+
+<sc-if value="{{l.yes}}" hint-placeholder-val="{{ true }}">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<div><p style="margin: 0 0 6px; font-size: 13px; font-weight: 600">Cantidad comprada</p>
+<div role="group" aria-label="{{l.qtyAria}}" style="height: 48px; display: flex; align-items: center; background: #ffffff; border-radius: 9999px; padding: 0 4px">
+<button type="button" aria-label="Uno menos" onClick="{{l.dec}}" class="ib" style="width: 40px; height: 40px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font-size: 20px; cursor: pointer">−</button>
+<span style="flex: 1; text-align: center; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{l.qty}}</span>
+<button type="button" aria-label="Uno más" onClick="{{l.inc}}" class="ib" style="width: 40px; height: 40px; border: 0; border-radius: 9999px; background: #f6f8fa; color: #1c1c1e; font-size: 20px; cursor: pointer">+</button></div>
+<p style="margin: 6px 0 0; font-size: 12px; color: #6b6f76">{{l.qtyUnit}} · = {{l.qtyBase}}</p></div>
+<label style="display: flex; flex-direction: column"><span style="margin: 0 0 6px; font-size: 13px; font-weight: 600">{{l.costLabel}}</span>
+<span style="position: relative; display: flex; align-items: center"><input type="number" inputmode="decimal" min="0" step="0.01" class="fld" value="{{l.cost}}" onChange="{{l.onCost}}" style="width: 100%; height: 48px; box-sizing: border-box; border: 1.5px solid #e4e6ea; border-radius: 9999px; background: #ffffff; padding: 0 52px 0 16px; font: inherit; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap"><span aria-hidden="true" style="position: absolute; right: 16px; font-size: 13px; color: #6b6f76">CUP</span></span>
+<span style="margin: 6px 0 0; font-size: 12px; color: #6b6f76">{{l.perBase}}</span></label>
+</div>
+<sc-if value="{{l.hasDiff}}" hint-placeholder-val="{{ true }}"><p style="{{l.diffStyle}}"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"></path><path d="M12 10v4M12 17.5v.01"></path></svg>{{l.diffText}}</p></sc-if>
+</sc-if>
+<sc-if value="{{l.no}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 10px 14px; border-radius: 16px; background: #ffffff; font-size: 13px; color: #45484d">No lo compraste. Quedará como faltante en la revisión.</p></sc-if>
+<sc-if value="{{l.undecided}}" hint-placeholder-val="{{ false }}"><p style="margin: -6px 0 0; font-size: 13px; color: #7a5200; font-weight: 600">Marca si lo compraste para poder enviar.</p></sc-if>
+</article>
+</sc-for>
+
+<section aria-labelledby="cmp-h" style="background: #f6f8fa; border-radius: 24px; padding: 18px">
+<h2 id="cmp-h" style="margin: 0 0 12px; font-size: 17px; font-weight: 600">Entregado · Gastado · Sobrante</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<div style="background: #ffffff; border-radius: 16px; padding: 12px 14px"><p style="margin: 0; font-size: 12px; color: #6b6f76">Entregado</p><p style="margin: 0; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{entregado}}</p></div>
+<div style="background: #ffffff; border-radius: 16px; padding: 12px 14px"><p style="margin: 0; font-size: 12px; color: #6b6f76">Gastado</p><p style="margin: 0; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{gastado}}</p></div>
+<div style="{{sobBox}}"><p style="margin: 0; font-size: 12px; font-weight: 600">{{sobLabel}}</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 26px; font-weight: 500; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; white-space: nowrap">{{sobValue}}</p></div>
+</div>
+<p style="margin: 16px 0 8px; font-size: 13px; font-weight: 600">Gasto por producto</p>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{byProd}}" as="g" hint-placeholder-count="4"><li><div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{g.name}}</span><span style="font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap">{{g.amount}}</span></div>
+<div aria-hidden="true" style="height: 6px; margin-top: 4px; border-radius: 9999px; background: #ffffff; overflow: hidden"><div style="{{g.bar}}"></div></div></li></sc-for>
+</ul>
+</section>
+<div style="height: 8px"></div>
+</main>
+
+<div style="position: sticky; bottom: 0; z-index: 6; background: #ffffff; border-radius: 28px 28px 0 0; padding: 14px 16px 18px; box-shadow: 0 -10px 30px rgba(28,28,30,0.10)">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 12px">
+<div><p style="margin: 0; font-size: 12px; color: #6b6f76">Gastado de {{entregado}}</p><p style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 24px; font-weight: 500; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; white-space: nowrap">{{gastado}}</p></div>
+<span style="{{diffChip}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"></path><path d="M12 11v5M12 7.5v.01"></path></svg>{{diffChipText}}</span></div>
+<button type="button" onClick="{{openSheet}}" disabled="{{sendDisabled}}" style="{{sendStyle}}">{{sendLabel}}</button>
+<sc-if value="{{hasPending}}" hint-placeholder-val="{{ true }}"><p style="margin: 8px 0 0; text-align: center; font-size: 12px; color: #6b6f76">{{pendingText}}</p></sc-if>
+</div>
+
+<sc-if value="{{sheet}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; z-index: 20; background: rgba(28,28,30,0.32); display: flex; align-items: flex-end">
+<div role="dialog" aria-modal="true" aria-labelledby="sh-h" style="width: 100%; background: #ffffff; border-radius: 28px 28px 0 0; padding: 10px 18px 22px; box-sizing: border-box">
+<div aria-hidden="true" style="width: 40px; height: 5px; border-radius: 9999px; background: #e4e6ea; margin: 0 auto 14px"></div>
+<h2 id="sh-h" style="margin: 0; font-family: 'Inter Tight', Arial, sans-serif; font-size: 22px; font-weight: 600">¿Enviar a revisión?</h2>
+<p style="margin: 4px 0 14px; color: #45484d">Raul revisará lo que llega al almacén. Mientras tanto no podrás editar el pedido.</p>
+<dl style="margin: 0; background: #f6f8fa; border-radius: 18px; padding: 4px 14px">
+<sc-for list="{{sheetRows}}" as="r" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eceef1"><dt style="color: #45484d">{{r.k}}</dt><dd style="{{r.vs}}">{{r.v}}</dd></div></sc-for>
+</dl>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px">
+<button type="button" onClick="{{closeSheet}}" style="height: 48px; padding: 0 18px; border: 1.5px solid #d6d9de; border-radius: 9999px; background: #ffffff; color: #1c1c1e; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Seguir editando</button>
+<button type="button" onClick="{{send}}" style="height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">Enviar</button></div>
+</div></div>
+</sc-if>
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}"><div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 200px; z-index: 21; background: #1c1c1e; color: #ffffff; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; font-weight: 600"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7fd6a6" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Enviado a revisión. Te avisaremos del resultado.</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview": {"width": 390, "height": 2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({ bell: false, nRead: false }, { filter: 'todas', sheet: false, sent: false, lines: [
+      { id: 'arroz', prod: 'Arroz', pres: 'saco', cont: 25, unit: 'lb', ped: 4, dest: 'Almacén general', bought: true, qty: 4, cost: 850 },
+      { id: 'aceite', prod: 'Aceite de soya', pres: 'caja', cont: 12, unit: 'L', ped: 3, dest: 'Almacén general', bought: true, qty: 2, cost: 2400 },
+      { id: 'pollo', prod: 'Pollo (muslos)', pres: 'caja', cont: 40, unit: 'lb', ped: 2, dest: 'Entrega directa · 23 y L (1) · 5ta Avenida (1)', bought: true, qty: 2, cost: 4200 },
+      { id: 'frijol', prod: 'Frijoles negros', pres: 'saco', cont: 50, unit: 'lb', ped: 2, dest: 'Almacén general', bought: null, qty: 2, cost: 0 }
+    ] });
+  }
+  renderVals() {
+    const st = this.state;
+    const P = this.props;
+    const ACTIVE = 'pedidos';
+    const ME = ['Luis Martín', 'Comprador', 'LM', 'background: #ffe6e4; color: #b3221b'];
+
+    const C = this.props.costs !== false;
+    const fq = (n, d) => { const neg = n < 0; const s = Math.abs(n).toFixed(d).split('.'); s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); return (neg ? '−' : '') + s[0] + (d ? ',' + s[1] : ''); };
+    const fm = (n, cur) => fq(n, 2) + ' ' + (cur || 'CUP');
+    const chip = 'display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; white-space: nowrap; ';
+    const ST = { normal: ['Normal', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], bajo: ['Bajo', 'background: #fff4cf; color: #7a5200', 'M12 6v8M12 18v.01'], agotado: ['Agotado', 'background: #ffe6e4; color: #b3221b; font-weight: 700', 'M6 6l12 12M18 6L6 18'] };
+    const sb = (k) => ({ bl: ST[k][0], bs: chip + ST[k][1], bi: ST[k][2] });
+    const PS = { borrador: ['Borrador', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M4 20h4L19 9l-4-4L4 16z'], abierto: ['Abierto · en curso', 'background: #ffc93c; color: #1c1c1e', 'M12 7.5V12l3 2'], revision: ['En revisión', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-3.5-3.5'], cumplido: ['Cumplido', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], devuelto: ['Devuelto', 'background: #ffe6e4; color: #b3221b', 'M15 5l-7 7 7 7'], cancelado: ['Cancelado', 'background: #f6f8fa; color: #6b6f76', 'M6 6l12 12M18 6L6 18'] };
+    const pb = (k) => ({ bl: PS[k][0], bs: chip + PS[k][1], bi: PS[k][2] });
+    const LS = { pendiente: ['Pendiente', 'background: #f6f8fa; color: #45484d; box-shadow: inset 0 0 0 1.5px #e4e6ea', 'M12 7.5V12l3 2'], surtida: ['Surtida', 'background: #e6f4ec; color: #1e7a50', 'M5 12.5l4.5 4.5L19 7.5'], parcial: ['Surtida en parte', 'background: #fff4cf; color: #7a5200', 'M6 12h12'], comprar: ['Por comprar', 'background: #ffffff; color: #1c1c1e; box-shadow: inset 0 0 0 1.5px #c9cdd3', 'M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2'], rechazada: ['Rechazada', 'background: #ffe6e4; color: #b3221b', 'M6 6l12 12M18 6L6 18'] };
+    const lb = (k) => ({ bl: LS[k][0], bs: chip + LS[k][1], bi: LS[k][2] });
+    const NI = {
+      inicio: ['M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', '', ''],
+      notificaciones: ['M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z', 'M10 21h4', ''],
+      existencias: ['M3 21V9l9-6 9 6v12', 'M7 21v-8h10v8', 'M7 17h10'],
+      solicitudes: ['M9 3.5h6v3H9z', 'M8 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2', 'M9 12h6M9 16h4'],
+      pedidos: ['M5 8h14l-1 13H6z', 'M9 8V6a3 3 0 0 1 6 0v2', ''],
+      productos: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
+      categorias: ['M3 12V4h8l10 10-8 8z', 'M7.5 7a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z', ''],
+      divisas: ['M3 6h18v12H3z', 'M12 9.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z', 'M6.5 9v.01M17.5 15v.01'],
+      companias: ['M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16', 'M16 9h2a2 2 0 0 1 2 2v10M2 21h20', 'M8 7h4M8 11h4M8 15h4'],
+      roles: ['M15.5 3a5.5 5.5 0 1 1-4.6 8.5L4 18.4V21h3v-2h2v-2h2l1.5-1.5', 'M16.5 7.5v.01', ''],
+      usuarios: ['M9 4.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7z', 'M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5', 'M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.8 3 2.6 3.5 5.2'],
+      historial: ['M3 12a9 9 0 1 0 3-6.7L3 8', 'M3 3v5h5', 'M12 7.5V12l3 2']
+    };
+    const NAVS = [['GENERAL', [['inicio', 'Inicio'], ['notificaciones', 'Notificaciones']]], ['ALMACÉN', [['existencias', 'Existencias'], ['solicitudes', 'Solicitudes', 6], ['pedidos', 'Pedidos']]], ['CATÁLOGO', [['productos', 'Productos'], ['categorias', 'Categorías'], ['divisas', 'Divisas']]], ['ADMINISTRACIÓN', [['companias', 'Compañías'], ['roles', 'Roles'], ['usuarios', 'Usuarios'], ['historial', 'Historial']]]];
+    const navSecs = NAVS.map(([t, items]) => ({ t, items: items.map(([k, label, badge]) => { const a = k === ACTIVE; return {
+      label, badge: badge ? String(badge) : '', hasBadge: !!badge, dot: a && !badge, current: a ? 'page' : 'false', cls: a ? '' : 'nav-i',
+      d1: NI[k][0], d2: NI[k][1], d3: NI[k][2], iconColor: a ? '#d92d25' : 'currentColor',
+      badgeStyle: 'min-width: 22px; height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; ' + (a ? 'background: #d92d25; color: #ffffff' : 'background: #ffffff; color: #1c1c1e'),
+      style: 'display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px 0 14px; border-radius: 9999px; text-decoration: none; font-size: 15px; ' + (a ? 'background: #ffffff; color: #1c1c1e; font-weight: 600; box-shadow: 0 1px 2px rgba(28,28,30,0.05), 0 6px 16px rgba(28,28,30,0.06)' : 'color: #45484d; font-weight: 500')
+    }; }) }));
+    const PR = { info: ['Info', 'background: #f6f8fa; color: #45484d'], aviso: ['Aviso', 'background: #fff4cf; color: #7a5200'], urgente: ['Urgente', 'background: #ffe6e4; color: #b3221b'] };
+    const NOTIF = [
+      { mod: 'pedidos', pr: 'urgente', title: 'Pedido P-0139 listo para revisar', text: C ? 'Luis Martín terminó la compra. Gastado 18.450,00 CUP.' : 'Luis Martín terminó la compra: 5 líneas.', meta: 'hace 5 min', u: true },
+      { mod: 'existencias', pr: 'aviso', title: 'Aceite de soya agotado', text: 'El almacén general llegó a 0 L.', meta: 'hace 20 min · Almacén general', u: true },
+      { mod: 'solicitudes', pr: 'info', title: 'Nueva solicitud de reposición', text: 'Tienda 5ta Avenida pide 4 productos.', meta: 'hace 1 h · Tienda 5ta Avenida', u: true },
+      { mod: 'existencias', pr: 'info', title: 'Entrada inicial registrada', text: 'Raul registró 5 sacos de arroz (125,000 lb).', meta: 'hace 3 h · Almacén general', u: false }
+    ];
+    const allReadNow = !!st.nRead;
+    const notifs = NOTIF.map((m) => { const u = m.u && !allReadNow; return {
+      title: m.title, text: m.text, meta: m.meta, unread: u, pr: PR[m.pr][0], prStyle: 'height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 9999px; font-size: 11px; font-weight: 700; ' + PR[m.pr][1],
+      titleStyle: 'font-size: 14px; ' + (u ? 'font-weight: 600' : 'font-weight: 500; color: #45484d'),
+      d1: NI[m.mod][0], d2: NI[m.mod][1], d3: NI[m.mod][2],
+      iconBox: 'width: 36px; height: 36px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (m.pr === 'urgente' ? 'background: #ffe6e4; color: #d92d25' : 'background: #f6f8fa; color: #45484d')
+    }; });
+    const unread = notifs.filter((m) => m.unread).length;
+    const COMMON = {
+      navSecs, notifs, unread: String(unread), hasUnread: unread > 0, allRead: unread === 0,
+      bellOpen: !!st.bell, bellAria: st.bell ? 'true' : 'false', bellLabel: 'Notificaciones' + (unread ? ', ' + unread + ' sin leer' : ''),
+      bellBtn: 'position: relative; width: 44px; height: 44px; border: 0; border-radius: 9999px; color: #1c1c1e; display: flex; align-items: center; justify-content: center; cursor: pointer; background: ' + (st.bell ? '#ffe6e4' : '#f6f8fa'),
+      toggleBell: () => this.setState({ bell: !st.bell }), markAll: () => this.setState({ nRead: true }),
+      meName: ME[0], meRole: ME[1], meInitial: ME[2], meAvatar: 'width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 700; ' + ME[3],
+      C, noC: !C
+    };
+
+
+    const NUMS = 'font-variant-numeric: tabular-nums; white-space: nowrap; ';
+    const BTNP = 'height: 48px; padding: 0 20px; border: 0; border-radius: 9999px; background: #d92d25; color: #ffffff; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; width: 100%';
+
+    const dev = !!P.devuelto;
+    const PL = { saco: 'sacos', caja: 'cajas', paquete: 'paquetes' };
+    const pl = (n, w) => n === 1 ? w : (PL[w] || w + 's');
+    const ENT = 20000;
+    const upd = (id, patch) => this.setState({ lines: st.lines.map((x) => x.id === id ? Object.assign({}, x, patch) : x), sent: false });
+    const seg = (on, tone) => 'height: 44px; border: 0; border-radius: 9999px; font: inherit; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; ' + (on ? (tone === 'yes' ? 'background: #1c1c1e; color: #ffffff' : 'background: #45484d; color: #ffffff') : 'background: transparent; color: #45484d');
+    let spent = 0, pend = 0, bought = 0;
+    const all = st.lines.map((l) => {
+      const yes = l.bought === true, no = l.bought === false, und = l.bought === null;
+      const tot = yes ? l.qty * (Number(l.cost) || 0) : 0;
+      spent += tot; if (und) pend++; if (yes) bought++;
+      const d = l.qty - l.ped;
+      return { l, yes, no, und, tot, d };
+    });
+    const show = all.filter((o) => st.filter === 'todas' || o.und || (st.filter === 'faltan' && o.no));
+    const lines = show.map(({ l, yes, no, und, tot, d }) => ({
+      prod: l.prod, dest: l.dest, qid: 'q-' + l.id, yes, no, undecided: und,
+      icon: 'width: 40px; height: 40px; flex: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; ' + (yes ? 'background: #ffffff; color: #d92d25' : 'background: #ffffff; color: #8c9097'),
+      pedLabel: l.ped + ' ' + pl(l.ped, l.pres) + ' de ' + l.cont + ' ' + l.unit, pedBase: fq(l.ped * l.cont, 3) + ' ' + l.unit,
+      total: yes ? fm(tot) : (no ? 'No comprado' : '—'),
+      totalStyle: 'margin: 0; flex: none; font-size: 15px; font-weight: 600; ' + NUMS + (yes ? '' : 'color: #8c9097; font-weight: 500; font-size: 13px'),
+      yesAria: yes ? 'true' : 'false', noAria: no ? 'true' : 'false', yesStyle: seg(yes, 'yes'), noStyle: seg(no, 'no'),
+      setYes: () => upd(l.id, { bought: true }), setNo: () => upd(l.id, { bought: false }),
+      qty: String(l.qty), qtyAria: 'Cantidad comprada de ' + l.prod, qtyUnit: pl(l.qty, l.pres), qtyBase: fq(l.qty * l.cont, 3) + ' ' + l.unit,
+      dec: () => upd(l.id, { qty: Math.max(1, l.qty - 1) }), inc: () => upd(l.id, { qty: l.qty + 1 }),
+      costLabel: 'Costo por ' + l.pres, cost: String(l.cost), onCost: (e) => upd(l.id, { cost: parseFloat(String(e.target.value).replace(',', '.')) || 0 }),
+      perBase: l.cost ? '= ' + fq(l.cost / l.cont, 2) + ' CUP por ' + l.unit : 'Escribe el precio pagado',
+      hasDiff: d !== 0, diffText: d < 0 ? (-d) + ' ' + pl(-d, l.pres) + ' menos de lo pedido' : d + ' ' + pl(d, l.pres) + ' más de lo pedido',
+      diffStyle: 'margin: -4px 0 0; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 14px; font-size: 13px; font-weight: 600; background: #fff4cf; color: #7a5200'
+    }));
+    const rest = ENT - spent;
+    const pct = Math.min(100, Math.round(spent / ENT * 100));
+    const over = rest < 0;
+    const filters = [['todas', 'Todos', st.lines.length], ['faltan', 'Sin marcar', pend]].map(([id, label, count]) => {
+      const on = st.filter === id;
+      return { label, count: String(count), hasCount: true, aria: on ? 'true' : 'false', pick: () => this.setState({ filter: id }),
+        style: 'height: 36px; padding: 0 6px 0 12px; display: inline-flex; align-items: center; gap: 6px; border-radius: 9999px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; ' + (on ? 'background: #ffe6e4; color: #b3221b; border: 0' : 'background: #ffffff; color: #1c1c1e; border: 1.5px solid #d6d9de'),
+        countStyle: 'min-width: 22px; height: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 9999px; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; ' + (on ? 'background: #ffffff' : 'background: #f6f8fa') };
+    });
+    const byProd = all.filter((o) => o.yes).map((o) => ({ name: o.l.prod, amount: fm(o.tot), bar: 'height: 100%; border-radius: 9999px; background: #d92d25; width: ' + (spent ? Math.round(o.tot / spent * 100) : 0) + '%' }));
+    const ok = pend === 0;
+    const V = {
+      ps: pb(dev ? 'devuelto' : 'abierto'), devuelto: dev,
+      linesInfo: bought + ' de ' + st.lines.length + ' comprados',
+      entregado: fm(ENT), gastado: fm(spent), pct: String(pct),
+      bar: 'height: 100%; border-radius: 9999px; width: ' + pct + '%; background: ' + (over ? '#d92d25' : '#1c1c1e'),
+      restLabel: over ? 'Excedido ' + fm(-rest) : 'Restante ' + fm(rest), restStyle: 'font-weight: 600; ' + (over ? 'color: #b3221b' : 'color: #1e7a50'),
+      filters, lines, byProd,
+      sobLabel: over ? 'Te excediste' : 'Sobrante', sobValue: (over ? '−' : '+') + fm(Math.abs(rest)),
+      sobBox: 'grid-column: 1 / -1; border-radius: 16px; padding: 12px 14px; ' + (over ? 'background: #ffe6e4; color: #b3221b' : 'background: #e6f4ec; color: #1e7a50'),
+      diffChip: 'display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 9999px; font-size: 13px; font-weight: 700; ' + NUMS + (over ? 'background: #ffe6e4; color: #b3221b' : 'background: #e6f4ec; color: #1e7a50'),
+      diffChipText: over ? 'Excedido ' + fq(-rest, 2) : 'Sobran ' + fq(rest, 2),
+      sendDisabled: !ok, sendLabel: dev ? 'Reenviar a revisión' : 'Enviar a revisión',
+      sendStyle: BTNP + (ok ? '' : '; background: #eceef1; color: #8c9097; cursor: not-allowed'),
+      hasPending: !ok, pendingText: 'Falta marcar ' + pend + (pend === 1 ? ' producto' : ' productos'),
+      sheet: st.sheet, sent: st.sent,
+      openSheet: () => { if (ok) this.setState({ sheet: true }); }, closeSheet: () => this.setState({ sheet: false }),
+      send: () => this.setState({ sheet: false, sent: true }),
+      sheetRows: [
+        { k: 'Comprados', v: bought + ' de ' + st.lines.length, vs: 'margin: 0; font-weight: 600' },
+        { k: 'No comprados', v: String(st.lines.length - bought - pend), vs: 'margin: 0; font-weight: 600' },
+        { k: 'Gastado', v: fm(spent), vs: 'margin: 0; font-weight: 600; ' + NUMS },
+        { k: over ? 'Excedido' : 'Sobrante a devolver', v: fm(Math.abs(rest)), vs: 'margin: 0; font-weight: 700; ' + NUMS + (over ? 'color: #b3221b' : 'color: #1e7a50') }
+      ]
+    };
+
+    return Object.assign(COMMON, V);
+  }
+}
+</script>
+</body>
+</html>
