@@ -6,26 +6,14 @@ import { TimeZoneSync } from "@/components/shell/time-zone-sync";
 import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { BellFallback, BellSlot } from "@/components/notifications/bell-slot";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AppShell, type NavItem } from "@/components/shell/app-shell";
-import { CATEGORIES, HISTORY, PRODUCTS, operatorHistoryNav, operatorNav } from "@/components/shell/catalog-nav";
+import { AppShell } from "@/components/shell/app-shell";
+import { buildNav } from "@/components/shell/nav-config";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeOrg } from "@/infrastructure/supabase/org-factory";
 import { createServerClient } from "@/infrastructure/supabase/server-client";
 import { ACTIVE_COMPANY_COOKIE } from "./companias/guard";
 import { makeUserRepository } from "@/infrastructure/supabase/user-repository";
 import { makeUsers } from "@/infrastructure/supabase/users-factory";
-
-const HOME: NavItem = { id: "inicio", label: "Inicio", href: "/", icon: "LayoutDashboard" };
-const COMPANIES: NavItem = { id: "companias", label: "Compañías", href: "/companias", icon: "Building2" };
-const ROLES: NavItem = { id: "roles", label: "Roles", href: "/roles", icon: "KeyRound" };
-const CURRENCIES: NavItem = { id: "divisas", label: "Divisas", href: "/divisas", icon: "Coins" };
-const USERS: NavItem = { id: "usuarios", label: "Usuarios", href: "/usuarios", icon: "Users" };
-const ADMINS: NavItem = {
-  id: "administradores",
-  label: "Administradores",
-  href: "/superadmin/administradores",
-  icon: "ShieldCheck",
-};
 
 const bell = (
   <Suspense fallback={<BellFallback />}>
@@ -60,7 +48,7 @@ async function OperatorShell({
           />
         </div>
       }
-      nav={[HOME, ...operatorNav(active.permissions.products), ...operatorHistoryNav(active.permissions.products)]}
+      nav={buildNav({ kind: "operator", permissions: active.permissions })}
       user={{ name: profile?.displayName ?? "Operador", role: active.roleName, handle: profile?.username }}
     >
       {children}
@@ -88,7 +76,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
     <AppShell
       bell={bell}
       company={company}
-      nav={superadmin ? [HOME, ADMINS, COMPANIES, HISTORY] : [HOME, COMPANIES, ROLES, USERS, CURRENCIES, CATEGORIES, PRODUCTS, HISTORY]}
+      nav={buildNav({ kind: superadmin ? "superadmin" : "admin" })}
       user={{
         name: profile?.displayName ?? claims.email,
         role: superadmin ? "Superadmin" : "Administrador",

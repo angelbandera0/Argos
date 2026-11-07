@@ -62,6 +62,7 @@ export function SidebarItem({
   badge,
   dot,
   active,
+  disabled,
 }: {
   href: string;
   label: string;
@@ -69,10 +70,19 @@ export function SidebarItem({
   badge?: SidebarBadge;
   dot?: boolean;
   active?: boolean;
+  disabled?: boolean;
 }) {
   const pathname = usePathname();
   const Icon = NAV_ICONS[icon];
   const current = active ?? isActivePath(pathname, href);
+  if (disabled) {
+    return (
+      <span className="nav-item" role="link" aria-disabled="true" title="Próximamente">
+        <Icon aria-hidden="true" />
+        <span>{label}</span>
+      </span>
+    );
+  }
   return (
     <Link className="nav-item" href={href} title={label} data-badge={badge ? "" : undefined} aria-current={current ? "page" : undefined}>
       <Icon aria-hidden="true" />

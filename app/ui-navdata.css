@@ -123,7 +123,9 @@
   display: inline-grid; place-items: center; margin-left: auto; min-width: var(--size-counter); height: var(--size-counter); padding: 0 var(--space-1-5);
   border-radius: var(--radius-pill); font: var(--text-caption); font-weight: 700;
 }
-.nav-badge-count { background: var(--color-red-strong); color: var(--color-surface); }
+.nav-badge-count { background: var(--color-surface); color: var(--color-ink); }
+.nav-item[aria-current="page"] .nav-badge-count { background: var(--color-red-strong); color: var(--color-surface); }
+.nav-item[aria-disabled="true"]:hover { background: transparent; color: var(--color-ink-2); }
 .nav-badge-alert { background: var(--color-red-tint); color: var(--color-red-hover); }
 .nav-badge-new { background: var(--color-yellow); color: var(--color-ink); font: var(--text-overline); font-weight: 700; padding: 0 var(--space-2); }
 .nav-dot { margin-left: auto; width: var(--size-dot); height: var(--size-dot); border-radius: 50%; background: var(--color-red); }

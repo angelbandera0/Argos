@@ -1,13 +1,21 @@
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
 import { CompanySelector, type CompanySelectorProps } from "@/components/org/company-selector";
-import { SidebarSection } from "@/components/ui/sidebar-section";
-import { NavLink } from "./nav-link";
+import { SidebarItem, SidebarSection, type SidebarBadge } from "@/components/ui/sidebar-section";
+import type { NavSection } from "./nav-config";
 import { ProfileMenu } from "./profile-menu";
 import { TopClock } from "./top-clock";
 
 const { Search } = NAV_ICONS;
 
-export type NavItem = { id: string; label: string; href: string; icon: NavIconName };
+export type NavItem = {
+  id: string;
+  label: string;
+  href: string;
+  icon: NavIconName;
+  available?: boolean;
+  badge?: SidebarBadge;
+  dot?: boolean;
+};
 
 export function AppShell({
   nav,
@@ -18,7 +26,7 @@ export function AppShell({
   bell,
   children,
 }: {
-  nav: NavItem[];
+  nav: NavSection[];
   user: { name: string; role: string; handle?: string | null };
   top?: React.ReactNode;
   company?: CompanySelectorProps;
@@ -34,11 +42,13 @@ export function AppShell({
           <span>Argos</span>
         </div>
         {company && <CompanySelector {...company} variant="side" />}
-        <SidebarSection title="Menú">
-          {nav.map(({ id, ...item }) => (
-            <NavLink key={id} {...item} />
-          ))}
-        </SidebarSection>
+        {nav.map((section) => (
+          <SidebarSection key={section.title} title={section.title}>
+            {section.items.map(({ id, available = true, ...item }) => (
+              <SidebarItem key={id} {...item} disabled={!available} />
+            ))}
+          </SidebarSection>
+        ))}
       </nav>
       <main className="main">
         <div className="content">
