@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { adjustBounds, adjustDeltaError, reasonCode, surplusSchema, writeOffSchema } from "./ops-logic";
+import { adjustBounds, adjustDeltaError, reasonCode, surplusSchema, writeOffSchema } from "@/components/stock/ops-logic";
 
 describe("ops-logic", () => {
   it("«otro» exige texto", () => {
