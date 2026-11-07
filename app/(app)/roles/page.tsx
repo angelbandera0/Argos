@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Plus } from "@/components/icons";
-import { allowedCompanies, parseCompanyFilter } from "@/components/roles/role-card-data";
+import { allowedCompanies, extraPermissionLabels, parseCompanyFilter } from "@/components/roles/role-card-data";
 import { RoleList } from "@/components/roles/role-list";
 import { buttonClass } from "@/components/ui/button-class";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -50,6 +50,7 @@ async function RoleListContent({ searchParams }: { searchParams: PageProps<"/rol
         name: r.name,
         companies: r.excludedCompanyIds.length === 0 ? "all" : allowedCompanies(companies, r.excludedCompanyIds).map((c) => c.name),
         products: r.permissions.products,
+        extras: extraPermissionLabels(r.permissions, r.specialPermissions),
         sessionSeconds: r.sessionSeconds,
         users: assigned.filter((u) => u.roleId === r.id).map((u) => u.displayName),
       }))}

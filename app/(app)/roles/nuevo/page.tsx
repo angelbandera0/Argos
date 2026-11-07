@@ -18,7 +18,7 @@ async function Editor() {
     <RoleForm
       roleId={null}
       companies={companies}
-      initial={{ name: "", sessionSeconds: null, excludedCompanyIds: [], permissions: { products: NONE } }}
+      initial={{ name: "", sessionSeconds: null, excludedCompanyIds: [], permissions: { products: NONE, currencies: NONE, stock: NONE, requests: NONE, orders: NONE, notifications: NONE }, specialPermissions: [] }}
     />
   );
 }

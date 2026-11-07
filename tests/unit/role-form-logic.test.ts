@@ -8,6 +8,13 @@ import {
   TEMPLATES,
   toggle,
   toggleAll,
+  abilities,
+  hasAnyPermission,
+  NONE,
+  pruneSpecials,
+  setWarehouse,
+  specialLabels,
+  toggleSpecial,
 } from "@/components/roles/role-form-logic";
 
 const read = TEMPLATES[0].set;
@@ -40,11 +47,31 @@ describe("role form logic", () => {
     expect(nameError("abc")).toBeUndefined();
   });
   it("checklist: permissions warn but do not block", () => {
-    const a = checklist("Cajero", 1, none);
+    const a = checklist("Cajero", 1, false);
     expect(a.complete).toBe(true);
     expect(a.items[2].state).toBe("warn");
-    const b = checklist("Ca", 0, read);
+    const b = checklist("Ca", 0, true);
     expect(b.complete).toBe(false);
     expect(b.items.map((i) => i.state)).toEqual(["todo", "todo", "ok"]);
+  });
+  it("specials: toggle, warehouse scope and prune without view", () => {
+    const perms = { products: NONE, currencies: NONE, stock: read, requests: NONE, orders: NONE, notifications: NONE };
+    let g = toggleSpecial([], "transfer", true);
+    g = setWarehouse(toggleSpecial(g, "write_off", true), "write_off", true);
+    expect(g).toEqual([{ permission: "transfer", warehouse: false }, { permission: "write_off", warehouse: true }]);
+    expect(pruneSpecials(perms, g)).toEqual(g);
+    expect(pruneSpecials({ ...perms, stock: NONE }, [...g, { permission: "see_costs", warehouse: false }])).toEqual([{ permission: "see_costs", warehouse: false }]);
+    expect(toggleSpecial(g, "transfer", false)).toHaveLength(1);
+  });
+  it("summaries", () => {
+    const perms = { products: read, currencies: NONE, stock: TEMPLATES[1].set, requests: NONE, orders: NONE, notifications: NONE };
+    const g = toggleSpecial([], "transfer", true);
+    expect(abilities(perms, g)).toEqual([
+      { label: "Productos", text: "Ver" },
+      { label: "Existencias", text: "Ver · Crear · Editar · 1 permiso especial" },
+    ]);
+    expect(specialLabels(toggleSpecial(g, "see_costs", true))).toEqual(["Ver costos", "Trasladar a tienda"]);
+    expect(hasAnyPermission({ ...perms, products: NONE, stock: NONE }, [])).toBe(false);
+    expect(hasAnyPermission({ ...perms, products: NONE, stock: NONE }, g)).toBe(true);
   });
 });

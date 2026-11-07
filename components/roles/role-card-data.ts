@@ -1,4 +1,5 @@
-import type { Op } from "@/core/domain/permissions";
+import type { Module, Op, PermissionSet, SpecialGrant } from "@/core/domain/permissions";
+import { MODULE_GROUPS, specialLabels } from "./role-form-logic";
 
 export const OPS: { op: Op; label: string }[] = [
   { op: "view", label: "Ver" },
@@ -6,6 +7,11 @@ export const OPS: { op: Op; label: string }[] = [
   { op: "edit", label: "Editar" },
   { op: "delete", label: "Eliminar" },
 ];
+
+export function extraPermissionLabels(permissions: Record<Module, PermissionSet>, grants: SpecialGrant[]): string[] {
+  const modules = MODULE_GROUPS.filter((m) => permissions[m.key].view).map((m) => m.label);
+  return [...modules, ...specialLabels(grants)];
+}
 
 export function allowedCompanies<C extends { id: string }>(companies: C[], excludedIds: string[]): C[] {
   return companies.filter((c) => !excludedIds.includes(c.id));

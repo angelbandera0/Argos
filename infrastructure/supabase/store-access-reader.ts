@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { StoreAccess, StoreAccessReader } from "@/core/application/ports/store-access-reader";
-import type { PermissionSet } from "@/core/domain/permissions";
+import { MODULES, type PermissionMap, type PermissionSet } from "@/core/domain/permissions";
 
 type Row = {
   store_id: string;
@@ -13,8 +13,13 @@ type Row = {
   role_session_seconds: number | null;
   company_cap_seconds: number;
   operational: boolean;
-  permissions: { products?: Partial<PermissionSet> };
+  permissions: Partial<Record<string, Partial<PermissionSet>>>;
 };
+
+const flags = (p?: Partial<PermissionSet>): PermissionSet => ({ view: p?.view ?? false, create: p?.create ?? false, edit: p?.edit ?? false, delete: p?.delete ?? false });
+
+const toPermissions = (raw: Row["permissions"]) =>
+  Object.fromEntries(MODULES.map((m) => [m, flags(raw[m])])) as PermissionMap & { products: PermissionSet };
 
 const toAccess = (r: Row): StoreAccess => ({
   storeId: r.store_id,
@@ -26,14 +31,7 @@ const toAccess = (r: Row): StoreAccess => ({
   roleSessionSeconds: r.role_session_seconds,
   companyCapSeconds: r.company_cap_seconds,
   operational: r.operational,
-  permissions: {
-    products: {
-      view: r.permissions.products?.view ?? false,
-      create: r.permissions.products?.create ?? false,
-      edit: r.permissions.products?.edit ?? false,
-      delete: r.permissions.products?.delete ?? false,
-    },
-  },
+  permissions: toPermissions(r.permissions),
 });
 
 /** The SQL function reads as the signed-in operator (auth.uid()); the userId argument must match that client. */

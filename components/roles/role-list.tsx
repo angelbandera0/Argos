@@ -20,6 +20,7 @@ export type RoleCardRow = {
   name: string;
   companies: string[] | "all";
   products: PermissionSet;
+  extras: string[];
   sessionSeconds: number | null;
   users: string[];
 };
@@ -129,6 +130,18 @@ export function RoleList({
                     )}
                   </dd>
                 </div>
+                {r.extras.length > 0 && (
+                  <div>
+                    <dt>Otros permisos</dt>
+                    <dd className="ui-role-chips">
+                      {r.extras.map((x) => (
+                        <Chip key={x} variant="ring">
+                          {x}
+                        </Chip>
+                      ))}
+                    </dd>
+                  </div>
+                )}
                 <div className="ui-role-pair">
                   <div>
                     <dt>Sesión</dt>

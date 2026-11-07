@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { type RoleActionState, saveRoleAction } from "@/app/(app)/roles/actions";
 import type { RoleInput } from "@/core/application/ports/role-repository";
-import type { PermissionSet } from "@/core/domain/permissions";
+import type { Module, PermissionSet, SpecialGrant } from "@/core/domain/permissions";
+import { Alert } from "@/components/ui/alert";
 import { avatarTone, companyInitials } from "@/components/org/company-avatar";
 import { buttonClass } from "@/components/ui/button-class";
 import { ChoiceCard, ChoicePills } from "@/components/ui/choice-card";
@@ -14,7 +15,8 @@ import { FormSection } from "@/components/ui/form-section";
 import { FormShell, FormSubmit } from "@/components/ui/form-shell";
 import { Checklist, SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
 import { PermissionMatrix } from "./permission-matrix";
-import { checklist, nameError, OPS, permissionSummary, SESSION_HOURS, sessionSummary } from "./role-form-logic";
+import { ModulePermissions, SeeCostsCard } from "./module-permissions";
+import { abilities, checklist, hasAnyPermission, nameError, OPS, pruneSpecials, SESSION_HOURS, sessionSummary } from "./role-form-logic";
 
 export function RoleForm({
   roleId,
@@ -22,7 +24,10 @@ export function RoleForm({
   companies,
 }: {
   roleId: string | null;
-  initial: Omit<RoleInput, "ownerId" | "permissions" | "specialPermissions"> & { permissions: { products: PermissionSet } };
+  initial: Omit<RoleInput, "ownerId" | "permissions" | "specialPermissions"> & {
+    permissions: Record<Module, PermissionSet>;
+    specialPermissions: SpecialGrant[];
+  };
   companies: { id: string; name: string; code: string }[];
 }) {
   const [state, action, pending] = useActionState<RoleActionState, FormData>(saveRoleAction.bind(null, roleId), {});
@@ -31,12 +36,17 @@ export function RoleForm({
   const [hours, setHours] = useState(initial.sessionSeconds ? String(initial.sessionSeconds / 3600) : "");
   const [on, setOn] = useState(() => new Set(companies.filter((c) => !initial.excludedCompanyIds.includes(c.id)).map((c) => c.id)));
   const [permissions, setPermissions] = useState(initial.permissions);
+  const [grants, setGrants] = useState(initial.specialPermissions);
+  const changePermissions = (next: Record<Module, PermissionSet>) => {
+    setPermissions(next);
+    setGrants(pruneSpecials(next, grants));
+  };
   const hourList = hours && !SESSION_HOURS.includes(Number(hours)) ? [...SESSION_HOURS, Number(hours)].sort((a, b) => a - b) : SESSION_HOURS;
   const sessions = [
     { value: "", label: "Tope de la compañía", badge: "Recomendado" },
     ...hourList.map((h) => ({ value: String(h), label: `${h} h` })),
   ];
-  const { items, complete } = checklist(name, on.size, permissions.products);
+  const { items, complete } = checklist(name, on.size, hasAnyPermission(permissions, grants));
   const nameMsg = touched ? nameError(name) : undefined;
   const noCompany = touched && on.size === 0;
   const chosen = companies.filter((c) => on.has(c.id));
@@ -78,9 +88,14 @@ export function RoleForm({
                 label: "Compañías",
                 value: chosen.length ? chosen.map((c) => <Chip key={c.id}>{c.name}</Chip>) : "Ninguna",
               },
-              { label: "Productos", value: permissionSummary(permissions.products) },
+              ...abilities(permissions, grants).map((a) => ({ label: a.label, value: a.text })),
             ]}
           />
+          {grants.some((g) => g.permission === "see_costs") && (
+            <Alert variant="danger" title="Verá costos e importes.">
+              Incluye el valor del inventario, los montos de los pedidos y el costo de cada lote.
+            </Alert>
+          )}
           <Checklist items={items} />
         </SummaryPanel>
       }
@@ -89,8 +104,11 @@ export function RoleForm({
       {chosen.map((c) => (
         <input key={c.id} type="hidden" name="company" value={c.id} />
       ))}
-      {OPS.filter(({ op }) => permissions.products[op]).map(({ op }) => (
-        <input key={op} type="hidden" name={`products.${op}`} value="on" />
+      {(Object.keys(permissions) as Module[]).flatMap((m) =>
+        OPS.filter(({ op }) => permissions[m][op]).map(({ op }) => <input key={`${m}.${op}`} type="hidden" name={`${m}.${op}`} value="on" />),
+      )}
+      {grants.map((g) => (
+        <input key={g.permission} type="hidden" name={`special.${g.permission}`} value={g.warehouse ? "warehouse" : "on"} />
       ))}
 
       <FormSection n={1} title="Datos del rol" description="Cómo se llama y cuánto dura la sesión.">
@@ -151,7 +169,12 @@ export function RoleForm({
       </FormSection>
 
       <FormSection n={3} title="Permisos por módulo" description="Marca lo que este rol puede hacer en cada módulo.">
-        <PermissionMatrix value={permissions} onChange={setPermissions} />
+        <PermissionMatrix value={{ products: permissions.products }} onChange={(v) => changePermissions({ ...permissions, products: v.products })} />
+      </FormSection>
+
+      <FormSection n={4} title="Módulos de almacén y compras" description="Permisos de los módulos de almacén y compras.">
+        <SeeCostsCard grants={grants} onGrants={setGrants} />
+        <ModulePermissions permissions={permissions} grants={grants} onPermissions={changePermissions} onGrants={setGrants} />
       </FormSection>
     </FormShell>
   );
