@@ -34,8 +34,12 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
     mine.find((l) => l.id === wanted) ?? mine.find((l) => l.kind === "warehouse") ?? locations.find((l) => l.storeId === storeId) ?? locations[0];
   if (!location) return <ViewState kind="empty" entity="existencias" text="Aún no hay ubicaciones." canCreate={false} />;
 
-  const catalog = makeCatalog(await createServerClient());
+  const supabase = await createServerClient();
+  const catalog = makeCatalog(supabase);
   const products = await catalog.listProducts(actor, { companyId }).catch(() => []);
+  const { data: storable } = await supabase.from("product_stock_settings").select("product_id").eq("company_id", companyId).eq("storable", true);
+  const storableIds = new Set((storable ?? []).map((s) => s.product_id));
+  const storableProducts = products.filter((p) => p.active && storableIds.has(p.id));
   const categories = (await catalog.listCategories(actor, { companyId }).catch(() => [])).map((c) => ({ value: c.id, label: c.name }));
   const categoria = categories.some((c) => c.value === first(sp.categoria)) ? first(sp.categoria) : "";
   const estado = parseStatus(sp.estado);
@@ -86,7 +90,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
         canMinimums={can("configure_minimums")}
         canDirect={can("direct_store_entry")}
         canRequest={can("request_replenishment")}
-        entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
+        entry={{ locationId: location.id, products: storableProducts.map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       />
     );
   }
@@ -109,8 +113,8 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       canTransfer={canWh("transfer")}
       canWriteOff={canWh("write_off")}
       canDirect={can("direct_store_entry")}
-      transfer={{ fromLocationId: location.id, stores: locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name })), products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), canChooseLot: canWh("choose_lot"), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
-      entry={{ locationId: location.id, products: products.filter((p) => p.active).map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
+      transfer={{ fromLocationId: location.id, stores: locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name })), products: storableProducts.map((p) => ({ value: p.id, label: p.name })), canChooseLot: canWh("choose_lot"), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
+      entry={{ locationId: location.id, products: storableProducts.map((p) => ({ value: p.id, label: p.name })), currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
       isWarehouse={location.kind === "warehouse"}
     />
   );
