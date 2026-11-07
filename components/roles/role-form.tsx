@@ -15,7 +15,7 @@ import { FormSection } from "@/components/ui/form-section";
 import { FormShell, FormSubmit } from "@/components/ui/form-shell";
 import { Checklist, SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
 import { PermissionMatrix } from "./permission-matrix";
-import { ModulePermissions, SeeCostsCard } from "./module-permissions";
+import { SpecialPermissions } from "./module-permissions";
 import { abilities, checklist, hasAnyPermission, nameError, OPS, pruneSpecials, SESSION_HOURS, sessionSummary } from "./role-form-logic";
 
 export function RoleForm({
@@ -169,12 +169,11 @@ export function RoleForm({
       </FormSection>
 
       <FormSection n={3} title="Permisos por módulo" description="Marca lo que este rol puede hacer en cada módulo.">
-        <PermissionMatrix value={{ products: permissions.products }} onChange={(v) => changePermissions({ ...permissions, products: v.products })} />
+        <PermissionMatrix value={permissions} onChange={changePermissions} />
       </FormSection>
 
-      <FormSection n={4} title="Módulos de almacén y compras" description="Permisos de los módulos de almacén y compras.">
-        <SeeCostsCard grants={grants} onGrants={setGrants} />
-        <ModulePermissions permissions={permissions} grants={grants} onPermissions={changePermissions} onGrants={setGrants} />
+      <FormSection n={4} title="Permisos especiales" description="Acciones delicadas de cada módulo; requieren «Ver» en ese módulo.">
+        <SpecialPermissions permissions={permissions} grants={grants} onGrants={setGrants} />
       </FormSection>
     </FormShell>
   );

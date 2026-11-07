@@ -60,7 +60,7 @@ Las secciones son las de M7 (`DESIGN-modulo2.md`, línea entre paréntesis). Las
 | Dar de baja, entrada directa, motivos (453) | `3-existencias/M2-Dialogos-Existencias`, `-SinCostos` | T16 |
 | Configurar mínimos (466) | `3-existencias/M2-Minimos` | T17 |
 | Divisas (473) | `4-divisas/M2-Divisas`, `M2-Divisa-Form` | T03 |
-| Rol ampliado (491) | `6-roles-historial/M2-Rol-Ampliado` | T04 |
+| Rol ampliado (491) | `6-roles-historial/M2-Rol-Ampliado` | T04 (módulos en una sola matriz como Productos; decisión del usuario 2026-11-07) |
 | Historial ampliado (502) | `6-roles-historial/M2-Historial`, `-SinCostos` | T29 |
 | Notificaciones y campana (M5, línea 120) | `5-notificaciones/M2-Notificaciones` | T07 |
 | Dashboard con solicitudes del día (M5, línea 149) | `5-notificaciones/M2-Dashboard` | T07, T28 |

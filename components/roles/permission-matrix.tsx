@@ -1,11 +1,12 @@
 "use client";
 
-import type { PermissionSet } from "@/core/domain/permissions";
+import type { Module, PermissionSet } from "@/core/domain/permissions";
 import { Lock, NAV_ICONS } from "@/components/icons";
 import { Chip } from "@/components/ui/chip";
 import { CheckboxBox } from "@/components/ui/checkbox";
 import {
   ADMIN_ONLY_MODULES,
+  ALL_MODULES,
   allState,
   isViewLocked,
   matchTemplate,
@@ -13,22 +14,18 @@ import {
   TEMPLATES,
   toggle,
   toggleAll,
+  viewOnly,
 } from "./role-form-logic";
 
-type Value = { products: PermissionSet };
+type Value = Record<Module, PermissionSet>;
 
-export const MODULES: { key: keyof Value; label: string; description: string; hint: string }[] = [
-  {
-    key: "products",
-    label: "Productos",
-    description: "Catálogo, precios y existencias",
-    hint: "Eliminar no borra: el producto se marca como eliminado y queda en el historial. Con “Ver”, el rol también ve el historial de Productos.",
-  },
-];
+const PRODUCTS_HINT = "Eliminar no borra: el producto se marca como eliminado y queda en el historial. Con “Ver”, el rol también ve el historial de Productos.";
 
 export function PermissionMatrix({ value, onChange }: { value: Value; onChange: (next: Value) => void }) {
   const current = matchTemplate(value.products);
-  const anyLocked = MODULES.some((m) => isViewLocked(value[m.key]));
+  const anyLocked = ALL_MODULES.some((m) => isViewLocked(value[m.key]));
+  const applyTemplate = (t: PermissionSet) =>
+    onChange(Object.fromEntries(ALL_MODULES.map((m) => [m.key, viewOnly(m.key) ? { ...t, create: false, edit: false, delete: false } : t])) as Value);
   return (
     <>
       <div className="ui-perm-templates" role="group" aria-label="Plantillas de permisos">
@@ -37,7 +34,7 @@ export function PermissionMatrix({ value, onChange }: { value: Value; onChange: 
           <Chip
             key={t.key}
             pressed={current === t.key}
-            onPressedChange={() => onChange({ ...value, products: t.set })}
+            onPressedChange={() => applyTemplate(t.set)}
           >
             {t.label}
           </Chip>
@@ -56,15 +53,17 @@ export function PermissionMatrix({ value, onChange }: { value: Value; onChange: 
           </tr>
         </thead>
         <tbody>
-          {MODULES.map(({ key, label, description }) => {
+          {ALL_MODULES.map(({ key, label, description, icon }) => {
             const p = value[key];
-            const all = allState(p);
+            const only = viewOnly(key);
+            const Icon = NAV_ICONS[icon];
+            const all = allState(p, only);
             return (
               <tr key={key}>
                 <th scope="row">
                   <div className="ui-perm-module">
                     <span aria-hidden="true">
-                      <NAV_ICONS.Box />
+                      <Icon />
                     </span>
                     <div>
                       <strong>{label}</strong>
@@ -74,12 +73,13 @@ export function PermissionMatrix({ value, onChange }: { value: Value; onChange: 
                 </th>
                 {OPS.map(({ op, label: l }) => {
                   const locked = op === "view" && isViewLocked(p);
+                  const off = only && op !== "view";
                   return (
                     <td key={op}>
                       <CheckboxBox
                         checked={p[op]}
-                        disabled={locked}
-                        title={locked ? "Necesario para crear, editar o eliminar" : undefined}
+                        disabled={locked || off}
+                        title={off ? "Este módulo solo permite ver" : locked ? "Necesario para crear, editar o eliminar" : undefined}
                         aria-label={`${l} ${label}`}
                         onCheckedChange={(on) => onChange({ ...value, [key]: toggle(p, op, on) })}
                       />
@@ -91,7 +91,7 @@ export function PermissionMatrix({ value, onChange }: { value: Value; onChange: 
                     checked={all === "all"}
                     indeterminate={all === "some"}
                     aria-label={`Todos los permisos de ${label}`}
-                    onCheckedChange={() => onChange({ ...value, [key]: toggleAll(p) })}
+                    onCheckedChange={() => onChange({ ...value, [key]: toggleAll(p, only) })}
                   />
                 </td>
               </tr>
@@ -100,11 +100,8 @@ export function PermissionMatrix({ value, onChange }: { value: Value; onChange: 
         </tbody>
       </table>
       {anyLocked && <p className="hint">“Ver” queda marcado porque es necesario para crear, editar o eliminar.</p>}
-      {MODULES.map((m) => (
-        <p className="ui-perm-note" key={m.key}>
-          {m.hint}
-        </p>
-      ))}
+      <p className="ui-perm-note">{PRODUCTS_HINT}</p>
+      <p className="hint">Notificaciones solo permite “Ver”: el rol recibe los avisos que le corresponden.</p>
       <div className="ui-admin-only">
         <span aria-hidden="true">
           <Lock />

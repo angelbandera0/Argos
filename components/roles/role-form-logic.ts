@@ -32,12 +32,16 @@ export function toggle(p: PermissionSet, op: Op, on: boolean): PermissionSet {
 
 export const isViewLocked = (p: PermissionSet) => p.create || p.edit || p.delete;
 
-export function allState(p: PermissionSet): "all" | "some" | "none" {
-  const n = OPS.filter(({ op }) => p[op]).length;
-  return n === OPS.length ? "all" : n === 0 ? "none" : "some";
+export const viewOnly = (key: Module) => key === "notifications";
+
+export function allState(p: PermissionSet, only = false): "all" | "some" | "none" {
+  const ops = only ? OPS.slice(0, 1) : OPS;
+  const n = ops.filter(({ op }) => p[op]).length;
+  return n === ops.length ? "all" : n === 0 ? "none" : "some";
 }
 
-export const toggleAll = (p: PermissionSet): PermissionSet => (allState(p) === "all" ? set(false, false, false, false) : set(true, true, true, true));
+export const toggleAll = (p: PermissionSet, only = false): PermissionSet =>
+  allState(p, only) === "all" ? set(false, false, false, false) : set(true, !only, !only, !only);
 
 export const permissionSummary = (p: PermissionSet) =>
   OPS.filter(({ op }) => p[op])
@@ -63,11 +67,11 @@ export const SEE_COSTS: SpecialDef = {
 };
 
 export const MODULE_GROUPS: ModuleGroup[] = [
-  { key: "currencies", label: "Divisas", description: "Monedas y tasas de cambio", icon: "Coins", specials: [] },
+  { key: "currencies", label: "Divisas", description: "Monedas y denominaciones", icon: "Coins", specials: [] },
   {
     key: "stock",
     label: "Existencias",
-    description: "Almacén y tiendas",
+    description: "Almacén, lotes, traslados y bajas",
     icon: "Box",
     specials: [
       { key: "choose_lot", label: "Elegir lote en salidas", description: "Decide de qué lote sale la mercancía.", scoped: true },
@@ -83,7 +87,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
   {
     key: "requests",
     label: "Solicitudes",
-    description: "Reposición de tiendas",
+    description: "Reposición de las tiendas",
     icon: "Inbox",
     specials: [
       { key: "request_replenishment", label: "Solicitar reposición", description: "Pide mercancía al almacén desde una tienda." },
@@ -93,7 +97,7 @@ export const MODULE_GROUPS: ModuleGroup[] = [
   {
     key: "orders",
     label: "Pedidos",
-    description: "Pedidos de compra",
+    description: "Compras y su revisión",
     icon: "Tags",
     specials: [
       { key: "build_orders", label: "Armar pedidos", description: "Prepara pedidos con lo que hay que comprar." },
@@ -102,8 +106,12 @@ export const MODULE_GROUPS: ModuleGroup[] = [
       { key: "correct_orders", label: "Corregir pedidos", description: "Corrige un pedido ya cumplido." },
     ],
   },
-  { key: "notifications", label: "Notificaciones", description: "Solo ver las propias", icon: "Bell", specials: [] },
+  { key: "notifications", label: "Notificaciones", description: "Avisos de la aplicación", icon: "Bell", specials: [] },
 ];
+
+export type MatrixModule = { key: Module; label: string; description: string; icon: NavIconName };
+
+export const ALL_MODULES: MatrixModule[] = [{ key: "products", label: "Productos", description: "Catálogo, precios y existencias", icon: "Box" }, ...MODULE_GROUPS];
 
 export const NONE: PermissionSet = set(false, false, false, false);
 

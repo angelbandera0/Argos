@@ -15,6 +15,9 @@ import {
   setWarehouse,
   specialLabels,
   toggleSpecial,
+  ALL_MODULES,
+  MODULE_GROUPS,
+  viewOnly,
 } from "@/components/roles/role-form-logic";
 
 const read = TEMPLATES[0].set;
@@ -36,6 +39,16 @@ describe("role form logic", () => {
     expect(allState(TEMPLATES[2].set)).toBe("all");
     expect(toggleAll(TEMPLATES[1].set)).toEqual(TEMPLATES[2].set);
     expect(toggleAll(TEMPLATES[2].set)).toEqual(none);
+  });
+  it("view-only module: all means just view", () => {
+    expect(viewOnly("notifications")).toBe(true);
+    expect(allState(read, true)).toBe("all");
+    expect(toggleAll(none, true)).toEqual(read);
+    expect(toggleAll(read, true)).toEqual(none);
+  });
+  it("one module list, no exchange rates", () => {
+    expect(ALL_MODULES.map((m) => m.label)).toEqual(["Productos", "Divisas", "Existencias", "Solicitudes", "Pedidos", "Notificaciones"]);
+    expect(MODULE_GROUPS.some((m) => /tasas/i.test(m.description))).toBe(false);
   });
   it("summarises permissions", () => {
     expect(permissionSummary(TEMPLATES[1].set)).toBe("Ver · Crear · Editar");
