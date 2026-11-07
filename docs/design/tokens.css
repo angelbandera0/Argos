@@ -75,7 +75,9 @@
   --text-card-title-lg: 400 21px/1.15 var(--font-display);
   --text-h2: 700 15px/1.3 var(--font-ui);
   --text-value: 600 17px/1.2 var(--font-display);
-  --text-brand: 600 17px/1 var(--font-display);
+  --text-brand: 600 20px/1 var(--font-display);
+  --text-nav: 500 15px/1.45 var(--font-ui);
+  --text-company: 600 15px/1.25 var(--font-ui);
   --text-body: 400 14px/1.45 var(--font-ui);
   --text-caption: 400 12px/1.45 var(--font-ui);
   --text-overline: 600 11px/1.3 var(--font-ui);
@@ -87,7 +89,7 @@
   --tracking-kpi: -1.2px;
   --tracking-stat: -0.8px;
   --tracking-card-title: -0.5px;
-  --tracking-brand: -0.4px;
+  --tracking-brand: -0.5px;
   --tracking-overline: 0.8px;
   --tracking-eyebrow-sm: 0.4px;
 
@@ -144,7 +146,11 @@
   --size-sidebar: 236px;
   --size-rail: 84px;
   --size-bottom-nav: 68px;
-  --size-nav-item: 52px;
+  --size-nav-item: 44px;
+  --size-brand-mark: 30px;
+  --size-company-avatar: 38px;
+  --size-icon-side: 19px;
+  --radius-company-avatar: 11px;
   --size-rail-item: 52px;
   --size-nav-item-mobile: 56px;
   --size-icon: 18px;
