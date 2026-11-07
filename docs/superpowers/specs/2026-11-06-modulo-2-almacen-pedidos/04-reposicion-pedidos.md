@@ -19,6 +19,7 @@ Una tienda pide productos; el almacén surte lo que tiene; lo que falta se compr
 ## 3. Compra
 - **R-10 [U]** El comprador abre su pedido abierto y marca, por línea, si **pudo comprar**, la **cantidad realmente comprada** (puede ser menor o mayor a la pedida) y el **costo unitario** (por presentación; el sistema calcula por base).
 - **R-11 [U]** Se muestra: gasto por producto, total gastado y **diferencia con el monto entregado**.
+- **R-11b [U]** El **sobrante** (monto entregado − gastado; negativo = excedido) es siempre visible junto a lo entregado y lo gastado, en la compra, en la revisión y en el detalle del pedido, para comparar lo entregado con lo gastado. Se guarda en el pedido, no se recalcula a mano.
 - **R-12** El comprador **envía a revisión**. Hasta aquí el stock no cambia (M2-D02).
 
 ## 4. Revisión y entrada al stock
@@ -26,6 +27,7 @@ Una tienda pide productos; el almacén surte lo que tiene; lo que falta se compr
 - **R-14 [P]** El revisor registra por línea la **cantidad recibida y contada**. Se guardan siempre tres cantidades: pedida, reportada por el comprador y recibida.
 - **R-15 [P]** Con diferencias el revisor puede **devolver** el pedido al comprador con nota, o **confirmar** con las diferencias registradas.
 - **R-16 [U]** Al **confirmar** (`cumplido`), la cantidad **recibida** entra al stock como lotes con el costo unitario reportado, contenido y divisa. En destino tienda, el lote nace en esa tienda; en entrega general, el revisor reparte.
+- **R-16b [U]** El costo del lote es el **costo unitario reportado** por el comprador (opción A), no pagado ÷ recibido. El faltante no se absorbe en el costo.
 - **R-17 [P]** La diferencia entre reportado y recibido queda como **faltante o sobrante valorado** (lo pagado y no recibido), visible a quien ve costos.
 
 ## 5. Correcciones
@@ -43,6 +45,7 @@ Solicitar reposición, atender solicitudes, trasladar, armar pedidos, realizar c
 - CA-01: DADO una solicitud con stock suficiente, CUANDO el almacenero la atiende, ENTONCES se genera el traslado y la tienda ve la cantidad en su existencia.
 - CA-02: DADO stock parcial, ENTONCES se traslada lo disponible y el resto queda por comprar, pendiente o rechazado, con quién y por qué.
 - CA-03: DADO un pedido con monto y divisa, CUANDO el comprador marca costos y cantidades, ENTONCES ve gasto por producto, total y diferencia con el monto.
+- CA-03b: DADO un pedido con monto 500 y gasto 470, ENTONCES se ven en compra, revisión y detalle: entregado 500, gastado 470, sobrante 30.
 - CA-04: DADO un pedido en revisión, ENTONCES el stock no cambia hasta confirmar.
 - CA-05: DADO un pedido, CUANDO lo revisa quien lo compró, ENTONCES se rechaza.
 - CA-06: DADO una confirmación con faltante, ENTONCES entra solo lo recibido y el faltante queda valorado.
