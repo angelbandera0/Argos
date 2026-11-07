@@ -248,3 +248,7 @@ Se hace al terminar todo el proyecto, no por tarea.
 - Seguridad (WARN): 5 funciones SECURITY DEFINER ejecutables por `authenticated` (`assign_user_stores`, `create_company`, `delete_product`, `my_store_access`, `set_operator_status`); revisar que sean intencionales en la revisión de seguridad final. Protección contra contraseñas filtradas desactivada (plan Free).
 - Rendimiento: 12 claves foráneas sin índice (INFO) y políticas SELECT permisivas múltiples en `stores` (`stores_select`, `stores_select_operator`).
 - Pendiente del usuario: confirmar hooks y MFA activos en el panel; pgTAP (`test:db`) no se ejecutó.
+
+## Módulo 2 · permisos de tabla (T05)
+- Las tablas nuevas deben llevar `revoke all … from anon, authenticated` y solo los `grant` necesarios (Supabase concede todo por defecto, incluido `TRUNCATE`, que no pasa por la RLS). Corregido en `notifications` y `role_special_permissions`.
+- `role_permissions` (Módulo 1) y otras tablas del Módulo 1 conservan los permisos por defecto de `anon` y `authenticated` (solo las frena la RLS). Revisar y cerrar con una migración.
