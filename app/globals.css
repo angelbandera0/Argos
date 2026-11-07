@@ -55,8 +55,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
   position: sticky; top: var(--space-4); flex: none; width: var(--size-sidebar);
   height: calc(100dvh - 2 * var(--space-4)); background: var(--color-panel); border-radius: var(--radius-panel);
   padding: var(--space-6) var(--space-3-5) var(--space-4); display: flex; flex-direction: column; gap: var(--space-3-5);
-  overflow-y: auto; overscroll-behavior: contain;
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none;
 }
+.side::-webkit-scrollbar { display: none; }
 .side > * { flex: none; }
 .brand { display: flex; align-items: center; gap: var(--space-2-5); padding: 0 var(--space-2-5) var(--space-1); font: var(--text-brand); letter-spacing: var(--tracking-brand); }
 .brand-mark { width: var(--size-brand-mark); height: var(--size-brand-mark); border-radius: 50%; background: var(--color-red); flex: none; }
@@ -78,11 +79,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .company { flex: none; }
 .company-side { margin: 0 0 var(--space-1); }
 .company-bar { display: none; }
-.company-btn { display: flex; align-items: center; gap: var(--space-2-5); width: 100%; min-height: 0; padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2); border: 0; border-radius: var(--radius-toast); background: var(--color-surface); box-shadow: var(--shadow-active); color: var(--color-ink); text-align: left; cursor: pointer; }
+.company-btn { display: flex; align-items: center; gap: var(--space-2); width: 100%; min-height: 0; padding: var(--space-2); border: 0; border-radius: var(--radius-toast); background: var(--color-surface); box-shadow: var(--shadow-active); color: var(--color-ink); text-align: left; cursor: pointer; }
 .company-btn:hover, .company-btn[aria-expanded="true"] { background: var(--color-hover); }
 .company-text { display: flex; flex-direction: column; gap: 0; min-width: 0; flex: 1; text-align: left; }
 .company-text .eyebrow, .eyebrow.company-label { font: var(--text-eyebrow-sm); letter-spacing: var(--tracking-overline); }
-.company-text .eyebrow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.company-text .eyebrow { white-space: nowrap; flex: none; }
 .company-btn:focus-visible { outline: none; border-color: var(--color-red-strong); box-shadow: var(--focus-ring-field); }
 .company-text strong { font: var(--text-company); }
 .company-text strong, .company-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }

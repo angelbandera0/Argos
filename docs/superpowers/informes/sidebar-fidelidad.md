@@ -14,3 +14,7 @@ Fuente: Comp-Sidebar.dc.html y M2-Pedidos-Lista.dc.html. Agrupamiento y orden de
 
 ## No verificado sin navegador
 Aspecto visual final, barra superior (no tocada: no se comparó a nivel de píxel), avatar de compañía en el menú desplegable (ahora 38px), rail/móvil.
+
+## Ajuste posterior (etiqueta y scroll)
+- Etiqueta «Compañía activa» sin ellipsis (nowrap, flex none), gap y padding derecho de la tarjeta reducidos a --space-2; solo el nombre se trunca.
+- `.side` conserva overflow-y auto pero sin barra visible (scrollbar-width: none + ::-webkit-scrollbar); rueda/teclado siguen funcionando. No verificado en navegador.
