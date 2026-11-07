@@ -69,8 +69,7 @@ select is((select count(*) from companies), 0::bigint,
 
 select tests.clear_auth();
 set local role anon;
-select is((select count(*) from companies) + (select count(*) from profiles) + (select count(*) from stores), 0::bigint,
-  'anon sees nothing');
+select throws_ok($$select count(*) from companies$$, '42501', null, 'anon sees nothing');
 
 select tests.authenticate_as((select v from ctx where k = 'op'), 'aal1');
 select is((select array_agg(name) from companies), array['Alfa'],

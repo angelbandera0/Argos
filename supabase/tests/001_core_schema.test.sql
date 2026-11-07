@@ -115,9 +115,7 @@ select is((select count(*) from pg_class where relnamespace = 'public'::regnames
   'T-04: RLS is enabled on the five core tables');
 
 set local role anon;
-select is((select count(*) from profiles) + (select count(*) from companies) + (select count(*) from company_admins)
-  + (select count(*) from sites) + (select count(*) from stores), 0::bigint,
-  'T-04: anon sees zero rows (RLS)');
+select throws_ok($$select count(*) from profiles$$, '42501', null, 'T-04: anon has no table privileges');
 select throws_ok($$select create_company('Delta')$$, '42501', null, 'T-04: anon cannot execute create_company');
 reset role;
 

@@ -268,4 +268,5 @@ Se hace al terminar todo el proyecto, no por tarea.
 
 - ~~T26: migración `order_buyer_costs` (el comprador asignado lee `pedido_costos`/`pedido_linea_costos` de su propio pedido; revisada, acotada) sin pgTAP: añadir caso a la suite 024/026 (comprador ve el suyo, no el de otro, no ve costos de lote).~~ RESUELTO (L1): supabase/tests/028_order_buyer_costs.test.sql.
 
-- T29: el ocultado de costos en el historial es solo por sanitizado en aplicación (sanitize.ts); la RLS de audit_log sigue permitiendo leer el JSON completo por consulta directa. Considerar sanitizado en origen. No se ejecutó test:int.
+- ~~T29: el ocultado de costos en el historial es solo por sanitizado en aplicación (sanitize.ts); la RLS de audit_log sigue permitiendo leer el JSON completo por consulta directa. Considerar sanitizado en origen. No se ejecutó test:int.~~ RESUELTO (L2): vista audit_history + select por columnas; pgTAP 029.
+- L2: grants de M1 revocados parcialmente; ver informes/l2-auditoria-grants.md (dudas de delete\/update en companies, profiles, roles, sites, stores, user_stores; residuos de datos hacen fallar 023-026).
