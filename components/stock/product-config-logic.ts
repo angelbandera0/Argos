@@ -15,6 +15,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   INVALID_NAME: "El nombre debe tener entre 1 y 60 caracteres.",
   INVALID_CONTENT: "La cantidad debe ser mayor que cero.",
   BASE_UNIT_LOCKED: "La unidad base no se puede cambiar porque el producto ya tiene movimientos. Crea una presentación nueva o un producto distinto.",
+  STORABLE_LOCKED: "No se puede desactivar porque el producto ya tiene movimientos.",
   INVALID_INPUT: "Revisa los datos e inténtalo de nuevo.",
 };
 

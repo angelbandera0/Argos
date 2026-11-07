@@ -39,8 +39,12 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
   });
   if (!p.success) return { error: entryErrorMessage("INVALID_INPUT") };
   const d = p.data;
+  const baseUnit = text(f, "baseUnit");
   const withCost = costs && !d.unknownCost && d.cost !== undefined;
   try {
+    if (baseUnit && !(await stock.getProductStockConfig(actor, { productId: d.productId })).storable) {
+      await stock.saveProductStockConfig(actor, { productId: d.productId, storable: true, baseUnit });
+    }
     const input = {
       productId: d.productId,
       locationId,

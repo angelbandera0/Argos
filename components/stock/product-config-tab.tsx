@@ -18,10 +18,12 @@ import { type Column, DataTable } from "@/components/ui/data-table";
 import { Select } from "@/components/ui/select";
 import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/toast";
 import { ViewState } from "@/components/ui/view-state";
 import type { Unit } from "@/core/domain/stock";
 import { baseUnitOptions, BASE_UNIT_LOCKED_TEXT, contentLabel, hasMinimum } from "./product-config-logic";
+import { STORABLE_LOCKED_TEXT } from "./entry-logic";
 import { minimumLabel } from "./stock-list-logic";
 
 export type ConfigItem = { id: string; name: string; value: number; active: boolean };
@@ -106,6 +108,15 @@ export function ProductConfigTab({
     <div className="stack">
       <Card>
         <div className="stack">
+          {canUnits && (
+            <Switch
+              label="Se almacena en almacén"
+              description={storable && baseUnitLocked ? STORABLE_LOCKED_TEXT : "Permite registrar existencias de este producto."}
+              checked={storable}
+              disabled={(storable && baseUnitLocked) || pending}
+              onCheckedChange={(c) => start(async () => report(await changeBaseUnitAction(productId, c, baseUnit), c ? "Producto activado para almacén." : "Producto desactivado para almacén."))}
+            />
+          )}
           <h3>Unidad base</h3>
           <p><strong>{baseUnit === "l" ? "L" : baseUnit}</strong> <span className="hint">Cómo se cuenta la existencia.</span></p>
           {canUnits && (

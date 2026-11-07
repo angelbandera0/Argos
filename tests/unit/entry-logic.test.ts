@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { baseAmount, costPerBaseLabel, entryErrorMessage, entrySchema, equivalentLabel } from "@/components/stock/entry-logic";
+import { baseAmount, costPerBaseLabel, entryErrorMessage, entrySchema, entryProductOptions, equivalentLabel } from "@/components/stock/entry-logic";
 
 describe("entry-logic", () => {
   it("convierte a base en milésimas exactas", () => {
@@ -24,5 +24,21 @@ describe("entry-logic", () => {
   it("traduce errores", () => {
     expect(entryErrorMessage("NOT_WAREHOUSE")).toMatch(/almacén/);
     expect(entryErrorMessage("???")).toMatch(/No se pudo/);
+  });
+});
+
+describe("entryProductOptions", () => {
+  const products = [
+    { id: "a", name: "Arroz", active: true },
+    { id: "b", name: "Boniato", active: true },
+    { id: "c", name: "Café", active: false },
+  ];
+  it("lists storable first, then unconfigured active ones", () => {
+    const o = entryProductOptions(products, new Set(["b"]), true);
+    expect(o.map((x) => x.value)).toEqual(["b", "a"]);
+    expect(o[1].unconfigured).toBe(true);
+  });
+  it("hides unconfigured products without configure_units", () => {
+    expect(entryProductOptions(products, new Set(["b"]), false).map((x) => x.value)).toEqual(["b"]);
   });
 });

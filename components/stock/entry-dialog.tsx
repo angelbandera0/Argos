@@ -7,9 +7,9 @@ import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
-import { baseLabel, costPerBaseLabel, equivalentLabel } from "./entry-logic";
+import { baseLabel, costPerBaseLabel, DEFAULT_BASE_UNIT, ENTRY_BASE_UNITS, type EntryProductOption, equivalentLabel, UNCONFIGURED_NOTICE } from "./entry-logic";
 
-export type EntryProduct = { value: string; label: string };
+export type EntryProduct = EntryProductOption;
 export type EntryCurrency = { id: string; code: string };
 
 export function EntryDialog({
@@ -31,7 +31,10 @@ export function EntryDialog({
   onClose: () => void;
 }) {
   const [product, setProduct] = useState(productId ?? "");
-  const [config, setConfig] = useState<EntryConfig | null | undefined>(undefined);
+  const [loaded, setConfig] = useState<EntryConfig | null | undefined>(undefined);
+  const [newBase, setNewBase] = useState(DEFAULT_BASE_UNIT);
+  const unconfigured = !!products.find((p) => p.value === product)?.unconfigured;
+  const config = unconfigured ? { baseUnit: newBase, presentations: [] } : loaded;
   const [unit, setUnit] = useState("base");
   const [amount, setAmount] = useState("");
   const [content, setContent] = useState("");
@@ -40,7 +43,7 @@ export function EntryDialog({
   const [currencyId, setCurrencyId] = useState(currencies[0]?.id ?? "");
 
   useEffect(() => {
-    if (!product) return;
+    if (!product || unconfigured) return;
     let live = true;
     loadEntryConfigAction(product).then((c) => {
       if (!live) return;
@@ -51,7 +54,7 @@ export function EntryDialog({
     return () => {
       live = false;
     };
-  }, [product]);
+  }, [product, unconfigured]);
 
   const presentation = config?.presentations.find((p) => p.name === unit);
   const habitual = presentation?.content ?? 1;
@@ -78,6 +81,14 @@ export function EntryDialog({
             <Field label="Producto" htmlFor="entry-product">
               <Select id="entry-product" name="productId" options={products} value={product} onValueChange={(v) => { setConfig(undefined); setProduct(v ?? ""); }} placeholder="Elige un producto" />
             </Field>
+          )}
+          {unconfigured && (
+            <>
+              <p className="hint">{UNCONFIGURED_NOTICE}</p>
+              <Field label="Unidad base" htmlFor="entry-base-unit">
+                <Select id="entry-base-unit" name="baseUnit" options={ENTRY_BASE_UNITS} value={newBase} onValueChange={(v) => { setNewBase(v ?? DEFAULT_BASE_UNIT); setUnit("base"); }} />
+              </Field>
+            </>
           )}
           {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
           {config && (

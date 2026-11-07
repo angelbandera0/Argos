@@ -56,3 +56,25 @@ const ERRORS: Record<string, string> = {
 };
 
 export const entryErrorMessage = (code?: string) => (code && ERRORS[code]) || "No se pudo guardar. Inténtalo de nuevo.";
+
+export const UNCONFIGURED_HINT = "Sin configurar para almacén";
+export const UNCONFIGURED_NOTICE = "Este producto aún no se almacena. Elige su unidad base; se activará al registrar la entrada.";
+export const DEFAULT_BASE_UNIT = "lb";
+export const ENTRY_BASE_UNITS = ["lb", "kg", "g", "oz", "l", "ml", "u"].map((u) => ({ value: u, label: baseLabel(u) }));
+
+export type EntryProductOption = { value: string; label: string; hint?: string; unconfigured?: boolean };
+
+/** Storable products first; active products not yet storable follow (only offered to those who can configure units). */
+export function entryProductOptions(
+  products: { id: string; name: string; active: boolean }[],
+  storableIds: Set<string>,
+  canConfigure: boolean,
+): EntryProductOption[] {
+  const active = products.filter((p) => p.active);
+  const ready = active.filter((p) => storableIds.has(p.id)).map((p) => ({ value: p.id, label: p.name }));
+  if (!canConfigure) return ready;
+  const pending = active.filter((p) => !storableIds.has(p.id)).map((p) => ({ value: p.id, label: p.name, hint: UNCONFIGURED_HINT, unconfigured: true }));
+  return [...ready, ...pending];
+}
+
+export const STORABLE_LOCKED_TEXT = "No se puede desactivar porque el producto ya tiene movimientos.";
