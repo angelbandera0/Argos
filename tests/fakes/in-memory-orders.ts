@@ -112,7 +112,9 @@ export class InMemoryOrders implements OrderRepository {
 
   async list(companyId: string, filters: OrderFilters, page: { offset: number; limit: number }) {
     const all = this.orders.filter(
-      (o) => o.companyId === companyId && (!filters.status || o.status === filters.status) && (!filters.buyerId || o.buyerId === filters.buyerId),
+      (o) => o.companyId === companyId && (!filters.status || o.status === filters.status) && (!filters.buyerId || o.buyerId === filters.buyerId) &&
+        (!filters.createdFrom || o.createdAt >= filters.createdFrom) &&
+        (!filters.createdTo || o.createdAt < filters.createdTo),
     );
     return { items: all.slice(page.offset, page.offset + page.limit), total: all.length };
   }

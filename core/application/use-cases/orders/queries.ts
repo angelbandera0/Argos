@@ -9,7 +9,7 @@ export function makeListOrders(deps: OrderDeps) {
     const scope = await resolveOrderScope(deps, actor, input);
     const manager = hasOrderSpecial(scope, "build_orders") || hasOrderSpecial(scope, "review_orders");
     if (!manager && !scope.access?.specialPermissions.some((g) => g.permission === "make_purchases")) throw new Forbidden();
-    const filters = { status: input.status, buyerId: manager ? input.buyerId : actor.userId };
+    const filters = { status: input.status, buyerId: manager ? input.buyerId : actor.userId, createdFrom: input.createdFrom, createdTo: input.createdTo };
     return deps.orders.list(scope.companyId, filters, pageOf(input));
   };
 }

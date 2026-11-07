@@ -5,6 +5,8 @@ import { requestBadge } from "@/components/requests/request-logic";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { buttonClass } from "@/components/ui/button-class";
 import { EntityCard } from "@/components/ui/entity-card";
+import { parsePage } from "@/components/ui/page-param";
+import { UrlPager } from "@/components/ui/url-pager";
 import { LocalDateTime } from "@/components/ui/local-date-time";
 import { PageHeader } from "@/components/ui/page-header";
 import { ViewState } from "@/components/ui/view-state";
@@ -22,12 +24,15 @@ const NewLink = () => (
   </Link>
 );
 
-async function RequestsContent() {
+const PAGE_SIZE = 20;
+
+async function RequestsContent({ searchParams }: { searchParams: PageProps<"/solicitudes">["searchParams"] }) {
   const { actor, requests, companyId, canRequest } = await requireRequestUser();
   if (!companyId) return <ViewState kind="empty" entity="solicitudes" title="Elige una compañía arriba para ver sus solicitudes." canCreate={false} />;
+  const page = parsePage((await searchParams).pagina);
   let list;
   try {
-    list = await requests.listRequests(actor, { companyId, pageSize: 50 });
+    list = await requests.listRequests(actor, { companyId, page, pageSize: PAGE_SIZE });
   } catch (e) {
     if (e instanceof Forbidden) return <ViewState kind="forbidden" entity="solicitudes" permission="Solicitudes · Ver" />;
     throw e;
@@ -47,17 +52,17 @@ async function RequestsContent() {
           data={[{ label: "Tienda", value: r.storeName }]}
         />
       ))}
-      {list.total > list.items.length && <p className="hint">Se muestran las {list.items.length} más recientes de {list.total}.</p>}
+      <UrlPager page={page} pageSize={PAGE_SIZE} total={list.total} unit={list.total === 1 ? "solicitud" : "solicitudes"} />
     </div>
   );
 }
 
-export default function RequestsPage() {
+export default function RequestsPage({ searchParams }: PageProps<"/solicitudes">) {
   return (
     <div className="stack">
       <PageHeader title="Solicitudes" description="Lo que pediste al almacén y cómo va cada producto." actions={<Suspense fallback={null}><HeaderAction /></Suspense>} />
       <Suspense fallback={<Loading />}>
-        <RequestsContent />
+        <RequestsContent searchParams={searchParams} />
       </Suspense>
     </div>
   );

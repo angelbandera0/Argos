@@ -186,6 +186,8 @@ describe("queries", () => {
     await s.create(builder, { lines: [store] });
     expect((await s.list(buyer, {})).total).toBe(1);
     expect((await s.list(builder, {})).total).toBe(2);
+    expect((await s.list(builder, { page: 2, pageSize: 1 })).items).toHaveLength(1);
+    expect((await s.list(builder, { createdFrom: "2999-01-01" })).total).toBe(0);
     await expect(s.list(operator("u-none"), {})).rejects.toMatchObject({ name: "Forbidden" });
     await expect(s.get(operator("u-none"), { orderId: "ord-1" })).rejects.toMatchObject({ name: "NotFound" });
   });

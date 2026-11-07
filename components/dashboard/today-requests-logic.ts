@@ -15,7 +15,3 @@ export const STATUS_ORDER: { status: RequestStatus; label: string }[] = [
   { status: "fulfilled", label: "Atendidas" },
   { status: "rejected", label: "Rechazadas" },
 ];
-
-export function countByStatus(items: { status: RequestStatus }[]) {
-  return STATUS_ORDER.map((s) => ({ ...s, count: items.filter((i) => i.status === s.status).length })).filter((s) => s.count > 0);
-}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countByStatus, dayRange } from "@/components/dashboard/today-requests-logic";
+import { STATUS_ORDER, dayRange } from "@/components/dashboard/today-requests-logic";
 
 describe("today requests logic", () => {
   it("covers the local day as [from, to)", () => {
@@ -7,8 +7,7 @@ describe("today requests logic", () => {
     expect(new Date(createdFrom).getTime()).toBe(new Date(2026, 10, 7).getTime());
     expect(new Date(createdTo).getTime()).toBe(new Date(2026, 10, 8).getTime());
   });
-  it("counts by status in fixed order, omitting empty ones", () => {
-    const r = countByStatus([{ status: "fulfilled" }, { status: "new" }, { status: "new" }]);
-    expect(r.map((x) => [x.status, x.count])).toEqual([["new", 2], ["fulfilled", 1]]);
+  it("keeps a fixed status order", () => {
+    expect(STATUS_ORDER[0].status).toBe("new");
   });
 });

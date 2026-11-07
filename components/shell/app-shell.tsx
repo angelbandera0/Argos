@@ -24,6 +24,7 @@ export function AppShell({
   company,
   action,
   bell,
+  indicators,
   children,
 }: {
   nav: NavSection[];
@@ -32,6 +33,7 @@ export function AppShell({
   company?: CompanySelectorProps;
   action?: React.ReactNode;
   bell?: React.ReactNode;
+  indicators?: Record<string, React.ReactNode>;
   children: React.ReactNode;
 }) {
   return (
@@ -45,7 +47,7 @@ export function AppShell({
         {nav.map((section) => (
           <SidebarSection key={section.title} title={section.title}>
             {section.items.map(({ id, available = true, ...item }) => (
-              <SidebarItem key={id} {...item} disabled={!available} />
+              <SidebarItem key={id} {...item} indicator={indicators?.[id]} disabled={!available} />
             ))}
           </SidebarSection>
         ))}

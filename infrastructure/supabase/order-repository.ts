@@ -115,6 +115,8 @@ export function makeOrderRepository(supabase: SupabaseClient): OrderRepository {
       let q = supabase.from("pedidos").select(ORDER_COLS, { count: "exact" }).eq("company_id", companyId);
       if (filters.status) q = q.eq("status", filters.status);
       if (filters.buyerId) q = q.eq("buyer_id", filters.buyerId);
+      if (filters.createdFrom) q = q.gte("created_at", filters.createdFrom);
+      if (filters.createdTo) q = q.lt("created_at", filters.createdTo);
       const { data, error, count } = await q.order("created_at", { ascending: false }).order("id").range(page.offset, page.offset + page.limit - 1);
       fail("list orders", error);
       return { items: await summaries(data as OrderRow[]), total: count ?? 0 };

@@ -61,6 +61,7 @@ export function SidebarItem({
   icon,
   badge,
   dot,
+  indicator,
   active,
   disabled,
 }: {
@@ -69,6 +70,8 @@ export function SidebarItem({
   icon: NavIconName;
   badge?: SidebarBadge;
   dot?: boolean;
+  /** Server-streamed badge or dot rendered after the label. */
+  indicator?: React.ReactNode;
   active?: boolean;
   disabled?: boolean;
 }) {
@@ -89,6 +92,7 @@ export function SidebarItem({
       <span>{label}</span>
       <Badge badge={badge} />
       {dot && <i className="nav-dot" aria-hidden="true" />}
+      {indicator}
     </Link>
   );
 }

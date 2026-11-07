@@ -58,6 +58,9 @@ export interface ReviewLine {
 export interface OrderFilters {
   status?: OrderStatus;
   buyerId?: string;
+  /** Inclusive lower / exclusive upper bound on createdAt (ISO). */
+  createdFrom?: string;
+  createdTo?: string;
 }
 
 /** Reads rely on RLS; writes go through the create_pedido ... adjust_pedido RPCs. */

@@ -3,8 +3,11 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { OrderFilters } from "@/components/orders/order-filters";
 import { OrderTable } from "@/components/orders/order-table";
-import { inRange, orderNumber, parseDateRange, parseOrderStatus } from "@/components/orders/order-logic";
+import { orderNumber, parseDateRange, parseOrderStatus } from "@/components/orders/order-logic";
 import { buttonClass } from "@/components/ui/button-class";
+import { dayBoundsInTimeZone } from "@/components/history/time-zone";
+import { parsePage } from "@/components/ui/page-param";
+import { UrlPager } from "@/components/ui/url-pager";
 import { PageHeader } from "@/components/ui/page-header";
 import { ViewState } from "@/components/ui/view-state";
 import { Forbidden } from "@/core/domain/errors";
@@ -17,6 +20,7 @@ export const instant = false;
 
 export const metadata: Metadata = { title: "Pedidos · Argos" };
 
+const PAGE_SIZE = 20;
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : "");
 
 async function OrdersContent({ searchParams }: { searchParams: PageProps<"/pedidos">["searchParams"] }) {
@@ -28,18 +32,24 @@ async function OrdersContent({ searchParams }: { searchParams: PageProps<"/pedid
   const profiles = canBuild ? await makeUserRepository(supabase).listForCompany(companyId).catch(() => []) : [];
   const names = new Map(profiles.map((p) => [p.id, p.displayName]));
   const buyer = canBuild && names.has(first(sp.comprador)) ? first(sp.comprador) : "";
+  const tz = await userTimeZone();
+  const page = parsePage(sp.pagina);
   let list;
   try {
-    list = await orders.listOrders(actor, { companyId, status, buyerId: buyer || undefined, pageSize: 50 });
+    list = await orders.listOrders(actor, {
+      companyId,
+      status,
+      buyerId: buyer || undefined,
+      createdFrom: range.from ? dayBoundsInTimeZone(range.from, tz.tz).start.toISOString() : undefined,
+      createdTo: range.to ? dayBoundsInTimeZone(range.to, tz.tz).end.toISOString() : undefined,
+      page,
+      pageSize: PAGE_SIZE,
+    });
   } catch (e) {
     if (e instanceof Forbidden) return <ViewState kind="forbidden" entity="pedidos" permission="Pedidos · Ver" />;
     throw e;
   }
-  const tz = await userTimeZone();
-  const day = new Intl.DateTimeFormat("en-CA", { timeZone: tz.tz });
-  const rows = list.items
-    .filter((o) => inRange(day.format(new Date(o.createdAt)), range))
-    .map((o) => ({ id: o.id, number: orderNumber(o.id), status: o.status, buyer: o.buyerId ? (names.get(o.buyerId) ?? "—") : "Sin asignar", lineCount: o.lineCount, createdAt: o.createdAt }));
+  const rows = list.items.map((o) => ({ id: o.id, number: orderNumber(o.id), status: o.status, buyer: o.buyerId ? (names.get(o.buyerId) ?? "—") : "Sin asignar", lineCount: o.lineCount, createdAt: o.createdAt }));
   const filtered = !!(status || buyer || range.from || range.to);
   return (
     <>
@@ -47,7 +57,10 @@ async function OrdersContent({ searchParams }: { searchParams: PageProps<"/pedid
       {rows.length === 0 ? (
         <ViewState kind={filtered ? "no-match" : "empty"} entity="pedidos" text={filtered ? undefined : "Crea el primero desde la bolsa por comprar."} canCreate={false} />
       ) : (
-        <OrderTable rows={rows} />
+        <>
+          <OrderTable rows={rows} />
+          <UrlPager page={page} pageSize={PAGE_SIZE} total={list.total} unit={list.total === 1 ? "pedido" : "pedidos"} />
+        </>
       )}
     </>
   );

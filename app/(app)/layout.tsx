@@ -7,6 +7,7 @@ import { StoreSwitcher } from "@/components/shell/store-switcher";
 import { BellFallback, BellSlot } from "@/components/notifications/bell-slot";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppShell } from "@/components/shell/app-shell";
+import { NAV_SLOTS } from "@/components/shell/nav-slots";
 import { buildNav } from "@/components/shell/nav-config";
 import { readClaims } from "@/infrastructure/supabase/claims";
 import { makeOrg } from "@/infrastructure/supabase/org-factory";
@@ -40,6 +41,7 @@ async function OperatorShell({
   return (
     <AppShell
       bell={bell}
+      indicators={NAV_SLOTS}
       top={
         <div className="op-bar">
           <StoreSwitcher
@@ -75,6 +77,7 @@ async function Shell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       bell={bell}
+      indicators={NAV_SLOTS}
       company={company}
       nav={buildNav({ kind: superadmin ? "superadmin" : "admin" })}
       user={{

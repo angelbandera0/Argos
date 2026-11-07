@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildNav } from "@/components/shell/nav-config";
+import { hasStockAlert, unreadBadge } from "@/components/shell/nav-indicators";
 
 const view = { view: true, create: false, edit: false, delete: false };
 const none = { ...view, view: false };
@@ -29,5 +30,17 @@ describe("buildNav", () => {
 
   it("keeps the superadmin menu minimal", () => {
     expect(ids(buildNav({ kind: "superadmin" }))).toEqual(["inicio", "notificaciones", "administradores", "companias", "historial"]);
+  });
+});
+
+describe("nav indicators", () => {
+  it("shows the unread count, capped at 99+", () => {
+    expect(unreadBadge(0)).toBeUndefined();
+    expect(unreadBadge(3)).toEqual({ kind: "alert", text: "3" });
+    expect(unreadBadge(150)?.text).toBe("99+");
+  });
+  it("flags stock only when something is low or out", () => {
+    expect(hasStockAlert([{ normal: 4, low: 0, out: 0 }])).toBe(false);
+    expect(hasStockAlert([{ normal: 4, low: 0, out: 0 }, { normal: 0, low: 1, out: 0 }])).toBe(true);
   });
 });

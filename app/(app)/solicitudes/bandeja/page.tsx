@@ -7,6 +7,8 @@ import { lineBadge, requestBadge } from "@/components/requests/request-logic";
 import { formatStockQty } from "@/components/stock/stock-list-logic";
 import { EntityCard } from "@/components/ui/entity-card";
 import { LocalDateTime } from "@/components/ui/local-date-time";
+import { parsePage } from "@/components/ui/page-param";
+import { UrlPager } from "@/components/ui/url-pager";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { ViewState } from "@/components/ui/view-state";
@@ -19,6 +21,7 @@ export const instant = false;
 
 export const metadata: Metadata = { title: "Bandeja de solicitudes · Argos" };
 
+const PAGE_SIZE = 20;
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : "");
 
 async function InboxContent({ searchParams }: { searchParams: PageProps<"/solicitudes/bandeja">["searchParams"] }) {
@@ -26,12 +29,13 @@ async function InboxContent({ searchParams }: { searchParams: PageProps<"/solici
   if (!companyId) return <ViewState kind="empty" entity="solicitudes" title="Elige una compañía arriba para ver sus solicitudes." canCreate={false} />;
   const sp = await searchParams;
   const status = parseInboxStatus(sp.estado);
+  const page = parsePage(sp.pagina);
   let locations, list;
   let currentStore = "";
   try {
     locations = await stock.listLocations(actor, { companyId });
     currentStore = locations.some((l) => l.kind === "store" && l.storeId === first(sp.tienda)) ? first(sp.tienda) : "";
-    list = await requests.listRequests(actor, { companyId, status, storeId: currentStore || undefined, pageSize: 20 });
+    list = await requests.listRequests(actor, { companyId, status, storeId: currentStore || undefined, page, pageSize: PAGE_SIZE });
   } catch (e) {
     if (e instanceof Forbidden) return <ViewState kind="forbidden" entity="solicitudes" permission="Solicitudes · Atender" />;
     throw e;
@@ -79,7 +83,7 @@ async function InboxContent({ searchParams }: { searchParams: PageProps<"/solici
           })}
         </section>
       ))}
-      {list.total > details.length && <p className="hint">Se muestran las {details.length} más recientes de {list.total}.</p>}
+      <UrlPager page={page} pageSize={PAGE_SIZE} total={list.total} unit={list.total === 1 ? "solicitud" : "solicitudes"} />
     </>
   );
 }
