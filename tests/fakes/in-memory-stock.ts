@@ -11,6 +11,8 @@ import type {
   StockLine,
   StockRepository,
 } from "@/core/application/ports/stock-repository";
+import type { StockOperations } from "@/core/application/ports/stock-operations";
+import type { WriteOffReason, WriteOffReasonRepository } from "@/core/application/ports/write-off-reason-repository";
 import { RuleViolation } from "@/core/domain/errors";
 import { nameKey } from "@/core/domain/name";
 import { magnitudeOf, type StockStatus, type Unit } from "@/core/domain/stock";
@@ -114,6 +116,9 @@ export class InMemoryStock implements StockRepository {
     if (l) l.minimum = null;
   }
 
+  async getLot(id: string) {
+    return this.lots.find((l) => l.id === id) ?? null;
+  }
   async listLots(productId: string, locationId: string, f: { onlyAvailable: boolean }) {
     return this.lots.filter((l) => l.productId === productId && l.locationId === locationId && (!f.onlyAvailable || l.remaining > 0));
   }
@@ -127,5 +132,62 @@ export class InMemoryStock implements StockRepository {
       .filter((m) => !f.to || new Date(m.createdAt) <= f.to)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     return { items: rows.slice(page.offset, page.offset + page.limit), total: rows.length };
+  }
+}
+
+export class InMemoryReasons implements WriteOffReasonRepository {
+  readonly rows: WriteOffReason[] = [];
+  private seq = 0;
+
+  async list(companyId: string) {
+    return this.rows.filter((r) => r.companyId === companyId).sort((a, b) => a.name.localeCompare(b.name));
+  }
+  async get(id: string) {
+    return this.rows.find((r) => r.id === id) ?? null;
+  }
+  async create(companyId: string, i: { code: string; name: string }) {
+    const r: WriteOffReason = { id: `r${++this.seq}`, companyId, ...i, active: true, standard: false, requiresText: false };
+    this.rows.push(r);
+    return r;
+  }
+  async rename(id: string, name: string) {
+    this.rows.find((r) => r.id === id)!.name = name;
+  }
+  async setActive(id: string, active: boolean) {
+    this.rows.find((r) => r.id === id)!.active = active;
+  }
+  async delete(id: string) {
+    this.rows.splice(this.rows.findIndex((r) => r.id === id), 1);
+  }
+}
+
+type Calls = { [K in keyof StockOperations]: Array<Parameters<StockOperations[K]>[0]> };
+
+export class RecordingOperations implements StockOperations {
+  readonly calls: Calls = { registerInitialEntry: [], registerDirectEntry: [], transfer: [], writeOff: [], adjust: [], registerSurplus: [] };
+
+  async registerInitialEntry(c: Calls["registerInitialEntry"][number]) {
+    this.calls.registerInitialEntry.push(c);
+    return "lot-new";
+  }
+  async registerDirectEntry(c: Calls["registerDirectEntry"][number]) {
+    this.calls.registerDirectEntry.push(c);
+    return "lot-new";
+  }
+  async transfer(c: Calls["transfer"][number]) {
+    this.calls.transfer.push(c);
+    return { movedBase: c.qty, movedUnitQty: c.qty, lots: [] };
+  }
+  async writeOff(c: Calls["writeOff"][number]) {
+    this.calls.writeOff.push(c);
+    return { removedBase: c.qty, lots: [] };
+  }
+  async adjust(c: Calls["adjust"][number]) {
+    this.calls.adjust.push(c);
+    return "mv-new";
+  }
+  async registerSurplus(c: Calls["registerSurplus"][number]) {
+    this.calls.registerSurplus.push(c);
+    return "lot-new";
   }
 }

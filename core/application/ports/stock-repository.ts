@@ -131,6 +131,7 @@ export interface StockRepository {
   deleteMovementUnit(productId: string, id: string): Promise<void>;
   setMinimum(productId: string, locationId: string, minimum: number): Promise<void>;
   clearMinimum(productId: string, locationId: string): Promise<void>;
+  getLot(id: string): Promise<LotView | null>;
   /** Oldest first. */
   listLots(productId: string, locationId: string, filter: { onlyAvailable: boolean }): Promise<LotView[]>;
   /** Newest first. */

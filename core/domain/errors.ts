@@ -28,7 +28,20 @@ export type RuleCode =
   | "LOT_EXCEEDED"
   | "LOT_NOT_FOUND"
   | "INSUFFICIENT_STOCK"
-  | "BASE_UNIT_IN_USE";
+  | "BASE_UNIT_IN_USE"
+  | "DUPLICATE_LOT"
+  | "COST_NOT_ALLOWED"
+  | "CHOOSE_LOT_FORBIDDEN"
+  | "INVALID_UNIT"
+  | "INVALID_REASON"
+  | "REASON_TEXT_REQUIRED"
+  | "NOT_WAREHOUSE"
+  | "NOT_STORE"
+  | "LOCATION_NOT_FOUND"
+  | "PRODUCT_NOT_STORABLE"
+  | "ADJUST_EXCEEDS_LOT"
+  | "INVALID_REVERSES"
+  | "STANDARD_REASON_LOCKED";
 
 export class Forbidden extends Error {
   constructor() {
@@ -66,4 +79,18 @@ export class SessionExpired extends Error {
     super("Session expired");
     this.name = "SessionExpired";
   }
+}
+
+const STOCK_CODES: RuleCode[] = [
+  "INVALID_QUANTITY", "NEGATIVE_QUANTITY", "UNIT_MAGNITUDE_MISMATCH", "INVALID_CONTENT", "QUANTITY_MISMATCH", "LOT_EXCEEDED",
+  "LOT_NOT_FOUND", "INSUFFICIENT_STOCK", "BASE_UNIT_IN_USE", "DUPLICATE_LOT", "COST_NOT_ALLOWED", "CHOOSE_LOT_FORBIDDEN",
+  "INVALID_UNIT", "INVALID_REASON", "REASON_TEXT_REQUIRED", "NOT_WAREHOUSE", "NOT_STORE", "LOCATION_NOT_FOUND",
+  "PRODUCT_NOT_STORABLE", "ADJUST_EXCEEDS_LOT", "INVALID_REVERSES", "STANDARD_REASON_LOCKED", "CODE_TAKEN", "NAME_TAKEN",
+];
+
+/** Maps the textual code the database puts in its error message to a domain error. */
+export function translateStockError(code: string): Error {
+  if (/\bFORBIDDEN\b/.test(code)) return new Forbidden();
+  const found = STOCK_CODES.find((c) => new RegExp(`\\b${c}\\b`).test(code));
+  return found ? new RuleViolation(found) : new Error(code);
 }
