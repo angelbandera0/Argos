@@ -5,6 +5,8 @@ import { useActionState, useState } from "react";
 import { type RoleActionState, saveRoleAction } from "@/app/(app)/roles/actions";
 import type { RoleInput } from "@/core/application/ports/role-repository";
 import type { Module, PermissionSet, SpecialGrant } from "@/core/domain/permissions";
+import { Button } from "@/components/ui/button";
+import { Steps } from "@/components/ui/steps";
 import { Alert } from "@/components/ui/alert";
 import { avatarTone, companyInitials } from "@/components/org/company-avatar";
 import { buttonClass } from "@/components/ui/button-class";
@@ -12,13 +14,13 @@ import { ChoiceCard, ChoicePills } from "@/components/ui/choice-card";
 import { Chip } from "@/components/ui/chip";
 import { Field, Input } from "@/components/ui/field";
 import { FormSection } from "@/components/ui/form-section";
-import { FormShell, FormSubmit } from "@/components/ui/form-shell";
+import { FormShell } from "@/components/ui/form-shell";
 import { Checklist, SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
 import { PermissionMatrix } from "./permission-matrix";
 import { SpecialPermissions } from "./module-permissions";
-import { abilities, checklist, hasAnyPermission, nameError, OPS, pruneSpecials, SESSION_HOURS, sessionSummary } from "./role-form-logic";
+import { checklist, hasAnyPermission, LAST_STEP, nameError, nextStep, OPS, prevStep, pruneSpecials, ROLE_STEPS, SESSION_HOURS, sessionSummary, summaryRows } from "./role-form-logic";
 
-export function RoleForm({
+export function RoleStepper({
   roleId,
   initial,
   companies,
@@ -33,6 +35,8 @@ export function RoleForm({
   const [state, action, pending] = useActionState<RoleActionState, FormData>(saveRoleAction.bind(null, roleId), {});
   const [name, setName] = useState(initial.name);
   const [touched, setTouched] = useState(false);
+  const [step, setStep] = useState(0);
+  const [stepMsg, setStepMsg] = useState<string>();
   const [hours, setHours] = useState(initial.sessionSeconds ? String(initial.sessionSeconds / 3600) : "");
   const [on, setOn] = useState(() => new Set(companies.filter((c) => !initial.excludedCompanyIds.includes(c.id)).map((c) => c.id)));
   const [permissions, setPermissions] = useState(initial.permissions);
@@ -50,6 +54,16 @@ export function RoleForm({
   const nameMsg = touched ? nameError(name) : undefined;
   const noCompany = touched && on.size === 0;
   const chosen = companies.filter((c) => on.has(c.id));
+  const goNext = () => {
+    const r = nextStep(step, name, on.size);
+    setTouched(true);
+    setStepMsg(r.error);
+    setStep(r.step);
+  };
+  const goBack = () => {
+    setStepMsg(undefined);
+    setStep(prevStep(step));
+  };
   const toggleCompany = (id: string, checked: boolean) => {
     const next = new Set(on);
     if (checked) next.add(id);
@@ -62,7 +76,10 @@ export function RoleForm({
       action={action}
       error={state.error}
       onSubmit={(e) => {
-        if (!complete) {
+        if (step < LAST_STEP) {
+          e.preventDefault();
+          goNext();
+        } else if (!complete) {
           e.preventDefault();
           setTouched(true);
         }
@@ -74,28 +91,11 @@ export function RoleForm({
           placeholder="Sin nombre"
           subtitle={sessionSummary(hours)}
           actions={
-            <>
-              <FormSubmit label="Guardar rol" size="lg" pending={pending} disabled={!complete} />
-              <Link className={buttonClass("secondary", "lg")} href="/roles">
-                Cancelar
-              </Link>
-            </>
+            <Link className={buttonClass("secondary", "lg")} href="/roles">
+              Cancelar
+            </Link>
           }
         >
-          <SummaryCard
-            rows={[
-              {
-                label: "Compañías",
-                value: chosen.length ? chosen.map((c) => <Chip key={c.id}>{c.name}</Chip>) : "Ninguna",
-              },
-              ...abilities(permissions, grants).map((a) => ({ label: a.label, value: a.text })),
-            ]}
-          />
-          {grants.some((g) => g.permission === "see_costs") && (
-            <Alert variant="danger" title="Verá costos e importes.">
-              Incluye el valor del inventario, los montos de los pedidos y el costo de cada lote.
-            </Alert>
-          )}
           <Checklist items={items} />
         </SummaryPanel>
       }
@@ -111,6 +111,8 @@ export function RoleForm({
         <input key={g.permission} type="hidden" name={`special.${g.permission}`} value={g.warehouse ? "warehouse" : "on"} />
       ))}
 
+      <Steps steps={ROLE_STEPS} current={step} errorIndex={stepMsg ? step : undefined} aria-label="Pasos del rol" />
+      {step === 0 && (
       <FormSection n={1} title="Datos del rol" description="Cómo se llama y cuánto dura la sesión.">
         <Field label="Nombre" htmlFor="name" hint="Así aparece al asignarlo a un usuario." error={state.nameError ?? nameMsg}>
           <Input
@@ -131,7 +133,8 @@ export function RoleForm({
           Nunca supera el tope de la compañía de la tienda donde se trabaja (máximo 24 horas).
         </span>
       </FormSection>
-
+      )}
+      {step === 1 && (
       <FormSection
         n={2}
         title="Compañías donde vale"
@@ -167,14 +170,52 @@ export function RoleForm({
           </p>
         )}
       </FormSection>
-
+      )}
+      {step === 2 && (
       <FormSection n={3} title="Permisos por módulo" description="Marca lo que este rol puede hacer en cada módulo.">
         <PermissionMatrix value={permissions} onChange={changePermissions} />
       </FormSection>
-
+      )}
+      {step === 3 && (
       <FormSection n={4} title="Permisos especiales" description="Acciones delicadas de cada módulo; requieren «Ver» en ese módulo.">
         <SpecialPermissions permissions={permissions} grants={grants} onGrants={setGrants} />
       </FormSection>
+      )}
+      {step === 4 && (
+      <FormSection n={5} title="Resumen" description="Revisa todo antes de guardar.">
+        <SummaryCard rows={summaryRows({ name, hours, companies: chosen.map((c) => c.name), permissions, grants }).map((r) => ({ label: r.label, value: r.text }))} />
+        {grants.some((g) => g.permission === "see_costs") && (
+          <Alert variant="danger" title="Verá costos e importes.">
+            Incluye el valor del inventario, los montos de los pedidos y el costo de cada lote.
+          </Alert>
+        )}
+        {!complete && (
+          <p className="error-text" role="alert">
+            Completa el nombre y al menos una compañía antes de guardar.
+          </p>
+        )}
+      </FormSection>
+      )}
+
+      {stepMsg && (
+        <p className="error-text" role="alert">
+          {stepMsg}
+        </p>
+      )}
+      <div className="form-shell-actions">
+        {step > 0 && (
+          <Button variant="secondary" onClick={goBack}>
+            Atrás
+          </Button>
+        )}
+        {step < LAST_STEP ? (
+          <Button onClick={goNext}>Siguiente</Button>
+        ) : (
+          <Button type="submit" loading={pending} loadingLabel="Guardando…" disabled={!complete}>
+            {roleId ? "Guardar cambios" : "Crear rol"}
+          </Button>
+        )}
+      </div>
     </FormShell>
   );
 }

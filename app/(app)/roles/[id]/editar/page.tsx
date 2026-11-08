@@ -5,7 +5,7 @@ import { Lock } from "@/components/icons";
 import { Chip } from "@/components/ui/chip";
 import { PageHeader } from "@/components/ui/page-header";
 import { DeleteRoleDialog } from "@/components/roles/delete-role-dialog";
-import { RoleForm } from "@/components/roles/role-form";
+import { RoleStepper } from "@/components/roles/role-stepper";
 import { requireRoleUser } from "../../guard";
 import Loading from "./loading";
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Editar rol · Argos" };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-async function Editor({ params }: { params: PageProps<"/roles/[id]/editar">["params"] }) {
+async function Editor({ params }: { params: PageProps<"/roles/[id]">["params"] }) {
   const { id } = await params;
   if (!UUID.test(id)) notFound();
   const { actor, org, roles } = await requireRoleUser();
@@ -38,12 +38,12 @@ async function Editor({ params }: { params: PageProps<"/roles/[id]/editar">["par
           </>
         }
       />
-      <RoleForm roleId={role.id} companies={companies} initial={role} />
+      <RoleStepper roleId={role.id} companies={companies} initial={role} />
     </div>
   );
 }
 
-export default function EditRolePage(props: PageProps<"/roles/[id]/editar">) {
+export default function EditRolePage(props: PageProps<"/roles/[id]">) {
   return (
     <Suspense fallback={<Loading />}>
       <Editor params={props.params} />

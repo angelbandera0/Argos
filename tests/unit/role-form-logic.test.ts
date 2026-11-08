@@ -88,3 +88,34 @@ describe("role form logic", () => {
     expect(hasAnyPermission({ ...perms, products: NONE, stock: NONE }, g)).toBe(true);
   });
 });
+
+import { LAST_STEP, nextStep, prevStep, ROLE_STEPS, summaryRows } from "@/components/roles/role-form-logic";
+
+describe("role stepper", () => {
+  it("ends on the summary step", () => {
+    expect(ROLE_STEPS[LAST_STEP].title).toBe("Resumen");
+  });
+  it("blocks advancing with errors and keeps the step", () => {
+    expect(nextStep(0, "", 2)).toEqual({ step: 0, error: "Escribe un nombre para el rol." });
+    expect(nextStep(1, "Cajero", 0)).toEqual({ step: 1, error: "Elige al menos una compañía." });
+  });
+  it("advances when valid and clamps the bounds", () => {
+    expect(nextStep(0, "Cajero", 0)).toEqual({ step: 1 });
+    expect(nextStep(2, "", 0)).toEqual({ step: 3 });
+    expect(nextStep(LAST_STEP, "Cajero", 1)).toEqual({ step: LAST_STEP });
+    expect(prevStep(0)).toBe(0);
+    expect(prevStep(3)).toBe(2);
+  });
+  it("summarises what was chosen", () => {
+    const none = { view: false, create: false, edit: false, delete: false };
+    const p = { products: { ...none, view: true }, currencies: none, stock: none, requests: none, orders: none, notifications: none };
+    const rows = summaryRows({ name: " Cajero ", hours: "8", companies: ["A"], permissions: p, grants: [{ permission: "see_costs", warehouse: false }] });
+    expect(rows.slice(0, 3)).toEqual([
+      { label: "Nombre", text: "Cajero" },
+      { label: "Sesión", text: "8 h" },
+      { label: "Compañías", text: "A" },
+    ]);
+    expect(rows).toContainEqual({ label: "Productos", text: "Ver" });
+    expect(rows.at(-1)).toEqual({ label: "Permisos especiales", text: "Ver costos" });
+  });
+});

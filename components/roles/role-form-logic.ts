@@ -163,3 +163,39 @@ export function checklist(name: string, companies: number, hasPerms: boolean): {
     ],
   };
 }
+
+export const ROLE_STEPS = [
+  { title: "Datos", description: "Nombre y sesión" },
+  { title: "Compañías", description: "Dónde vale" },
+  { title: "Permisos", description: "Por módulo" },
+  { title: "Especiales", description: "Acciones delicadas" },
+  { title: "Resumen", description: "Revisar y guardar" },
+];
+
+export const LAST_STEP = ROLE_STEPS.length - 1;
+
+export function stepError(step: number, name: string, companies: number): string | undefined {
+  if (step === 0) return nameError(name);
+  if (step === 1 && companies === 0) return "Elige al menos una compañía.";
+  return undefined;
+}
+
+export function nextStep(step: number, name: string, companies: number): { step: number; error?: string } {
+  const error = stepError(step, name, companies);
+  return error ? { step, error } : { step: Math.min(step + 1, LAST_STEP) };
+}
+
+export const prevStep = (step: number) => Math.max(step - 1, 0);
+
+export function summaryRows(
+  v: { name: string; hours: string; companies: string[]; permissions: Record<Module, PermissionSet>; grants: SpecialGrant[] },
+): { label: string; text: string }[] {
+  const labels = specialLabels(v.grants);
+  return [
+    { label: "Nombre", text: v.name.trim() },
+    { label: "Sesión", text: v.hours ? `${v.hours} h` : "Tope de la compañía" },
+    { label: "Compañías", text: v.companies.length ? v.companies.join(", ") : "Ninguna" },
+    ...abilities(v.permissions, v.grants).map((a) => ({ label: a.label, text: a.text })),
+    { label: "Permisos especiales", text: labels.length ? labels.join(", ") : "Ninguno" },
+  ];
+}

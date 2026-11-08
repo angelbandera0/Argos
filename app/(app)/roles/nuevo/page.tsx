@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/page-header";
-import { RoleForm } from "@/components/roles/role-form";
+import { RoleStepper } from "@/components/roles/role-stepper";
 import { requireRoleUser } from "../guard";
 import Loading from "./loading";
 
@@ -15,7 +15,7 @@ async function Editor() {
   const { actor, org } = await requireRoleUser();
   const companies = (await org.listCompanies(actor)).map((c) => ({ id: c.id, name: c.name, code: c.code }));
   return (
-    <RoleForm
+    <RoleStepper
       roleId={null}
       companies={companies}
       initial={{ name: "", sessionSeconds: null, excludedCompanyIds: [], permissions: { products: NONE, currencies: NONE, stock: NONE, requests: NONE, orders: NONE, notifications: NONE }, specialPermissions: [] }}
