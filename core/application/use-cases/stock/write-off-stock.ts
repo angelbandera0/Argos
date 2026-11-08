@@ -15,7 +15,7 @@ export function makeWriteOffStock(deps: StockOpsDeps) {
     const reason = await deps.reasons.get(input.reasonId);
     if (!reason || reason.companyId !== scope.companyId || !reason.active) throw new RuleViolation("INVALID_REASON");
     const text = reasonText(input.reasonText, reason.requiresText, 1);
-    await planConsumption(deps, scope, location, input);
+    const plan = await planConsumption(deps, scope, location, input);
     return deps.ops.writeOff({
       productId: input.productId,
       locationId: location.id,
@@ -23,7 +23,7 @@ export function makeWriteOffStock(deps: StockOpsDeps) {
       unit: input.unit,
       reasonId: reason.id,
       reasonText: text,
-      picks: input.picks,
+      picks: plan.opsPicks,
       deviationReason: input.deviationReason,
     });
   };

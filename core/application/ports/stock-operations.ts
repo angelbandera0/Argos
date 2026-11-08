@@ -58,5 +58,5 @@ export interface StockOperations {
   adjust(c: { lotId: string; delta: number; reasonText: string }): Promise<string>;
   /** Returns the adjustment id. */
   adjustLotCost(c: { lotId: string; newUnitCost: number; reason: string }): Promise<string>;
-  registerSurplus(c: { productId: string; locationId: string; qty: number; reasonText: string; unitCost?: number | null; currencyId?: string | null }): Promise<string>;
+  registerSurplus(c: { productId: string; locationId: string; qty: number; unit?: string; content?: number | null; reasonText: string; unitCost?: number | null; currencyId?: string | null }): Promise<string>;
 }

@@ -53,7 +53,7 @@ export function pendingBase(picks: LotPick[], baseQty: number): number {
   return (qty(baseQty) - picksTotal(picks)) / 1000;
 }
 
-export type PreviewLot = { id: string; receivedAt: string; remaining: number; unitCost?: { amount: number; currencyId: string } | null };
+export type PreviewLot = { id: string; receivedAt: string; remaining: number; presentation?: { name: string; content: number } | null; unitCost?: { amount: number; currencyId: string } | null };
 
 /** Value moved by an allocation per currency; null when costs are hidden, `unknown` when some lot has no known cost. */
 export function allocationValue(lots: PreviewLot[], allocation: LotPick[]): { byCurrency: { currencyId: string; amount: number }[]; unknown: boolean } | null {
@@ -78,6 +78,7 @@ const ERRORS: Record<string, string> = {
   INVALID_QUANTITY: "La cantidad debe ser mayor que cero.",
   INVALID_UNIT: "Esa unidad no está disponible.",
   INSUFFICIENT_STOCK: "No hay existencias suficientes en el almacén.",
+  INSUFFICIENT_PACKS: "No hay presentaciones completas suficientes.",
   LOT_EXCEEDED: "Un lote no tiene tanta cantidad disponible.",
   LOT_NOT_FOUND: "No encontramos uno de los lotes. Actualiza la lista.",
   DUPLICATE_LOT: "Un mismo lote está repetido.",
@@ -92,7 +93,7 @@ const ERRORS: Record<string, string> = {
 
 export const transferErrorMessage = (code?: string) => (code && ERRORS[code]) || "No se pudo trasladar. Inténtalo de nuevo.";
 
-export type MoveUnitOption = { value: string; label: string; factor: number };
+export type MoveUnitOption = { value: string; label: string; factor: number; kind?: "presentation" | "movement" };
 
 const plainNum = (n: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(n);
 const unitName = (u: string) => (u === "l" ? "L" : u);
@@ -100,11 +101,11 @@ const unitName = (u: string) => (u === "l" ? "L" : u);
 /** What a quantity can be moved in: the base unit, presentations, movement units and the rest of the base unit's family. */
 export function moveUnitOptions(c: { baseUnit: string; presentations: { name: string; content: number }[]; units: { name: string; equivalence: number }[] }): MoveUnitOption[] {
   const base = c.baseUnit as Unit;
-  const sized = (name: string, f: number): MoveUnitOption => ({ value: name, label: `${name} (${plainNum(f)} ${unitName(base)})`, factor: f });
+  const sized = (name: string, f: number, kind: "presentation" | "movement"): MoveUnitOption => ({ value: name, label: `${name} (${plainNum(f)} ${unitName(base)})`, factor: f, kind });
   return [
     { value: "base", label: unitName(base), factor: 1 },
-    ...c.presentations.map((p) => sized(p.name, p.content)),
-    ...c.units.map((u) => sized(u.name, u.equivalence)),
+    ...c.presentations.map((p) => sized(p.name, p.content, "presentation")),
+    ...c.units.map((u) => sized(u.name, u.equivalence, "movement")),
     ...unitsOf(magnitudeOf(base))
       .filter((u) => u !== base)
       .map((u) => ({ value: u, label: unitName(u), factor: unitRatio(u, base) })),
@@ -118,3 +119,27 @@ export function moveEquivalent(options: MoveUnitOption[], unit: string, amount: 
   if (!o || unit === "base" || !(n > 0)) return undefined;
   return `= ${plainNum(Math.round(n * o.factor * 1000) / 1000)} ${unitName(baseUnit)}`;
 }
+
+const countWord = (name: string, n: number) => {
+  const w = name.trim().toLowerCase();
+  return n === 1 ? w : /[aeiouáéíóú]$/.test(w) ? `${w}s` : `${w}es`;
+};
+
+/** «Solo hay 3 sacos completos.» when the request needs more whole packs than the lots hold. */
+export function packShortageMessage(name: string, available: number): string {
+  const complete = /a$/i.test(name.trim()) ? "completas" : "completos";
+  return available === 0 ? `No hay ${countWord(name, 2)} ${complete} disponibles.` : `Solo hay ${available} ${countWord(name, available)} ${complete}.`;
+}
+
+/** «3 sacos del lote a1b2c3d4 (40 lb) + 2 del lote e5f6a7b8 (25 lb) = 170 lb» from packs taken per lot. */
+export function packBreakdown(lots: PreviewLot[], packs: LotPick[], name: string, baseUnit: string): string {
+  const parts = packs.map((p, i) => {
+    const lot = lots.find((l) => l.id === p.lotId);
+    const content = lot?.presentation?.content ?? 0;
+    const head = i === 0 ? `${plainNum(p.qty)} ${countWord(name, p.qty)}` : plainNum(p.qty);
+    return `${head} del lote ${p.lotId.slice(0, 8)} (${plainNum(content)} ${unitName(baseUnit)})`;
+  });
+  const total = packs.reduce((s, p) => s + p.qty * (lots.find((l) => l.id === p.lotId)?.presentation?.content ?? 0), 0);
+  return `${parts.join(" + ")} = ${plainNum(Math.round(total * 1000) / 1000)} ${unitName(baseUnit)}`;
+}
+

@@ -10,7 +10,7 @@ import { LocalDateTime } from "@/components/ui/local-date-time";
 import { Textarea } from "@/components/ui/textarea";
 import type { Unit } from "@/core/domain/stock";
 import { formatStockQty } from "./stock-list-logic";
-import { type LotPick, type PreviewLot, pendingBase, picksFrom, suggestedValues } from "./transfer-logic";
+import { type LotPick, type PreviewLot, packBreakdown, pendingBase, picksFrom, suggestedValues } from "./transfer-logic";
 
 export type LotCurrency = { id: string; code: string };
 export type LotChoice = { picks: LotPick[]; reason: string };
@@ -70,8 +70,9 @@ export function LotPicker({
 
   const shown = valid ? preview : null;
   const fmt = (q: number) => formatStockQty(q, baseUnit as Unit);
-  const pending = shown && choose ? pendingBase(picks, shown.baseQty) : 0;
-  const suggested = new Set(shown?.suggested.map((s) => s.lotId));
+  const pack = shown?.pack;
+  const pending = !shown || !choose ? 0 : pack ? n - picks.reduce((a, p) => a + p.qty, 0) : pendingBase(picks, shown.baseQty);
+  const suggested = new Set((shown?.suggestedPacks ?? shown?.suggested)?.map((s) => s.lotId));
 
   if (!shown) return null;
   return (
@@ -79,25 +80,28 @@ export function LotPicker({
       {shown.error && <Alert variant="danger" compact>{shown.error}</Alert>}
       {!shown.error && (
         <>
-          <p className="hint">Equivale a {fmt(shown.baseQty)}. {choose ? "Lotes elegidos" : "Sale de los lotes más antiguos primero (FIFO)"}:</p>
+          <p className="hint">
+            {pack ? `${packBreakdown(shown.lots, shown.allocationPacks ?? [], pack.name, baseUnit)}.` : `Equivale a ${fmt(shown.baseQty)}.`} {choose ? "Lotes elegidos" : "Sale de los lotes más antiguos primero (FIFO)"}:
+          </p>
           <ul className="stack">
             {shown.lots.map((l) => {
-              const used = shown.allocation.find((a) => a.lotId === l.id)?.qty ?? 0;
+              const used = (pack ? shown.allocationPacks : shown.allocation)?.find((a) => a.lotId === l.id)?.qty ?? 0;
+              const lotPacks = pack?.perLot.find((x) => x.lotId === l.id)?.packs ?? 0;
               const cost = lotMoney(l.unitCost, currencies);
               return (
                 <li key={l.id} className="row">
                   <span className="mono">{l.id.slice(0, 8)}</span>
                   <LocalDateTime value={l.receivedAt} />
-                  <span>Disponible {fmt(l.remaining)}</span>
+                  <span>Disponible {fmt(l.remaining)}{pack && (lotPacks > 0 ? ` (${lotPacks} completos de ${fmt(l.presentation?.content ?? 0)})` : " (no se puede mover por esta presentación)")}</span>
                   {cost && <span>Costo {cost}</span>}
                   {suggested.has(l.id) && <Chip>Sugerido</Chip>}
-                  {choose ? (
+                  {choose && (!pack || lotPacks > 0) ? (
                     <Input
                       aria-label={`Cantidad del lote ${l.id.slice(0, 8)}`}
                       type="number"
                       inputMode="decimal"
                       min={0}
-                      step="any"
+                      step={pack ? 1 : "any"}
                       value={values[l.id] ?? ""}
                       onChange={(e) => {
                         const next = { ...values, [l.id]: e.target.value };
@@ -106,13 +110,13 @@ export function LotPicker({
                       }}
                     />
                   ) : (
-                    used > 0 && <strong>{fmt(used)}</strong>
+                    used > 0 && <strong>{pack ? `${used} ${pack.name.toLowerCase()} (${fmt(shown.allocation.find((a) => a.lotId === l.id)?.qty ?? 0)})` : fmt(used)}</strong>
                   )}
                 </li>
               );
             })}
           </ul>
-          {choose && pending !== 0 && <p className="hint">{pending > 0 ? `Faltan ${fmt(pending)} por asignar.` : `Te pasas por ${fmt(-pending)}.`}</p>}
+          {choose && pending !== 0 && <p className="hint">{pending > 0 ? `Faltan ${pack ? pending : fmt(pending)} por asignar.` : `Te pasas por ${pack ? -pending : fmt(-pending)}.`}</p>}
           {shown.isDeviation && (
             <>
               <Alert variant="warning" compact>No sale del lote más antiguo.</Alert>
@@ -134,7 +138,7 @@ export function LotPicker({
               description="Por defecto sale el lote más antiguo."
               checked={choose}
               onCheckedChange={(c) => {
-                const next = c ? suggestedValues(shown.suggested) : {};
+                const next = c ? suggestedValues(shown.suggestedPacks ?? shown.suggested) : {};
                 setChoose(c);
                 setValues(next);
                 emit(c, next, reason);

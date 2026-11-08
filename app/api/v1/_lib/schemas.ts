@@ -109,6 +109,8 @@ export const schemas = {
     productId: id,
     locationId: id,
     qty: z.number(),
+    unit: z.string().optional(),
+    content: z.number().optional(),
     reasonText: z.string(),
     unitCost: z.number().optional(),
     currencyId: id.optional(),

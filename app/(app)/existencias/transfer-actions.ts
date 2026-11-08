@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { moveUnitOptions, type MoveUnitOption, transferErrorMessage, transferLinesSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
+import { packShortageMessage, moveUnitOptions, type MoveUnitOption, transferErrorMessage, transferLinesSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -21,6 +21,10 @@ export interface TransferPreview {
   suggested: LotPick[];
   allocation: LotPick[];
   isDeviation: boolean;
+  /** Present when asked by presentation: picks and suggestions count packs per lot, and `perLot` the complete packs each lot holds. */
+  pack?: { name: string; available: number; perLot: { lotId: string; packs: number }[] };
+  suggestedPacks?: LotPick[];
+  allocationPacks?: LotPick[];
   error?: string;
 }
 
@@ -45,11 +49,14 @@ export async function previewTransferAction(input: { productId: string; fromLoca
     const r = await stock.previewConsumption(actor, { ...input, locationId: input.fromLocationId });
     return {
       baseQty: r.baseQty,
-      lots: r.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, remaining: l.remaining, unitCost: l.unitCost })),
+      lots: r.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, remaining: l.remaining, presentation: l.presentation, unitCost: l.unitCost })),
       suggested: r.suggested,
       allocation: r.allocation,
       isDeviation: r.isDeviation,
-      error: r.errors?.[0] ? transferErrorMessage(r.errors[0]) : undefined,
+      pack: r.pack ?? undefined,
+      suggestedPacks: r.suggestedPacks,
+      allocationPacks: r.allocationPacks,
+      error: r.errors?.[0] ? (r.errors[0] === "INSUFFICIENT_PACKS" && r.pack ? packShortageMessage(r.pack.name, r.pack.available) : transferErrorMessage(r.errors[0])) : undefined,
     };
   } catch (e) {
     const error = e instanceof Forbidden ? "No tienes permiso para hacer esto." : transferErrorMessage(e instanceof RuleViolation ? e.code : undefined);
@@ -73,7 +80,7 @@ export async function transferStockAction(fromLocationId: string, _prev: Transfe
     for (const [i, l] of lines.entries()) {
       try {
         const r = await stock.previewConsumption(actor, { productId: l.productId, locationId: fromLocationId, qty: l.qty, unit: l.unit, picks: l.picks });
-        if (r.errors?.[0]) return { error: tag(i, transferErrorMessage(r.errors[0])) };
+        if (r.errors?.[0]) return { error: tag(i, r.errors[0] === "INSUFFICIENT_PACKS" && r.pack ? packShortageMessage(r.pack.name, r.pack.available) : transferErrorMessage(r.errors[0])) };
       } catch (e) {
         return fail(e, i);
       }

@@ -83,6 +83,7 @@ export function entryProductOptions(
 export const STORABLE_LOCKED_TEXT = "No se puede desactivar porque el producto ya tiene movimientos.";
 
 export const UNIT_PREFIX = "unit:";
+export const MOVEMENT_PREFIX = "mov:";
 export const NEW_PRESENTATION = "new";
 export const BULK = "bulk";
 
@@ -115,7 +116,10 @@ export const resolveBase = (configBase: string | undefined, unit: string): strin
 export const deriveBaseUnit = (bulk: boolean, bulkUnit?: string, contentUnit?: string): string | undefined =>
   (bulk ? bulkUnit : contentUnit) || undefined;
 
-export const familyOptions = (base: string): SelectOption[] => family(base).map((u) => ({ value: u, label: baseLabel(u) }));
+export const familyOptions = (base: string, movement: { name: string; equivalence: number }[] = []): SelectOption[] => [
+  ...family(base).map((u) => ({ value: u, label: baseLabel(u) })),
+  ...movement.map((m) => ({ value: MOVEMENT_PREFIX + m.name, label: `${m.name} (${fmt(m.equivalence)} ${baseLabel(base)})` })),
+];
 
 function familyUnit(unit: string, base: string): Unit {
   if (!family(base).includes(unit as Unit)) throw new RuleViolation("INVALID_UNIT");

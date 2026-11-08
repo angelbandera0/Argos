@@ -1,7 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { deriveBaseUnit, entryErrorMessage, entrySchema, BULK, fromFamilyUnit, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
+import { deriveBaseUnit, entryErrorMessage, entrySchema, BULK, fromFamilyUnit, MOVEMENT_PREFIX, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
+import { mul, qty as domainQty, toNumber } from "@/core/domain/stock";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -12,6 +13,7 @@ export interface EntryActionState {
 export interface EntryConfig {
   baseUnit: string;
   presentations: { name: string; content: number }[];
+  units: { name: string; equivalence: number }[];
   canConfigure: boolean;
 }
 
@@ -21,7 +23,7 @@ export async function loadEntryConfigAction(productId: string): Promise<EntryCon
   const { actor, stock, can } = await requireStockUser();
   try {
     const c = await stock.getProductStockConfig(actor, { productId });
-    return c.storable ? { baseUnit: c.baseUnit, presentations: c.presentations.filter((p) => p.active).map((p) => ({ name: p.name, content: p.content })), canConfigure: can("configure_units") } : null;
+    return c.storable ? { baseUnit: c.baseUnit, presentations: c.presentations.filter((p) => p.active).map((p) => ({ name: p.name, content: p.content })), units: c.movementUnits.filter((u) => u.active).map((u) => ({ name: u.name, equivalence: u.equivalence })), canConfigure: can("configure_units") } : null;
   } catch {
     return null;
   }
@@ -56,7 +58,11 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
     if (d.unit === BULK) {
       const u = d.bulkUnit || config.baseUnit;
       unit = "base";
-      if (u !== config.baseUnit) qty = fromFamilyUnit(UNIT_PREFIX + u, config.baseUnit, d.qty).qty;
+      const moved = u.startsWith(MOVEMENT_PREFIX) ? config.movementUnits.find((m) => m.active && m.name === u.slice(MOVEMENT_PREFIX.length)) : undefined;
+      if (u.startsWith(MOVEMENT_PREFIX)) {
+        if (!moved) return { error: entryErrorMessage("INVALID_UNIT") };
+        qty = toNumber(mul(domainQty(d.qty), moved.equivalence));
+      } else if (u !== config.baseUnit) qty = fromFamilyUnit(UNIT_PREFIX + u, config.baseUnit, d.qty).qty;
     } else {
       if (!d.contentQty || !d.contentUnit) return { error: entryErrorMessage("INVALID_INPUT") };
       const entered = newPresentationContent(d.contentQty, d.contentUnit, config.baseUnit);

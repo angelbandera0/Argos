@@ -106,6 +106,10 @@ export function SurplusDialog({ locationId, products, productId, costs, currenci
   const [config, setConfig] = useProductConfig(product);
   const [currency, setCurrency] = useState(currencies[0]?.id ?? "");
   const base = config?.baseUnit ?? "u";
+  const [unit, setUnit] = useState("base");
+  const [amount, setAmount] = useState("");
+  const units = (config?.options ?? [{ value: "base", label: baseLabel(base), factor: 1 }]).filter((o) => o.kind !== "movement");
+  const presentation = units.find((o) => o.value === unit && o.kind === "presentation");
   return (
     <FormDialog<OpActionState>
       title="Registrar sobrante"
@@ -117,12 +121,19 @@ export function SurplusDialog({ locationId, products, productId, costs, currenci
     >
       {(state) => (
         <>
-          <ProductField id="sp-product" productId={productId} products={products} value={product} onChange={(v) => { setConfig(undefined); setProduct(v); }} />
+          <ProductField id="sp-product" productId={productId} products={products} value={product} onChange={(v) => { setConfig(undefined); setProduct(v); setUnit("base"); setAmount(""); }} />
           {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
           {config && (
-            <Field label={`Cantidad (${base === "l" ? "L" : base})`} htmlFor="sp-qty">
-              <Input id="sp-qty" name="qty" type="number" inputMode="decimal" min={0} step="any" required />
-            </Field>
+            <>
+              <Field label="Cantidad" htmlFor="sp-qty">
+                <QuantityPicker id="sp-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} equivalent={moveEquivalent(units, unit, amount, base)} onValueChange={setAmount} onUnitChange={setUnit} />
+              </Field>
+              {presentation && (
+                <Field label="Contenido real" htmlFor="sp-content" optional hint={`Si difiere del habitual (${presentation?.label ?? ""}), se guarda solo en este lote, en ${baseLabel(base)}.`}>
+                  <Input key={unit} id="sp-content" name="content" type="number" inputMode="decimal" min={0} step="any" />
+                </Field>
+              )}
+            </>
           )}
           {config && costs && (
             <>

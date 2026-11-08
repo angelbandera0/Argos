@@ -16,14 +16,14 @@ export function makeTransferStock(deps: StockOpsDeps) {
     requireDo(scope, "transfer", from);
     if (from.kind !== "warehouse") throw new RuleViolation("NOT_WAREHOUSE");
     if (to.kind !== "store") throw new RuleViolation("NOT_STORE");
-    await planConsumption(deps, scope, from, input);
+    const plan = await planConsumption(deps, scope, from, input);
     return deps.ops.transfer({
       productId: input.productId,
       fromLocationId: from.id,
       toLocationId: to.id,
       qty: input.qty,
       unit: input.unit,
-      picks: input.picks,
+      picks: plan.opsPicks,
       deviationReason: input.deviationReason,
     });
   };

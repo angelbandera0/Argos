@@ -22,8 +22,8 @@ insert into product_presentations (company_id, product_id, name, content) values
   ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000e1', 'Saco', 40);
 
 select tests.authenticate_as((select v from ctx where k = 'ana'));
-select public.register_initial_entry('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), 3, 'saco', 40);
-select public.register_initial_entry('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), 4, 'saco', 25);
+select public.register_initial_entry('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), 3, 'saco', 40, p_received => current_date - 2);
+select public.register_initial_entry('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), 4, 'saco', 25, p_received => current_date - 1);
 select public.register_surplus('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), 7, 'Conteo suelto');
 
 select is((public.register_transfer('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), (select v from ctx where k = 'l1'), 4, 'saco'))->>'moved_base', '145.000', '4 sacks = 3 x 40 + 1 x 25 by each lot content');

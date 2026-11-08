@@ -7,7 +7,7 @@ import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
-import { ALL_UNIT_OPTIONS, baseLabel, BULK, costPerPresentationLabel, DEFAULT_BASE_UNIT, type EntryProductOption, entryFactor, entrySummary, familyOptions, NEW_PRESENTATION, presentationOptions, quantityLabel, resolveBase } from "./entry-logic";
+import { ALL_UNIT_OPTIONS, baseLabel, BULK, costPerPresentationLabel, DEFAULT_BASE_UNIT, type EntryProductOption, entryFactor, entrySummary, familyOptions, MOVEMENT_PREFIX, NEW_PRESENTATION, presentationOptions, quantityLabel, resolveBase } from "./entry-logic";
 
 export type EntryProduct = EntryProductOption;
 export type EntryCurrency = { id: string; code: string };
@@ -33,7 +33,7 @@ export function EntryDialog({
   const [product, setProduct] = useState(productId ?? "");
   const [loaded, setConfig] = useState<EntryConfig | null | undefined>(undefined);
   const unconfigured = !!products.find((p) => p.value === product)?.unconfigured;
-  const config = unconfigured ? { baseUnit: undefined, presentations: [], canConfigure: true } : loaded;
+  const config = unconfigured ? { baseUnit: undefined, presentations: [], units: [], canConfigure: true } : loaded;
   const [presentation, setPresentation] = useState(BULK);
   const [amount, setAmount] = useState("");
   const [unitSel, setUnitSel] = useState<string | null>(null);
@@ -64,11 +64,13 @@ export function EntryDialog({
   const factor = entryFactor(bulk, contentSel === null && existing ? base : unit, contentQty, base);
   const name = isNew ? newName : presentation;
   const options = presentationOptions(config?.presentations ?? [], !!config?.canConfigure);
-  const unitOptions = config?.baseUnit ? familyOptions(config.baseUnit) : ALL_UNIT_OPTIONS;
+  const unitOptions = config?.baseUnit ? familyOptions(config.baseUnit, config.units ?? []) : ALL_UNIT_OPTIONS;
   const changePresentation = (v: string) => { setPresentation(v); setUnitSel(null); setContentSel(null); };
   const currency = currencies.find((c) => c.id === currencyId)?.code ?? "";
   const showCost = costs && !!config;
-  const summary = entrySummary(bulk, amount, name, contentQty, contentUnit, base);
+  const movement = bulk && unit.startsWith(MOVEMENT_PREFIX) ? config?.units.find((m) => MOVEMENT_PREFIX + m.name === unit) : undefined;
+  const movedQty = Number(amount.replace(",", ".")) * (movement?.equivalence ?? 0);
+  const summary = movement ? (movedQty > 0 ? `= ${new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(movedQty)} ${baseLabel(base)}` : undefined) : entrySummary(bulk, amount, name, contentQty, contentUnit, base);
   const title = kind === "initial" ? "Entrada inicial" : "Entrada directa a tienda";
 
   return (

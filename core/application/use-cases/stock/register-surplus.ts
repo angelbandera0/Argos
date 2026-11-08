@@ -7,7 +7,7 @@ import { loadLocation, scopeOfProduct } from "./shared";
 export function makeRegisterSurplus(deps: StockOpsDeps) {
   return async (
     actor: Actor,
-    input: { productId: string; locationId: string; qty: number; reasonText: string; unitCost?: number; currencyId?: string },
+    input: { productId: string; locationId: string; qty: number; unit?: string; content?: number; reasonText: string; unitCost?: number; currencyId?: string },
   ): Promise<string> => {
     const scope = await scopeOfProduct(deps, actor, input.productId);
     const location = await loadLocation(deps, scope, input.locationId);
@@ -17,6 +17,6 @@ export function makeRegisterSurplus(deps: StockOpsDeps) {
     const amount = positiveQty(input.qty);
     const text = reasonText(input.reasonText, true)!;
     const unitCost = costOf(actor, scope, input);
-    return deps.ops.registerSurplus({ productId: input.productId, locationId: location.id, qty: toNumber(amount), reasonText: text, unitCost, currencyId: input.currencyId ?? null });
+    return deps.ops.registerSurplus({ productId: input.productId, locationId: location.id, qty: toNumber(amount), unit: input.unit, content: input.content ?? null, reasonText: text, unitCost, currencyId: input.currencyId ?? null });
   };
 }

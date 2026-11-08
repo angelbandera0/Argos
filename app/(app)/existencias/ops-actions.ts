@@ -101,11 +101,11 @@ export async function loadCostAdjustmentsAction(lotId: string): Promise<CostAdju
 }
 
 export async function registerSurplusAction(locationId: string, _prev: OpActionState, f: FormData): Promise<OpActionState> {
-  const p = surplusSchema.safeParse({ productId: text(f, "productId"), qty: text(f, "qty"), text: text(f, "text"), unitCost: text(f, "unitCost"), currencyId: text(f, "currencyId") });
+  const p = surplusSchema.safeParse({ productId: text(f, "productId"), qty: text(f, "qty"), unit: text(f, "unit") || undefined, content: text(f, "content"), text: text(f, "text"), unitCost: text(f, "unitCost"), currencyId: text(f, "currencyId") });
   if (!p.success) return INVALID;
   const d = p.data;
   return run(({ actor, stock, costs }) =>
-    stock.registerSurplus(actor, { productId: d.productId, locationId, qty: d.qty, reasonText: d.text, ...(costs && d.unitCost !== undefined && d.currencyId ? { unitCost: d.unitCost, currencyId: d.currencyId } : {}) }),
+    stock.registerSurplus(actor, { productId: d.productId, locationId, qty: d.qty, unit: d.unit, content: d.content, reasonText: d.text, ...(costs && d.unitCost !== undefined && d.currencyId ? { unitCost: d.unitCost, currencyId: d.currencyId } : {}) }),
   );
 }
 

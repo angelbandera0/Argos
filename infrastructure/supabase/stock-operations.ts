@@ -68,6 +68,8 @@ export function makeStockOperations(supabase: SupabaseClient): StockOperations {
         p_product: c.productId,
         p_location: c.locationId,
         p_qty: c.qty,
+        p_unit: c.unit ?? "base",
+        p_content: c.content ?? null,
         p_reason_text: c.reasonText,
         p_unit_cost: c.unitCost ?? null,
         p_currency: c.currencyId ?? null,

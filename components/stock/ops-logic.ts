@@ -27,6 +27,8 @@ export const adjustSchema = z.object({
 export const surplusSchema = z.object({
   productId: z.string().min(1),
   qty: positive,
+  unit: z.string().optional(),
+  content: z.preprocess(num, z.number().finite().positive().optional()),
   text: reasonText,
   unitCost: z.preprocess(num, z.number().finite().min(0).optional()),
   currencyId: z.string().optional(),
