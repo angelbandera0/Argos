@@ -33,7 +33,7 @@ select is((public.register_transfer('00000000-0000-0000-0000-0000000000e1', (sel
 select is((select count(*)::int from stock_movements where type = 'transfer_in' and asked_unit = 'Saco'), 1, 'the entry side keeps the asked unit');
 select is((public.register_transfer('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), (select v from ctx where k = 'l1'), 1, 'base'))->>'moved_base', '1.000', 'base keeps working');
 select is((select count(*)::int from stock_movements where type = 'transfer_out' and qty_delta = -1 and asked_qty is not null), 0, 'base leaves no asked unit');
-select throws_ok($$select public.register_transfer('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), (select v from ctx where k = 'l1'), 1000, 'saco')$$, 'P0001', 'INSUFFICIENT_STOCK', 'more than there is');
+select throws_ok($$select public.register_transfer('00000000-0000-0000-0000-0000000000e1', (select v from ctx where k = 'lw'), (select v from ctx where k = 'l1'), 1000, 'saco')$$, 'P0001', 'INSUFFICIENT_PACKS', 'more than there is');
 
 select tests.clear_auth();
 select * from finish();
