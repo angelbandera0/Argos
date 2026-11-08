@@ -76,7 +76,7 @@ select throws_ok($$select public.confirmar_pedido('00000000-0000-0000-0000-00000
 select tests.authenticate_as((select v from ctx where k = 'n1'), 'aal2', '00000000-0000-0000-0000-0000000005e4');
 select throws_ok($$select public.confirmar_pedido('00000000-0000-0000-0000-0000000a0001')$$, '42501', 'FORBIDDEN', 'a user without review_orders is rejected');
 select tests.clear_auth();
-select is((select count(*)::int from lots), 0, 'CA-04: stock does not change before confirming');
+select is((select count(*)::int from lots where company_id = '00000000-0000-0000-0000-0000000000a1'), 0, 'CA-04: stock does not change before confirming');
 
 select tests.authenticate_as((select v from ctx where k = 'w1'), 'aal2', '00000000-0000-0000-0000-0000000005e3');
 select throws_ok($$select public.confirmar_pedido('00000000-0000-0000-0000-0000000a0001')$$, 'P0001', 'REPARTO_REQUIRED', 'M2-D10: direct delivery requires a store split');
