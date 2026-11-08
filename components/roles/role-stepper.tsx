@@ -100,6 +100,7 @@ export function RoleStepper({
         </SummaryPanel>
       }
     >
+      <input type="hidden" name="name" value={name} />
       <input type="hidden" name="hours" value={hours} />
       {chosen.map((c) => (
         <input key={c.id} type="hidden" name="company" value={c.id} />
@@ -117,7 +118,6 @@ export function RoleStepper({
         <Field label="Nombre" htmlFor="name" hint="Así aparece al asignarlo a un usuario." error={state.nameError ?? nameMsg}>
           <Input
             id="name"
-            name="name"
             maxLength={80}
             autoComplete="off"
             placeholder="Ej. Cajero, Almacenero"
