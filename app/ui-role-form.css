@@ -21,3 +21,6 @@
 .ui-admin-only .ui-role-chips { margin-top: var(--space-2-5); }
 .ui-company-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 @media (max-width: 639px) { .ui-company-grid { grid-template-columns: 1fr; } }
+.ui-special-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3) var(--space-5); flex-wrap: wrap; }
+.ui-special-row > :first-child { flex: 1 1 18rem; min-width: 0; }
+.ui-special-warehouse { flex: 0 0 auto; }

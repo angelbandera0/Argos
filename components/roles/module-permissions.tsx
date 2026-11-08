@@ -42,7 +42,7 @@ export function SpecialPermissions({ permissions, grants, onGrants }: Omit<Props
           {m.specials.map((s) => {
             const grant = grants.find((g) => g.permission === s.key);
             return (
-              <div key={s.key} className="stack">
+              <div key={s.key} className="ui-special-row">
                 <Switch
                   label={s.label}
                   description={s.description}
@@ -52,8 +52,9 @@ export function SpecialPermissions({ permissions, grants, onGrants }: Omit<Props
                 />
                 {grant && s.scoped && (
                   <Switch
+                    className="ui-special-warehouse"
                     label="Almacén general"
-                    description="Además de las tiendas, vale en el almacén general."
+                    title="Además de las tiendas, vale en el almacén general."
                     checked={grant.warehouse}
                     onCheckedChange={(on) => onGrants(setWarehouse(grants, s.key, on))}
                   />
