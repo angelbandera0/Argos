@@ -13,6 +13,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Unit } from "@/core/domain/stock";
 import { baseLabel } from "./entry-logic";
+import { moveEquivalent } from "./transfer-logic";
 import { adjustBounds, adjustDeltaError } from "./ops-logic";
 import { formatStockQty } from "./stock-list-logic";
 
@@ -58,7 +59,7 @@ export function WriteOffDialog({ locationId, products, productId, canChooseLot, 
     };
   }, []);
   const reason = reasons?.find((r) => r.id === reasonId);
-  const units = [{ value: "base", label: baseLabel(config?.baseUnit ?? "u") }, ...(config?.units ?? []).map((u) => ({ value: u, label: u }))];
+  const units = config?.options ?? [{ value: "base", label: baseLabel(config?.baseUnit ?? "u"), factor: 1 }];
 
   return (
     <FormDialog<OpActionState>
@@ -76,7 +77,7 @@ export function WriteOffDialog({ locationId, products, productId, canChooseLot, 
           {config && (
             <>
               <Field label="Cantidad" htmlFor="wo-qty">
-                <QuantityPicker id="wo-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} onValueChange={setAmount} onUnitChange={setUnit} />
+                <QuantityPicker id="wo-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} equivalent={moveEquivalent(units, unit, amount, config?.baseUnit ?? "u")} onValueChange={setAmount} onUnitChange={setUnit} />
               </Field>
               <LotPicker key={product} id="wo" productId={product} locationId={locationId} amount={amount} unit={unit} baseUnit={config.baseUnit} canChooseLot={canChooseLot} currencies={currencies} onChange={setChoice} />
               <input type="hidden" name="picks" value={choice.picks.length ? JSON.stringify(choice.picks) : ""} />

@@ -20,7 +20,7 @@ import { setup } from "./catalog-setup";
 
 const money = (amount: number) => ({ amount, currencyId: "mxn" });
 const lotBase = { origin: "purchase", sourceLotId: null, capturedUnit: "lb", content: 1, presentation: null, receivedAt: "2026-01-01" };
-const mvBase = { capturedUnit: "lb", reasonCode: null, reasonText: null, documentType: null, documentId: null, reversesId: null, actorId: null };
+const mvBase = { capturedUnit: "lb", askedQty: null, askedUnit: null, reasonCode: null, reasonText: null, documentType: null, documentId: null, reversesId: null, actorId: null };
 
 /**
  * Locations: w1 (c1 warehouse), w2 (c2), and one store location per store (l-t-u-view, l-t-u-all,

@@ -46,6 +46,8 @@ type MovementRow = {
   qty_delta: number | string;
   captured_qty: number | string;
   captured_unit: string;
+  asked_qty: number | string | null;
+  asked_unit: string | null;
   reason_code: string | null;
   reason_text: string | null;
   document_type: string | null;
@@ -61,7 +63,7 @@ type CostRow = { unit_cost: number | string | null; currency_id: string | null }
 
 const LOT_COLS = "id, product_id, location_id, origin, source_lot_id, received_at, initial_qty, remaining, captured_qty, captured_unit, content, presentation_name, presentation_content";
 const MOVEMENT_COLS =
-  "id, type, qty_delta, captured_qty, captured_unit, reason_code, reason_text, document_type, document_id, reverses_id, actor_id, created_at, lot_id, product_id, location_id";
+  "id, type, qty_delta, captured_qty, captured_unit, asked_qty, asked_unit, reason_code, reason_text, document_type, document_id, reverses_id, actor_id, created_at, lot_id, product_id, location_id";
 const ITEM_COLS = { product_presentations: "id, name, content, active", product_movement_units: "id, name, equivalence, active" } as const;
 const STATUSES: StockStatus[] = ["normal", "low", "out"];
 
@@ -335,6 +337,8 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
           qtyDelta: Number(r.qty_delta),
           capturedQty: Number(r.captured_qty),
           capturedUnit: r.captured_unit,
+          askedQty: r.asked_qty === null ? null : Number(r.asked_qty),
+          askedUnit: r.asked_unit,
           reasonCode: r.reason_code,
           reasonText: r.reason_text,
           documentType: r.document_type,

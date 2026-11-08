@@ -21,7 +21,7 @@ import { formatStockQty } from "./stock-list-logic";
 
 type Money = { amount: number; currencyId: string } | null | undefined;
 export type LotRow = { id: string; receivedAt: string; initialQty: number; remaining: number; origin: string; unitCost: Money; presentation: { entered: string; remaining: string } | null };
-export type MovementRow = { id: string; createdAt: string; type: string; qtyDelta: number; reason: string | null; unitCost: Money };
+export type MovementRow = { id: string; createdAt: string; type: string; qtyDelta: number; asked: string | null; reason: string | null; unitCost: Money };
 type Currencies = Record<string, { code: string; decimals: number }>;
 const FALLBACK = { code: "", decimals: 2 };
 
@@ -80,7 +80,13 @@ export function ProductDetailTabs({
   const movColumns: Column<MovementRow>[] = [
     { id: "date", header: "Fecha", cell: (r) => <LocalDateTime value={r.createdAt} /> },
     { id: "type", header: "Tipo", cell: (r) => movementTypeLabel(r.type) },
-    { id: "qty", header: "Cantidad", align: "end", cell: (r) => <span className="ui-money-value">{signedQty(r.qtyDelta, formatStockQty(r.qtyDelta, unit))}</span> },
+    { id: "qty", header: "Cantidad", align: "end", cell: (r) => (
+        <span className="ui-prod-text">
+          <span className="ui-money-value">{signedQty(r.qtyDelta, formatStockQty(r.qtyDelta, unit))}</span>
+          {r.asked && <span className="ui-prod-desc">{r.asked}</span>}
+        </span>
+      ),
+    },
     { id: "reason", header: "Motivo", cell: (r) => r.reason ?? "" },
     ...(costs ? [{ id: "cost", header: "Costo unitario", align: "end", cell: (r) => cost(r.unitCost) } satisfies Column<MovementRow>] : []),
   ];

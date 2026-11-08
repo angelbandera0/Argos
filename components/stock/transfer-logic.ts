@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { add, qty, type Qty } from "@/core/domain/stock";
+import { add, magnitudeOf, qty, unitRatio, unitsOf, type Qty, type Unit } from "@/core/domain/stock";
 
 const num = (v: unknown) => (typeof v === "string" ? (v.trim() === "" ? undefined : Number(v.replace(",", "."))) : v);
 const pickSchema = z.object({ lotId: z.string().min(1), qty: z.number().finite().positive() });
@@ -91,3 +91,30 @@ const ERRORS: Record<string, string> = {
 };
 
 export const transferErrorMessage = (code?: string) => (code && ERRORS[code]) || "No se pudo trasladar. Inténtalo de nuevo.";
+
+export type MoveUnitOption = { value: string; label: string; factor: number };
+
+const plainNum = (n: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(n);
+const unitName = (u: string) => (u === "l" ? "L" : u);
+
+/** What a quantity can be moved in: the base unit, presentations, movement units and the rest of the base unit's family. */
+export function moveUnitOptions(c: { baseUnit: string; presentations: { name: string; content: number }[]; units: { name: string; equivalence: number }[] }): MoveUnitOption[] {
+  const base = c.baseUnit as Unit;
+  const sized = (name: string, f: number): MoveUnitOption => ({ value: name, label: `${name} (${plainNum(f)} ${unitName(base)})`, factor: f });
+  return [
+    { value: "base", label: unitName(base), factor: 1 },
+    ...c.presentations.map((p) => sized(p.name, p.content)),
+    ...c.units.map((u) => sized(u.name, u.equivalence)),
+    ...unitsOf(magnitudeOf(base))
+      .filter((u) => u !== base)
+      .map((u) => ({ value: u, label: unitName(u), factor: unitRatio(u, base) })),
+  ];
+}
+
+/** «= 200 lb» under the quantity; undefined for the base unit or an empty amount. */
+export function moveEquivalent(options: MoveUnitOption[], unit: string, amount: string, baseUnit: string): string | undefined {
+  const o = options.find((x) => x.value === unit);
+  const n = Number(amount.replace(",", "."));
+  if (!o || unit === "base" || !(n > 0)) return undefined;
+  return `= ${plainNum(Math.round(n * o.factor * 1000) / 1000)} ${unitName(baseUnit)}`;
+}

@@ -8,6 +8,10 @@ import { nameKey, normalizeName } from "@/core/domain/name";
 import {
   allocateChosen,
   capture,
+  convertUnits,
+  magnitudeOf,
+  unitsOf,
+  type Unit,
   isFifoDeviation,
   qty,
   suggestFifo,
@@ -63,8 +67,11 @@ export async function resolveConsumption(deps: StockOpsDeps, i: { productId: str
   let baseQty = amount;
   if (key !== "base") {
     const unit = config.movementUnits.find((u) => u.active && nameKey(u.name) === key);
-    if (!unit) throw new RuleViolation("INVALID_UNIT");
-    baseQty = capture(amount, { name: unit.name, equivalence: qty(unit.equivalence) }).base;
+    const presentation = config.presentations.find((p) => p.active && nameKey(p.name) === key);
+    if (unit) baseQty = capture(amount, { name: unit.name, equivalence: qty(unit.equivalence) }).base;
+    else if (presentation) baseQty = capture(amount, { name: presentation.name, content: qty(presentation.content) }).base;
+    else if (unitsOf(magnitudeOf(config.baseUnit)).includes(key as Unit)) baseQty = convertUnits(i.qty, key as Unit, config.baseUnit);
+    else throw new RuleViolation("INVALID_UNIT");
   }
   const views = await deps.stock.listLots(i.productId, location.id, { onlyAvailable: true });
   return { baseQty, views };

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { transferErrorMessage, transferLinesSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
+import { moveUnitOptions, type MoveUnitOption, transferErrorMessage, transferLinesSchema, type LotPick, type PreviewLot } from "@/components/stock/transfer-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -12,6 +12,7 @@ export interface TransferActionState {
 export interface TransferConfig {
   baseUnit: string;
   units: string[];
+  options: MoveUnitOption[];
 }
 
 export interface TransferPreview {
@@ -29,7 +30,10 @@ export async function loadTransferConfigAction(productId: string): Promise<Trans
   const { actor, stock } = await requireStockUser();
   try {
     const c = await stock.getProductStockConfig(actor, { productId });
-    return c.storable ? { baseUnit: c.baseUnit, units: c.movementUnits.filter((u) => u.active).map((u) => u.name) } : null;
+    return c.storable ? { baseUnit: c.baseUnit, units: c.movementUnits.filter((u) => u.active).map((u) => u.name),
+          options: moveUnitOptions({ baseUnit: c.baseUnit, presentations: c.presentations.filter((p) => p.active), units: c.movementUnits.filter((u) => u.active) }),
+        }
+      : null;
   } catch {
     return null;
   }

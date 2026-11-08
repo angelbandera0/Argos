@@ -48,6 +48,8 @@ export interface MovementView {
   qtyDelta: number;
   capturedQty: number;
   capturedUnit: string;
+  askedQty: number | null;
+  askedUnit: string | null;
   reasonCode: string | null;
   reasonText: string | null;
   documentType: string | null;

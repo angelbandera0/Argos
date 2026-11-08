@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
 import { averageCost, formatStockQty, lotsValue, minimumLabel, parsePage } from "@/components/stock/stock-list-logic";
-import { lotPresentation, presentationStock } from "@/components/stock/presentation-logic";
+import { lotPresentation, movementAsked, presentationStock } from "@/components/stock/presentation-logic";
 import { SurplusButton, WriteOffButton } from "@/components/stock/ops-dialogs";
 import { TransferButton } from "@/components/stock/transfer-button";
 import { EntryButton } from "@/components/stock/entry-button";
@@ -123,7 +123,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
       </div>
       <ProductDetailTabs
         lots={detail.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, initialQty: l.initialQty, remaining: l.remaining, origin: l.origin, unitCost: l.unitCost, presentation: lotPresentation(l, unit) }))}
-        movements={moves.items.map((m) => ({ id: m.id, createdAt: m.createdAt, type: m.type, qtyDelta: m.qtyDelta, reason: m.reasonText ?? m.reasonCode, unitCost: m.unitCost }))}
+        movements={moves.items.map((m) => ({ id: m.id, createdAt: m.createdAt, type: m.type, qtyDelta: m.qtyDelta, asked: movementAsked(m, unit), reason: m.reasonText ?? m.reasonCode, unitCost: m.unitCost }))}
         total={moves.total}
         unit={unit}
         costs={costs}

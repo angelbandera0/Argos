@@ -15,7 +15,7 @@ import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
 import { baseLabel } from "./entry-logic";
 import { type LotChoice, type LotCurrency, LotPicker, lotMoney } from "./lot-picker";
-import { allocationValue } from "./transfer-logic";
+import { allocationValue, moveEquivalent } from "./transfer-logic";
 
 export type TransferOption = { value: string; label: string };
 export type TransferCurrency = LotCurrency;
@@ -47,7 +47,7 @@ function LineFields({ line, index, fixed, products, fromLocationId, canChooseLot
   }, [product]);
 
   const base = config?.baseUnit ?? "u";
-  const units = [{ value: "base", label: baseLabel(base) }, ...(config?.units ?? []).map((u) => ({ value: u, label: u }))];
+  const units = config?.options ?? [{ value: "base", label: baseLabel(base), factor: 1 }];
   const id = `transfer-${line.key}`;
   return (
     <div className="stack">
@@ -59,8 +59,8 @@ function LineFields({ line, index, fixed, products, fromLocationId, canChooseLot
       {product && config === null && <p className="error-text">Este producto no maneja existencias.</p>}
       {config && (
         <>
-          <Field label="Cantidad" htmlFor={`${id}-qty`} hint="La cantidad va en la unidad de movimiento de la tienda.">
-            <QuantityPicker id={`${id}-qty`} name={`qty-${line.key}`} unitName={`unit-${line.key}`} value={line.amount} unit={line.unit} units={units} onValueChange={(amount) => onPatch({ amount })} onUnitChange={(unit) => onPatch({ unit })} />
+          <Field label="Cantidad" htmlFor={`${id}-qty`} hint="Mueve por presentación, por unidad de medida o por unidad de movimiento.">
+            <QuantityPicker id={`${id}-qty`} name={`qty-${line.key}`} unitName={`unit-${line.key}`} value={line.amount} unit={line.unit} units={units} equivalent={moveEquivalent(units, line.unit, line.amount, base)} onValueChange={(amount) => onPatch({ amount })} onUnitChange={(unit) => onPatch({ unit })} />
           </Field>
           <LotPicker
             key={product}

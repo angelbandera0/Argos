@@ -36,3 +36,19 @@ export function lotPresentation(l: { initialQty: number; remaining: number; pres
     remaining: presentationStock([{ remaining: l.remaining, presentation: p }], unit)?.main ?? "",
   };
 }
+
+const FAMILY = ["lb", "kg", "g", "oz", "l", "ml", "u"];
+
+/** «5 sacos» / «10 kg» as it was asked; the caller adds the base equivalent. */
+export function askedLabel(qtyValue: number, unitName: string) {
+  const u = unitName.trim();
+  return `${plain(qtyValue)} ${FAMILY.includes(u) ? unitLabel(u as Unit) : pluralName(u, qtyValue)}`;
+}
+
+/** How a movement was asked when it differs from the base unit: «5 sacos (200 lb)». */
+export function movementAsked(m: { qtyDelta: number; capturedQty: number; capturedUnit: string; askedQty: number | null; askedUnit: string | null }, unit: Unit): string | null {
+  const q = m.askedQty ?? (m.capturedUnit !== unit && Math.abs(m.capturedQty) !== Math.abs(m.qtyDelta) ? m.capturedQty : null);
+  const u = m.askedQty !== null ? m.askedUnit : m.capturedUnit;
+  if (q === null || !u || u === unit) return null;
+  return `${askedLabel(q, u)} (${formatStockQty(Math.abs(m.qtyDelta), unit)})`;
+}
