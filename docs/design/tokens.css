@@ -317,10 +317,32 @@ a:hover { color: var(--color-red-hover); }
 
 /* Indicador dentro de un botón mientras se ejecuta una acción. Hereda el color del texto. */
 .spinner {
-  display: inline-block; width: 18px; height: 18px; flex: none;
-  border: 2.5px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  display: inline-block; width: 14px; height: 14px; flex: none; box-sizing: border-box;
+  border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%;
   animation: spinner-turn var(--spinner-duration) linear infinite;
 }
+/* Spinner de estado (carga de región): 24px, anillo rojo claro con arco rojo. */
+.spinner-status { width: 24px; height: 24px; border-width: 3px; border-color: var(--color-red-tint); border-top-color: var(--color-red-strong); }
+.loading-status { display: flex; align-items: center; gap: var(--space-3); color: var(--color-ink-2); }
+
+/* Barra de progreso determinada. */
+.progress-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: var(--space-2); }
+.progress-label { font-weight: 600; }
+.progress-value { color: var(--color-muted); }
+.progress-track { height: 8px; border-radius: var(--radius-pill); background: var(--color-panel); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: var(--radius-pill); background: var(--color-red); }
+
+/* Filas de esqueleto: avatar + dos líneas. */
+.skeleton-rows { display: flex; flex-direction: column; gap: 10px; }
+.skeleton-row-item { display: flex; align-items: center; gap: var(--space-3); }
+.skeleton-row-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.skeleton-row-lines .skeleton-text:first-child { height: 12px; }
+.skeleton-row-lines .skeleton-text:last-child { height: 10px; }
+
+/* Botón en carga: etiqueta normal y de carga apiladas para mantener el ancho. */
+.btn-swap { display: inline-grid; }
+.btn-swap > * { grid-area: 1 / 1; }
+.btn-swap-off { visibility: hidden; }
 @keyframes spinner-turn { to { transform: rotate(360deg); } }
 
 /* Barra fina de progreso al navegar entre pantallas. */

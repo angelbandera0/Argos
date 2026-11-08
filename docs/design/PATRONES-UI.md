@@ -65,6 +65,7 @@ Patrones ya implementados. Usa SIEMPRE los componentes de la librería Argos UI 
 | Campana de notificaciones en la barra superior (M5) | `NotificationBell` + `BellSlot` (async bajo `Suspense` en el layout), server actions `listRecentAction`/`countUnreadAction`/`markReadAction`, estilos `app/ui-notification-panel.css` | `components/notifications/notification-bell.tsx` |
 | Fila de denominación (billete/moneda) con etiqueta de valor y acciones a la derecha (M2); contenedor `.ui-denomination-list` | `DenominationRow` | `components/ui/denomination-row.tsx` (galería `/ui`) |
 | Cantidad + unidad con equivalente en base (entradas, traslados) | `QuantityPicker` | `components/ui/quantity-picker.tsx` (galería `/ui`) |
+| Botón en carga (`loading` + `loadingLabel`) en TODA acción de servidor; `ProgressBar` solo con progreso medible; `LoadingStatus` para cargas de región; `SkeletonRows`/`ViewState loading` para listas y tablas | `ProgressBar`, `LoadingStatus`, `SkeletonRows` | `components/ui/progress-bar.tsx` (galería `/ui`) |
 
 ## Reglas transversales
 

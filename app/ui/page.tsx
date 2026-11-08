@@ -35,6 +35,7 @@ import { ViewStateSection } from "./sections/view-state";
 import { MoneyValueSection } from "./sections/money-value";
 import { DenominationRowSection } from "./sections/denomination-row";
 import { QuantityPickerSection } from "./sections/quantity-picker";
+import { ProgressBarSection } from "./sections/progress-bar";
 
 export const metadata = { title: "Argos UI — galería" };
 
@@ -92,6 +93,7 @@ const sections = [
   { id: "money-value", title: "MoneyValue", description: "Importe con formato de divisa, «Sin costo conocido» y variante sin costos (M3).", content: <MoneyValueSection /> },
   { id: "denomination-row", title: "DenominationRow", description: "Fila de denominación: etiqueta de valor amarilla suave, importe con símbolo, tipo y acciones a la derecha (M2).", content: <DenominationRowSection /> },
   { id: "quantity-picker", title: "QuantityPicker", description: "Cantidad + unidad con equivalente en base (entradas, traslados).", content: <QuantityPickerSection /> },
+  { id: "progress-bar", title: "ProgressBar", description: "Carga: barra de progreso, estado de región, filas de esqueleto y botón en carga.", content: <ProgressBarSection /> },
 ];
 
 export default function UiPage() {

@@ -1,3 +1,3 @@
-export function Spinner() {
-  return <span className="spinner" aria-hidden="true" />;
+export function Spinner({ status = false }: { status?: boolean }) {
+  return <span className={status ? "spinner spinner-status" : "spinner"} aria-hidden="true" />;
 }

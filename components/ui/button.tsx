@@ -5,6 +5,7 @@ export function Button({
   variant = "primary",
   size = "md",
   loading = false,
+  loadingLabel,
   iconLeft,
   iconRight,
   className,
@@ -15,6 +16,7 @@ export function Button({
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
+  loadingLabel?: string;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
 }) {
@@ -28,7 +30,14 @@ export function Button({
       {...props}
     >
       {loading ? <Spinner /> : iconLeft}
-      {children}
+      {loadingLabel ? (
+        <span className="btn-swap">
+          <span className={loading ? "btn-swap-off" : undefined} aria-hidden={loading || undefined}>{children}</span>
+          <span className={loading ? undefined : "btn-swap-off"} aria-hidden={!loading || undefined}>{loadingLabel}</span>
+        </span>
+      ) : (
+        children
+      )}
       {iconRight}
     </button>
   );
