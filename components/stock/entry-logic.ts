@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { format, mul, qty, toNumber } from "@/core/domain/stock";
+import type { SelectOption } from "@/components/ui/select";
+import { RuleViolation, convertUnits, format, magnitudeOf, mul, qty, toNumber, unitRatio, unitsOf, type Unit } from "@/core/domain/stock";
 
 const num = (v: unknown) => (typeof v === "string" ? (v.trim() === "" ? undefined : Number(v.replace(",", "."))) : v);
 const positive = z.preprocess(num, z.number().finite().positive());
@@ -14,6 +15,9 @@ export const entrySchema = z.object({
   cost: optionalCost,
   currencyId: z.string().optional(),
   unknownCost: z.boolean(),
+  newName: z.string().trim().optional(),
+  newQty: optionalPositive,
+  newUnit: z.string().optional(),
 });
 
 export type EntryUnit = { value: string; label: string; factor: number };
@@ -78,3 +82,47 @@ export function entryProductOptions(
 }
 
 export const STORABLE_LOCKED_TEXT = "No se puede desactivar porque el producto ya tiene movimientos.";
+
+export const UNIT_PREFIX = "unit:";
+export const NEW_PRESENTATION = "new";
+
+const family = (base: string) => unitsOf(magnitudeOf(base as Unit));
+
+/** Base unit, the rest of its family, existing presentations and (if allowed) "new presentation". */
+export function entryUnitOptions(base: string, presentations: { name: string }[], canCreate: boolean): SelectOption[] {
+  return [
+    { value: "base", label: baseLabel(base) },
+    ...family(base).filter((u) => u !== base).map((u) => ({ value: UNIT_PREFIX + u, label: baseLabel(u) })),
+    ...presentations.map((p) => ({ value: p.name, label: p.name })),
+    ...(canCreate ? [{ value: NEW_PRESENTATION, label: "Nueva presentación…" }] : []),
+  ];
+}
+
+export const familyOptions = (base: string): SelectOption[] => family(base).map((u) => ({ value: u, label: baseLabel(u) }));
+
+function familyUnit(unit: string, base: string): Unit {
+  if (!family(base).includes(unit as Unit)) throw new RuleViolation("INVALID_UNIT");
+  return unit as Unit;
+}
+
+/** Base units per one `unit` of the family (value from the selector). */
+export const familyRatio = (value: string, base: string) => unitRatio(familyUnit(value.slice(UNIT_PREFIX.length), base), base as Unit);
+
+/** Quantity and cost per base unit for an entry typed in another unit of the base's family. */
+export function fromFamilyUnit(value: string, base: string, amount: number, cost?: number) {
+  const ratio = familyRatio(value, base);
+  return { qty: toNumber(mul(qty(amount), ratio)), unitCost: cost === undefined ? undefined : cost / ratio };
+}
+
+/** Content of a new presentation, in base units (thousandths). */
+export const newPresentationContent = (contentQty: number, contentUnit: string, base: string) =>
+  toNumber(convertUnits(contentQty, familyUnit(contentUnit, base), base as Unit));
+
+/** "10 sacos × 25 kg = 250 kg = 551,160 lb" (the base total is what gets stored: amount × content). */
+export function newPresentationSummary(amount: string, name: string, contentQty: string, contentUnit: string, base: string): string {
+  const a = Number(amount.replace(",", ".")), c = Number(contentQty.replace(",", "."));
+  if (!(a > 0) || !(c > 0) || !name.trim() || !family(base).includes(contentUnit as Unit)) return "";
+  const n = (v: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(v);
+  const total = baseAmount(amount, newPresentationContent(c, contentUnit, base));
+  return `${n(a)} ${name.trim()} × ${n(c)} ${baseLabel(contentUnit)} = ${n(toNumber(mul(qty(a), c)))} ${baseLabel(contentUnit)} = ${total === null ? "" : format(qty(total))} ${baseLabel(base)}`;
+}

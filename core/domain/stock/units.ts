@@ -29,3 +29,12 @@ export function convertFromBase(base: Qty, unit: Unit, magnitude?: Magnitude): Q
   check(unit, magnitude);
   return mul(base, 1 / BASE_PER_UNIT[unit]);
 }
+
+/** Units of `to` per one `from`, e.g. unitRatio("kg","lb") = 2.2046. */
+export function unitRatio(from: Unit, to: Unit): number {
+  check(from, MAGNITUDE[to]);
+  return BASE_PER_UNIT[from] / BASE_PER_UNIT[to];
+}
+
+/** Converts between units of the same magnitude with a single rounding. */
+export const convertUnits = (value: number | string, from: Unit, to: Unit): Qty => mul(qty(value), unitRatio(from, to));

@@ -42,3 +42,25 @@ describe("entryProductOptions", () => {
     expect(entryProductOptions(products, new Set(["b"]), false).map((x) => x.value)).toEqual(["b"]);
   });
 });
+
+import { entryUnitOptions, familyRatio, fromFamilyUnit, newPresentationContent, newPresentationSummary } from "@/components/stock/entry-logic";
+import { convertUnits, toNumber } from "@/core/domain/stock";
+
+describe("unidades compatibles", () => {
+  it("ofrece toda la familia, presentaciones y nueva presentación", () => {
+    const v = (canCreate: boolean) => entryUnitOptions("lb", [{ name: "saco" }], canCreate).map((o) => o.value);
+    expect(v(true)).toEqual(["base", "unit:kg", "unit:g", "unit:oz", "saco", "new"]);
+    expect(v(false)).not.toContain("new");
+    expect(entryUnitOptions("u", [], false).map((o) => o.value)).toEqual(["base"]);
+  });
+  it("convierte dentro de la familia con un solo redondeo", () => {
+    expect(toNumber(convertUnits(250, "kg", "lb"))).toBe(551.156);
+    expect(fromFamilyUnit("unit:kg", "lb", 12, 2)).toEqual({ qty: 26.455, unitCost: 2 / familyRatio("unit:kg", "lb") });
+    expect(() => fromFamilyUnit("unit:ml", "lb", 1)).toThrow();
+  });
+  it("nueva presentación", () => {
+    expect(newPresentationContent(25, "kg", "lb")).toBe(55.116);
+    expect(newPresentationSummary("10", "sacos", "25", "kg", "lb")).toBe("10 sacos × 25 kg = 250 kg = 551,160 lb");
+    expect(newPresentationSummary("", "sacos", "25", "kg", "lb")).toBe("");
+  });
+});

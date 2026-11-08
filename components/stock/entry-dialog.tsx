@@ -7,7 +7,7 @@ import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
-import { baseLabel, costPerBaseLabel, DEFAULT_BASE_UNIT, ENTRY_BASE_UNITS, type EntryProductOption, equivalentLabel, UNCONFIGURED_NOTICE } from "./entry-logic";
+import { baseLabel, costPerBaseLabel, DEFAULT_BASE_UNIT, ENTRY_BASE_UNITS, type EntryProductOption, entryUnitOptions, equivalentLabel, familyOptions, familyRatio, NEW_PRESENTATION, newPresentationContent, newPresentationSummary, UNCONFIGURED_NOTICE, UNIT_PREFIX } from "./entry-logic";
 
 export type EntryProduct = EntryProductOption;
 export type EntryCurrency = { id: string; code: string };
@@ -34,10 +34,13 @@ export function EntryDialog({
   const [loaded, setConfig] = useState<EntryConfig | null | undefined>(undefined);
   const [newBase, setNewBase] = useState(DEFAULT_BASE_UNIT);
   const unconfigured = !!products.find((p) => p.value === product)?.unconfigured;
-  const config = unconfigured ? { baseUnit: newBase, presentations: [] } : loaded;
+  const config = unconfigured ? { baseUnit: newBase, presentations: [], canConfigure: true } : loaded;
   const [unit, setUnit] = useState("base");
   const [amount, setAmount] = useState("");
   const [content, setContent] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newQty, setNewQty] = useState("");
+  const [newUnit, setNewUnit] = useState("");
   const [cost, setCost] = useState("");
   const [unknownCost, setUnknownCost] = useState(false);
   const [currencyId, setCurrencyId] = useState(currencies[0]?.id ?? "");
@@ -58,9 +61,13 @@ export function EntryDialog({
 
   const presentation = config?.presentations.find((p) => p.name === unit);
   const habitual = presentation?.content ?? 1;
-  const factor = Number(content.replace(",", ".")) > 0 && presentation ? Number(content.replace(",", ".")) : habitual;
   const base = config?.baseUnit ?? "u";
-  const units = [{ value: "base", label: baseLabel(base) }, ...(config?.presentations ?? []).map((p) => ({ value: p.name, label: p.name }))];
+  const isNew = unit === NEW_PRESENTATION;
+  const contentUnit = newUnit || base;
+  const newContent = isNew && Number(newQty.replace(",", ".")) > 0 ? newPresentationContent(Number(newQty.replace(",", ".")), contentUnit, base) : 0;
+  const factor = unit.startsWith(UNIT_PREFIX) ? familyRatio(unit, base) : isNew ? newContent : Number(content.replace(",", ".")) > 0 && presentation ? Number(content.replace(",", ".")) : habitual;
+  const units = entryUnitOptions(base, config?.presentations ?? [], !!config?.canConfigure);
+  const unitLabel = isNew ? newName.trim() || "presentación" : (units.find((u) => u.value === unit)?.label ?? baseLabel(base));
   const currency = currencies.find((c) => c.id === currencyId)?.code ?? "";
   const showCost = costs && !!config;
   const title = kind === "initial" ? "Entrada inicial" : "Entrada directa a tienda";
@@ -94,8 +101,21 @@ export function EntryDialog({
           {config && (
             <>
               <Field label="Cantidad" htmlFor="entry-qty">
-                <QuantityPicker id="entry-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} equivalent={equivalentLabel(amount, factor, base)} onValueChange={setAmount} onUnitChange={(u) => { setUnit(u); setContent(""); }} />
+                <QuantityPicker id="entry-qty" name="qty" unitName="unit" value={amount} unit={unit} units={units} equivalent={isNew ? newPresentationSummary(amount, newName, newQty, contentUnit, base) : equivalentLabel(amount, factor, base)} onValueChange={setAmount} onUnitChange={(u) => { setUnit(u); setContent(""); }} />
               </Field>
+              {isNew && (
+                <>
+                  <Field label="Nombre de la presentación" htmlFor="entry-new-name" hint="Por ejemplo: saco, paca, caja.">
+                    <Input id="entry-new-name" name="newName" required value={newName} onChange={(e) => setNewName(e.target.value)} />
+                  </Field>
+                  <Field label="Contenido de cada una" htmlFor="entry-new-qty">
+                    <div className="row">
+                      <Input id="entry-new-qty" name="newQty" type="number" inputMode="decimal" min={0} step="any" required value={newQty} onChange={(e) => setNewQty(e.target.value)} />
+                      <Select name="newUnit" aria-label="Unidad del contenido" options={familyOptions(base)} value={contentUnit} onValueChange={(v) => setNewUnit(v ?? base)} />
+                    </div>
+                  </Field>
+                </>
+              )}
               {presentation && (
                 <Field label={`Contenido real (${baseLabel(base)})`} htmlFor="entry-content" optional hint={Number(content.replace(",", ".")) > 0 && factor !== habitual ? `Difiere del habitual (${habitual} ${baseLabel(base)}). Se guardará solo en este lote.` : `Habitual: ${habitual} ${baseLabel(base)}`}>
                   <Input id="entry-content" name="content" type="number" inputMode="decimal" min={0} step="any" value={content} onChange={(e) => setContent(e.target.value)} />
@@ -103,7 +123,7 @@ export function EntryDialog({
               )}
               {showCost && (
                 <>
-                  <Field label={unit === "base" ? `Costo por ${baseLabel(base)}` : "Costo por presentación"} htmlFor="entry-cost" optional hint={!unknownCost ? costPerBaseLabel(cost, factor, base, currency) || undefined : undefined}>
+                  <Field label={`Costo por ${unitLabel}`} htmlFor="entry-cost" optional hint={!unknownCost ? costPerBaseLabel(cost, factor, base, currency) || undefined : undefined}>
                     <Input id="entry-cost" name="cost" type="number" inputMode="decimal" min={0} step="any" value={cost} disabled={unknownCost} onChange={(e) => setCost(e.target.value)} />
                   </Field>
                   {currencies.length > 0 && (
