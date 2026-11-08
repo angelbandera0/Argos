@@ -74,26 +74,26 @@ export function RoleDetail({
     <div className="stack">
       <div className="ui-detail-grid">
         <StatTile icon="Building2" label="Compañías" value={companiesLabel(allowed.length === allCompanies.length ? "all" : allowed)} />
-        <StatTile icon="Clock" label="Sesión" value={sessionLabel(sessionSeconds)} />
+        <StatTile icon="History" label="Sesión" value={sessionLabel(sessionSeconds)} />
         <StatTile icon="Users" label="Usuarios asignados" value={usersLabel(users.length)} />
       </div>
       <Card>
-        <h2 className="section-title">Permisos por módulo</h2>
+        <h2 className="ui-detail-title">Permisos por módulo</h2>
         <PermissionsReadOnly permissions={permissions} />
       </Card>
       <Card>
-        <h2 className="section-title">Permisos especiales</h2>
+        <h2 className="ui-detail-title">Permisos especiales</h2>
         <SpecialsReadOnly grants={grants} />
       </Card>
       <div className="ui-detail-grid">
         <Card>
-          <h2 className="section-title">Compañías donde vale</h2>
+          <h2 className="ui-detail-title">Compañías donde vale</h2>
           <div className="ui-role-chips">
             {allowed.length === 0 ? "Ninguna" : allowed.map((c) => <Chip key={c} variant="ring">{c}</Chip>)}
           </div>
         </Card>
         <Card>
-          <h2 className="section-title">Usuarios con este rol</h2>
+          <h2 className="ui-detail-title">Usuarios con este rol</h2>
           {users.length === 0 ? (
             <p className="hint">Ningún usuario lo tiene asignado.</p>
           ) : (

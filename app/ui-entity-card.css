@@ -76,3 +76,4 @@
 .ui-role-perms li { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
 .ui-role-perms strong { min-width: 9rem; }
 .ui-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-4); }
+.ui-detail-title { margin: 0 0 var(--space-3); font: var(--text-h2); }

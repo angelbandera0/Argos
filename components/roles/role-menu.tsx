@@ -3,11 +3,11 @@
 import { Menu } from "@base-ui/react/menu";
 import Link from "next/link";
 import { useState } from "react";
-import { NAV_ICONS } from "@/components/icons";
+import { NAV_ICONS, Pencil } from "@/components/icons";
 import { buttonClass } from "@/components/ui/button-class";
 import { DeleteRoleDialog } from "./delete-role-dialog";
 
-const { Ellipsis, Pencil, Trash2 } = NAV_ICONS;
+const { Ellipsis, Trash2 } = NAV_ICONS;
 
 export function RoleMenu({ roleId, name }: { roleId: string; name: string }) {
   const [open, setOpen] = useState(false);
