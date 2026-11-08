@@ -37,6 +37,8 @@ type LotRow = {
   captured_qty: number | string;
   captured_unit: string;
   content: number | string;
+  presentation_name: string | null;
+  presentation_content: number | string | null;
 };
 type MovementRow = {
   id: string;
@@ -57,7 +59,7 @@ type MovementRow = {
 };
 type CostRow = { unit_cost: number | string | null; currency_id: string | null };
 
-const LOT_COLS = "id, product_id, location_id, origin, source_lot_id, received_at, initial_qty, remaining, captured_qty, captured_unit, content";
+const LOT_COLS = "id, product_id, location_id, origin, source_lot_id, received_at, initial_qty, remaining, captured_qty, captured_unit, content, presentation_name, presentation_content";
 const MOVEMENT_COLS =
   "id, type, qty_delta, captured_qty, captured_unit, reason_code, reason_text, document_type, document_id, reverses_id, actor_id, created_at, lot_id, product_id, location_id";
 const ITEM_COLS = { product_presentations: "id, name, content, active", product_movement_units: "id, name, equivalence, active" } as const;
@@ -102,6 +104,7 @@ export function makeStockRepository(supabase: SupabaseClient): StockRepository {
         capturedQty: Number(r.captured_qty),
         capturedUnit: r.captured_unit,
         content: Number(r.content),
+        presentation: r.presentation_name && r.presentation_content !== null ? { name: r.presentation_name, content: Number(r.presentation_content) } : null,
       };
       const cost = money(c.get(r.id));
       if (cost !== undefined) view.unitCost = cost;

@@ -19,7 +19,7 @@ import { InMemoryStock } from "../../fakes/in-memory-stock";
 import { setup } from "./catalog-setup";
 
 const money = (amount: number) => ({ amount, currencyId: "mxn" });
-const lotBase = { origin: "purchase", sourceLotId: null, capturedUnit: "lb", content: 1, receivedAt: "2026-01-01" };
+const lotBase = { origin: "purchase", sourceLotId: null, capturedUnit: "lb", content: 1, presentation: null, receivedAt: "2026-01-01" };
 const mvBase = { capturedUnit: "lb", reasonCode: null, reasonText: null, documentType: null, documentId: null, reversesId: null, actorId: null };
 
 /**

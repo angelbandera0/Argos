@@ -36,6 +36,7 @@ export type StockRow = {
   category: string | null;
   quantity: number;
   unit: Unit;
+  presentation: { main: string; base: string } | null;
   status: StockStatus;
   minimum: number | null;
   avgCost: Money | null;
@@ -139,7 +140,15 @@ export function StockList({
       id: "qty",
       header: "Existencia",
       align: "end",
-      cell: (r) => <span className={`ui-money-value${r.quantity === 0 ? " ui-stock-zero" : ""}`}>{formatStockQty(r.quantity, r.unit)}</span>,
+      cell: (r) =>
+        r.presentation ? (
+          <span className="ui-prod-text">
+            <span className="ui-money-value">{r.presentation.main}</span>
+            <span className="ui-prod-desc">{r.presentation.base}</span>
+          </span>
+        ) : (
+          <span className={`ui-money-value${r.quantity === 0 ? " ui-stock-zero" : ""}`}>{formatStockQty(r.quantity, r.unit)}</span>
+        ),
     },
     { id: "status", header: "Estado", cell: (r) => <StatusBadge family="stock" status={r.status} /> },
     { id: "min", header: "Mínimo", align: "end", cell: (r) => <span className="ui-money-value">{minimumLabel(r.minimum, r.unit)}</span> },

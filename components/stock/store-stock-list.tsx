@@ -96,7 +96,7 @@ export function StoreStockList({
               subtitle={r.category ?? undefined}
               badge={<StatusBadge family="stock" status={r.status} />}
               data={[
-                { label: "Existencia", value: formatStockQty(r.quantity, r.unit) },
+                { label: "Existencia", value: r.presentation ? `${r.presentation.main} · ${r.presentation.base}` : formatStockQty(r.quantity, r.unit) },
                 { label: "Mínimo", value: minimumLabel(r.minimum, r.unit) },
               ]}
               actions={

@@ -38,6 +38,7 @@ export interface LotView {
   capturedQty: number;
   capturedUnit: string;
   content: number;
+  presentation: { name: string; content: number } | null;
   unitCost?: Money | null;
 }
 

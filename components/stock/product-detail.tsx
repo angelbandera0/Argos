@@ -20,7 +20,7 @@ import { ProductConfigTab } from "./product-config-tab";
 import { formatStockQty } from "./stock-list-logic";
 
 type Money = { amount: number; currencyId: string } | null | undefined;
-export type LotRow = { id: string; receivedAt: string; initialQty: number; remaining: number; origin: string; unitCost: Money };
+export type LotRow = { id: string; receivedAt: string; initialQty: number; remaining: number; origin: string; unitCost: Money; presentation: { entered: string; remaining: string } | null };
 export type MovementRow = { id: string; createdAt: string; type: string; qtyDelta: number; reason: string | null; unitCost: Money };
 type Currencies = Record<string, { code: string; decimals: number }>;
 const FALLBACK = { code: "", decimals: 2 };
@@ -65,8 +65,15 @@ export function ProductDetailTabs({
   const lotColumns: Column<LotRow>[] = [
     { id: "lot", header: "Lote", cell: (r) => <span className="mono">{r.id.slice(0, 8)}</span> },
     { id: "received", header: "Fecha", cell: (r) => <LocalDateTime value={r.receivedAt} /> },
+    { id: "presentation", header: "Presentación", cell: (r) => r.presentation?.entered ?? "" },
     { id: "initial", header: "Inicial", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.initialQty, unit)}</span> },
-    { id: "remaining", header: "Restante", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.remaining, unit)}</span> },
+    { id: "remaining", header: "Restante", align: "end", cell: (r) => (
+        <span className="ui-prod-text">
+          <span className="ui-money-value">{formatStockQty(r.remaining, unit)}</span>
+          {r.presentation?.remaining && <span className="ui-prod-desc">{r.presentation.remaining}</span>}
+        </span>
+      ),
+    },
     { id: "origin", header: "Origen", cell: (r) => <Chip>{lotOriginLabel(r.origin)}</Chip> },
     ...(costs ? [{ id: "cost", header: "Costo unitario", align: "end", cell: (r) => cost(r.unitCost) } satisfies Column<LotRow>] : []),
   ];

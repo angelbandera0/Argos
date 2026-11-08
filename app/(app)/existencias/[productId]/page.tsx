@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
 import { averageCost, formatStockQty, lotsValue, minimumLabel, parsePage } from "@/components/stock/stock-list-logic";
+import { lotPresentation, presentationStock } from "@/components/stock/presentation-logic";
 import { SurplusButton, WriteOffButton } from "@/components/stock/ops-dialogs";
 import { TransferButton } from "@/components/stock/transfer-button";
 import { EntryButton } from "@/components/stock/entry-button";
@@ -89,6 +90,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
   const cur = (id?: string) => currencyList.find((c) => c.id === id) ?? { code: "", decimals: 2 };
   const lastLot = [...detail.lots].sort((a, b) => (a.receivedAt < b.receivedAt ? 1 : -1))[0];
   const avg = averageCost(lotsValue(detail.lots.filter((l) => l.remaining > 0)));
+  const pres = presentationStock(detail.lots, unit);
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = can(isWarehouse ? "initial_entry" : "direct_store_entry");
 
@@ -110,7 +112,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         ]}
       />
       <div className="ui-stat-grid">
-        <StatTile icon="Box" label="Existencia" value={formatStockQty(detail.quantity, unit)} />
+        <StatTile icon="Box" label="Existencia" value={pres ? pres.main : formatStockQty(detail.quantity, unit)} hint={pres?.base} />
         <StatTile dot={detail.status === "normal" ? "success" : detail.status === "low" ? "warning" : "ink"} label="Estado" hint={detail.minimum === null ? undefined : `mínimo ${minimumLabel(detail.minimum, unit)}`} value={<StatusBadge family="stock" status={detail.status} />} />
         {costs && (
           <>
@@ -120,7 +122,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
         )}
       </div>
       <ProductDetailTabs
-        lots={detail.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, initialQty: l.initialQty, remaining: l.remaining, origin: l.origin, unitCost: l.unitCost }))}
+        lots={detail.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, initialQty: l.initialQty, remaining: l.remaining, origin: l.origin, unitCost: l.unitCost, presentation: lotPresentation(l, unit) }))}
         movements={moves.items.map((m) => ({ id: m.id, createdAt: m.createdAt, type: m.type, qtyDelta: m.qtyDelta, reason: m.reasonText ?? m.reasonCode, unitCost: m.unitCost }))}
         total={moves.total}
         unit={unit}

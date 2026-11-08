@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { StockList, type StockRow } from "@/components/stock/stock-list";
 import { StoreStockList } from "@/components/stock/store-stock-list";
 import { entryProductOptions } from "@/components/stock/entry-logic";
+import { presentationStock } from "@/components/stock/presentation-logic";
 import { PAGE_SIZE, averageCost, groupLotsByProduct, lotsValue, parsePage, parseStatus } from "@/components/stock/stock-list-logic";
 import { PageHeader } from "@/components/ui/page-header";
 import { ViewState } from "@/components/ui/view-state";
@@ -66,7 +67,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       page: pagina,
       pageSize: PAGE_SIZE,
     }),
-    costs ? stock.listLocationLots(actor, { companyId, locationId: location.id }) : Promise.resolve([]),
+    stock.listLocationLots(actor, { companyId, locationId: location.id }),
     costs ? currencies.listCurrencies(actor, { companyId }).catch(() => []) : Promise.resolve([]),
   ]);
 
@@ -81,6 +82,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
       quantity: l.quantity,
       unit: l.baseUnit,
       status: l.status,
+      presentation: presentationStock(byProduct.get(l.productId) ?? [], l.baseUnit),
       minimum: l.minimum,
       avgCost: avg,
       value: value.byCurrency.map((v) => ({ currencyId: v.currencyId, amount: v.value })),
