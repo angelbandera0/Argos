@@ -15,6 +15,9 @@ Cada compañía sabe cuánto hay de cada producto básico en el almacén general
 - **S-06 [P]** Todo se guarda en base; se conserva la cantidad capturada y su unidad junto a la convertida. Redondeo a 3 decimales, aceptado por el usuario (M2-Q06, 2026-11-07).
 - **S-07 [P]** Se configuran en el producto (pantalla de configuración de almacén del producto).
 
+- **S-04b [U]** **Existencia por presentación (2026-11-08):** además de la unidad base, se muestra cuánto hay de la presentación con que entró cada lote. Es un dato **derivado** (nunca capturado): el lote recuerda su presentación (nombre y contenido en base; los lotes de traslado heredan la del lote de origen) y, por lote, completas = piso(restante ÷ contenido) y sueltas = restante − completas × contenido, sumadas por producto y ubicación: «20 sacos · 800 lb», «19 sacos completos + 10 lb sueltas». A granel o sin presentación solo se muestra la unidad de medida. Sin costos. Cantidades exactas (milésimas), sin fracciones inventadas.
+- **S-04c [U]** **Tres modos de mover (2026-11-08)** en traslado, baja, sobrante y entrada directa: por **presentación** (5 sacos = 5 × contenido del lote), por **unidad de medida** de la familia (200 lb) y por **unidad de movimiento** del producto (10 raciones, 1 ración = 1 lb). El libro sigue en base; el movimiento guarda además cómo se pidió (`asked_qty`, `asked_unit`: «5 sacos», «10 raciones») y se muestra «5 sacos (200 lb)». No se puede mover más de lo existente. Pedido y solicitud no cambian.
+
 ## Lotes y costo
 - **S-08 [U]** Cada entrada crea un **lote**: producto, ubicación, cantidad inicial y restante (base), costo unitario por base, divisa, fecha, origen (entrada inicial, pedido, entrada directa, traslado), presentación y contenido usados.
 - **S-09 [U]** El costo varía por lote. El costo por unidad base permite comparar compras y presentaciones.
@@ -62,3 +65,7 @@ Ver existencias, entrada inicial, entrada directa, trasladar, bajas, ajustar, el
 - CA-09: DADO un movimiento registrado, ENTONCES no puede editarse ni borrarse; solo corregirse con un ajuste.
 - CA-10: DADO un lote con costo 12, cuando un administrador lo corrige a 15 con motivo, ENTONCES el costo vigente del lote es 15, existe un ajuste «de 12 a 15» con motivo y autor, y los movimientos previos conservan su costo 12.
 - CA-11: DADO un usuario sin («Ver costos» y «Corregir pedidos»), ENTONCES no puede corregir costos ni ver los ajustes; sin motivo o con costo negativo la corrección se rechaza.
+- CA-12: DADO 20 sacos de 40 lb entrados, ENTONCES la lista y el detalle muestran «20 sacos · 800 lb»; tras trasladar 30 lb, «19 sacos completos + 10 lb sueltas».
+- CA-13: DADO una caja de picadillo de 20 lb y 10 raciones de 1 lb movidas, ENTONCES se descuentan 10 lb y la existencia es «0 cajas completas + 10 lb sueltas».
+- CA-14: DADO un traslado de 5 sacos, ENTONCES se descuentan 5 × contenido, la tienda recibe lotes con la misma presentación y el movimiento guarda «5 sacos».
+- CA-15: DADO un producto a granel, ENTONCES solo se muestra la unidad de medida.

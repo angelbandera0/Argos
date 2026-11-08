@@ -6,3 +6,4 @@ export * from "./cost";
 export * from "./lot";
 export * from "./allocation";
 export * from "./status";
+export * from "./presentation-stock";

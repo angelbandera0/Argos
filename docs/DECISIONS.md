@@ -258,3 +258,13 @@
 - **Alternativas descartadas:** *editar el costo y reescribir movimientos* (pierde trazabilidad); *no permitir corregir* (obliga a anular lotes).
 - **Consecuencias:** las estadísticas distinguen el costo original del corregido; el costo del lote deja de ser inmutable pero solo por la función `adjust_lot_cost`.
 
+---
+
+### ADR-019 — La existencia por presentación es derivada del lote
+- **Fecha:** 2026-11-08
+- **Estado:** Aceptada
+- **Contexto:** Solo se mostraba la unidad base («800 lb»); el usuario necesita ver también «20 sacos».
+- **Decisión:** `lots.presentation_name/presentation_content` (heredados en traslados) y cálculo puro `stockByPresentation` (completas + sueltas por lote). `stock_movements.asked_qty/asked_unit` guardan cómo se pidió. El libro y los costos siguen en base.
+- **Alternativas descartadas:** *existencia de presentaciones como contador propio* (se desincroniza al mover por libras).
+- **Consecuencias:** nada nuevo que mantener; lotes antiguos se rellenan desde su unidad capturada.
+
