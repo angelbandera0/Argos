@@ -12,6 +12,7 @@ export function AlertDialog({
   confirmLabel,
   cancelLabel = "Cancelar",
   loading,
+  loadingLabel,
   dismissible = true,
   tone = "danger",
   size = "sm",
@@ -25,6 +26,7 @@ export function AlertDialog({
   confirmLabel: string;
   cancelLabel?: string;
   loading?: boolean;
+  loadingLabel?: string;
   dismissible?: boolean;
 }) {
   const cancelRef = useRef<HTMLButtonElement>(null);
@@ -48,7 +50,7 @@ export function AlertDialog({
             <Button ref={cancelRef} variant="secondary" disabled={loading} onClick={onClose}>
               {cancelLabel}
             </Button>
-            <Button variant={tone === "danger" ? "danger" : "primary"} loading={loading} onClick={onConfirm}>
+            <Button variant={tone === "danger" ? "danger" : "primary"} loading={loading} loadingLabel={loadingLabel} onClick={onConfirm}>
               {confirmLabel}
             </Button>
           </>

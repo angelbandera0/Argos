@@ -68,6 +68,7 @@ export function ReasonsManager({ reasons }: { reasons: ReasonOption[] }) {
           })
         }
         loading={pending}
+        loadingLabel="Eliminando…"
         title={`¿Eliminar «${removing?.name ?? ""}»?`}
         description="Esta acción no se puede deshacer."
         confirmLabel="Eliminar"

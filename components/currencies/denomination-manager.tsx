@@ -105,7 +105,7 @@ function Row({ item, all, symbol, ops }: { item: Denomination; all: Denomination
           <Button variant="outline" onClick={cancel}>
             Cancelar
           </Button>
-          <Button loading={busy} onClick={save}>
+          <Button loading={busy} loadingLabel="Guardando…" onClick={save}>
             Guardar
           </Button>
           {error && (
@@ -140,6 +140,7 @@ function Row({ item, all, symbol, ops }: { item: Denomination; all: Denomination
           if (await run(() => ops.remove(item.id), "Denominación eliminada")) setConfirming(false);
         }}
         loading={busy}
+        loadingLabel="Eliminando…"
         tone="danger"
         icon="Trash2"
         confirmLabel="Eliminar denominación"
@@ -227,7 +228,7 @@ export function DenominationManager({
           value={kind}
           onValueChange={(v) => setKind(String(v))}
         />
-        <Button loading={busy} onClick={add} iconLeft={<Plus aria-hidden="true" />}>
+        <Button loading={busy} loadingLabel="Añadiendo…" onClick={add} iconLeft={<Plus aria-hidden="true" />}>
           Añadir
         </Button>
       </div>

@@ -16,6 +16,8 @@ export function FormDialog<S extends FormDialogState>({
   successMessage,
   size,
   onClose,
+  submitLabel,
+  pendingLabel,
   children,
 }: {
   title: string;
@@ -25,6 +27,8 @@ export function FormDialog<S extends FormDialogState>({
   successMessage?: string;
   size?: "sm" | "md" | "lg";
   onClose: () => void;
+  submitLabel?: string;
+  pendingLabel?: string;
   children: (state: S) => React.ReactNode;
 }) {
   const toast = useToast();
@@ -46,14 +50,18 @@ export function FormDialog<S extends FormDialogState>({
       title={title}
       description={description}
       size={size}
-      onClose={onClose}
+      onClose={() => {
+        if (!pending) onClose();
+      }}
     >
       <FormShell
         action={formAction}
         error={state.error}
         pending={pending}
+        submitLabel={submitLabel}
+        pendingLabel={pendingLabel}
         cancel={
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" disabled={pending} onClick={onClose}>
             Cancelar
           </Button>
         }

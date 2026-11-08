@@ -20,8 +20,8 @@ export function FormSubmit({
   const status = useFormStatus();
   const pending = status.pending || external;
   return (
-    <Button type="submit" size={size} loading={pending} disabled={disabled}>
-      {pending ? pendingLabel : label}
+    <Button type="submit" size={size} loading={pending} loadingLabel={pendingLabel} disabled={disabled}>
+      {label}
     </Button>
   );
 }

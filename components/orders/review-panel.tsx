@@ -72,20 +72,20 @@ export function ReviewPanel({ orderId, lines, stores, currency, showCosts }: { o
         </Card>
       )}
       <div className="row">
-        <Button variant="secondary" loading={pending} onClick={() => run({ kind: "save", lines: revLines() }, "Revisión guardada.")}>
+        <Button variant="secondary" loading={pending} loadingLabel="Guardando…" onClick={() => run({ kind: "save", lines: revLines() }, "Revisión guardada.")}>
           Guardar
         </Button>
-        <Button disabled={!reviewReady(lines, drafts)} loading={pending} onClick={() => setDialog("confirm")}>
+        <Button disabled={!reviewReady(lines, drafts)} loading={pending} loadingLabel="Confirmando…" onClick={() => setDialog("confirm")}>
           Confirmar y sumar al stock
         </Button>
-        <Button variant="secondary" loading={pending} onClick={() => setDialog("return")}>
+        <Button variant="secondary" loading={pending} loadingLabel="Devolviendo…" onClick={() => setDialog("return")}>
           Devolver al comprador
         </Button>
       </div>
-      <AlertDialog open={dialog === "confirm"} onClose={() => setDialog(null)} onConfirm={() => run({ kind: "confirm", lines: revLines() }, "Pedido confirmado: los lotes ya están en el stock.")} confirmLabel="Confirmar" loading={pending} tone="success" icon="Check" title="¿Confirmar el pedido?">
+      <AlertDialog open={dialog === "confirm"} onClose={() => setDialog(null)} onConfirm={() => run({ kind: "confirm", lines: revLines() }, "Pedido confirmado: los lotes ya están en el stock.")} confirmLabel="Confirmar" loading={pending} loadingLabel="Confirmando…" tone="success" icon="Check" title="¿Confirmar el pedido?">
         Solo lo recibido entra al stock, con el costo reportado por el comprador.
       </AlertDialog>
-      <AlertDialog open={dialog === "return"} onClose={() => setDialog(null)} onConfirm={() => run({ kind: "return", note }, "Pedido devuelto al comprador.")} confirmLabel="Devolver" loading={pending} tone="warning" icon="Check" title="Devolver al comprador">
+      <AlertDialog open={dialog === "return"} onClose={() => setDialog(null)} onConfirm={() => run({ kind: "return", note }, "Pedido devuelto al comprador.")} confirmLabel="Devolver" loading={pending} loadingLabel="Devolviendo…" tone="warning" icon="Check" title="Devolver al comprador">
         <Textarea aria-label="Nota para el comprador" placeholder="Ej. Llegó 1 saco de frijoles, no 2." maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} />
       </AlertDialog>
     </div>

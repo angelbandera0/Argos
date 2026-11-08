@@ -88,7 +88,7 @@ export function CategoryRow({ item, all }: { item: CategoryItem; all: CategoryIt
         <Button variant="outline" onClick={close}>
           Cancelar
         </Button>
-        <Button type="submit" loading={busy} disabled={!value.trim()}>
+        <Button type="submit" loading={busy} loadingLabel="Guardando…" disabled={!value.trim()}>
           Guardar
         </Button>
       </form>
@@ -108,7 +108,7 @@ export function CategoryRow({ item, all }: { item: CategoryItem; all: CategoryIt
         <Button variant="outline" autoFocus onClick={close}>
           Cancelar
         </Button>
-        <Button variant="danger" loading={busy} onClick={remove}>
+        <Button variant="danger" loading={busy} loadingLabel="Eliminando…" onClick={remove}>
           Eliminar
         </Button>
       </div>

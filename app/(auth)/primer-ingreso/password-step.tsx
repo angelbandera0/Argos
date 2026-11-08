@@ -45,8 +45,8 @@ export function PasswordStep() {
         <Input id="confirm" name="confirm" type="password" autoComplete="new-password" required minLength={MIN} />
       </Field>
       {state.error && <Alert variant="danger">{state.error}</Alert>}
-      <Button type="submit" loading={pending} disabled={!enough}>
-        {pending ? "Guardando…" : "Guardar y continuar"}
+      <Button type="submit" loading={pending} loadingLabel="Guardando…" disabled={!enough}>
+        Guardar y continuar
       </Button>
     </form>
   );

@@ -58,7 +58,7 @@ export function CategoryManager({ items, companyName }: { items: CategoryItem[];
             </p>
           )}
         </div>
-        <Button type="submit" loading={busy} disabled={!name.trim()} iconLeft={<Plus aria-hidden="true" />}>
+        <Button type="submit" loading={busy} loadingLabel="Agregando…" disabled={!name.trim()} iconLeft={<Plus aria-hidden="true" />}>
           Agregar
         </Button>
       </form>

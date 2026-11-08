@@ -31,6 +31,7 @@ export function CostAdjustDialog({ lot, onClose }: { lot: CostLot; onClose: () =
   return (
     <FormDialog<OpActionState>
       title="Corregir costo"
+      submitLabel="Corregir" pendingLabel="Corrigiendo…"
       description={`${lot.label} · actual ${formatMoney(old, { code: lot.currencyCode, decimals: 6 })}`}
       successMessage="Costo corregido."
       size="md"

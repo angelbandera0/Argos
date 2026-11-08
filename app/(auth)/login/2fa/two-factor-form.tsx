@@ -14,8 +14,8 @@ export function TwoFactorForm() {
       <form className="auth-form" action={action}>
         <CodeField id="code" name="code" label="Código de verificación" error={!!state.error} onValueChange={setCode} />
         {state.error && <Alert variant="danger">{state.error}</Alert>}
-        <Button type="submit" loading={pending} disabled={code.length < 6}>
-          {pending ? "Verificando…" : "Verificar"}
+        <Button type="submit" loading={pending} loadingLabel="Verificando…" disabled={code.length < 6}>
+          Verificar
         </Button>
       </form>
       <form className="auth-actions" action={signOutAdmin}>

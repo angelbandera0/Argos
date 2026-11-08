@@ -46,8 +46,8 @@ export function TotpStep() {
       <input type="hidden" name="factorId" value={enrollment.factorId} />
       <CodeField id="code" name="code" label="Código de verificación" error={!!state.error} onValueChange={setCode} />
       {state.error && <Alert variant="danger">{state.error}</Alert>}
-      <Button type="submit" loading={pending} disabled={code.length < 6}>
-        {pending ? "Verificando…" : "Verificar y continuar"}
+      <Button type="submit" loading={pending} loadingLabel="Verificando…" disabled={code.length < 6}>
+        Verificar y continuar
       </Button>
     </form>
   );

@@ -85,7 +85,7 @@ export function NotificationsView({
             { value: "unread", label: "Sin leer", count: counts.unread },
           ]}
         />
-        <Button variant="ghost" size="sm" disabled={pending || counts.unread === 0} onClick={() => run()}>Marcar todas como leídas</Button>
+        <Button variant="ghost" size="sm" loading={pending} loadingLabel="Marcando…" disabled={counts.unread === 0} onClick={() => run()}>Marcar todas como leídas</Button>
       </div>
       <NotificationFilterBar filters={filters} stores={stores} />
       {groups.length === 0 ? (

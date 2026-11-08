@@ -49,8 +49,9 @@ export function DeleteProductDialog({
         open={open}
         onClose={() => setOpen(false)}
         onConfirm={confirm}
-        confirmLabel={busy ? "Eliminando…" : "Eliminar producto"}
+        confirmLabel="Eliminar producto"
         loading={busy}
+        loadingLabel="Eliminando…"
         title={`¿Eliminar ${name}?`}
       >
         <p className="muted">El producto dejará de aparecer en el catálogo.</p>

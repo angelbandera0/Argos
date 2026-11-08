@@ -82,8 +82,9 @@ export function UserActionDialogs({
             onClose();
           }}
           onConfirm={confirm}
-          confirmLabel={busy ? copy.busy : copy.confirm}
+          confirmLabel={copy.confirm}
           loading={busy}
+          loadingLabel={copy.busy}
           title={copy.title(first)}
           icon={kind === "deactivate" ? "Trash2" : "KeyRound"}
           tone={kind === "deactivate" ? "danger" : "warning"}

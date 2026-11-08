@@ -50,8 +50,9 @@ export function DeleteRoleDialog({
         open={open}
         onClose={() => setOpen(false)}
         onConfirm={confirm}
-        confirmLabel={busy ? "Eliminando…" : "Eliminar rol"}
+        confirmLabel="Eliminar rol"
         loading={busy}
+        loadingLabel="Eliminando…"
         title={`¿Eliminar el rol ${name}?`}
       >
         <p className="muted">El rol dejará de aparecer en tu lista. Si tiene usuarios asignados, no se podrá eliminar.</p>

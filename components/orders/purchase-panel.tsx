@@ -94,14 +94,14 @@ export function PurchasePanel({
         )}
       </Card>
       <div className="row">
-        <Button variant="secondary" loading={pending} onClick={() => run(false)}>
+        <Button variant="secondary" loading={pending} loadingLabel="Guardando…" onClick={() => run(false)}>
           Guardar
         </Button>
-        <Button disabled={!purchaseReady(drafts)} loading={pending} onClick={() => setConfirm(true)}>
+        <Button disabled={!purchaseReady(drafts)} loading={pending} loadingLabel="Enviando…" onClick={() => setConfirm(true)}>
           Enviar a revisión
         </Button>
       </div>
-      <AlertDialog open={confirm} onClose={() => setConfirm(false)} onConfirm={() => run(true)} confirmLabel="Enviar a revisión" cancelLabel="Seguir editando" loading={pending} tone="success" icon="Check" title="¿Enviar a revisión?">
+      <AlertDialog open={confirm} onClose={() => setConfirm(false)} onConfirm={() => run(true)} confirmLabel="Enviar a revisión" cancelLabel="Seguir editando" loading={pending} loadingLabel="Enviando…" tone="success" icon="Check" title="¿Enviar a revisión?">
         Quien revisa verificará lo que llega al almacén. Mientras tanto no podrás editar el pedido.
       </AlertDialog>
     </div>

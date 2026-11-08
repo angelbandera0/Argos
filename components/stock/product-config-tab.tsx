@@ -187,6 +187,7 @@ export function ProductConfigTab({
         onClose={() => setRemoving(null)}
         onConfirm={remove}
         loading={pending}
+        loadingLabel="Eliminando…"
         title={`¿Eliminar «${removing?.item.name ?? ""}»?`}
         description="Esta acción no se puede deshacer."
         confirmLabel="Eliminar"

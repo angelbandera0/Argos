@@ -64,6 +64,7 @@ export function WriteOffDialog({ locationId, products, productId, canChooseLot, 
   return (
     <FormDialog<OpActionState>
       title="Dar de baja"
+      submitLabel="Dar de baja" pendingLabel="Registrando…"
       description="Descuenta existencia por pérdida, daño u otro motivo; por defecto sale de los lotes más antiguos primero."
       successMessage="Baja registrada."
       size="md"
@@ -113,6 +114,7 @@ export function SurplusDialog({ locationId, products, productId, costs, currenci
   return (
     <FormDialog<OpActionState>
       title="Registrar sobrante"
+      submitLabel="Registrar" pendingLabel="Registrando…"
       description="Suma existencia que aparece sin una entrada, como un lote nuevo."
       successMessage="Sobrante registrado."
       size="md"
@@ -163,6 +165,7 @@ export function AdjustLotDialog({ lot, unit, onClose }: { lot: { id: string; ini
   return (
     <FormDialog<OpActionState>
       title="Ajustar lote"
+      submitLabel="Ajustar" pendingLabel="Ajustando…"
       description={`Lote ${lot.id.slice(0, 8)} · actual ${formatStockQty(lot.remaining, unit)} de ${formatStockQty(lot.initialQty, unit)}.`}
       successMessage="Ajuste registrado."
       size="md"

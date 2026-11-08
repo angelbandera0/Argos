@@ -35,8 +35,8 @@ export function LoginForm() {
         />
       </Field>
       {state.error && <Alert variant="danger">{state.error}</Alert>}
-      <Button type="submit" loading={pending}>
-        {pending ? "Entrando…" : "Entrar"}
+      <Button type="submit" loading={pending} loadingLabel="Entrando…">
+        Entrar
       </Button>
       <div className="auth-actions">
         <Link href="/recuperar">¿Olvidaste tu contraseña?</Link>

@@ -128,6 +128,7 @@ export function TransferDialog({
   return (
     <FormDialog<TransferActionState>
       title="Trasladar a tienda"
+      submitLabel="Trasladar" pendingLabel="Trasladando…"
       description="Sale del almacén general y entra en la tienda."
       successMessage="Traslado registrado."
       size="lg"

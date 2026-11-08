@@ -22,8 +22,8 @@ export function RecoverForm() {
       <Field label="Correo" htmlFor="email">
         <Input id="email" name="email" type="email" autoComplete="username" autoCapitalize="none" spellCheck={false} required />
       </Field>
-      <Button type="submit" loading={pending}>
-        {pending ? "Enviando…" : "Enviar enlace"}
+      <Button type="submit" loading={pending} loadingLabel="Enviando…">
+        Enviar enlace
       </Button>
       <div className="auth-actions">
         <Link href="/login">Volver a entrar</Link>

@@ -43,7 +43,7 @@ export function AdjustPanel({ orderId, lots, costLots = [] }: { orderId: string;
         <Textarea id="adj-reason" maxLength={300} placeholder="Ej. Un saco estaba roto y se descartó." value={reason} onChange={(e) => setReason(e.target.value)} />
       </Field>
       <div className="row">
-        <Button disabled={!adjustValid(lot, Number(delta), reason)} loading={pending} onClick={apply}>
+        <Button disabled={!adjustValid(lot, Number(delta), reason)} loading={pending} loadingLabel="Aplicando…" onClick={apply}>
           Aplicar corrección
         </Button>
       </div>

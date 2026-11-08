@@ -25,7 +25,7 @@ export function AttendButton({ lineId, productId, warehouseId, canChooseLot, cur
         Atender
       </Button>
       {open && (
-        <FormDialog title={`Atender: ${productName}`} description={`Falta decidir ${formatStockQty(remaining, unit)} · En almacén ${formatStockQty(warehouse, unit)}`} action={attendLineAction} successMessage="Decisión guardada." onClose={() => setOpen(false)}>
+        <FormDialog title={`Atender: ${productName}`} description={`Falta decidir ${formatStockQty(remaining, unit)} · En almacén ${formatStockQty(warehouse, unit)}`} action={attendLineAction} successMessage="Decisión guardada." submitLabel="Confirmar" pendingLabel="Confirmando…" onClose={() => setOpen(false)}>
           {() => (
             <>
               <input type="hidden" name="lineId" value={lineId} />

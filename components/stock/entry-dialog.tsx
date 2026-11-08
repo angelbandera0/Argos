@@ -76,6 +76,7 @@ export function EntryDialog({
   return (
     <FormDialog<EntryActionState>
       title={title}
+      submitLabel="Registrar" pendingLabel="Registrando…"
       description={kind === "direct" ? "Para lo que llega directo a la tienda, sin pasar por el almacén." : undefined}
       successMessage="Entrada registrada."
       action={(prev, f) => registerEntryAction(kind, locationId, prev, f)}

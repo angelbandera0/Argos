@@ -117,6 +117,7 @@ export function RevokeAccess({ companyId, adminId, name }: { companyId: string; 
           icon="Users"
           confirmLabel="Quitar acceso"
           loading={busy}
+          loadingLabel="Quitando…"
           onConfirm={confirm}
           onClose={() => setOpen(false)}
         >

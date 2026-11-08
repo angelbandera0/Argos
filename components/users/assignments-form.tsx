@@ -130,9 +130,10 @@ export function AssignmentsForm({
           disabled={blocked || chosen.length === 0 || roles.length === 0}
           aria-describedby={blocked ? "assign-blocked" : undefined}
           loading={pending}
+          loadingLabel="Guardando…"
           onClick={save}
         >
-          {pending ? "Guardando…" : "Guardar cambios"}
+          Guardar cambios
         </Button>
       </div>
     </div>

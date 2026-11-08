@@ -68,6 +68,7 @@ export function CurrencyMenu({ id, name, active }: { id: string; name: string; a
         onClose={close}
         onConfirm={confirm}
         loading={busy}
+        loadingLabel="Procesando…"
         tone={deleting || active ? "danger" : "warning"}
         icon={deleting ? "Trash2" : "Settings"}
         confirmLabel={deleting ? "Eliminar divisa" : active ? "Desactivar divisa" : "Reactivar divisa"}

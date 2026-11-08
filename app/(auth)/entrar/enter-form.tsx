@@ -40,8 +40,8 @@ export function EnterForm() {
           setDismissed(state);
         }}
       />
-      <Button type="submit" className="pin-submit" disabled={!username.trim() || pinLength !== 6} loading={pending}>
-        {pending ? "Entrando…" : "Entrar"}
+      <Button type="submit" className="pin-submit" disabled={!username.trim() || pinLength !== 6} loading={pending} loadingLabel="Entrando…">
+        Entrar
       </Button>
       <ForgotPin />
     </form>

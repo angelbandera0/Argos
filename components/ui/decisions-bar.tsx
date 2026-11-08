@@ -21,7 +21,7 @@ export function DecisionsBar({
       <Button variant="outline" className="ui-decisions-undo" onClick={onUndo} disabled={pending}>
         Deshacer todo
       </Button>
-      <Button onClick={onApply} loading={pending}>
+      <Button onClick={onApply} loading={pending} loadingLabel="Aplicando…">
         Aplicar<span className="ui-decisions-long"> decisiones</span>
       </Button>
     </div>

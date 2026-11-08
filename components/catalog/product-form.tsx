@@ -186,7 +186,7 @@ export function ProductForm({
                     aria-invalid={newError ? true : undefined}
                     aria-describedby="newcat-hint"
                   />
-                  <Button type="button" size="md" loading={newBusy} disabled={!newName.trim()} onClick={createCategory}>
+                  <Button type="button" size="md" loading={newBusy} loadingLabel="Creando…" disabled={!newName.trim()} onClick={createCategory}>
                     Crear
                   </Button>
                 </div>
