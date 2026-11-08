@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Plus } from "@/components/icons";
-import { allowedCompanies, extraPermissionLabels, parseCompanyFilter } from "@/components/roles/role-card-data";
+import { allowedCompanies, parseCompanyFilter } from "@/components/roles/role-card-data";
 import { RoleList } from "@/components/roles/role-list";
 import { buttonClass } from "@/components/ui/button-class";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -17,7 +17,7 @@ export const metadata: Metadata = { title: "Roles · Argos" };
 const NewRoleLink = () => (
   <Link className={buttonClass("primary", "md")} href="/roles/nuevo">
     <Plus aria-hidden="true" />
-    Nuevo rol
+    Crear rol
   </Link>
 );
 
@@ -30,8 +30,8 @@ async function RoleListContent({ searchParams }: { searchParams: PageProps<"/rol
 
   if (all.length === 0) {
     return (
-      <EmptyState icon="KeyRound" title="Aún no tienes roles." action={<NewRoleLink />}>
-        Crea el primero para asignarlo a tus operadores.
+      <EmptyState icon="KeyRound" title="Aún no tienes roles.">
+        Usa «Crear rol» para crear el primero y asignarlo a tus operadores.
       </EmptyState>
     );
   }
@@ -49,10 +49,8 @@ async function RoleListContent({ searchParams }: { searchParams: PageProps<"/rol
         id: r.id,
         name: r.name,
         companies: r.excludedCompanyIds.length === 0 ? "all" : allowedCompanies(companies, r.excludedCompanyIds).map((c) => c.name),
-        products: r.permissions.products,
-        extras: extraPermissionLabels(r.permissions, r.specialPermissions),
         sessionSeconds: r.sessionSeconds,
-        users: assigned.filter((u) => u.roleId === r.id).map((u) => u.displayName),
+        usersCount: assigned.filter((u) => u.roleId === r.id).length,
       }))}
     />
   );

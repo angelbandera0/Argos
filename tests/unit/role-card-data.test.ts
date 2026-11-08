@@ -22,3 +22,20 @@ describe("role card data", () => {
     expect(parseCompanyFilter(undefined, ["a"])).toBe("");
   });
 });
+
+import { companiesLabel, ROLE_ACTIONS, roleCardData } from "@/components/roles/role-card-data";
+
+describe("role card summary", () => {
+  it("shows only companies, session and users", () => {
+    expect(roleCardData({ companies: ["A", "B"], sessionSeconds: null, usersCount: 2 })).toEqual([
+      { label: "Compañías", value: "2 compañías" },
+      { label: "Sesión", value: "Tope de la compañía" },
+      { label: "Usuarios", value: "2 usuarios" },
+    ]);
+    expect(companiesLabel("all")).toBe("Todas");
+    expect(companiesLabel([])).toBe("Ninguna");
+  });
+  it("puts edit next to delete", () => {
+    expect(ROLE_ACTIONS).toEqual(["edit", "delete"]);
+  });
+});

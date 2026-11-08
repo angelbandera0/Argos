@@ -3,26 +3,21 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { NAV_ICONS } from "@/components/icons";
-import { Avatar } from "@/components/ui/avatar";
-import { buttonClass } from "@/components/ui/button-class";
 import { Chip } from "@/components/ui/chip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EntityCard } from "@/components/ui/entity-card";
 import { ListToolbar } from "@/components/ui/list-toolbar";
-import type { PermissionSet } from "@/core/domain/permissions";
-import { OPS, sessionLabel, usersLabel } from "./role-card-data";
+import { roleCardData } from "./role-card-data";
 import { RoleMenu } from "./role-menu";
 
-const { KeyRound, Plus, Check } = NAV_ICONS;
+const { KeyRound } = NAV_ICONS;
 
 export type RoleCardRow = {
   id: string;
   name: string;
   companies: string[] | "all";
-  products: PermissionSet;
-  extras: string[];
   sessionSeconds: number | null;
-  users: string[];
+  usersCount: number;
 };
 
 export function RoleList({
@@ -85,92 +80,14 @@ export function RoleList({
           {rows.map((r) => (
             <EntityCard
               key={r.id}
+              className="ui-role-card"
               avatar={<KeyRound />}
               avatarClassName="co-tone-1"
               title={<Link href={`/roles/${r.id}`}>{r.name}</Link>}
               badge={<RoleMenu roleId={r.id} name={r.name} />}
-              actions={
-                <Link href={`/roles/${r.id}`} className={`${buttonClass("outline", "md")} ui-entity-card-edit`}>
-                  Editar rol
-                </Link>
-              }
-            >
-              <dl className="ui-role-data">
-                <div>
-                  <dt>Compañías</dt>
-                  <dd className="ui-role-chips">
-                    {r.companies === "all" ? (
-                      <Chip variant="neutral">Todas las compañías</Chip>
-                    ) : r.companies.length === 0 ? (
-                      "—"
-                    ) : (
-                      r.companies.map((c) => (
-                        <Chip key={c} variant="ring">
-                          {c}
-                        </Chip>
-                      ))
-                    )}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Permisos · Productos</dt>
-                  <dd className="ui-role-chips">
-                    {OPS.map(({ op, label }) =>
-                      r.products[op] ? (
-                        <Chip key={op} variant="alert">
-                          <Check aria-hidden="true" />
-                          {label}
-                        </Chip>
-                      ) : (
-                        <Chip key={op} className="ui-role-denied">
-                          {label}
-                          <span className="sr-only"> (no permitido)</span>
-                        </Chip>
-                      ),
-                    )}
-                  </dd>
-                </div>
-                {r.extras.length > 0 && (
-                  <div>
-                    <dt>Otros permisos</dt>
-                    <dd className="ui-role-chips">
-                      {r.extras.map((x) => (
-                        <Chip key={x} variant="ring">
-                          {x}
-                        </Chip>
-                      ))}
-                    </dd>
-                  </div>
-                )}
-                <div className="ui-role-pair">
-                  <div>
-                    <dt>Sesión</dt>
-                    <dd>{sessionLabel(r.sessionSeconds)}</dd>
-                  </div>
-                  <div>
-                    <dt>Usuarios</dt>
-                    <dd className="ui-role-users">
-                      {r.users.length > 0 && (
-                        <span className="ui-avatar-stack">
-                          {r.users.slice(0, 3).map((u) => (
-                            <Avatar key={u} name={u} size="sm" />
-                          ))}
-                        </span>
-                      )}
-                      {usersLabel(r.users.length)}
-                    </dd>
-                  </div>
-                </div>
-              </dl>
-            </EntityCard>
+              data={roleCardData(r)}
+            />
           ))}
-          <Link href="/roles/nuevo" className="ui-role-new">
-            <span className="ui-role-new-icon" aria-hidden="true">
-              <Plus />
-            </span>
-            <strong>Crear un rol nuevo</strong>
-            <span className="caption">Define qué puede hacer cada persona.</span>
-          </Link>
         </div>
       )}
     </>

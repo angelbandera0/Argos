@@ -1,12 +1,13 @@
 "use client";
 
 import { Menu } from "@base-ui/react/menu";
+import Link from "next/link";
 import { useState } from "react";
 import { NAV_ICONS } from "@/components/icons";
 import { buttonClass } from "@/components/ui/button-class";
 import { DeleteRoleDialog } from "./delete-role-dialog";
 
-const { Ellipsis, Trash2 } = NAV_ICONS;
+const { Ellipsis, Pencil, Trash2 } = NAV_ICONS;
 
 export function RoleMenu({ roleId, name }: { roleId: string; name: string }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,10 @@ export function RoleMenu({ roleId, name }: { roleId: string; name: string }) {
             <Menu.Popup className="menu-popup" aria-label={`Opciones de ${name}`}>
               <Menu.Group>
                 <Menu.GroupLabel className="eyebrow">Rol</Menu.GroupLabel>
+                <Menu.Item className="menu-item" render={<Link href={`/roles/${roleId}/editar`} />}>
+                  <Pencil aria-hidden="true" />
+                  Editar rol
+                </Menu.Item>
                 <Menu.Item className="menu-item menu-item-danger" onClick={() => setOpen(true)}>
                   <Trash2 aria-hidden="true" />
                   Eliminar rol

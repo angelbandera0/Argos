@@ -70,3 +70,9 @@
 .ui-role-new .caption { color: var(--color-muted); }
 .ui-entity-card[data-code-box] .ui-entity-card-avatar { width: var(--size-icon-circle-xl); height: var(--size-icon-circle-xl); background: var(--color-surface); box-shadow: inset 0 0 0 var(--border-field) var(--color-line); font-family: var(--font-mono, ui-monospace, monospace); font-weight: 700; }
 .ui-entity-card[data-code-box] .ui-entity-card-avatar.co-tone-1 { background: var(--color-red-tint); color: var(--color-red-strong); box-shadow: none; }
+.ui-role-card .ui-entity-card-data { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 480px) { .ui-role-card .ui-entity-card-data { grid-template-columns: 1fr 1fr; } }
+.ui-role-perms { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.ui-role-perms li { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.ui-role-perms strong { min-width: 9rem; }
+.ui-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-4); }

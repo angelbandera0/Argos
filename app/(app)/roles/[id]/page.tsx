@@ -1,52 +1,59 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { Lock } from "@/components/icons";
-import { Chip } from "@/components/ui/chip";
-import { PageHeader } from "@/components/ui/page-header";
+import { Pencil } from "@/components/icons";
 import { DeleteRoleDialog } from "@/components/roles/delete-role-dialog";
-import { RoleForm } from "@/components/roles/role-form";
+import { RoleDetail } from "@/components/roles/role-detail";
+import { buttonClass } from "@/components/ui/button-class";
+import { PageHeader } from "@/components/ui/page-header";
 import { requireRoleUser } from "../guard";
 import Loading from "./loading";
 
 export const instant = false;
 
-export const metadata: Metadata = { title: "Editar rol · Argos" };
+export const metadata: Metadata = { title: "Rol · Argos" };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-async function Editor({ params }: { params: PageProps<"/roles/[id]">["params"] }) {
+async function Detail({ params }: { params: PageProps<"/roles/[id]">["params"] }) {
   const { id } = await params;
   if (!UUID.test(id)) notFound();
   const { actor, org, roles } = await requireRoleUser();
   const role = await roles.roles.getById(id);
   if (!role || role.ownerId !== actor.userId) notFound();
-  const companies = (await org.listCompanies(actor)).map((c) => ({ id: c.id, name: c.name, code: c.code }));
+  const [companies, assigned] = await Promise.all([org.listCompanies(actor), roles.roles.listUsers([id])]);
   return (
     <div className="stack">
       <PageHeader
-        title={`Rol: ${role.name}`}
-        description="Define qué puede hacer y en qué compañías. Luego lo asignas a usuarios."
+        title={role.name}
+        description="Detalle del rol en solo lectura."
         breadcrumbs={[{ label: "Roles", href: "/roles" }, { label: role.name }]}
         actions={
           <>
-            <Chip variant="ring">
-              <Lock aria-hidden="true" />
-              Solo tú ves y editas este rol
-            </Chip>
+            <Link className={buttonClass("outline", "md")} href={`/roles/${role.id}/editar`}>
+              <Pencil aria-hidden="true" />
+              Editar
+            </Link>
             <DeleteRoleDialog roleId={role.id} name={role.name} />
           </>
         }
       />
-      <RoleForm roleId={role.id} companies={companies} initial={role} />
+      <RoleDetail
+        permissions={role.permissions}
+        grants={role.specialPermissions}
+        sessionSeconds={role.sessionSeconds}
+        allCompanies={companies.map((c) => ({ id: c.id, name: c.name, allowed: !role.excludedCompanyIds.includes(c.id) }))}
+        users={assigned.filter((u) => u.roleId === id).map((u) => u.displayName)}
+      />
     </div>
   );
 }
 
-export default function EditRolePage(props: PageProps<"/roles/[id]">) {
+export default function RoleDetailPage(props: PageProps<"/roles/[id]">) {
   return (
     <Suspense fallback={<Loading />}>
-      <Editor params={props.params} />
+      <Detail params={props.params} />
     </Suspense>
   );
 }

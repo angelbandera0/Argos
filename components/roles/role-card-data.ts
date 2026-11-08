@@ -28,3 +28,16 @@ export const usersLabel = (n: number) => (n === 0 ? "Ninguno" : `${n} ${n === 1 
 export function parseCompanyFilter(value: unknown, companyIds: string[]): string {
   return typeof value === "string" && companyIds.includes(value) ? value : "";
 }
+
+export const companiesLabel = (companies: string[] | "all") =>
+  companies === "all" ? "Todas" : companies.length === 0 ? "Ninguna" : `${companies.length} ${companies.length === 1 ? "compañía" : "compañías"}`;
+
+export function roleCardData(r: { companies: string[] | "all"; sessionSeconds: number | null; usersCount: number }) {
+  return [
+    { label: "Compañías", value: companiesLabel(r.companies) },
+    { label: "Sesión", value: sessionLabel(r.sessionSeconds) },
+    { label: "Usuarios", value: usersLabel(r.usersCount) },
+  ];
+}
+
+export const ROLE_ACTIONS = ["edit", "delete"] as const;
