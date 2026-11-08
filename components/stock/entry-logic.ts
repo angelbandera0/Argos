@@ -62,7 +62,6 @@ const ERRORS: Record<string, string> = {
 export const entryErrorMessage = (code?: string) => (code && ERRORS[code]) || "No se pudo guardar. Inténtalo de nuevo.";
 
 export const UNCONFIGURED_HINT = "Sin configurar para almacén";
-export const UNCONFIGURED_NOTICE = "Este producto aún no se almacena. Elige su unidad base; se activará al registrar la entrada.";
 export const DEFAULT_BASE_UNIT = "lb";
 export const ENTRY_BASE_UNITS = ["lb", "kg", "g", "oz", "l", "ml", "u"].map((u) => ({ value: u, label: baseLabel(u) }));
 
@@ -109,11 +108,12 @@ export function plural(name: string): string {
 export const quantityLabel = (presentation: string, name: string) =>
   presentation === BULK ? "Cantidad" : `¿Cuántos ${plural(name) || "envases"} entran?`;
 
-/** Base unit: the product's if configured; otherwise the chosen base if compatible, else the unit in use. */
-export function resolveBase(configBase: string | undefined, unit: string, chosenBase?: string | null): string {
-  if (configBase) return configBase;
-  return chosenBase && family(unit).includes(chosenBase as Unit) ? chosenBase : unit;
-}
+/** Base unit: the product's if configured; otherwise deduced from the unit in use (content unit, or bulk unit). */
+export const resolveBase = (configBase: string | undefined, unit: string): string => configBase || unit;
+
+/** Base unit to activate an unconfigured product with: bulk unit when bulk, else the content unit. */
+export const deriveBaseUnit = (bulk: boolean, bulkUnit?: string, contentUnit?: string): string | undefined =>
+  (bulk ? bulkUnit : contentUnit) || undefined;
 
 export const familyOptions = (base: string): SelectOption[] => family(base).map((u) => ({ value: u, label: baseLabel(u) }));
 

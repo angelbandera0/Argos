@@ -5,3 +5,6 @@
 - Costo ahora siempre por unidad base, con «= X por saco» como pista. Quitado `pricePerPresentation` de la acción.
 - `registerEntryAction`: guarda config si falta, crea presentación (nombre + contenido), contenido distinto del habitual = sobrescritura por lote; sin registrar si falla la configuración.
 - Lógica en `components/stock/entry-logic.ts`; pruebas en `tests/unit/entry-logic.test.ts`. Sin navegador.
+- Cambio posterior: quitados el aviso «aún no se almacena» y el selector «Unidad base»; la base se deduce (`deriveBaseUnit`: unidad del Contenido, o la de Cantidad a granel; 'u' si es conteo).
+- `registerEntryAction` activa el producto (storable + base deducida) con `configure_units` antes de registrar; sin permiso o sin base deducible no registra nada (error traducido).
+- Resumen y «Costo por <base>» usan la base deducida; productos ya configurados sin cambios. Pruebas actualizadas.

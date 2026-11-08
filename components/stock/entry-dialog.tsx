@@ -7,7 +7,7 @@ import { Field, Input } from "@/components/ui/field";
 import { FormDialog } from "@/components/ui/form-dialog";
 import { QuantityPicker } from "@/components/ui/quantity-picker";
 import { Select } from "@/components/ui/select";
-import { ALL_UNIT_OPTIONS, baseLabel, BULK, costPerPresentationLabel, DEFAULT_BASE_UNIT, type EntryProductOption, entryFactor, entrySummary, familyOptions, NEW_PRESENTATION, presentationOptions, quantityLabel, resolveBase, UNCONFIGURED_NOTICE } from "./entry-logic";
+import { ALL_UNIT_OPTIONS, baseLabel, BULK, costPerPresentationLabel, DEFAULT_BASE_UNIT, type EntryProductOption, entryFactor, entrySummary, familyOptions, NEW_PRESENTATION, presentationOptions, quantityLabel, resolveBase } from "./entry-logic";
 
 export type EntryProduct = EntryProductOption;
 export type EntryCurrency = { id: string; code: string };
@@ -38,7 +38,6 @@ export function EntryDialog({
   const [amount, setAmount] = useState("");
   const [unitSel, setUnitSel] = useState<string | null>(null);
   const [contentSel, setContentSel] = useState<string | null>(null);
-  const [baseSel, setBaseSel] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [cost, setCost] = useState("");
   const [unknownCost, setUnknownCost] = useState(false);
@@ -59,7 +58,7 @@ export function EntryDialog({
   const isNew = presentation === NEW_PRESENTATION;
   const existing = config?.presentations.find((p) => p.name === presentation);
   const unit = unitSel ?? config?.baseUnit ?? DEFAULT_BASE_UNIT;
-  const base = resolveBase(config?.baseUnit, unit, baseSel);
+  const base = resolveBase(config?.baseUnit, unit);
   const contentQty = contentSel ?? (existing ? String(existing.content) : "");
   const contentUnit = contentSel === null && existing ? base : unit;
   const factor = entryFactor(bulk, contentSel === null && existing ? base : unit, contentQty, base);
@@ -118,14 +117,6 @@ export function EntryDialog({
                 </Field>
               )}
               {summary && !bulk && <p className="hint">{summary}</p>}
-              {unconfigured && (
-                <>
-                  <p className="hint">{UNCONFIGURED_NOTICE}</p>
-                  <Field label="Unidad base" htmlFor="entry-base-unit">
-                    <Select id="entry-base-unit" name="baseUnit" options={familyOptions(unit)} value={base} onValueChange={(v) => setBaseSel(v)} />
-                  </Field>
-                </>
-              )}
               {showCost && (
                 <>
                   <Field label={`Costo por ${baseLabel(base)}`} htmlFor="entry-cost" optional hint={!unknownCost ? (bulk ? "" : costPerPresentationLabel(cost, factor, name, currency)) || undefined : undefined}>

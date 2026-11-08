@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { entryErrorMessage, entrySchema, BULK, fromFamilyUnit, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
+import { deriveBaseUnit, entryErrorMessage, entrySchema, BULK, fromFamilyUnit, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -43,10 +43,11 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
   });
   if (!p.success) return { error: entryErrorMessage("INVALID_INPUT") };
   const d = p.data;
-  const baseUnit = text(f, "baseUnit");
   const withCost = costs && !d.unknownCost && d.cost !== undefined;
   try {
-    if (baseUnit && !(await stock.getProductStockConfig(actor, { productId: d.productId })).storable) {
+    if (!(await stock.getProductStockConfig(actor, { productId: d.productId })).storable) {
+      const baseUnit = deriveBaseUnit(d.unit === BULK, d.bulkUnit, d.contentUnit);
+      if (!baseUnit || !can("configure_units")) return { error: entryErrorMessage("PRODUCT_NOT_STORABLE") };
       await stock.saveProductStockConfig(actor, { productId: d.productId, storable: true, baseUnit });
     }
     const config = await stock.getProductStockConfig(actor, { productId: d.productId });

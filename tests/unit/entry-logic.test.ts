@@ -43,7 +43,7 @@ describe("entryProductOptions", () => {
   });
 });
 
-import { BULK, entryFactor, entrySummary, familyRatio, fromFamilyUnit, newPresentationContent, plural, presentationOptions, quantityLabel, resolveBase } from "@/components/stock/entry-logic";
+import { BULK, entryFactor, entrySummary, familyRatio, fromFamilyUnit, newPresentationContent, plural, presentationOptions, quantityLabel, resolveBase, deriveBaseUnit } from "@/components/stock/entry-logic";
 import { convertUnits, toNumber } from "@/core/domain/stock";
 
 describe("flujo presentación > cantidad > contenido", () => {
@@ -83,7 +83,9 @@ describe("flujo presentación > cantidad > contenido", () => {
   it("unidad base por defecto y familia compatible", () => {
     expect(resolveBase("lb", "kg")).toBe("lb");
     expect(resolveBase(undefined, "kg")).toBe("kg");
-    expect(resolveBase(undefined, "kg", "lb")).toBe("lb");
-    expect(resolveBase(undefined, "kg", "ml")).toBe("kg");
+    expect(deriveBaseUnit(true, "kg", "lb")).toBe("kg");
+    expect(deriveBaseUnit(false, "kg", "lb")).toBe("lb");
+    expect(deriveBaseUnit(false, "", "u")).toBe("u");
+    expect(deriveBaseUnit(true, "", "")).toBeUndefined();
   });
 });
