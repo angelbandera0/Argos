@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { entryErrorMessage, entrySchema, fromFamilyUnit, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
+import { entryErrorMessage, entrySchema, BULK, fromFamilyUnit, NEW_PRESENTATION, newPresentationContent, UNIT_PREFIX } from "@/components/stock/entry-logic";
 import { Forbidden, NotFound, RuleViolation } from "@/core/domain/errors";
 import { requireStockUser } from "./guard";
 
@@ -33,13 +33,13 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
     productId: text(f, "productId"),
     qty: text(f, "qty"),
     unit: text(f, "unit"),
-    content: text(f, "content"),
+    bulkUnit: text(f, "bulkUnit"),
+    contentQty: text(f, "contentQty"),
+    contentUnit: text(f, "contentUnit"),
     cost: costs ? text(f, "cost") : "",
     currencyId: text(f, "currencyId"),
     unknownCost: f.get("unknownCost") === "on",
     newName: text(f, "newName"),
-    newQty: text(f, "newQty"),
-    newUnit: text(f, "newUnit"),
   });
   if (!p.success) return { error: entryErrorMessage("INVALID_INPUT") };
   const d = p.data;
@@ -50,22 +50,22 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
       await stock.saveProductStockConfig(actor, { productId: d.productId, storable: true, baseUnit });
     }
     const config = await stock.getProductStockConfig(actor, { productId: d.productId });
-    let { qty, unit, unitCost, price } = { qty: d.qty, unit: d.unit, unitCost: undefined as number | undefined, price: undefined as number | undefined };
-    if (withCost) {
-      if (d.unit === "base") unitCost = d.cost;
-      else price = d.cost;
-    }
-    let content = d.unit === "base" ? undefined : d.content;
-    if (d.unit.startsWith(UNIT_PREFIX)) {
-      ({ qty, unitCost } = fromFamilyUnit(d.unit, config.baseUnit, d.qty, price));
+    let { qty, unit, content } = { qty: d.qty, unit: d.unit, content: undefined as number | undefined };
+    const unitCost = withCost ? d.cost : undefined;
+    if (d.unit === BULK) {
+      const u = d.bulkUnit || config.baseUnit;
       unit = "base";
-      price = undefined;
-      content = undefined;
-    } else if (d.unit === NEW_PRESENTATION) {
-      if (!can("configure_units") || !d.newName || !d.newQty || !d.newUnit) return { error: entryErrorMessage("INVALID_INPUT") };
-      await stock.addPresentation(actor, { productId: d.productId, name: d.newName, content: newPresentationContent(d.newQty, d.newUnit, config.baseUnit) });
-      unit = d.newName;
-      content = undefined;
+      if (u !== config.baseUnit) qty = fromFamilyUnit(UNIT_PREFIX + u, config.baseUnit, d.qty).qty;
+    } else {
+      if (!d.contentQty || !d.contentUnit) return { error: entryErrorMessage("INVALID_INPUT") };
+      const entered = newPresentationContent(d.contentQty, d.contentUnit, config.baseUnit);
+      if (d.unit === NEW_PRESENTATION) {
+        if (!can("configure_units") || !d.newName) return { error: entryErrorMessage("INVALID_INPUT") };
+        await stock.addPresentation(actor, { productId: d.productId, name: d.newName, content: entered });
+        unit = d.newName;
+      } else if (entered !== config.presentations.find((x) => x.name === d.unit)?.content) {
+        content = entered;
+      }
     }
     const input = {
       productId: d.productId,
@@ -75,7 +75,6 @@ export async function registerEntryAction(kind: "initial" | "direct", locationId
       content,
       currencyId: withCost ? d.currencyId || undefined : undefined,
       ...(unitCost !== undefined ? { unitCost } : {}),
-      ...(price !== undefined ? { pricePerPresentation: price } : {}),
     };
     await (kind === "initial" ? stock.registerInitialEntry(actor, input) : stock.registerDirectEntry(actor, input));
   } catch (e) {

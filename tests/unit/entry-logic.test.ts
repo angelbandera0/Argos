@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { baseAmount, costPerBaseLabel, entryErrorMessage, entrySchema, entryProductOptions, equivalentLabel } from "@/components/stock/entry-logic";
+import { baseAmount, costPerPresentationLabel, entryErrorMessage, entrySchema, entryProductOptions, equivalentLabel } from "@/components/stock/entry-logic";
 
 describe("entry-logic", () => {
   it("convierte a base en milésimas exactas", () => {
@@ -12,9 +12,9 @@ describe("entry-logic", () => {
     expect(equivalentLabel("5", 25, "lb")).toContain("lb");
     expect(equivalentLabel("", 25, "lb")).toBe("");
   });
-  it("costo por base", () => {
-    expect(costPerBaseLabel("100", 25, "lb", "CUP")).toContain("4");
-    expect(costPerBaseLabel("", 25, "lb", "CUP")).toBe("");
+  it("costo por presentación", () => {
+    expect(costPerPresentationLabel("4", 10, "saco", "CUP")).toBe("= 40 CUP por saco");
+    expect(costPerPresentationLabel("", 10, "saco", "CUP")).toBe("");
   });
   it("valida el formulario", () => {
     expect(entrySchema.safeParse({ productId: "p", qty: "2,5", unit: "base", unknownCost: false }).success).toBe(true);
@@ -43,24 +43,47 @@ describe("entryProductOptions", () => {
   });
 });
 
-import { entryUnitOptions, familyRatio, fromFamilyUnit, newPresentationContent, newPresentationSummary } from "@/components/stock/entry-logic";
+import { BULK, entryFactor, entrySummary, familyRatio, fromFamilyUnit, newPresentationContent, plural, presentationOptions, quantityLabel, resolveBase } from "@/components/stock/entry-logic";
 import { convertUnits, toNumber } from "@/core/domain/stock";
 
-describe("unidades compatibles", () => {
-  it("ofrece toda la familia, presentaciones y nueva presentación", () => {
-    const v = (canCreate: boolean) => entryUnitOptions("lb", [{ name: "saco" }], canCreate).map((o) => o.value);
-    expect(v(true)).toEqual(["base", "unit:kg", "unit:g", "unit:oz", "saco", "new"]);
-    expect(v(false)).not.toContain("new");
-    expect(entryUnitOptions("u", [], false).map((o) => o.value)).toEqual(["base"]);
+describe("flujo presentación > cantidad > contenido", () => {
+  it("lista presentaciones, granel y nueva", () => {
+    const v = (canCreate: boolean) => presentationOptions([{ name: "saco" }], canCreate).map((o) => o.value);
+    expect(v(true)).toEqual([BULK, "saco", "new"]);
+    expect(v(false)).toEqual([BULK, "saco"]);
+  });
+  it("etiqueta de cantidad", () => {
+    expect(plural("saco")).toBe("sacos");
+    expect(plural("caja")).toBe("cajas");
+    expect(plural("pan")).toBe("panes");
+    expect(quantityLabel("saco", "saco")).toBe("¿Cuántos sacos entran?");
+    expect(quantityLabel(BULK, "")).toBe("Cantidad");
   });
   it("convierte dentro de la familia con un solo redondeo", () => {
     expect(toNumber(convertUnits(250, "kg", "lb"))).toBe(551.156);
-    expect(fromFamilyUnit("unit:kg", "lb", 12, 2)).toEqual({ qty: 26.455, unitCost: 2 / familyRatio("unit:kg", "lb") });
+    expect(fromFamilyUnit("unit:kg", "lb", 12)).toEqual({ qty: 26.455, unitCost: undefined });
     expect(() => fromFamilyUnit("unit:ml", "lb", 1)).toThrow();
+    expect(familyRatio("unit:lb", "lb")).toBe(1);
   });
-  it("nueva presentación", () => {
+  it("contenido de presentación nueva en milésimas", () => {
     expect(newPresentationContent(25, "kg", "lb")).toBe(55.116);
-    expect(newPresentationSummary("10", "sacos", "25", "kg", "lb")).toBe("10 sacos × 25 kg = 250 kg = 551,160 lb");
-    expect(newPresentationSummary("", "sacos", "25", "kg", "lb")).toBe("");
+    expect(entryFactor(false, "kg", "25", "lb")).toBe(55.116);
+    expect(entryFactor(false, "kg", "", "lb")).toBe(0);
+  });
+  it("resumen presentación", () => {
+    expect(entrySummary(false, "25", "saco", "10", "lb", "lb")).toBe("25 sacos × 10 lb = 250 lb");
+    expect(entrySummary(false, "10", "saco", "25", "kg", "lb")).toBe("10 sacos × 25 kg = 250 kg = 551,160 lb");
+    expect(entrySummary(false, "", "saco", "25", "kg", "lb")).toBe("");
+    expect(entrySummary(false, "5", "saco", "", "kg", "lb")).toBe("");
+  });
+  it("resumen granel", () => {
+    expect(entrySummary(true, "12", "", "", "kg", "lb")).toBe("12 kg = 26,455 lb");
+    expect(entrySummary(true, "12", "", "", "lb", "lb")).toBe("");
+  });
+  it("unidad base por defecto y familia compatible", () => {
+    expect(resolveBase("lb", "kg")).toBe("lb");
+    expect(resolveBase(undefined, "kg")).toBe("kg");
+    expect(resolveBase(undefined, "kg", "lb")).toBe("lb");
+    expect(resolveBase(undefined, "kg", "ml")).toBe("kg");
   });
 });

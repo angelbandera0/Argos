@@ -11,13 +11,13 @@ export const entrySchema = z.object({
   productId: z.string().min(1),
   qty: positive,
   unit: z.string().min(1),
-  content: optionalPositive,
+  bulkUnit: z.string().optional(),
+  contentQty: optionalPositive,
+  contentUnit: z.string().optional(),
   cost: optionalCost,
   currencyId: z.string().optional(),
   unknownCost: z.boolean(),
   newName: z.string().trim().optional(),
-  newQty: optionalPositive,
-  newUnit: z.string().optional(),
 });
 
 export type EntryUnit = { value: string; label: string; factor: number };
@@ -40,11 +40,11 @@ export function equivalentLabel(amount: string, factor: number, unit: string): s
   return base === null ? "" : `= ${format(qty(base))} ${baseLabel(unit)}`;
 }
 
-/** Cost per base unit shown under the price per presentation. */
-export function costPerBaseLabel(cost: string, factor: number, unit: string, currency: string): string {
+/** Cost is per base unit; this shows what it amounts to per presentation: "= 40 CUP por saco". */
+export function costPerPresentationLabel(cost: string, factor: number, name: string, currency: string): string {
   const n = Number(cost.trim().replace(",", "."));
-  if (!cost.trim() || !(n >= 0) || !(factor > 0)) return "";
-  return `= ${new Intl.NumberFormat("es", { maximumFractionDigits: 4 }).format(n / factor)} ${currency} por ${baseLabel(unit)}`;
+  if (!cost.trim() || !(n >= 0) || !(factor > 0) || !name.trim()) return "";
+  return `= ${new Intl.NumberFormat("es", { maximumFractionDigits: 4 }).format(Math.round(n * factor * 1000) / 1000)} ${currency} por ${name.trim().toLowerCase()}`;
 }
 
 const ERRORS: Record<string, string> = {
@@ -85,17 +85,34 @@ export const STORABLE_LOCKED_TEXT = "No se puede desactivar porque el producto y
 
 export const UNIT_PREFIX = "unit:";
 export const NEW_PRESENTATION = "new";
+export const BULK = "bulk";
 
 const family = (base: string) => unitsOf(magnitudeOf(base as Unit));
 
-/** Base unit, the rest of its family, existing presentations and (if allowed) "new presentation". */
-export function entryUnitOptions(base: string, presentations: { name: string }[], canCreate: boolean): SelectOption[] {
+/** Existing presentations, bulk (quantity straight in a unit of measure) and, if allowed, "new presentation". */
+export function presentationOptions(presentations: { name: string }[], canCreate: boolean): SelectOption[] {
   return [
-    { value: "base", label: baseLabel(base) },
-    ...family(base).filter((u) => u !== base).map((u) => ({ value: UNIT_PREFIX + u, label: baseLabel(u) })),
+    { value: BULK, label: "A granel / por unidad de medida" },
     ...presentations.map((p) => ({ value: p.name, label: p.name })),
     ...(canCreate ? [{ value: NEW_PRESENTATION, label: "Nueva presentación…" }] : []),
   ];
+}
+
+export const ALL_UNIT_OPTIONS: SelectOption[] = ENTRY_BASE_UNITS;
+
+export function plural(name: string): string {
+  const n = name.trim().toLowerCase();
+  if (!n) return "";
+  return /s$/.test(n) ? n : /[aeiouáéíóú]$/.test(n) ? `${n}s` : `${n}es`;
+}
+
+export const quantityLabel = (presentation: string, name: string) =>
+  presentation === BULK ? "Cantidad" : `¿Cuántos ${plural(name) || "envases"} entran?`;
+
+/** Base unit: the product's if configured; otherwise the chosen base if compatible, else the unit in use. */
+export function resolveBase(configBase: string | undefined, unit: string, chosenBase?: string | null): string {
+  if (configBase) return configBase;
+  return chosenBase && family(unit).includes(chosenBase as Unit) ? chosenBase : unit;
 }
 
 export const familyOptions = (base: string): SelectOption[] => family(base).map((u) => ({ value: u, label: baseLabel(u) }));
@@ -118,11 +135,27 @@ export function fromFamilyUnit(value: string, base: string, amount: number, cost
 export const newPresentationContent = (contentQty: number, contentUnit: string, base: string) =>
   toNumber(convertUnits(contentQty, familyUnit(contentUnit, base), base as Unit));
 
-/** "10 sacos × 25 kg = 250 kg = 551,160 lb" (the base total is what gets stored: amount × content). */
-export function newPresentationSummary(amount: string, name: string, contentQty: string, contentUnit: string, base: string): string {
-  const a = Number(amount.replace(",", ".")), c = Number(contentQty.replace(",", "."));
-  if (!(a > 0) || !(c > 0) || !name.trim() || !family(base).includes(contentUnit as Unit)) return "";
-  const n = (v: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(v);
-  const total = baseAmount(amount, newPresentationContent(c, contentUnit, base));
-  return `${n(a)} ${name.trim()} × ${n(c)} ${baseLabel(contentUnit)} = ${n(toNumber(mul(qty(a), c)))} ${baseLabel(contentUnit)} = ${total === null ? "" : format(qty(total))} ${baseLabel(base)}`;
+const fmt = (v: number) => new Intl.NumberFormat("es", { maximumFractionDigits: 3 }).format(v);
+
+/** Base units per one entered unit: bulk unit, or content of the presentation. 0 when not computable. */
+export function entryFactor(bulk: boolean, unit: string, contentQty: string, base: string): number {
+  try {
+    if (bulk) return familyRatio(UNIT_PREFIX + unit, base);
+    const c = Number(contentQty.trim().replace(",", "."));
+    return c > 0 ? newPresentationContent(c, unit, base) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** "25 sacos × 10 lb = 250 lb" (+ " = X base" when the unit differs); bulk: "25 kg = 55,116 lb". */
+export function entrySummary(bulk: boolean, amount: string, name: string, contentQty: string, unit: string, base: string): string {
+  const a = Number(amount.trim().replace(",", ".")), c = Number(contentQty.trim().replace(",", "."));
+  const factor = entryFactor(bulk, unit, contentQty, base);
+  if (!(a > 0) || !(factor > 0)) return "";
+  const total = baseAmount(amount, factor);
+  const inBase = total === null || unit === base ? "" : ` = ${format(qty(total))} ${baseLabel(base)}`;
+  if (bulk) return unit === base ? "" : `${fmt(a)} ${baseLabel(unit)}${inBase}`;
+  if (!(c > 0) || !name.trim()) return "";
+  return `${fmt(a)} ${plural(name)} × ${fmt(c)} ${baseLabel(unit)} = ${fmt(toNumber(mul(qty(a), c)))} ${baseLabel(unit)}${inBase}`;
 }
