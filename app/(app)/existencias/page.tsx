@@ -18,14 +18,22 @@ export const metadata: Metadata = { title: "Existencias · Argos" };
 
 const first = (v: string | string[] | undefined) => (typeof v === "string" ? v : "");
 
+const generic = <PageHeader title="Existencias" description="Lo que hay en cada ubicación, en la unidad base de cada producto." />;
+const withHeader = (n: React.ReactNode) => (
+  <>
+    {generic}
+    {n}
+  </>
+);
+
 async function StockContent({ searchParams }: { searchParams: PageProps<"/existencias">["searchParams"] }) {
   const { actor, stock, currencies, companyId, storeId, can, canWh, costs } = await requireStockUser();
-  if (!companyId) return <ViewState kind="empty" entity="existencias" title="Elige una compañía arriba para ver sus existencias." canCreate={false} />;
+  if (!companyId) return withHeader(<ViewState kind="empty" entity="existencias" title="Elige una compañía arriba para ver sus existencias." canCreate={false} />);
   let locations;
   try {
     locations = await stock.listLocations(actor, { companyId });
   } catch (e) {
-    if (e instanceof Forbidden) return <ViewState kind="forbidden" entity="existencias" permission="Existencias · Ver" />;
+    if (e instanceof Forbidden) return withHeader(<ViewState kind="forbidden" entity="existencias" permission="Existencias · Ver" />);
     throw e;
   }
   const sp = await searchParams;
@@ -33,7 +41,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
   const mine = storeId ? locations.filter((l) => l.storeId === storeId) : locations;
   const location =
     mine.find((l) => l.id === wanted) ?? mine.find((l) => l.kind === "warehouse") ?? locations.find((l) => l.storeId === storeId) ?? locations[0];
-  if (!location) return <ViewState kind="empty" entity="existencias" text="Aún no hay ubicaciones." canCreate={false} />;
+  if (!location) return withHeader(<ViewState kind="empty" entity="existencias" text="Aún no hay ubicaciones." canCreate={false} />);
 
   const supabase = await createServerClient();
   const catalog = makeCatalog(supabase);
@@ -80,7 +88,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
     };
   });
   if (storeId && location.storeId === storeId) {
-    return (
+    return withHeader(
       <StoreStockList
         rows={rows}
         total={list.total}
@@ -93,7 +101,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
         canDirect={can("direct_store_entry")}
         canRequest={can("request_replenishment")}
         entry={{ locationId: location.id, products: entryProducts, currencies: currencyList.map((c) => ({ id: c.id, code: c.code })) }}
-      />
+      />,
     );
   }
   const productValues = [...byProduct.values()].map(lotsValue);
@@ -125,8 +133,7 @@ async function StockContent({ searchParams }: { searchParams: PageProps<"/existe
 export default function StockPage(props: PageProps<"/existencias">) {
   return (
     <div className="stack">
-      <PageHeader title="Existencias" description="Lo que hay en cada ubicación, en la unidad base de cada producto." />
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={withHeader(<Loading />)}>
         <StockContent searchParams={props.searchParams} />
       </Suspense>
     </div>

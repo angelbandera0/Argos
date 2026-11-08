@@ -5,11 +5,13 @@ export function StatTile({
   icon,
   dot,
   label,
+  hint,
   value,
 }: {
   icon?: NavIconName;
   dot?: "ink" | "success" | "warning" | "muted";
   label: string;
+  hint?: string;
   value: React.ReactNode;
 }) {
   const Icon = icon && NAV_ICONS[icon];
@@ -24,6 +26,7 @@ export function StatTile({
       <div>
         <div className="ui-stat-tile-label">{label}</div>
         <div className="ui-stat-tile-value">{value}</div>
+        {hint && <div className="ui-stat-tile-label">{hint}</div>}
       </div>
     </div>
   );

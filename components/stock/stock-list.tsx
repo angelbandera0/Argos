@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
 import { Chip } from "@/components/ui/chip";
 import { WriteOffButton } from "./ops-dialogs";
 import { TransferButton } from "./transfer-button";
@@ -96,15 +97,30 @@ export function StockList({
   const countOf = (s: StatusFilter) => (s === "todos" ? all : counts[s]);
   const hasFilters = !!(filters.q || filters.categoria || filters.estado !== "todos");
 
+  const header =
+    isWarehouse && (canEntry || canTransfer || canWriteOff) ? (
+      <>
+        {canTransfer && <TransferButton {...transfer} />}
+        {canWriteOff && <WriteOffButton locationId={transfer.fromLocationId} products={transfer.products} canChooseLot={transfer.canChooseLot} currencies={transfer.currencies} />}
+        {entryButton}
+      </>
+    ) : (
+      entryButton
+    );
+  const pageHeader = <PageHeader title={`Existencias ${isWarehouse ? "del" : "de"} ${location}`} description={`Lo que hay en ${isWarehouse ? "el almacén" : "la ubicación"}, en la unidad base de cada producto.`} actions={header} />;
+
   if (all === 0) {
     return (
-      <ViewState
-        kind="empty"
-        entity="existencias"
-        text={canEnter ? "Registra la entrada inicial para empezar." : "Cuando se registren, aparecerán aquí."}
-        canCreate={canEnter}
-        action={entryButton}
-      />
+      <>
+        {pageHeader}
+        <ViewState
+          kind="empty"
+          entity="existencias"
+          text={canEnter ? "Registra la entrada inicial para empezar." : "Cuando se registren, aparecerán aquí."}
+          canCreate={canEnter}
+          action={entryButton}
+        />
+      </>
     );
   }
 
@@ -119,7 +135,6 @@ export function StockList({
         </span>
       ),
     },
-    { id: "category", header: "Categoría", cell: (r) => (r.category ? <Chip>{r.category}</Chip> : null) },
     {
       id: "qty",
       header: "Existencia",
@@ -156,10 +171,11 @@ export function StockList({
   const noCost = inventory && unknownCostLabel(inventory.unknownProducts);
   return (
     <>
+      {pageHeader}
       <div className="ui-stat-grid">
         <StatTile icon="Box" label="Productos" value={all} />
-        <StatTile dot="warning" label="Bajos" value={counts.low} />
-        <StatTile dot="ink" label="Agotados" value={counts.out} />
+        <StatTile dot="warning" label="Bajos" hint="en o bajo el mínimo" value={counts.low} />
+        <StatTile dot="ink" label="Agotados" hint="existencia en 0" value={counts.out} />
         {inventory && (
           <StatTile
             icon="Coins"
@@ -178,15 +194,6 @@ export function StockList({
       <ListToolbar
         submitLabel={false}
         search={{ label: "Buscar producto", placeholder: "Buscar producto", defaultValue: filters.q }}
-        primary={
-          isWarehouse && (canEntry || canTransfer || canWriteOff) ? (
-            <>
-              {canTransfer && <TransferButton {...transfer} />}
-              {canWriteOff && <WriteOffButton locationId={transfer.fromLocationId} products={transfer.products} canChooseLot={transfer.canChooseLot} currencies={transfer.currencies} />}
-              {entryButton}
-            </>
-          ) : entryButton
-        }
         extra={
           <>
             {filters.ubicacion && <input type="hidden" name="ubicacion" value={filters.ubicacion} />}
@@ -212,7 +219,7 @@ export function StockList({
         <ViewState kind="no-match" entity="existencias" action={<Button variant="outline" onClick={() => go({ q: "", categoria: "", estado: "todos" })}>Limpiar filtros</Button>} />
       ) : (
         <div className="stack">
-          <DataTable label={`Existencias de ${location}`} columns={columns} rows={rows} getRowId={(r) => r.productId} />
+          <DataTable label={`Existencias de ${location}`} columns={columns} rows={rows} getRowId={(r) => r.productId} rowActions={(r) => [{ label: "Ver detalle", onSelect: () => router.push(`/existencias/${r.productId}${stockListQuery({ ubicacion: filters.ubicacion })}`) }]} rowActionsLabel={(id) => `Acciones de ${rows.find((r) => r.productId === id)?.name ?? "producto"}`} />
           <div className="ui-user-foot">
             <Pager page={filters.pagina} pageSize={pageSize} total={total} unit={total === 1 ? "producto" : "productos"} onPageChange={(pagina) => go({ pagina })} />
           </div>

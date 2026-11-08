@@ -64,9 +64,9 @@ export function ProductDetailTabs({
 
   const lotColumns: Column<LotRow>[] = [
     { id: "lot", header: "Lote", cell: (r) => <span className="mono">{r.id.slice(0, 8)}</span> },
-    { id: "received", header: "Recepción", cell: (r) => <LocalDateTime value={r.receivedAt} /> },
-    { id: "initial", header: "Cantidad inicial", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.initialQty, unit)}</span> },
-    { id: "remaining", header: "Cantidad actual", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.remaining, unit)}</span> },
+    { id: "received", header: "Fecha", cell: (r) => <LocalDateTime value={r.receivedAt} /> },
+    { id: "initial", header: "Inicial", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.initialQty, unit)}</span> },
+    { id: "remaining", header: "Restante", align: "end", cell: (r) => <span className="ui-money-value">{formatStockQty(r.remaining, unit)}</span> },
     { id: "origin", header: "Origen", cell: (r) => <Chip>{lotOriginLabel(r.origin)}</Chip> },
     ...(costs ? [{ id: "cost", header: "Costo unitario", align: "end", cell: (r) => cost(r.unitCost) } satisfies Column<LotRow>] : []),
   ];

@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ProductDetailTabs } from "@/components/stock/product-detail";
 import { MOVEMENT_PAGE_SIZE, parseIsoDate, parseMovementType, parseTab } from "@/components/stock/product-detail-logic";
-import { formatStockQty, parsePage } from "@/components/stock/stock-list-logic";
+import { averageCost, formatStockQty, lotsValue, minimumLabel, parsePage } from "@/components/stock/stock-list-logic";
 import { SurplusButton, WriteOffButton } from "@/components/stock/ops-dialogs";
 import { TransferButton } from "@/components/stock/transfer-button";
 import { EntryButton } from "@/components/stock/entry-button";
+import { MoneyValue } from "@/components/ui/money-value";
 import { PageHeader } from "@/components/ui/page-header";
+import { StatTile } from "@/components/ui/stat-tile";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { ViewState } from "@/components/ui/view-state";
 import { Forbidden, NotFound } from "@/core/domain/errors";
@@ -84,6 +86,9 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
   const isWarehouse = location.kind === "warehouse";
   const curs = currencyList.map((c) => ({ id: c.id, code: c.code }));
   const stores = locations.filter((l) => l.kind === "store").map((l) => ({ value: l.id, label: l.name }));
+  const cur = (id?: string) => currencyList.find((c) => c.id === id) ?? { code: "", decimals: 2 };
+  const lastLot = [...detail.lots].sort((a, b) => (a.receivedAt < b.receivedAt ? 1 : -1))[0];
+  const avg = averageCost(lotsValue(detail.lots.filter((l) => l.remaining > 0)));
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = can(isWarehouse ? "initial_entry" : "direct_store_entry");
 
@@ -92,7 +97,7 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
       <PageHeader
         title={name}
         breadcrumbs={[{ label: "Existencias", href: `/existencias?ubicacion=${location.id}` }, { label: name }]}
-        description={`${location.name} · Existencia ${formatStockQty(detail.quantity, unit)}`}
+        description={`Unidad base ${unit === "l" ? "L" : unit} · ${location.name}`}
         actions={[
           isWarehouse && canWh("write_off") && <WriteOffButton key="writeoff" locationId={location.id} products={[]} productId={productId} canChooseLot={canWh("choose_lot")} currencies={currencyList.map((c) => ({ id: c.id, code: c.code }))} />,
           can("adjust_stock") && <SurplusButton key="surplus" locationId={location.id} products={[]} productId={productId} costs={costs} currencies={curs} />,
@@ -104,8 +109,15 @@ async function ProductContent({ params, searchParams }: { params: PageProps<"/ex
           ),
         ]}
       />
-      <div className="row">
-        <StatusBadge family="stock" status={detail.status} />
+      <div className="ui-stat-grid">
+        <StatTile icon="Box" label="Existencia" value={formatStockQty(detail.quantity, unit)} />
+        <StatTile dot={detail.status === "normal" ? "success" : detail.status === "low" ? "warning" : "ink"} label="Estado" hint={detail.minimum === null ? undefined : `mínimo ${minimumLabel(detail.minimum, unit)}`} value={<StatusBadge family="stock" status={detail.status} />} />
+        {costs && (
+          <>
+            <StatTile icon="Coins" label="Costo del último lote" hint={`por ${unit === "l" ? "L" : unit}`} value={<MoneyValue value={lastLot?.unitCost?.amount ?? null} currency={cur(lastLot?.unitCost?.currencyId)} />} />
+            <StatTile icon="Coins" label="Costo promedio" hint="lotes con restante" value={<MoneyValue value={avg?.amount ?? null} currency={cur(avg?.currencyId)} />} />
+          </>
+        )}
       </div>
       <ProductDetailTabs
         lots={detail.lots.map((l) => ({ id: l.id, receivedAt: l.receivedAt, initialQty: l.initialQty, remaining: l.remaining, origin: l.origin, unitCost: l.unitCost }))}
