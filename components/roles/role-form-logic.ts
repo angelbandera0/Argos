@@ -199,3 +199,5 @@ export function summaryRows(
     { label: "Permisos especiales", text: labels.length ? labels.join(", ") : "Ninguno" },
   ];
 }
+
+export const roleErrorStep = (state: { nameError?: string }) => (state.nameError ? 0 : -1);

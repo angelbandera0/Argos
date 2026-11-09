@@ -13,6 +13,7 @@ export interface NewUserState {
   displayName?: string;
   userId?: string;
   pin?: string;
+  field?: "displayName" | "name" | "roleId" | "storeIds";
 }
 
 export interface ActionResult {
@@ -21,6 +22,15 @@ export interface ActionResult {
 }
 
 const text = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
+
+function failField(e: unknown): NewUserState["field"] {
+  if (e instanceof RuleViolation) {
+    if (e.code === "NAME_TAKEN" || e.code === "INVALID_USERNAME") return "name";
+    if (e.code === "INVALID_NAME") return "displayName";
+    if (e.code === "ROLE_EXCLUDED") return "roleId";
+  }
+  return undefined;
+}
 
 function fail(e: unknown): string {
   if (e instanceof Forbidden) return "No tienes permiso para hacer esto.";
@@ -45,17 +55,32 @@ export async function createUserAction(_: NewUserState, formData: FormData): Pro
   try {
     validateName(displayName);
   } catch {
-    return { ...echo, error: fail(new RuleViolation("INVALID_NAME")) };
+    return { ...echo, field: "displayName", error: fail(new RuleViolation("INVALID_NAME")) };
   }
-  if (!roleId) return { ...echo, error: "Elige un rol." };
-  if (storeIds.length === 0) return { ...echo, error: "Elige al menos una tienda." };
+  if (!roleId) return { ...echo, field: "roleId", error: "Elige un rol." };
+  if (storeIds.length === 0) return { ...echo, field: "storeIds", error: "Elige al menos una tienda." };
   try {
     const r = await users.createOperator(actor, { companyId: company.id, name, displayName, roleId, storeIds });
     revalidatePath("/usuarios", "layout");
     return { ...echo, userId: r.userId, pin: r.pin };
   } catch (e) {
-    return { ...echo, error: fail(e) };
+    return { ...echo, field: failField(e), error: fail(e) };
   }
+}
+
+export async function updateUserAction(userId: string, _: NewUserState, formData: FormData): Promise<NewUserState> {
+  const { actor, users } = await requireUserAdmin();
+  const roleId = text(formData, "roleId");
+  const storeIds = formData.getAll("storeId").filter((v): v is string => typeof v === "string");
+  if (!roleId) return { field: "roleId", error: "Elige un rol." };
+  if (storeIds.length === 0) return { field: "storeIds", error: "Elige al menos una tienda." };
+  try {
+    await users.assignStores(actor, { userId, assignments: storeIds.map((storeId) => ({ storeId, roleId })) });
+  } catch (e) {
+    return { field: failField(e), error: fail(e) };
+  }
+  revalidatePath("/usuarios", "layout");
+  redirect("/usuarios");
 }
 
 /** Live availability of a username inside the active company (usernames are never reused). */

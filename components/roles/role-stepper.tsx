@@ -18,7 +18,7 @@ import { FormShell } from "@/components/ui/form-shell";
 import { Checklist, SummaryCard, SummaryPanel } from "@/components/ui/summary-panel";
 import { PermissionMatrix } from "./permission-matrix";
 import { SpecialPermissions } from "./module-permissions";
-import { checklist, hasAnyPermission, LAST_STEP, nameError, nextStep, OPS, prevStep, pruneSpecials, ROLE_STEPS, SESSION_HOURS, sessionSummary, summaryRows } from "./role-form-logic";
+import { checklist, hasAnyPermission, LAST_STEP, nameError, nextStep, OPS, roleErrorStep, prevStep, pruneSpecials, ROLE_STEPS, SESSION_HOURS, sessionSummary, summaryRows } from "./role-form-logic";
 
 export function RoleStepper({
   roleId,
@@ -37,6 +37,16 @@ export function RoleStepper({
   const [touched, setTouched] = useState(false);
   const [step, setStep] = useState(0);
   const [stepMsg, setStepMsg] = useState<string>();
+  const [seen, setSeen] = useState(state);
+  if (state !== seen) {
+    setSeen(state);
+    const back = roleErrorStep(state);
+    if (back >= 0) {
+      setStep(back);
+      setTouched(true);
+      setStepMsg(state.nameError);
+    }
+  }
   const [hours, setHours] = useState(initial.sessionSeconds ? String(initial.sessionSeconds / 3600) : "");
   const [on, setOn] = useState(() => new Set(companies.filter((c) => !initial.excludedCompanyIds.includes(c.id)).map((c) => c.id)));
   const [permissions, setPermissions] = useState(initial.permissions);

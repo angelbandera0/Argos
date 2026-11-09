@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { rolePreviewSource } from "@/components/users/user-form-logic";
+import { UserStepper } from "@/components/users/user-stepper";
 import { AssignmentsForm } from "@/components/users/assignments-form";
 import { UserActions } from "@/components/users/user-actions";
 import { Alert } from "@/components/ui/alert";
@@ -37,19 +39,23 @@ async function Detail({ params }: { params: PageProps<"/usuarios/[id]">["params"
   const { actor, org, users, roles } = await requireUserAdmin();
   const profile = await users.users.getProfile(id);
   if (!profile || profile.kind !== "operator" || !profile.companyId) notFound();
-  const [company, stores, assignments, mine, events] = await Promise.all([
+  const [company, stores, assignments, mine, events, companies] = await Promise.all([
     org.companies.getById(profile.companyId),
     loadStores(org, profile.companyId),
     users.users.listAssignments(id),
     roles.listRoles(actor),
     users.users.listAuthEvents(id, 20),
+    org.listCompanies(actor),
   ]);
+  const assignedUsers = await roles.roles.listUsers(mine.map((r) => r.id));
+  
   const owned = new Set(mine.map((r) => r.id));
   const assignedRoleIds = new Set(assignments.map((a) => a.roleId));
   const options = mine
     .filter((r) => !r.excludedCompanyIds.includes(profile.companyId!) || assignedRoleIds.has(r.id))
     .map((r) => ({ id: r.id, name: r.name }));
   const foreignStoreIds = assignments.filter((a) => !owned.has(a.roleId)).map((a) => a.storeId);
+  const single = assignedRoleIds.size === 1 && foreignStoreIds.length === 0;
   const deactivated = profile.status === "deactivated";
 
   return (
@@ -93,6 +99,17 @@ async function Detail({ params }: { params: PageProps<"/usuarios/[id]">["params"
                 <h2 className="h2">Tiendas asignadas</h2>
                 {deactivated ? (
                   <p className="muted">Este usuario está desactivado y ya no se puede modificar.</p>
+                ) : single ? (
+                  <UserStepper
+                    mode="edit"
+                    userId={profile.id}
+                    code={company?.code ?? ""}
+                    companyId={profile.companyId!}
+                    companyName={company?.name ?? ""}
+                    roles={mine.map((r) => rolePreviewSource(r, companies, assignedUsers))}
+                    stores={stores.filter((s) => s.active || assignments.some((a) => a.storeId === s.id)).map(({ id, name, site }) => ({ id, name, site }))}
+                    initial={{ roleId: assignments[0].roleId, storeIds: assignments.map((a) => a.storeId) }}
+                  />
                 ) : (
                   <AssignmentsForm
                     userId={profile.id}

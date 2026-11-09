@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { OPS } from "@/components/roles/role-form-logic";
-import { NewUserForm } from "@/components/users/new-user-form";
+import { rolePreviewSource } from "@/components/users/user-form-logic";
+import { UserStepper } from "@/components/users/user-stepper";
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { loadStores, requireUserAdmin } from "../guard";
@@ -15,7 +15,8 @@ export const metadata: Metadata = { title: "Nuevo usuario · Argos" };
 async function Guarded() {
   const { actor, org, roles, company } = await requireUserAdmin();
   if (!company) return <Card>Elige una compañía arriba para crear usuarios.</Card>;
-  const [mine, stores] = await Promise.all([roles.listRoles(actor), loadStores(org, company.id)]);
+  const [mine, stores, companies] = await Promise.all([roles.listRoles(actor), loadStores(org, company.id), org.listCompanies(actor)]);
+  const assigned = await roles.roles.listUsers(mine.map((r) => r.id));
   const available = mine.filter((r) => !r.excludedCompanyIds.includes(company.id));
   const active = stores.filter((s) => s.active);
   if (available.length === 0) {
@@ -37,14 +38,12 @@ async function Guarded() {
     );
   }
   return (
-    <NewUserForm
+    <UserStepper
+      mode="create"
       code={company.code}
+      companyId={company.id}
       companyName={company.name}
-      roles={available.map((r) => ({
-        id: r.id,
-        name: r.name,
-        permissions: OPS.filter(({ op }) => r.permissions.products[op]).map(({ label }) => label),
-      }))}
+      roles={mine.map((r) => rolePreviewSource(r, companies, assigned))}
       stores={active.map(({ id, name, site }) => ({ id, name, site }))}
     />
   );
