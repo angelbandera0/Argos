@@ -201,3 +201,17 @@ export function summaryRows(
 }
 
 export const roleErrorStep = (state: { nameError?: string }) => (state.nameError ? 0 : -1);
+
+export function grantedModules(permissions: Record<Module, PermissionSet>) {
+  return ALL_MODULES.map((m) => ({ key: m.key, label: m.label, ops: OPS.filter(({ op }) => permissions[m.key][op]) })).filter((m) => m.ops.length > 0);
+}
+
+export function groupedSpecials(grants: SpecialGrant[]) {
+  const groups = [{ scope: "General", defs: [SEE_COSTS] }, ...MODULE_GROUPS.map((m) => ({ scope: m.label, defs: m.specials }))];
+  return groups
+    .map((g) => ({
+      scope: g.scope,
+      items: g.defs.filter((d) => grants.some((x) => x.permission === d.key)).map((d) => ({ ...d, warehouse: !!grants.find((x) => x.permission === d.key)?.warehouse })),
+    }))
+    .filter((g) => g.items.length > 0);
+}

@@ -25,7 +25,7 @@ export function StatTile({
       {dot && <span className={`ui-stat-tile-dot ui-stat-dot-${dot}`} aria-hidden="true" />}
       <div>
         <div className="ui-stat-tile-label">{label}</div>
-        <div className="ui-stat-tile-value">{value}</div>
+        <div className="ui-stat-tile-value" data-long={typeof value === "string" && value.length > 12 ? "" : undefined}>{value}</div>
         {hint && <div className="ui-stat-tile-label">{hint}</div>}
       </div>
     </div>

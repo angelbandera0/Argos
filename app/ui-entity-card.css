@@ -77,3 +77,13 @@
 .ui-role-perms strong { min-width: 9rem; }
 .ui-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--space-4); }
 .ui-detail-title { margin: 0 0 var(--space-3); font: var(--text-h2); }
+.ui-special-group { display: flex; flex-direction: column; gap: var(--space-2); }
+.ui-special-scope { margin: 0; font: var(--text-overline); letter-spacing: var(--tracking-overline); text-transform: uppercase; color: var(--color-muted); }
+.ui-role-specials { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.ui-role-specials li { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.ui-role-special-text { flex: 1 1 14rem; min-width: 0; display: flex; flex-direction: column; }
+.ui-role-special-text strong { font-weight: 600; color: var(--color-ink); }
+.ui-role-special-text span { font: var(--text-caption); color: var(--color-muted); }
+.ui-stat-tile > div { min-width: 0; }
+.ui-stat-tile-value { font-weight: 600; overflow-wrap: anywhere; }
+.ui-stat-tile-value[data-long] { font: var(--text-value); letter-spacing: 0; }
