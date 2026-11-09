@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button-class";
 import { Chip } from "@/components/ui/chip";
@@ -55,7 +56,7 @@ export function CompanyList({
   activeId?: string;
   canEdit: boolean;
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const go = (next: { estado?: StatusFilter; vista?: ViewMode; orden?: SortKey; pagina?: number }) => {
     const p = new URLSearchParams();

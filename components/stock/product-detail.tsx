@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Chip } from "@/components/ui/chip";
 import { type Column, DataTable } from "@/components/ui/data-table";
 import { DateRangePicker } from "@/components/ui/datepicker";
@@ -50,7 +51,7 @@ export function ProductDetailTabs({
 }) {
   const [adjusting, setAdjusting] = useState<LotRow | null>(null);
   const [costDialog, setCostDialog] = useState<{ lot: CostLot; mode: "fix" | "history" } | null>(null);
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const go = (patch: Partial<DetailFilters>) => router.replace(`${pathname}${detailQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });
   const cost = (m: Money) => (m === undefined ? null : <MoneyValue value={m ? m.amount : null} currency={(m && currencies[m.currencyId]) || FALLBACK} />);

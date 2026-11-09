@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { useTransition } from "react";
 import { markReadAction } from "@/app/(app)/notificaciones/actions";
 import { NAV_ICONS } from "@/components/icons";
@@ -62,7 +63,7 @@ export function NotificationsView({
   total: number;
   counts: { all: number; unread: number };
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const [pending, start] = useTransition();
   const run = (ids?: string[], then?: () => void) =>
     start(async () => {

@@ -1,11 +1,12 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useNavRouter } from "@/components/ui/use-nav-router";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Pager } from "./pager";
 
 /** Pager that keeps the page in the `pagina` URL param, preserving the other filters. */
 export function UrlPager({ page, pageSize, total, unit }: { page: number; pageSize: number; total: number; unit?: string }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const go = (n: number) => {

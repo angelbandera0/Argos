@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { DateRangePicker } from "@/components/ui/datepicker";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { FilterSelect } from "@/components/ui/filter-select";
@@ -16,7 +17,7 @@ const READ_OPTIONS = [
 ];
 
 export function NotificationFilterBar({ filters, stores }: { filters: NotificationFilters; stores: { value: string; label: string }[] }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const path = "/notificaciones";
   const go = (patch: Partial<NotificationFilters>) => router.replace(`${path}${notificationsQuery({ ...filters, page: 1, ...patch })}`, { scroll: false });
   return (

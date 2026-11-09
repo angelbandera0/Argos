@@ -1,3 +1,4 @@
+import { RouteProgress } from "@/components/ui/route-progress";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -5,6 +6,7 @@ export default function Loading() {
   return (
     <div className="stack" aria-busy="true">
       <span className="sr-only">Cargando…</span>
+      <RouteProgress />
       <Card>
         <div className="row">
           <Skeleton onPanel variant="circle" />

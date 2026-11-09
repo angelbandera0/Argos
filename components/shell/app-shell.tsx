@@ -1,5 +1,6 @@
 import { NAV_ICONS, type NavIconName } from "@/components/icons";
 import { CompanySelector, type CompanySelectorProps } from "@/components/org/company-selector";
+import { NavProgress } from "@/components/ui/use-nav-router";
 import { SidebarItem, SidebarSection, type SidebarBadge } from "@/components/ui/sidebar-section";
 import type { NavSection } from "./nav-config";
 import { ProfileMenu } from "./profile-menu";
@@ -38,6 +39,7 @@ export function AppShell({
 }) {
   return (
     <div className="app">
+      <NavProgress />
       <nav className="side" aria-label="Principal">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true" />

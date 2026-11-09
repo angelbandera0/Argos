@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { DateRangePicker } from "@/components/ui/datepicker";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { FilterSelect } from "@/components/ui/filter-select";
@@ -11,7 +12,7 @@ const PATH = "/pedidos";
 type F = { estado: string; comprador: string; desde: string; hasta: string };
 
 export function OrderFilters({ buyers, ...f }: F & { buyers: { value: string; label: string }[] }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const go = (next: Partial<F>) => {
     const all = { ...f, ...next };
     const q = new URLSearchParams();

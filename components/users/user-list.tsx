@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +104,7 @@ export function UserList({
   counts: Record<StateFilter, number>;
   pageSize: number;
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const [action, setAction] = useState<{ id: string; name: string; kind: Kind } | null>(null);
   const go = (patch: Partial<UserListFilters>) => {

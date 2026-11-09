@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { NAV_ICONS } from "@/components/icons";
 import { Chip } from "@/components/ui/chip";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -31,7 +32,7 @@ export function RoleList({
   companyId: string;
   companies: { id: string; name: string }[];
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const go = (compania: string) => {
     const p = new URLSearchParams();

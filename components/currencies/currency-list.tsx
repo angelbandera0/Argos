@@ -1,8 +1,9 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { Star } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button-class";
 import { Chip } from "@/components/ui/chip";
@@ -30,7 +31,7 @@ const FILTERS: { value: StatusFilter; label: string }[] = [
 ];
 
 export function CurrencyList({ rows, q, status }: { rows: CurrencyRow[]; q: string; status: StatusFilter }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const go = (estado: StatusFilter) => {
     const p = new URLSearchParams();

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { Avatar } from "@/components/ui/avatar";
 import { DateRangePicker } from "@/components/ui/datepicker";
 import { FilterBar } from "@/components/ui/filter-bar";
@@ -21,7 +22,7 @@ export function HistoryFilterBar({
   actionOptions: { value: string; label: string }[];
   actionLabel?: string;
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const go = (patch: Partial<HistoryFilters>) => router.replace(`${path}${filtersQuery({ ...filters, ...patch })}`, { scroll: false });
   return (
     <FilterBar label="Filtros del historial" onClear={hasActiveFilters(filters) ? () => router.replace(path, { scroll: false }) : undefined}>

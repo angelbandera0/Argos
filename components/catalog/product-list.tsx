@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 import { bulkProductsAction, setProductActiveAction } from "@/app/(app)/catalogo/actions";
 import { NAV_ICONS } from "@/components/icons";
@@ -44,7 +45,7 @@ export function ProductList({
   canEdit: boolean;
   canDelete: boolean;
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const toast = useToast();
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { STATUS_OPTIONS } from "./inbox-logic";
@@ -8,7 +9,7 @@ import { STATUS_OPTIONS } from "./inbox-logic";
 const PATH = "/solicitudes/bandeja";
 
 export function InboxFilters({ estado, tienda, stores }: { estado: string; tienda: string; stores: { value: string; label: string }[] }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const go = (next: { estado: string; tienda: string }) => {
     const q = new URLSearchParams();
     if (next.estado) q.set("estado", next.estado);

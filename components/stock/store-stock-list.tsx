@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { saveMinimumAction } from "@/app/(app)/existencias/[productId]/actions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ export function StoreStockList({
   costs: boolean;
   entry: { locationId: string; products: EntryProduct[]; currencies: EntryCurrency[] };
 }) {
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const [editing, setEditing] = useState<StockRow | null>(null);
   const go = (patch: Partial<StockFilters>) => router.replace(`${pathname}${stockListQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });

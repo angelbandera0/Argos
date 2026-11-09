@@ -1,7 +1,8 @@
 "use client";
 
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Chip } from "@/components/ui/chip";
@@ -90,7 +91,7 @@ export function StockList({
   const entryKind = isWarehouse ? "initial" : "direct";
   const canEnter = isWarehouse ? canEntry : canDirect;
   const entryButton = canEnter ? <EntryButton kind={entryKind} {...entry} costs={costs} /> : undefined;
-  const router = useRouter();
+  const router = useNavRouter();
   const pathname = usePathname();
   const go = (patch: Partial<StockFilters>) => router.replace(`${pathname}${stockListQuery({ ...filters, pagina: 1, ...patch })}`, { scroll: false });
   const cur = (id: string) => currencies[id] ?? FALLBACK;

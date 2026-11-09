@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+
+import { useNavRouter } from "@/components/ui/use-nav-router";
 import { Tabs } from "@/components/ui/tabs";
 import { type HistoryFilters, filtersQuery } from "./history-utils";
 
@@ -8,7 +9,7 @@ export type HistoryTabItem = { value: string; label: string; count?: number };
 
 /** Module tabs with counter; switching keeps the filters (except the action, which differs between sections). */
 export function HistoryTabs({ items, current, filters }: { items: HistoryTabItem[]; current: string; filters: HistoryFilters }) {
-  const router = useRouter();
+  const router = useNavRouter();
   return (
     <Tabs
       aria-label="Módulo"

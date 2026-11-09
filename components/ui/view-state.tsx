@@ -1,5 +1,6 @@
 import { Alert } from "./alert";
 import { EmptyState } from "./empty-state";
+import { RouteProgress } from "./route-progress";
 import { Skeleton } from "./skeleton";
 import { supportLine, viewStateCopy, type ViewStateKind } from "./view-state-logic";
 
@@ -22,6 +23,7 @@ export function ViewState({ kind, entity, title, text, action, canCreate = true,
   if (kind === "loading") {
     return (
       <div role="status" aria-label={title ?? copy.title} className={`ui-view-state ui-view-loading ui-view-loading-${shape}`}>
+        <RouteProgress />
         {Array.from({ length: count }, (_, i) => (
           <div key={i} className="ui-view-skel">
             <Skeleton variant="circle" />

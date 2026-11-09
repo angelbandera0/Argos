@@ -1,3 +1,4 @@
+import { RouteProgress } from "@/components/ui/route-progress";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -5,6 +6,7 @@ export default function Loading() {
   return (
     <div className="stack" aria-busy="true">
       <span className="sr-only">Cargando…</span>
+      <RouteProgress />
       <Skeleton variant="title" />
       <div className="ui-stat-grid">
         {[0, 1, 2, 3].map((i) => (
