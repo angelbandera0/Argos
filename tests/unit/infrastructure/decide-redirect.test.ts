@@ -65,11 +65,11 @@ describe("decideRedirect operador", () => {
     expect(go("/entrar", session("operator", { sessionEnded: true }))).toBeNull();
     expect(go("/login", session("operator", { sessionEnded: true }))).toBeNull();
   });
-  it("/usuarios -> /tienda", () => {
-    expect(go("/usuarios", session("operator"))).toBe("/tienda");
+  it("/usuarios, /roles y /companias -> /tienda", () => {
+    for (const p of ["/usuarios", "/roles", "/companias"]) expect(go(p, session("operator"))).toBe("/tienda");
   });
   it("rutas permitidas -> null", () => {
-    for (const p of ["/tienda", "/tienda/x", "/catalogo/productos", "/historial"]) {
+    for (const p of ["/tienda", "/tienda/x", "/catalogo/productos", "/historial", "/existencias", "/solicitudes/bandeja", "/pedidos/nuevo", "/divisas", "/notificaciones", "/perfil"]) {
       expect(go(p, session("operator"))).toBeNull();
     }
   });
