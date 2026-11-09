@@ -8,6 +8,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Steps } from "@/components/ui/steps";
+import { canSubmitStep } from "@/components/ui/step-guard";
 import { buttonClass } from "@/components/ui/button-class";
 import { CheckboxBox } from "@/components/ui/checkbox";
 import { ChoiceCard } from "@/components/ui/choice-card";
@@ -86,6 +87,13 @@ export function UserStepper({
     setStepMsg(r.error);
     setStep(r.step);
   };
+  const guardedAction = (fd: FormData) => {
+    if (canSubmitStep(step, lastStep)) action(fd);
+  };
+  const applySuggestion = () => {
+    setStepMsg(undefined);
+    setUsername(suggestion);
+  };
   const groups = groupBySite(stores);
   const chosen = stores.filter((s) => on.has(s.id));
   const suggestion = username ? "" : suggestUsername(displayName);
@@ -100,7 +108,8 @@ export function UserStepper({
     return () => clearTimeout(t);
   }, [format, username]);
 
-  const setStores = (ids: string[], value: boolean) =>
+  const setStores = (ids: string[], value: boolean) => {
+    setStepMsg(undefined);
     setOn((prev) => {
       const next = new Set(prev);
       for (const id of ids) {
@@ -109,6 +118,7 @@ export function UserStepper({
       }
       return next;
     });
+  };
 
   const status =
     format === "invalid"
@@ -148,10 +158,10 @@ export function UserStepper({
     <>
       <FormShell
         key={formKey}
-        action={action}
+        action={guardedAction}
         error={state.error && stepForField(keys, state.field) < 0 ? state.error : undefined}
         onSubmit={(e) => {
-          if (step < lastStep) {
+          if (!canSubmitStep(step, lastStep)) {
             e.preventDefault();
             goNext();
           } else if (!complete) e.preventDefault();
@@ -203,7 +213,10 @@ export function UserStepper({
                   maxLength={80}
                   placeholder="Ej. Marta López"
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  onChange={(e) => {
+                    setStepMsg(undefined);
+                    setDisplayName(e.target.value);
+                  }}
                   aria-describedby="displayName-hint"
                 />
               </Field>
@@ -214,7 +227,10 @@ export function UserStepper({
                   <input
                     id="username"
                     value={username}
-                    onChange={(e) => setUsername(cleanUsername(e.target.value))}
+                    onChange={(e) => {
+                      setStepMsg(undefined);
+                      setUsername(cleanUsername(e.target.value));
+                    }}
                     autoComplete="off"
                     autoCapitalize="none"
                     spellCheck={false}
@@ -236,7 +252,7 @@ export function UserStepper({
                     <>
                       {" "}
                       Sugerencia:{" "}
-                      <Chip variant="alert" className="ui-suggestion" role="button" tabIndex={0} onClick={() => setUsername(suggestion)} onKeyDown={(e) => e.key === "Enter" && setUsername(suggestion)}>
+                      <Chip variant="alert" className="ui-suggestion" role="button" tabIndex={0} onClick={applySuggestion} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applySuggestion())}>
                         {code}.{suggestion}
                       </Chip>
                     </>
@@ -262,7 +278,10 @@ export function UserStepper({
                 options={roles.map((r) => ({ value: r.id, label: r.name }))}
                 placeholder="Elige un rol"
                 value={roleId || null}
-                onValueChange={(v) => setRoleId(v ?? "")}
+                onValueChange={(v) => {
+                  setStepMsg(undefined);
+                  setRoleId(v ?? "");
+                }}
                 aria-describedby="roleId-hint"
               />
             </div>
@@ -322,6 +341,8 @@ export function UserStepper({
         <div className="form-shell-actions">
           {step > 0 && (
             <Button
+              key="back"
+              type="button"
               variant="secondary"
               onClick={() => {
                 setStepMsg(undefined);
@@ -332,9 +353,11 @@ export function UserStepper({
             </Button>
           )}
           {step < lastStep ? (
-            <Button onClick={goNext}>Siguiente</Button>
+            <Button key="next" type="button" onClick={goNext}>
+              Siguiente
+            </Button>
           ) : (
-            <Button type="submit" loading={pending} loadingLabel={mode === "create" ? "Creando…" : "Guardando…"} disabled={!complete}>
+            <Button key="submit" type="submit" loading={pending} loadingLabel={mode === "create" ? "Creando…" : "Guardando…"} disabled={!complete}>
               {mode === "create" ? "Crear usuario" : "Guardar cambios"}
             </Button>
           )}

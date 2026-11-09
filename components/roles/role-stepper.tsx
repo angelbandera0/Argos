@@ -7,6 +7,7 @@ import type { RoleInput } from "@/core/application/ports/role-repository";
 import type { Module, PermissionSet, SpecialGrant } from "@/core/domain/permissions";
 import { Button } from "@/components/ui/button";
 import { Steps } from "@/components/ui/steps";
+import { canSubmitStep } from "@/components/ui/step-guard";
 import { Alert } from "@/components/ui/alert";
 import { avatarTone, companyInitials } from "@/components/org/company-avatar";
 import { buttonClass } from "@/components/ui/button-class";
@@ -74,7 +75,11 @@ export function RoleStepper({
     setStepMsg(undefined);
     setStep(prevStep(step));
   };
+  const guardedAction = (fd: FormData) => {
+    if (canSubmitStep(step, LAST_STEP)) action(fd);
+  };
   const toggleCompany = (id: string, checked: boolean) => {
+    setStepMsg(undefined);
     const next = new Set(on);
     if (checked) next.add(id);
     else next.delete(id);
@@ -83,10 +88,10 @@ export function RoleStepper({
 
   return (
     <FormShell
-      action={action}
+      action={guardedAction}
       error={state.error}
       onSubmit={(e) => {
-        if (step < LAST_STEP) {
+        if (!canSubmitStep(step, LAST_STEP)) {
           e.preventDefault();
           goNext();
         } else if (!complete) {
@@ -132,7 +137,10 @@ export function RoleStepper({
             autoComplete="off"
             placeholder="Ej. Cajero, Almacenero"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setStepMsg(undefined);
+              setName(e.target.value);
+            }}
             onBlur={() => setTouched(true)}
             aria-describedby={`name-hint${state.nameError || nameMsg ? " name-error" : ""}`}
             aria-invalid={state.nameError || nameMsg ? true : undefined}
@@ -160,7 +168,10 @@ export function RoleStepper({
           title="Todas mis compañías"
           checked={on.size === companies.length}
           indeterminate={on.size > 0 && on.size < companies.length}
-          onCheckedChange={(c) => setOn(c ? new Set(companies.map((x) => x.id)) : new Set())}
+          onCheckedChange={(c) => {
+            setStepMsg(undefined);
+            setOn(c ? new Set(companies.map((x) => x.id)) : new Set());
+          }}
         />
         <div className="ui-company-grid" role="group" aria-label="Compañías">
           {companies.map((c) => (
@@ -214,14 +225,16 @@ export function RoleStepper({
       )}
       <div className="form-shell-actions">
         {step > 0 && (
-          <Button variant="secondary" onClick={goBack}>
+          <Button key="back" type="button" variant="secondary" onClick={goBack}>
             Atrás
           </Button>
         )}
         {step < LAST_STEP ? (
-          <Button onClick={goNext}>Siguiente</Button>
+          <Button key="next" type="button" onClick={goNext}>
+            Siguiente
+          </Button>
         ) : (
-          <Button type="submit" loading={pending} loadingLabel="Guardando…" disabled={!complete}>
+          <Button key="submit" type="submit" loading={pending} loadingLabel="Guardando…" disabled={!complete}>
             {roleId ? "Guardar cambios" : "Crear rol"}
           </Button>
         )}
