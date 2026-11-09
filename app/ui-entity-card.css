@@ -87,3 +87,4 @@
 .ui-stat-tile > div { min-width: 0; }
 .ui-stat-tile-value { font-weight: 600; overflow-wrap: anywhere; }
 .ui-stat-tile-value[data-long] { font: var(--text-value); letter-spacing: 0; }
+.ui-detail-grid .ui-stat-tile-value, .ui-detail-grid .ui-stat-tile-value[data-long] { font: var(--text-value); letter-spacing: 0; }
