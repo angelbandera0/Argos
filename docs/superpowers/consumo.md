@@ -150,6 +150,7 @@ Los tokens por subagente no se registraron en el ledger de las Tareas 7-9; solo 
 | Fix: steppers no envían desde pasos intermedios | `argos-dev` (Sonnet) | implementación | verify:fast OK (854); visual pendiente | 909407f | contexto 19.164 → 42.248, 16 llamadas; equivalente ponderado ≈ 124.000 |
 | Detalle de rol, vista previa y cargas de navegación | `argos-dev` (Sonnet) | implementación | verify:fast OK (858); visual pendiente | roles-detalle y cargas commits | contexto 20.165 → 70.572, 31 llamadas; equivalente ponderado ≈ 302.000 |
 | Fix: tiles de rol y cabeceras de acordeón | `argos-dev` (Sonnet) | implementación | verify:fast OK (858); visual pendiente | d428b01 | contexto 18.769 → 30.476, 13 llamadas; equivalente ponderado ≈ 69.000 |
+| Fix: proxy redirigía a operadores a /tienda | `argos-dev` (Sonnet) | implementación | verify:fast OK (858), int operator-guard OK | eac121c | contexto 19.646 → 49.006, 21 llamadas; equivalente ponderado ≈ 178.000 |
 
 Nota de medición (2026-10-26): la columna Tokens es el tamaño del contexto al final de la corrida (`subagent_tokens` del arnés), no el gasto facturado. El gasto real es salida + escritura de caché + lectura de caché (que se relee en cada llamada); `pnpm usage <output_file>` lo calcula. En la Tarea 21: 23 llamadas, contexto 32.985 → 122.132, salida 20.146, escritura de caché 103.527, lectura de caché 1.712.301, equivalente ponderado ≈ 401.000.
 
